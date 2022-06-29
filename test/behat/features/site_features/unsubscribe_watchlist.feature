@@ -1,11 +1,15 @@
-@javascript @core @core_view
+@javascript @core @core_view @dorycron
 Feature: Unsubscribing from watchlist via link in email
 In order to unsubscribe from watchlist for page I am watching
 As a user
 I follow unsubscription link in email
 
 Background:
-Given the following "users" exist:
+Given the following "institutions" exist:
+    | name | displayname | registerallowed | registerconfirm |
+    | pcnz | Institution One | ON | OFF |
+
+And the following "users" exist:
     | username | password | email | firstname | lastname | institution | authname | role |
     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
     | UserB | Kupuh1pa! | UserB@example.org | Bob | User | mahara | internal | member |

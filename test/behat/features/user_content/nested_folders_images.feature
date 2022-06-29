@@ -1,11 +1,15 @@
-@javascript @core @core_artefact @core_content
+@javascript @core @core_artefact @core_content @dot
 Feature: Creating folders and subfolders with images inside
    In order to organise my files
    As an user I need to create folders with other folders inside
    So I can add files to them
 
 Background:
-    Given the following "users" exist:
+    Given the following "institutions" exist:
+    | name | displayname | registerallowed | registerconfirm |
+    | pcnz | Institution One | ON | OFF |
+
+    And the following "users" exist:
     | username | password | email | firstname | lastname | institution | authname | role |
     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
 

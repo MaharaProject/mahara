@@ -5,7 +5,11 @@ As a student
 So I can view others social media pages
 
 Background:
-Given the following "users" exist:
+Given the following "institutions" exist:
+    | name | displayname | registerallowed | registerconfirm |
+    | pcnz | Institution One | ON | OFF |
+
+And the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
      | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
      | UserB | Kupuh1pa! | UserB@example.org | Bob | User | mahara | internal | member |

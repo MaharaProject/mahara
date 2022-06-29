@@ -1,9 +1,13 @@
-@javascript @core @core_portfolio
+@javascript @core @core_portfolio @dory
 Feature: Smart evidence work flow from Institution member submitting to Institution staff making
     and adding comments to collection submission.
 
 Background: Setting up test data for people and portfolio pages
-    Given the following "users" exist:
+    Given the following "institutions" exist:
+    | name | displayname | registerallowed | registerconfirm |
+    | pcnz | Institution One | ON | OFF |
+
+    And the following "users" exist:
     | username | password | email | firstname | lastname | institution | authname | role |
     | UserA | Kupuh1pa! | UserA@example.org | Alice | User | mahara | internal | member |
     | UserB | Kupuh1pa! | UserB@example.org | Bob | User | mahara | internal | staff |
@@ -40,7 +44,9 @@ Background: Setting up test data for people and portfolio pages
     Then I should see "Title of your framework"
     # Enable Institutions to allow Smart Evidencelcd
     And I choose "Settings" in "Institutions" from administration menu
-    And I press "Edit"
+    # PCNZ customisation - must add pcnz auth instance so we need to specify 
+    # the institution to edit
+    And I press "Edit \"No Institution\""
     And I enable the switch "Allow SmartEvidence"
     And I press "Submit"
     Then I log out
@@ -52,8 +58,10 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
     # Creating a collection AND adding pages
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I press "Add"
-    When I click on "Collection" in the dialog
+    # PCNZ customisation: cannot access 'Add button'
+    # And I press "Add"
+    # When I click on "Collection" in the dialog
+    When I go to "/collection/edit.php?new=1"
     And I fill in the following:
     | Collection name | Smart Evidence Collection 1 |
     | Collection description | Smart Evidence Collection 1 description |

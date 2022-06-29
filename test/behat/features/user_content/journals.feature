@@ -1,10 +1,14 @@
-@javascript @core @blocktype @blocktype_journals
+@javascript @core @blocktype @blocktype_journals @dot
 Feature: Add journal blocktypes to a page
     In order to make sure they appear on the page
     when added by a user
 
 Background:
-    Given the following "users" exist:
+    Given the following "institutions" exist:
+    | name | displayname | registerallowed | registerconfirm |
+    | pcnz | Institution One | ON | OFF |
+
+    And the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
      | celeste | Kupuh1pa! | celeste@example.com | Celeste | Phobos | mahara | internal | member |
 

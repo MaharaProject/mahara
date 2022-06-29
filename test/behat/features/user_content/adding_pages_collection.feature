@@ -23,8 +23,10 @@ Scenario: Creating a collection AND adding pages
     # Create Test collection
     # This is the test for manually creating a collection
     And I choose "Pages and collections" in "Create" from main menu
-    And I press "Add"
-    And I click on "Collection" in the dialog
+    # PCNZ customisation: cannot access 'Add button'
+    # And I press "Add"
+    # When I click on "Collection" in the dialog
+    When I go to "/collection/edit.php?new=1"
     And I fill in the following:
         | Collection name | Test Collection |
         | Collection description | Test |

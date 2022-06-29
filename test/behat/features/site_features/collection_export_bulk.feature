@@ -80,8 +80,8 @@ Scenario: Institution One admin locks First name, Last name fields
     # user should see ignore for all of the Locked fields for inst
     And I should see "Ignore" in the "Import First name" "Profile" property
     And I should see "Ignore" in the "Import Last name" "Profile" property
-    # Student ID field was not locked so user should see additional option of "Add new"
-    And I should see "Ignore" in the "Import Student ID" "Profile" property
-    And I should see "Add new" in the "Import Student ID" "Profile" property
+    # Registration number field was not locked so user should see additional option of "Add new"
+    And I should see "Ignore" in the "Import Registration number" "Profile" property
+    And I should see "Add new" in the "Import Registration number" "Profile" property
     When I expand "Contact information" node
     Then I should see "Ignore" in the "Import Email address" "Profile" property

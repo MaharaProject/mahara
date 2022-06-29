@@ -28,12 +28,12 @@ I can create a new page from the site default portfolio page
     And I should see "Sample text block"
     And I log out
 
+    # PCNZ cannot edit/add pages
     # Create a new portfolio page
     And I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
     And I should see "Pages and collections"
-    And I press "Add"
-    And I click on "Page" in the dialog
+    Then I go to "/view/editlayout.php?new=1"
     And I should see "Settings"
     And I press "Edit"
     Then I should see "Lorem Ipsum is simply dummy text of the printing and typesetting industry."

@@ -1,8 +1,12 @@
-@javascript @core @core_portfolio
+@javascript @core @core_portfolio @dorycron
 Feature: objectionable content functionality
 
 Background:
-  Given the following "users" exist:
+  Given the following "institutions" exist:
+    | name | displayname | registerallowed | registerconfirm |
+    | pcnz | Institution One | ON | OFF |
+
+  And the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
      | UserA | Kupuhipa1! | UserA@example.org | Angela | User | mahara | internal | member |
      | UserB | Kupuhipa1! | UserB@example.org | Bob    | User | mahara | internal | member |

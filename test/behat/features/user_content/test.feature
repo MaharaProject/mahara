@@ -135,8 +135,8 @@ Background:
 
     And the following "collections" exist:
     # Available fields: title*, description, ownertype*, ownername*, pages
-    | title          | ownertype | ownername | lock  | description | pages                                |
-    | collection one | user      | UserA     | false | desc of col | Page One A, Page Two A, Page Three A |
+    | title          | ownertype | ownername | lock  | description | framework | pages                                |
+    | collection one | user      | UserA     | false | desc of col | 0         | Page One A, Page Two A, Page Three A |
 
     And the following "journals" exist:
     # Available fields: owner*, ownertype*, title*, description, tags

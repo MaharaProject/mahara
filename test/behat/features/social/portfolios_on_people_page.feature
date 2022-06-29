@@ -25,15 +25,17 @@ Background:
 Scenario: Create contacts and portfolios for each to see portfolios on People page
     # Log in as a UserA and create portfolio and set sharing access to contacts
     Given I log in as "UserA" with password "Kupuh1pa!"
-    When I choose "Pages and collections" in "Create" from main menu
-    And I click on "Manage access" in "CollectionA" card access menu
-    And I select "friends" from "General" in shared with select2 box
-    And I press "Save"
+    # PCNZ customisation: you can only share your portfolio with one reviewer, no friends.
+    # When I choose "Pages and collections" in "Create" from main menu
+    # And I click on "Manage access" in "CollectionA" card access menu
+    # And I select "friends" from "General" in shared with select2 box
+    # And I press "Save"
 
-    Then I choose "Pages and collections" in "Create" from main menu
-    And I click on "Manage access" in "PageA single" card access menu
-    And I select "friends" from "General" in shared with select2 box
-    And I press "Save"
+    # PCNZ customisation: you can only share your portfolio with one reviewer, no friends.
+    # Then I choose "Pages and collections" in "Create" from main menu
+    # And I click on "Manage access" in "PageA single" card access menu
+    # And I select "friends" from "General" in shared with select2 box
+    # And I press "Save"
 
     # Let UserA add UserB as a contact
     Then I choose "People" in "Engage" from main menu
