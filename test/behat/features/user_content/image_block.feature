@@ -5,7 +5,11 @@ Feature: Creating/deleting an image block
     So I can control the content
 
 Background:
-    Given the following "users" exist:
+    Given the following "institutions" exist:
+    | name | displayname | registerallowed | registerconfirm |
+    | pcnz | Institution One | ON | OFF |
+
+    And the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
      | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
 
@@ -16,7 +20,8 @@ Background:
 Scenario: Create and delete image block
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Edit" in "Page UserA_01" card menu
+    And I click on "Page UserA_01"
+    Then I press "Edit"
     When I click on the add block button
     And I press "Add"
     And I set the field "Block title" to "Image Block 1"
