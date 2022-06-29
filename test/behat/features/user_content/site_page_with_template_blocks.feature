@@ -7,7 +7,11 @@ As a user
 I can copy the site page and have the block pre-populated with information.
 
 Background:
-    Given the following "users" exist:
+    Given the following "institutions" exist:
+    | name | displayname | registerallowed | registerconfirm |
+    | pcnz | Institution One | ON | OFF |
+
+    And the following "users" exist:
     | username | password  | email             | firstname | lastname | institution | authname | role   | studentid | town       | country | occupation |
     | UserA    | Kupuh1pa! | UserA@example.org | Angela    | User     | mahara      | internal | member | superA1   | Wellington | nz      | Plumber    |
     | UserB    | Kupuh1pa! | UserB@example.org | Bob       | User     | mahara      | internal | member | normalB2  | Oslo       | Norway  | Welder     |
@@ -76,7 +80,7 @@ Scenario: Check templates not editable then create and use the Page template wit
     # Copy site portfolio page for UserA
     And I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I press "Copy"
+    Then I go to "/view/choosetemplate.php?searchcollection=1"
     And I press "Copy page"
     And I press "Edit"
     And I press "Display page"
@@ -86,7 +90,8 @@ Scenario: Check templates not editable then create and use the Page template wit
     # Copy site portfolio page for UserB
     And I log in as "UserB" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I press "Copy"
+    # PCNZ customisation: hardcode navigating to the copy page as the button is hidden
+    And I go to "/view/choosetemplate.php?searchcollection=1"
     And I press "Copy page"
     And I press "Edit"
     And I press "Display page"
