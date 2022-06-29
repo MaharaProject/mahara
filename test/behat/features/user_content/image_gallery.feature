@@ -2,7 +2,11 @@
 Feature:
 
 Background:
-  Given the following "users" exist:
+  Given the following "institutions" exist:
+    | name | displayname | registerallowed | registerconfirm |
+    | pcnz | Institution One | ON | OFF |
+
+  And the following "users" exist:
   | username | password | email | firstname | lastname | institution | authname | role |
   | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
 
@@ -24,7 +28,8 @@ Scenario:
   And I should see "1.5M" in the "Folder1" row
   # Creating folder 1
   Given I choose "Pages and collections" in "Create" from main menu
-  And I click on "Edit" in "Page UserA_01" card menu
+  And I click on "Page UserA_01"
+  Then I press "Edit"
   When I click on the add block button
   And I press "Add"
   And I click on blocktype "Image gallery"
