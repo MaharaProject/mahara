@@ -970,10 +970,10 @@ function file_cleanup_old_temp_files($paths=array()) {
 
     $cachepaths = $validpaths;
     // check that the paths supplied are valid
-    if (is_array($paths) && $paths[0] != 'all') {
+    if (is_array($paths) && !empty($paths) && $paths[0] != 'all') {
+        $paths = array_flip($paths);
         $cachepaths = array_intersect_key($validpaths, $paths);
     }
-
     $files = array();
     $dirs = array();
     foreach ($cachepaths as $cpath => $mintime) {
