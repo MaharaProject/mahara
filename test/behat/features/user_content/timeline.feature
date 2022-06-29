@@ -5,7 +5,11 @@ Feature: Creating versions of a page
     So I can control the content
 
 Background:
-    Given the following "users" exist:
+    Given the following "institutions" exist:
+     | name | displayname | registerallowed | registerconfirm |
+     | pcnz | Institution One | ON | OFF |
+
+    And the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
      | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
 
@@ -33,7 +37,8 @@ Background:
 Scenario: Add blocks and create versions
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Edit" in "Page UserA_01" card menu
+    And I follow "Page UserA_01"
+    And I press "Edit"
     When I click on the add block button
     And I press "Add"
     And I click on blocktype "Text"
@@ -66,7 +71,8 @@ Scenario: Check that plan blocks on timeline are not automatically updated when 
     # Need to visit the edit page to get correct block dimensions
     # for a block added by background step so that when versioned
     # it records the correct block dimensions in view_versioning table
-    And I click on "Edit" in "Page Two" card menu
+    And I follow "Page Two"
+    And I press "Edit"
     And I display the page
     And I press "More options"
     And I follow "Save to timeline"
