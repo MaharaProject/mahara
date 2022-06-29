@@ -19,6 +19,13 @@ require_once(get_config('docroot') . 'local/lib/cron.php');
  */
 function local_pcnz_doublecheck() {
 
+    if (defined('BEHAT_TEST')) {
+        log_debug('Behat tests have a limited time to wait so we can\t run through
+        doublecheck_people() cron job otherwise the behat tests will time out and cause a
+        mass fail.');
+        return;
+    }
+
     $login_endpoint = PCNZ_REMOTEURL . 'api/Users/login';
 
     $login_data = json_encode(
