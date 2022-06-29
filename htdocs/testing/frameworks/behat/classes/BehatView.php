@@ -64,7 +64,10 @@ class BehatView extends BehatBase {
                 $exception,
                 $block
         );
-        $blockconfigbutton->press();
+        $textliteraljs = $this->escapeDoubleQuotes($blocktitle);
+        $this->ensure_node_is_visible($blockconfigbutton);
+        $this->ensure_node_is_in_viewport($blockconfigbutton, 'Edit block', 'css_element', "h2.card-header:contains(" . $textliteraljs . ")");
+        $blockconfigbutton->click();
     }
 
     /**
@@ -83,7 +86,10 @@ class BehatView extends BehatBase {
                 $exception,
                 $block
         );
-        $blockconfigbutton->press();
+        $textliteraljs = $this->escapeDoubleQuotes($blocktitle);
+        $this->ensure_node_is_visible($blockconfigbutton);
+        $this->ensure_node_is_in_viewport($blockconfigbutton, 'Remove block', 'css_element', "h2.card-header:contains(" . $textliteraljs . ")");
+        $blockconfigbutton->click();
         $this->getSession()->getDriver()->getWebDriverSession()->accept_alert();
     }
 }

@@ -20,6 +20,7 @@ Background:
     # Person sets profile setting set to "Do not allow anyone to send me messages"
     Given I log in as "UserD" with password "Kupuh1pa!"
     And I choose "Preferences" in "Settings" from account menu
+    When I scroll to the base of id "accountprefs_messages_container"
     And I set the following fields to these values:
     | Do not allow anyone to send me messages | 1 |
     And I click on "Save"

@@ -20,6 +20,8 @@ use Behat\Mink\Exception\ExpectationException as ExpectationException,
     Behat\Mink\Exception\ElementNotFoundException as ElementNotFoundException,
     Behat\Mink\Element\NodeElement as NodeElement,
     Behat\Mink\Selector\Xpath\Escaper;
+use WebDriver\Exception\NoSuchWindow;
+use WebDriver\Exception\UnknownError;
 
 /**
  * Base class
@@ -102,7 +104,7 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
      * @return NodeElement
      */
     protected function find($selector, $locator, $exception = false, $node = false) {
-
+        $returnitems = [];
         // Returns the first match.
         if ($items = $this->find_all($selector, $locator, $exception, $node)) {
             foreach ($items as $key => $value) {
@@ -564,7 +566,7 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
     }
 
     /**
-     * Helper functio to make sure the node to be clicked is within the viewport
+     * Helper function to make sure the node to be clicked is within the viewport.
      *
      * @throws ExpectationException
      * @param NodeElement $node
@@ -597,19 +599,32 @@ class BehatBase extends Behat\MinkExtension\Context\RawMinkContext {
             $jquerystr = "$element:contains($textliteraljs)";
         }
         if ($parenttype == 'css_element') {
-            $jquerystr = $parentelement . ' ' . $jquerystr;
+            // This allows for better targeting of groups of elements.
+            // We need to split $parentelement and $jquerystr by comma and then join them back with a space.
+            $parentelements = explode(',', $parentelement);
+            $jquerystrs = explode(',', $jquerystr);
+            // For each $parentelements, we need to add each $jquerystrs to it.
+            $newjquerystrs = array();
+            foreach ($parentelements as $parent) {
+                foreach ($jquerystrs as $str) {
+                    $newjquerystrs[] = trim($parent) . ' ' . trim($str);
+                }
+            }
+            $jquerystr = implode(',', $newjquerystrs);
         }
         // Need to single escape the double escaped doublequotes
         $jquerystr = str_replace("\\\\\"", "\\\"", $jquerystr);
         $function = <<<JS
-          (function(){
+          (function() {
               var elem = jQuery("$jquerystr")[0];
+              // We do not appear to be able to use elem.scrollIntoView() here.
+              // Even with setting block and inline to center.
               var elementRect = elem.getBoundingClientRect();
               var absoluteElementTop = elementRect.top + window.pageYOffset;
               var middle = absoluteElementTop - (window.innerHeight / 2);
               window.scrollTo(0, middle);
               return 1;
-          })()
+          })();
 JS;
         try {
             $this->getSession()->wait(5000, $function);
@@ -736,6 +751,11 @@ JS;
             case "medium":
                 $width = 1024;
                 $height = 768;
+                break;
+            case "default":
+                // Update this to match the value in run_xvfb in mahara_behat.sh.
+                $width = 1280;
+                $height = 1024;
                 break;
             case "large":
                 $width = 2560;

@@ -29,7 +29,7 @@ class BehatAdmin extends BehatBase {
      * @param TableNode $table
      * @throws SystemException
      */
-    public function site_settings_set(TableNode $table) {
+    public function site_settings_set($table) {
 
         $settings = array();
         foreach ($table->getHash() as $sitesetting) {
@@ -132,16 +132,19 @@ class BehatAdmin extends BehatBase {
         if (isset($settings['searchplugin']) && $oldsearchplugin != $settings['searchplugin']) {
             // Call the old search plugin's sitewide cleanup method
             safe_require('search', $oldsearchplugin);
-            call_static_method(generate_class_name('search', $oldsearchplugin), 'cleanup_sitewide');
+            $classname = generate_class_name('search', $oldsearchplugin);
+            $classname::cleanup_sitewide();
             // Call the new search plugin's sitewide initialize method
             safe_require('search', $settings['searchplugin']);
-            $initialize = call_static_method(generate_class_name('search', $settings['searchplugin']), 'initialize_sitewide');
+            $classname = generate_class_name('search', $settings['searchplugin']);
+            $initialize = $classname::initialize_sitewide();
             if (!$initialize) {
                 throw new SystemException(get_string('searchconfigerror1', 'admin', $settings['searchplugin']));
             }
             // Call the new search plugin's can connect
             safe_require('search', $settings['searchplugin']);
-            $connect = call_static_method(generate_class_name('search', $settings['searchplugin']), 'can_connect');
+            $classname = generate_class_name('search', $settings['searchplugin']);
+            $connect = $classname::can_connect();
             if (!$connect) {
                 throw new SystemException(get_string('searchconfigerror1', 'admin', $settings['searchplugin']));
             }
@@ -156,7 +159,7 @@ class BehatAdmin extends BehatBase {
      * @param TableNode $table
      * @throws SystemException
      */
-    public function plugin_activation_set(TableNode $table) {
+    public function plugin_activation_set($table) {
 
         $settings = array();
         foreach ($table->getHash() as $pluginsetting) {
@@ -223,7 +226,7 @@ class BehatAdmin extends BehatBase {
      * @param TableNode $table
      * @throws SystemException
      */
-    public function plugin_settings_set(TableNode $table) {
+    public function plugin_settings_set($table) {
 
         $settings = array();
         foreach ($table->getHash() as $pluginsetting) {

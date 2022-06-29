@@ -48,6 +48,10 @@ class BehatGeneral extends BehatBase {
         $this->wait_until_exists("//*[@id='login_login_username']",
             "xpath_element", 5 * self::EXTENDED_TIMEOUT);
 
+        // When running with rundebug some actions can generate a lot of log
+        // messages. The will ensure the login form is in view.
+        $this->i_scroll_into_view_base("loginform_container");
+
         $this->getSession()->getPage()->fillField(
             "login_login_username",
             $username
@@ -591,7 +595,7 @@ EOF;
             $exists = false;
         }
         if ($exists) {
-            throw new ExpectationException('"' . $args['text'] . '" text was found in the "' . $args['element'] . '" element', $context->getSession());
+            throw new ExpectationException('"' . $text . '" text was found in the "' . $rowtext . '" element', $this->getSession());
         }
     }
 
@@ -1516,7 +1520,7 @@ EOF;
     public function should_not_exist($element, $selectortype) {
 
         try {
-            $this->should_exists($element, $selectortype);
+            $this->should_exist($element, $selectortype);
             throw new ExpectationException('The "' . $element . '" "' . $selectortype . '" exists in the current page', $this->getSession());
         }
         catch (ElementNotFoundException $e) {
@@ -1966,6 +1970,9 @@ JS;
 JS;
         try {
             $this->getSession()->wait(5000, $function);
+            // This can return before the element has finished scrolling.
+            // Let's give it a second.
+            sleep(1);
         }
         catch(Exception $e) {
             throw new \Exception("scrollIntoView failed");
@@ -1988,6 +1995,9 @@ JS;
 JS;
         try {
             $this->getSession()->wait(5000, $function);
+            // This can return before the element has finished scrolling.
+            // Let's give it a second.
+            sleep(1);
         }
         catch(Exception $e) {
             throw new \Exception("scrollIntoView failed");
@@ -2013,6 +2023,9 @@ JS;
 JS;
         try {
             $this->getSession()->wait(5000, $function);
+            // This can return before the element has finished scrolling.
+            // Let's give it a second.
+            sleep(1);
         }
         catch(Exception $e) {
             throw new \Exception("scrollIntoView failed");
@@ -2035,6 +2048,9 @@ JS;
 JS;
         try {
             $this->getSession()->wait(5000, $jscode);
+            // This can return before the element has finished scrolling.
+            // Let's give it a second.
+            sleep(1);
         }
         catch(Exception $e) {
             throw new \Exception("scrollIntoViewLike failed");
@@ -2350,6 +2366,7 @@ JS;
     *
     */
     private function switch_action($action) {
+        $funct = '';
         switch ($action) {
             case "click on":
                 $funct = "i_click_on_in_the";

@@ -33,6 +33,7 @@ Scenario: Moving pages within a group (Bug 1426983)
     And I click on "General discussion"
     And I should see "Testing topic 1"
     # Checking topic 1 checkbox
+    And I scroll to the base of id "viewforum"
     And I check "Testing topic 1"
     And I select "Move to" from "action"
     And I should see "Testing forum 1"

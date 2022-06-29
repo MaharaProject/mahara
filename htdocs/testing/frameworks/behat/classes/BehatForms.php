@@ -219,6 +219,7 @@ class BehatForms extends BehatBase {
         $this->i_click_on_element("span.picker.input-short", "css_element");
         //set id for option list
         $locator = "";
+        $id = '';
         $selectortype = "css_element";
         switch ($label) {
             case "Search for...":

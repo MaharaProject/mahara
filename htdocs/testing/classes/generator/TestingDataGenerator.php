@@ -829,7 +829,7 @@ EOD;
         $sortedfields = $this->setup_configdata($data);
 
         if (is_callable($classname . '::' . $functionname)) {
-            $result = call_static_method($classname, $functionname, $sortedfields, $ownertype, $ownerid, $title, $view);
+            $result = $classname::$functionname($sortedfields, $ownertype, $ownerid, $title, $view);
             $configdata = array_merge($configdata, (array)$result);
 
             if (isset($record['updateonly']) && $record['updateonly']) {
@@ -1443,6 +1443,7 @@ EOD;
      * @return array $configdata of key and values of db table
      */
     public static function generate_configdata_pdf($sortedfields, $ownertype, $ownerid) {
+        $configdata = [];
         foreach ($sortedfields as $key => $value) {
 
             if ($key == 'attachment') {
@@ -1547,7 +1548,7 @@ EOD;
 
         foreach ($sortedfields as $key => $value) {
             if ($key == 'groupname') {
-                $groupid;
+                $groupid = null;
                 //make sure the group exists
                 if (!$groupid = get_field('group', 'id', 'name', $value)) {
                     throw new SystemException("Invalid Group '" . $value . "'");
@@ -1855,11 +1856,11 @@ EOD;
     public function setup_configdata($data) {
         $fields = explode(';', $data);
         $sortedfields = array();
-        if (!empty($fields)) {
+        if (count($fields) > 0) {
             foreach($fields as $field) {
                 if (empty($field)) break;
-                list($key, $value) = explode('=', $field, 2);
-                if (isset($key) && isset($value)) {
+                if (strpos($field, '=') !== false) {
+                    list($key, $value) = explode('=', $field, 2);
                     $key = trim(strtolower($key));
                     $value = trim($value);
                     $sortedfields[$key]=$value;
@@ -2064,10 +2065,9 @@ EOD;
                                 : false;
             if (!empty($viewtitles)) {
                 foreach ($viewtitles as $viewtitle) {
-                    if (!empty($viewtitle) &&
-                        ! $view = get_record_sql('SELECT v.id FROM {view} v ' . $sqljoin . ' WHERE v.title = ? ' . $sqlwhere
-                            , array(trim($viewtitle), $record['ownername']))
-                        ) {
+                    $sql = 'SELECT v.id FROM {view} v ' . $sqljoin . ' WHERE v.title = ? ' . $sqlwhere;
+                    $view = get_record_sql($sql, [trim($viewtitle), $record['ownername']]);
+                    if (!empty($viewtitle) && !$view) {
                         throw new SystemException("The page '" . $viewtitle
                             . "' does not exist or not belong to the user '" . $record['ownername'] . "'.");
                     }
@@ -2196,8 +2196,9 @@ EOD;
       $artefact = new ArtefactTypeBlogPost();
       $artefact->set('title', trim($record['title']));
       $artefact->set('description', trim($record['entry']));
-      $tags = array_map('trim', explode(',', $record['tags']));
-      $artefact->set('tags', (!empty($tags) ? $tags : null));
+      $tags = explode(',', $record['tags']);
+      $tags = array_map('trim', $tags);
+      $artefact->set('tags', $tags?:null);
       $artefact->set('published', !$record['draft']);
       $artefact->set('owner', $owner);
       $artefact->set('parent', $blogid);
@@ -2405,18 +2406,17 @@ EOD;
         }
 
         $files_arr = explode(',', $attachments);
-        if (!empty($files_arr)) {
-            foreach ($files_arr as $filename) {
-                $file = trim($filename);
+        foreach ($files_arr as $filename) {
+            $file = trim($filename);
 
-                // connect file to user/group
-                if (!empty($userid)) {
-                    $artefactid = self::process_attachment($file, 'user', $userid);
-                }
-                else if (!empty($groupid)) {
-                    $artefactid = self::process_attachment($file, 'group', $groupid);
-                }
-
+            // connect file to user/group
+            if (!empty($userid)) {
+                $artefactid = self::process_attachment($file, 'user', $userid);
+            }
+            else if (!empty($groupid)) {
+                $artefactid = self::process_attachment($file, 'group', $groupid);
+            }
+            if (!empty($artefactid)) {
                 $resultartefactids[] = $artefactid;
             }
         }
@@ -2561,6 +2561,7 @@ EOD;
       }
       else {
         $role = null;
+        $type = '';
         switch ($record['accesstype']) {
           case 'user':
           $ids = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower(trim($record['accessname']))));
@@ -2632,8 +2633,9 @@ EOD;
         $artefact->set('owner', $owner);
 
         if (!empty($record['tags'])) {
-            $tags = array_map('trim', explode(',', $record['tags']));
-            $artefact->set('tags', (!empty($tags) ? $tags : null));
+            $tags = explode(',', $record['tags']);
+            $tags = array_map('trim', $tags);
+            $artefact->set('tags', $tags?:null);
         }
         $artefact->commit();
     }
@@ -3094,8 +3096,9 @@ EOD;
         $artefact->set('completiondate', $completiondate);
 
         if (!empty($record['tags'])) {
-            $tags = array_map('trim', explode(',', $record['tags']));
-            $artefact->set('tags', (!empty($tags) ? $tags : null));
+            $tags = explode(',', $record['tags']);
+            $tags = array_map('trim', $tags);
+            $artefact->set('tags', $tags?:null);
         }
         $artefact->commit();
     }

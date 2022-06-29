@@ -28,7 +28,7 @@ class BehatAccount extends BehatBase {
      * @Given /^I set the following account settings values:$/
      * @param TableNode $table
      */
-    public function i_set_account_settings(TableNode $table) {
+    public function i_set_account_settings($table) {
         global $USER;
 
         $prefs = array();

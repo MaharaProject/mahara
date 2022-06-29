@@ -26,6 +26,8 @@ define('BEHAT_MAHARA_EXITCODE_BADCONFIG_DUPLICATEDBPREFIX', 246);
 define('BEHAT_MAHARA_EXITCODE_BADCONFIG_DUPLICATEDATAROOT', 247);
 define('BEHAT_MAHARA_EXITCODE_BADCONFIG_DUPLICATEWWWROOT', 248);
 define('BEHAT_MAHARA_EXITCODE_BADCONFIG_MISSING', 249);
+define('BEHAT_EXITCODE_NOTMAHARATESTSITE', 251); // not for behat testing
+define('BEHAT_EXITCODE_OUTOFDATEMAHARADB', 252); // database for testing is not updated
 define('BEHAT_EXITCODE_CANNOTRUN', 253);
 define('BEHAT_EXITCODE_NOTINSTALLED', 254);     // Behat and is dependencies are not installed
                                                 // in external directory
@@ -65,6 +67,7 @@ function behat_error($errorcode, $text = '') {
             $text .= "\n Please check the permissions";
             break;
         case BEHAT_MAHARA_EXITCODE_OUTOFDATEDB:
+        case BEHAT_EXITCODE_OUTOFDATEMAHARADB:
             $text = 'Mahara behat error: ' . $text;
             $path = testing_cli_argument_path('/testing/frameworks/behat/cli/util.php');
             $text .= "\n Please drop mahara database for testing, use:\n php " . $path . " --drop";
@@ -79,6 +82,9 @@ function behat_error($errorcode, $text = '') {
             $text = 'Mahara behat error: ' . $text;
             $path = testing_cli_argument_path('/testing/frameworks/behat/cli/util.php');
             $text .= "\n Please enable the test site, use:\n php " . $path . " --enable";
+            break;
+        case BEHAT_EXITCODE_NOTMAHARATESTSITE:
+            $text = 'Mahara behat error: ' . $text;
             break;
         default:
             $text = 'Unknown error ' . $errorcode . ' ' . $text;
@@ -123,7 +129,7 @@ function behat_error_handler($errno, $errstr, $errfile, $errline, $errcontext) {
     }
 
     // Using the default one in case there is a fatal catchable error.
-    error($errno, $errstr, $errfile, $errline, $errcontext);
+    error($errno, $errstr, $errfile, $errline);
 
     switch ($errno) {
         case E_USER_ERROR:

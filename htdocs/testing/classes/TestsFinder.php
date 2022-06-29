@@ -148,6 +148,7 @@ class TestsFinder {
     private static function get_regexp($testtype) {
 
         $sep = preg_quote(DIRECTORY_SEPARATOR, '|');
+        $regexp = '';
 
         switch ($testtype) {
             case 'phpunit':

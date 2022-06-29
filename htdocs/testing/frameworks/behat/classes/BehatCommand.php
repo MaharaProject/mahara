@@ -105,7 +105,7 @@ class BehatCommand {
     protected static function output_msg($msg) {
 
         // If we are using the web interface we want pretty messages.
-        if (!CLI) {
+        if (!defined('CLI')) {
 
             echo($msg);
 

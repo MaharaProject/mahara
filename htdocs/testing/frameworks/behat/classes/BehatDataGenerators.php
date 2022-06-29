@@ -13,7 +13,8 @@
 require_once(__DIR__ . '/BehatBase.php');
 
 use Behat\Gherkin\Node\TableNode as TableNode;
-use Behat\Behat\Exception\PendingException as PendingException;
+// use Behat\Behat\Exception\PendingException as PendingException;
+use Behat\Behat\Tester\Exception\PendingException;
 
 /**
  * Class to set up quickly a Given environment.

@@ -68,6 +68,10 @@ class BehatHooks extends BehatBase {
     protected static $faildumpdirname = false;
 
     /**
+     * @var The current Scenario.
+     */
+    protected $currentScenario = '';
+    /**
      * Make sure the test site is installed and enabled for behat tests.
      *
      * @static
@@ -134,7 +138,7 @@ class BehatHooks extends BehatBase {
         // Check if our tests passed.
         if ($event->getTestResult()->isPassed()) {
             // Our tests passed. We can clean up the database.
-            BehatTestingUtil::drop_site();
+            BehatTestingUtil::drop_database(true);
         }
         BehatTestingUtil::stop_test_mode();
     }
@@ -177,8 +181,8 @@ class BehatHooks extends BehatBase {
             BehatContextHelper::set_session($session);
             // Reset the browser
             $session->restart();
-            // Run all test with medium (1024x768) screen size, to avoid responsive problems.
-            $this->resize_window('medium');
+            // Run all test with default screen size, to avoid responsive problems.
+            $this->resize_window('default');
         }
 
         // Reset $SESSION.

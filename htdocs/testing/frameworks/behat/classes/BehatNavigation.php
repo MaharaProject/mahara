@@ -218,7 +218,7 @@ class BehatNavigation extends BehatBase {
      * @Given I collapse :element node in the :property property
      */
     public function i_collapse_node_in_the($element = null, $nodeelement = null, $nodeselectortype = null, $property = null) {
-        $this->i_expand_node_in_the($element, $nodeelement, $nodeselectortype, $property);
+        $this->i_expand_node_in_the($element, $nodeelement, $nodeselectortype);
     }
 
     /**
@@ -230,6 +230,8 @@ class BehatNavigation extends BehatBase {
         if (!$this->running_javascript()) {
             return true;
         }
+        $nodeelement = '';
+        $nodeselectortype = '';
         if ($property) {
           $css_locator = get_property($property, $location);
           if (!$css_locator) {

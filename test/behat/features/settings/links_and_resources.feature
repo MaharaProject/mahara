@@ -113,12 +113,13 @@ Scenario: Make sure blogs (ie site journals) do not show in site file link optio
     And I fill in "Title" with "Site blog"
     And I click on "Create journal"
     # I upload some site files
-    And I choose "Files" in "Configure site" from administration menu
+    When I choose "Files" in "Configure site" from administration menu
     And I attach the file "Image1.jpg" to "File"
     # Entering an external link
     And I choose "Menus" in "Configure site" from administration menu
     And I select "Logged-in links and resources" from "Edit"
+    And I scroll to the base of id "type_new_sitefile"
     And I set the following fields to these values:
     | Site file | 1 |
-    And the "linkedtonew" select box should not contain "Site blog"
+    Then the "linkedtonew" select box should not contain "Site blog"
     And I click on "Add" in the "Menus" "Administration" property

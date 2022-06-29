@@ -99,7 +99,6 @@ class BehatConfigManager {
                 }
 
             }
-            $features = array_merge($features, array_values($featurespaths));
         }
 
         // Behat config file specifying the main context class,

@@ -95,6 +95,8 @@ Background:
     And I should not see "This comment is private" in the "This is comment 2" comment
     And I click on "Next page"
     And I click on "Make comment public" in the "This is comment 11" comment
+    # Pause to avoid a race condition when clicking Comments on rundebug
+    And I wait "1" seconds
     And I click on "Comments"
     And I should see "A message has been sent to Bob User to request that the comment be made public."
     And I choose "Portfolios" in "Create" from main menu

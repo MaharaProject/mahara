@@ -66,7 +66,7 @@ $hascore = false;
 // Get the core features
 if (get_config('behat_dataroot')) {
     // Find the behat.yml file
-    require_once(get_config('docroot') . 'testing/frameworks/behat/classes/util.php');
+    require_once(__DIR__ . '/classes/util.php');
     $behatyml = BehatTestingUtil::get_behat_config_path();
     if (!is_readable($behatyml)) {
         // Try and get it to be readable
@@ -82,7 +82,7 @@ if (get_config('behat_dataroot')) {
         $behatconfig = 'export BEHAT_PARAMS=\'{"gherkin" : {"cache" : null}}\' && php ' . dirname(get_config('docroot')) . '/external/vendor/behat/behat/bin/behat --config ' . $behatyml . ' -dl 2>&1';
         $corefeatures = shell_exec($behatconfig);
         $corefeatures = explode(PHP_EOL, trim($corefeatures));
-        if (!empty($corefeatures)) {
+        if (count($corefeatures) > 0) {
             // Need to merge the core features with the used features
             foreach ($corefeatures as $feature) {
                 if (preg_match('/\^(.*?)\$/', $feature, $match)) {

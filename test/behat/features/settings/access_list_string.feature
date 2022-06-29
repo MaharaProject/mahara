@@ -29,6 +29,7 @@ Scenario: Verifying a person's authentication method only displays institutions 
 Scenario: Accessing people reports
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "People search" in "People" from administration menu
+    When I scroll to the base of id "searchresults"
     And I check "selectusers_2"
     And I check "selectusers_3"
     And I click on "Get reports"

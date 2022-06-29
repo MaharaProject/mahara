@@ -38,6 +38,7 @@ class BehatFormSelect extends BehatFormField {
         // Get the internal id of the element we are going to click.
         // This kind of internal IDs are only available in the selenium wire
         // protocol, so only available using selenium drivers, phantomjs and family.
+        $currentelementid = '';
         if ($this->running_javascript()) {
             $currentelementid = $this->get_internal_field_id();
         }
@@ -217,14 +218,8 @@ class BehatFormSelect extends BehatFormField {
         $selectedoptionvalues = $this->get_unescaped_options($values);
 
         // Precheck to speed things up.
-        if (count($expectedoptions) !== count($selectedoptiontexts) ||
-                count($expectedoptions) !== count($selectedoptionvalues)) {
-            return false;
-        }
-
-        // We check against string-ordered lists of options.
-        if ($expectedoptions != $selectedoptiontexts &&
-                $expectedoptions != $selectedoptionvalues) {
+        if ($expectedoptions != $selectedoptiontexts ||
+            $expectedoptions != $selectedoptionvalues) {
             return false;
         }
 
@@ -248,7 +243,7 @@ class BehatFormSelect extends BehatFormField {
         );
 
         // Sort by value (keeping the keys is irrelevant).
-        core_collator::asort($optionsarray, SORT_STRING);
+        asort($optionsarray, SORT_STRING);
 
         // Returning it as a string which is easier to match against other values.
         return implode('|||', $optionsarray);

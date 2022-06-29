@@ -4,6 +4,11 @@ In order to view the message
 As user/admin
 So admin can view the message in their inbox
 
+Background:
+  Given the following site settings are set:
+    | field    | value  |
+    | antispam | simple |
+
 Scenario: Checking that admin user can view messages in their mail sent from Contact us page
  Given I click on "Contact us"
  And I fill in "Name" with "Dean"

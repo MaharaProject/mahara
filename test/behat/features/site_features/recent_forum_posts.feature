@@ -57,11 +57,13 @@ Scenario: Administrative forum bulk actions
     And I click on "Forums" in the "Navigation" "Groups" property
     And I click on "Group A's forum"
     # Perform bulk actions of
+    And I scroll to the base of id "forumtopicstable"
     And I check "Taking photos of Cows"
     And I check "Taking photos of Dogs"
     And I check "Taking photos of cats"
     And I select "Close" from "action"
     And I click on "Update selected topics"
+    And I scroll to the base of id "forumtopicstable"
     And I check "Taking photos of Cows"
     And I check "Taking photos of Dogs"
     And I check "Taking photos of cats"

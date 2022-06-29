@@ -33,6 +33,8 @@ function run_xvfb {
     echo "Starting Xvfb ..."
     XVFB_CLIENTS="-maxclients 512"
     XVFB_INET6="-nolisten inet6"
+    # If the dimentions in XVFB_SCREEN change be sure to update the height and
+    # width of 'default' in resize_window() in BehatBase.php.
     XVFB_SCREEN="-screen 0 1280x1024x24+32"
     until [ $XVFB_PORT -gt 20 ]
     do

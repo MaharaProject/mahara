@@ -5,6 +5,7 @@ parameters:
     paths:
         - htdocs
     scanDirectories:
+        - external/vendor
         - htdocs/auth/saml/
         - htdocs/lib/
         - htdocs/lib/adodb/
@@ -65,6 +66,7 @@ parameters:
         - htdocs/lib/xmldb/classes/XMLDBStatement.class.php
         - htdocs/lib/xmldb/classes/XMLDBStructure.class.php
         - htdocs/lib/xmldb/classes/XMLDBTable.class.php
+        - htdocs/testing/frameworks/behat/lib.php
         - htdocs/webservice/lib.php
         - htdocs/webservice/libs/oauth-php/OAuthDiscovery.php
         - htdocs/webservice/libs/oauth-php/OAuthException2.php
@@ -93,7 +95,6 @@ parameters:
         - htdocs/lib/xmldb/*
         - htdocs/module/lti_advantage/*
         - htdocs/module/submissions/vendor/composer/autoload_static.php
-        - htdocs/testing/frameworks/behat/classes/*
         - htdocs/webservice/admin/oauthv1sregister.php
         - htdocs/webservice/libs/oauth-php
         - htdocs/webservice/tests/exampleclients/lib/*
