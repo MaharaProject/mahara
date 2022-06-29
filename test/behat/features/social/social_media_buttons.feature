@@ -43,7 +43,9 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  And I fill in "maharayahoo" for "Your URL or username"
  And I press "Save"
  And I choose "Pages and collections" in "Create" from main menu
- And I click on "Edit" in "Page UserA_01" card menu
+ # PCNZ customisation
+ And I click on "Page UserA_01"
+ Then I press "Edit"
  When I click on the add block button
  And I press "Add"
  And I click on blocktype "Social media"
