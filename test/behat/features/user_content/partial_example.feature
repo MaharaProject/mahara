@@ -15,16 +15,16 @@ Scenario: Meta test testing Behat's functionality (Bug #1387836)
     And I press "Save profile"
     And I choose "Pages and collections" in "Create" from main menu
     # Creating a page
-    And I press "Add"
-    And I click on "Page" in the dialog
+    # PCNZ customisation - 'Add' button is hidden so we need to hardcode the navigation
+    And I go to "/view/editlayout.php?new=1"
     And I fill in "Page title" with "test page name 1"
     And I press "Save"
     # Verifying it saved
     And I should see "Page saved successfully"
     # Creating a collection
     And I choose "Pages and collections" in "Create" from main menu
-    And I press "Add"
-    And I click on "Collection" in the dialog
+    # PCNZ customisation - 'Add' button is hidden so we need to hardcode the navigation
+    And I go to "/collection/edit.php?new=1"
     And I fill in "Collection name" with "test collection name"
     And the "Page navigation bar" checkbox should be checked
     And I press "Next: Edit collection pages"
