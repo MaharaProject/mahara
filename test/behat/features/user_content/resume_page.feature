@@ -10,7 +10,11 @@ Background:
      | field | value |
      | licensemetadata | 1 |
 
-    Given the following "users" exist:
+    And the following "institutions" exist:
+     | name | displayname | registerallowed | registerconfirm |
+     | pcnz | Institution One | ON | OFF |
+
+    When the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
      | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
 
@@ -119,7 +123,8 @@ Scenario: Editing Education and Employment info
 
     # When entire resume is displayed on Profile page, it should include employment address (Bug 1529750)
     Given I choose "Pages and collections" in "Create" from main menu
-    And I click on "Edit" in "Profile page" card menu
+    And I follow "Profile page"
+    And I press "Edit"
     When I click on the add block button
     And I press "Add"
     And I click on blocktype "My entire résumé"
@@ -285,7 +290,8 @@ Scenario: Adding interests
     And I press "Save"
     And I should see "Saved successfully"
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Edit" in "Page UserA_01" card menu
+    And I follow "Page UserA_01"
+    And I press "Edit"
     When I click on the add block button
     And I press "Add"
     And I click on blocktype "One résumé field"
