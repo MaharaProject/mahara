@@ -1,5 +1,5 @@
 {include file="header.tpl"}
-    {if !$noedit}
+    {if !$noaddcopy || !noedit} {* PCNZ Customisation  WR 349181*}
     <div class="btn-top-right btn-group btn-group-top {if $GROUP} pagetabs{/if}">
         <button id="addview-button" class="btn btn-secondary" type="button" data-target="{$WWWROOT}view/editlayout.php?new=1{$urlparamsstr}" >
             <span class="icon icon-plus left" role="presentation" aria-hidden="true" ></span>

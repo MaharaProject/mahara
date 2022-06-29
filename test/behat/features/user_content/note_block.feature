@@ -5,7 +5,11 @@ Feature: Adding a Note to a page
     I need to be able to add a Note block to my portfolio
 
 Background:
-Given the following "users" exist:
+Given the following "institutions" exist:
+    | name | displayname | registerallowed | registerconfirm |
+    | pcnz | Institution One | ON | OFF |
+
+And the following "users" exist:
     | username | password | email | firstname | lastname | institution | authname | role |
     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
 

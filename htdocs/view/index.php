@@ -52,7 +52,7 @@ $institutionname = param_alphanum('institution', false);
 
 $smarty = smarty(array('paginator', 'js/jquery/jquery-ui/js/jquery-ui.min.js'));
 setpageicon($smarty, 'icon-regular icon-file-alt');
-$smarty->assign('noedit', true); // PCNZ customisation: WR349181
+$smarty->assign('noaddcopy', true); // PCNZ customisation: WR349181
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('views', $data->data);
 $smarty->assign('sitetemplate', View::SITE_TEMPLATE);
