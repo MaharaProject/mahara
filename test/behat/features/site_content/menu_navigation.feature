@@ -97,8 +97,8 @@ Scenario: Checking menu items are available as site admin (Bug 1467368)
  And I should see "Site staff" in the "Users sub-menu" "Nav" property
  And I should see "Site administrators" in the "Users sub-menu" "Nav" property
  And I should see "Export queue" in the "Users sub-menu" "Nav" property
- And I should see "Add a person" in the "Users sub-menu" "Nav" property
- And I should see "Add people by CSV" in the "Users sub-menu" "Nav" property
+ And I should see "Add an account" in the "Users sub-menu" "Nav" property
+ And I should see "Add or update accounts by CSV" in the "Users sub-menu" "Nav" property
  # Checking the sub navigation in Groups
  When I press "Groups" in the "Administration menu" "Nav" property
  Then I should see "Administer groups" in the "Admin Groups sub-menu" "Nav" property
@@ -154,8 +154,8 @@ Scenario: Checking menu items are available as Institution Administrator (Bug 14
  And I should see "People search" in the "Users sub-menu" "Nav" property
  And I should see "Suspended and expired accounts" in the "Users sub-menu" "Nav" property
  And I should see "Export queue" in the "Users sub-menu" "Nav" property
- And I should see "Add a person" in the "Users sub-menu" "Nav" property
- And I should see "Add people by CSV" in the "Users sub-menu" "Nav" property
+ And I should see "Add an account" in the "Users sub-menu" "Nav" property
+ And I should see "Add or update accounts by CSV" in the "Users sub-menu" "Nav" property
  # Checking the sub navigation in Groups
  And I press "Groups" in the "Administration menu" "Nav" property
  Then I should not see "Administer groups" in the "Admin Groups sub-menu" "Nav" property

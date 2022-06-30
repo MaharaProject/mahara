@@ -14,7 +14,7 @@ Scenario: Creating an institution assigning members and changing their passwords
     | Institution name   | Institution One  |
     And I press "Submit"
     # Creating account 1
-    And I choose "Add a person" in "People" from administration menu
+    And I choose "Add an account" in "People" from administration menu
     And I fill in the following:
     | firstname   | bob  |
     | lastname    | bobby    |
@@ -26,7 +26,7 @@ Scenario: Creating an institution assigning members and changing their passwords
     And I scroll to the base of id "adduser_submit"
     And I press "Create account"
     # Creating account 2
-    And I choose "Add a person" in "People" from administration menu
+    And I choose "Add an account" in "People" from administration menu
     And I fill in the following:
     | firstname   | Jen  |
     | lastname    | Jenny    |

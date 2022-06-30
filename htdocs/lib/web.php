@@ -2437,13 +2437,13 @@ function admin_nav() {
         'configusers/adduser' => array(
             'path'   => 'configusers/adduser',
             'url'    => 'admin/users/add.php',
-            'title'  => get_string('adduser', 'admin'),
+            'title'  => get_string('addaccount', 'admin'),
             'weight' => 40,
         ),
         'configusers/uploadcsv' => array(
             'path'   => 'configusers/uploadcsv',
             'url'    => 'admin/users/uploadcsv.php',
-            'title'  => get_string('uploadcsv', 'admin'),
+            'title'  => get_string('uploadcsv1', 'admin'),
             'weight' => 50,
         ),
         'managegroups' => array(
@@ -2739,13 +2739,13 @@ function institutional_admin_nav() {
         'configusers/adduser' => array(
             'path'   => 'configusers/adduser',
             'url'    => 'admin/users/add.php',
-            'title'  => get_string('adduser', 'admin'),
+            'title'  => get_string('addaccount', 'admin'),
             'weight' => 30,
         ),
         'configusers/uploadcsv' => array(
             'path'   => 'configusers/uploadcsv',
             'url'    => 'admin/users/uploadcsv.php',
-            'title'  => get_string('uploadcsv', 'admin'),
+            'title'  => get_string('uploadcsv1', 'admin'),
             'weight' => 40,
         ),
         'managegroups' => array(

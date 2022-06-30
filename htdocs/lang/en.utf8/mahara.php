@@ -1456,3 +1456,48 @@ $string['institutionmembershipdescription'] = 'You can see your institution memb
 $string['institutionmembershiprequestsdescription'] = 'You have requested to join the following institutions.';
 $string['institutionmembershipinvitedescription'] = 'An administrator has invited you to join the following institutions.';
 $string['institutionmembershipjoindescription'] = 'You can send a request to join an institution. The "Institution ID" field is for setting the student ID for this institution.';
+
+// Account updating via CSV upload
+$string['accountupdated'] = '%s: Account updated';
+$string['accountupdatedheading'] = 'Dear %s,
+
+Your account has been updated on %s. Your username may have changed in the process. It is:
+
+%s
+';
+$string['accountupdatedheadinghtml'] = '<p>Dear %s,</p>
+<p>Your account has been updated on %s. Your username may have changed in the process. It is:</p>
+
+<p>%s </p>
+';
+$string['accountupdatednewinstitution'] = '
+You have been added to the institution %s.
+';
+$string['accountupdatednewinstitutionhtml'] = '
+<p>You have been <strong>added</strong> to the institution %s.</p>
+';
+$string['accountupdatedremovedinstitutions'] = '
+You have been removed from the following institution(s): %s
+';
+$string['accountupdatedremovedinstitutionshtml'] = '
+<p>You have been <strong>removed</strong> from the following institution(s): <br /> %s</p>
+';
+$string['accountupdatedpasswordreset'] = '
+Please change your password using the following link:
+
+%s
+
+Note: This link will expire in one day at %s.
+';
+$string['accountupdatedpasswordresethtml'] = '
+<p>Please <a href="%s">change your password</a>.</p>
+
+<p><strong>Note</strong>: This link will expire in one day at %s.</p>
+';
+$string['accountupdateresetpasslink'] = '%sforgotpass.php?key=%s';
+$string['accountupdatefooter'] = '
+Regards,
+%s administrator';
+$string['accountupdatefooterhtml'] = '
+<p>Regards,<br />
+%s administrator</p>';

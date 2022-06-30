@@ -38,7 +38,7 @@ if (count($authinstances) > 0) {
     $authinstanceelement = array(
         'type' => 'select',
         'title' => get_string('institution'),
-        'description' => get_string('uploadcsvinstitution', 'admin'),
+        'description' => get_string('uploadcsvinstitution1', 'admin'),
         'options' => $options,
         'defaultvalue' => $default
     );
@@ -59,8 +59,8 @@ $form = array(
         ),
         'emailusers' => array(
             'type' => 'switchbox',
-            'title' => get_string('emailusersaboutnewaccount', 'admin'),
-            'description' => get_string('emailusersaboutnewaccountdescription', 'admin'),
+            'title' => get_string('emailusersaboutnewaccount1', 'admin'),
+            'description' => get_string('emailimportedusersaboutnewaccountdescription', 'admin'),
             'defaultvalue' => true,
         ),
         'progress_meter_token' => array(
