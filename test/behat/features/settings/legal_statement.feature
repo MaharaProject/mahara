@@ -30,15 +30,18 @@ Scenario: Admin user log in and confirm Legal templates are correct for
     And I should see "1.0" in the "System User" row
     And I wait "1" seconds
     And I should see "Page saved"
-    When I click on "Terms and conditions"
+    # PCNZ customisation: Now that 'Terms and conditions is the heading, a custom entry into the
+    # properties.php file is added to point only to the link'
+    When I click on the "Terms and conditions tab" "Legal" property
     # Terms and conditions statements in logged out page should show latest version (Bug 1797812)
     And I click on the "Terms and conditions Edit icon" "Legal" property
     And I fill in "Version" with "V2.0"
-    And I fill in "V 2.0 terms and conditions for the site" in first editor
+    And I fill in "V 2.0 terms and conditions for the site" in first editor
     And I press "Save changes"
     Then I should see "V2.0" in the "Admin Account" row
     And I should see "1.0" in the "System User" row
     And I should see "Page saved"
-    When I click on "Legal" in the "Footer" "Footer" property
+    # PCNZ customisation: 'Legal' -> 'Terms and conditions'
+    When I click on "Terms and conditions" in the "Footer" "Footer" property
     And I should see "V 2.0 terms and conditions for the site"
     Then I should see "V 2.0 privacy statement for the site"

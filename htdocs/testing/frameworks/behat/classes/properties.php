@@ -160,6 +160,8 @@ define('LEGAL', array(
     'Second Legal' => "//a[contains(@href, 'fs=termsandconditions')]/strong",
     'Terms and conditions Edit icon' => '#termsandconditions .btn-secondary',
     'Privacy statement Edit icon' => '#privacy .btn-group',
+    # PCNZ customisation: need a specific property as the page heading is now T&C as well
+    'Terms and conditions tab' => "a[href|='#termsandconditions']",
 ));
 
 define('MODAL', array(
@@ -224,7 +226,8 @@ define('PROFILE', array(
     'Country mandatory field' => "//div[@id='pluginconfig_mandatory_container']/div[@class='checkboxes-option checkbox']/label[contains(text(),'Country')]",
     'Import First name' => '#profilefield-profile #profile-profile:nth-of-type(1)',
     'Import Last name' => '#profilefield-profile #profile-profile:nth-of-type(2)',
-    'Import Student ID' => '#profilefield-profile #profile-profile:nth-of-type(3)',
+    # PCNZ customisation: 'Student ID' -> 'Registration number'
+    'Import Registration number' => '#profilefield-profile #profile-profile:nth-of-type(3)',
     'Import Email address' => '#profilefield-contact #profile-contact:nth-of-type(1)',
 ));
 
