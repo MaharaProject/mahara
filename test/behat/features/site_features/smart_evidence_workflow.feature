@@ -1,4 +1,4 @@
-@javascript @core @core_portfolio @dory
+@javascript @core @core_portfolio
 Feature: Smart evidence work flow from Institution member submitting to Institution staff making
     and adding comments to collection submission.
 
@@ -80,12 +80,13 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
     And I select "Person" from "accesslist[0][searchtype]"
     And I select "Bob User" from select2 nested search box in row number "1"
     And I press "Save"
-    ## End customisation
+    Then I choose "Pages and collections" in "Create" from main menu
     # Verify author is on correct page
     And I should see "Smart Evidence Collection 1"
 
     # Mahara member must make comment on a competencies before it can be accessed by admin/staff
     When I follow "Smart Evidence Collection 1"
+
     # click the standard group 3.1 to make an annotation for page 1 column
     And I click on the matrix point "3,22"
     And I fill in "First annotation description" in first editor
