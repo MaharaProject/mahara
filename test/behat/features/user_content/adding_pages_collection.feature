@@ -64,8 +64,8 @@ Scenario: Creating a collection AND adding pages
     #And I press "Save"
     ## End customisation
     And I choose "Pages and collections" in "Create" from main menu
-    And I press "Add"
-    And I click on "Page" in the dialog
+    # PCNZ customisation - 'Add' button is hidden
+    Then I go to "/view/editlayout.php?new=1"
     And I set the following fields to these values:
     | Page title | New page |
     | Page description | testing |

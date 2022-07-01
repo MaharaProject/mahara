@@ -11,6 +11,10 @@ Given the following "users" exist:
     | UserB | Kupuh1pa! | UserB@example.org | Bob | User | mahara | internal | member |
     | UserC | Kupuh1pa! | UserC@example.org | Cecilia | User |mahara | internal | member |
 
+    And the following "institutions" exist:
+ 	| name | displayname | registerallowed | registerconfirm |
+ 	| pcnz | Institution One | ON | OFF |
+
     And the following "pages" exist:
     | title | description | ownertype | ownername |
     | Page UserC_01 | Page 01| user | UserC |
@@ -23,12 +27,12 @@ Given the following "users" exist:
     | group  | title           | description                            | creator | config |
     | GroupA | Group A's forum | Talking about things this group can do | UserA   | indentmode=full_indent, autosubscribe=1 |
 
-    And the following "forumposts" exist:
+    And the following "forumposts" exist
     | group  | forum           | user  | topic                | subject | message                                                 | attachments |
     | GroupA | Group A's forum | UserA | Taking photos of cats|         | The difficulty of cat photography is often underrated.  | Image2.png, mahara_about.pdf, Image3.png |
     | GroupA | Group A's forum | UserB | Taking photos of cats|         | I don't know Angela, I just use my phone to photograph my cat, and I've got some pretty good ones! ||
     | GroupA | Group A's forum | UserA |Taking photos of cats |         |The difficulty of cat photography is often underrated. You need a fast lens to accurately capture the speed and agility of the cat.||
-    | GroupA | Group A's forum | UserA |Taking photos of Dogs |         |The difficulty of Dog photography is often underrated. You need a fast lens to accurately capture the speed and agility of the Dog.|| 
+    | GroupA | Group A's forum | UserA |Taking photos of Dogs |         |The difficulty of Dog photography is often underrated. You need a fast lens to accurately capture the speed and agility of the Dog.||
     | GroupA | Group A's forum | UserA |Taking photos of Cows |         |The difficulty of Cows photography is often underrated. You need a fast lens to accurately capture the speed and agility of the Cows.||
     And the following "blocks" exist:
     | title              | type            | page          |retractable | data |

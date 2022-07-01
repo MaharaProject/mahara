@@ -5,8 +5,11 @@ I want to add portfolio page note content using an existing note
 So that I can easily keep my portfolio pages up to date
 
 Background:
+Given the following "institutions" exist:
+    | name | displayname | registerallowed | registerconfirm |
+    | pcnz | Institution One | ON | OFF |
 
-Given the following "users" exist:
+And the following "users" exist:
   | username | password | email | firstname | lastname | institution | authname | role |
   | UserA | Kupuh1pa! | UserA@example.com | Angela | User | mahara | internal | member |
 And the following "pages" exist:

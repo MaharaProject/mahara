@@ -5,7 +5,11 @@ Feature: Creating a page with stuff in it
    So I can create a page and add content to it
 
 Background:
-    Given the following "users" exist:
+    Given the following "institutions" exist:
+    | name | displayname | registerallowed | registerconfirm |
+    | pcnz | Institution One | ON | OFF |
+
+    And the following "users" exist:
     | username | password  | email             | firstname | lastname | institution | authname | role   |
     | UserA    | Kupuh1pa! | UserA@example.org | Angela    | User     | mahara      | internal | member |
 
@@ -20,10 +24,9 @@ Scenario: Creating a page with content in it (Bug 1426983)
     # Navigating to Portfolio to create a page
     # This is the test for manually creating a page
     And I choose "Pages and collections" in "Create" from main menu
-    And I scroll to the base of id "addview-button"
     And I should see "Pages and collections" in the "H1 heading" "Common" property
-    And I press "Add"
-    And I click on "Page" in the dialog
+    # PCNZ customisation: 'Add' button is hidden
+    Then I go to "/view/editlayout.php?new=1"
     And I fill in the following:
     | Page title       | Test view         |
     | Page description | First description |
@@ -81,27 +84,29 @@ Scenario: Creating a page with content in it (Bug 1426983)
     Then I should see "Print"
     And I should see "Delete this page"
     # User share page with public and enable copy page functionality
-    And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Manage access" in "This is the edited page title" card access menu
-    And I press "Advanced options"
-    And I enable the switch "Allow copying"
-    And I select "Public" from "General" in shared with select2 box
-    And I press "Save"
+    # PCNZ customisation - advanced sharing is disabled
+    # And I choose "Pages and collections" in "Create" from main menu
+    # And I click on "Manage access" in "This is the edited page title" card access menu
+    # And I press "Advanced options"
+    # And I enable the switch "Allow copying"
+    # And I select "Public" from "General" in shared with select2 box
+    # And I press "Save"
     And I log out
 
     # Log in as UserA and copy the page
-    Given I log in as "UserA" with password "Kupuh1pa!"
-    And I wait "1" seconds
-    Then I should see "This is the edited page title"
-    When I follow "This is the edited page title"
-    And I press "More options"
-    And I follow "Copy"
-    And I fill in the following:
-    | Page title | This is my page now |
-    And I press "Save"
-    And I press "Display page"
-    And I should not see "This is the edited description"
-    And I log out
+    # PCNZ customisation - advanced sharing is disabled
+    # Given I log in as "UserA" with password "Kupuh1pa!"
+    # And I wait "1" seconds
+    # Then I should see "This is the edited page title"
+    # When I follow "This is the edited page title"
+    # And I press "More options"
+    # And I follow "Copy"
+    # And I fill in the following:
+    # | Page title | This is my page now |
+    # And I press "Save"
+    # And I press "Display page"
+    # And I should not see "This is the edited description"
+    # And I log out
 
     # check page can be deleted (Bug 1755682)
     Given I log in as "admin" with password "Kupuh1pa!"

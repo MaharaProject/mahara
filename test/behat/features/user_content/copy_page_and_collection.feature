@@ -6,23 +6,28 @@ I need to be able to click on the links
 
 Background:
   Given the following "pages" exist:
-     | title | description | ownertype | ownername | tags |
-     | Page admin_01 | Page 01 | admin | admin | page,one |
-     | Page admin_02 | Page 02 | admin | admin | page,two |
-     | Page admin_03 | Page 03 | admin | admin | page,three |
+    | title | description | ownertype | ownername | tags |
+    | Page admin_01 | Page 01 | admin | admin | page,one |
+    | Page admin_02 | Page 02 | admin | admin | page,two |
+    | Page admin_03 | Page 03 | admin | admin | page,three |
+
+   And the following "institutions" exist:
+ 	  | name | displayname | registerallowed | registerconfirm |
+ 	  | pcnz | Institution One | ON | OFF |
 
   Given the following "collections" exist:
-     | title | description | ownertype | ownername | pages |
-     | Collection admin_01 | Collection 01 | user | admin | Page admin_01, Page admin_03 |
+    | title | description | ownertype | ownername | pages |
+    | Collection admin_01 | Collection 01 | user | admin | Page admin_01, Page admin_03 |
 
 Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361450)
   Given I log in as "admin" with password "Kupuh1pa!"
   And I choose "Pages and collections" in "Create" from main menu
-  And I press "Copy"
+  # PCNZ customisation: The 'Copy' button is hidden
+  Then I go to "/view/choosetemplate.php?searchcollection=1"
   And I follow "Collection admin_01"
   And I should see "Collection admin_01 by admin"
   And I press "Close"
-  Then I should not see "Collection admin_01 by admin"
+  Then I should not see "Collection admin_01 by
 
   # Add a block to the page
   When I choose "Pages and collections" in "Create" from main menu
@@ -46,7 +51,8 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
 
   # Copy a page
   And I choose "Pages and collections" in "Create" from main menu
-  And I press "Copy"
+  # PCNZ customisation - 'Copy' button is hidden
+  And I go to "/view/choosetemplate.php?searchcollection=1"
   And I click on "Copy page" in "Page admin_02" row
   And I press "Save"
   And I should see "Here is a new block."
@@ -70,7 +76,8 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
 
   # Copy a collection
   And I choose "Pages and collections" in "Create" from main menu
-  And I press "Copy"
+  # PCNZ cusotmisaiton: "Copy' button is hidden
+  Then I go to "/view/choosetemplate.php?searchcollection=1"
   And I click on "Copy collection" in "Collection admin_01" row
   And I press "Next: Edit collection pages"
   And I press "Next: Edit access"

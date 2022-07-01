@@ -5,13 +5,17 @@ Feature: Add block with files for download
     To make my files available for download
 
 Background:
-    Given the following "users" exist:
-     | username | password | email | firstname | lastname | institution | authname | role |
-     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
+    Given the following "institutions" exist:
+    | name | displayname | registerallowed | registerconfirm |
+    | pcnz | Institution One | ON | OFF |
 
-     And the following "pages" exist:
-     | title | description | ownertype | ownername |
-     | Page UserA_01 | Page 01| user | UserA |
+    And the following "users" exist:
+    | username | password | email | firstname | lastname | institution | authname | role |
+    | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | member |
+
+    And the following "pages" exist:
+    | title | description | ownertype | ownername |
+    | Page UserA_01 | Page 01| user | UserA |
 
 Scenario: Add Files to download block
     Given I log in as "UserA" with password "Kupuh1pa!"

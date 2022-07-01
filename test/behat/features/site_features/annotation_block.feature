@@ -5,7 +5,11 @@ Feature: Annotation block is off by default
  So I can annotate people's work
 
 Background:
- Given the following "pages" exist:
+ Given the following "institutions" exist:
+    | name | displayname | registerallowed | registerconfirm |
+    | pcnz | Institution One | ON | OFF |
+
+ And the following "pages" exist:
   | title | description | ownertype | ownername |
   | Page admin_01 | Page 01 | admin | admin |
 

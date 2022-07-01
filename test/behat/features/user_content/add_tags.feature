@@ -5,7 +5,11 @@ As an UserA I need to be able to go Content
 So I can create a file and tag
 
 Background:
-  Given the following "users" exist:
+  Given the following "institutions" exist:
+    | name | displayname | registerallowed | registerconfirm |
+    | pcnz | Institution One | ON | OFF |
+
+  And the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
      | UserA | Kupuh1pa! | test01@example.com | Angela | User | mahara | internal | member |
      | UserB | Kupuh1pa! | test02@example.com | Albert | User | mahara | internal | member |
@@ -142,9 +146,8 @@ Background:
 
    # Create Portfolio page via tags = blue
    Given I choose "Pages and collections" in "Create" from main menu
-   And I scroll to the base of id "addview-button"
-   And I press "Add"
-   And I click on "Page" in the dialog
+   # PCNZ customisation - 'Add' button is hidden
+   Then I go to "/view/editlayout.php?new=1"
    And I fill in the following:
    | Page title | Create portfolio via tags feature |
    And I fill in "Create portfolio via tags feature description" in first editor
