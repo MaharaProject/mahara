@@ -29,43 +29,44 @@ Background:
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "People" in "Engage" from main menu
     When I click on "Send contact request" in "Bob UserB" row
-    Then I should see "Send Bob UserB a contact request"
-    When I fill in "Would you like to be my contact?" for "Message"
-    And I press "Request contact"
-    Then I should see "Sent a contact request to Bob UserB"
-    When I click on "Send contact request" in "Cecilia UserC" row
-    Then I should see "Send Cecilia UserC a contact request"
-    When I fill in "Would you like to be my contact Cecilia?" for "Message"
-    And I press "Request contact"
-    Then I should see "Sent a contact request to Cecilia UserC"
-    When I select "Everyone" from "Filter"
-    And I press "Search"
-    And I click on "Send contact request" in "Dave UserD" row
-    Then I should see "Send Dave UserD a contact request"
-    When I fill in "Would you like to be my contact Dave?" for "Message"
-    And I press "Request contact"
-    Then I should see "Sent a contact request to Dave UserD"
+    # PCNZ customisation - accounts cannot become contacts
+    Then I should see "You cannot become a contact with this person"
+    # When I fill in "Would you like to be my contact?" for "Message"
+    # And I press "Request contact"
+    # Then I should see "Sent a contact request to Bob UserB"
+    # When I click on "Send contact request" in "Cecilia UserC" row
+    # Then I should see "Send Cecilia UserC a contact request"
+    # When I fill in "Would you like to be my contact Cecilia?" for "Message"
+    # And I press "Request contact"
+    # Then I should see "Sent a contact request to Cecilia UserC"
+    # When I select "Everyone" from "Filter"
+    # And I press "Search"
+    # And I click on "Send contact request" in "Dave UserD" row
+    # Then I should see "Send Dave UserD a contact request"
+    # When I fill in "Would you like to be my contact Dave?" for "Message"
+    # And I press "Request contact"
+    # Then I should see "Sent a contact request to Dave UserD"
     And I log out
 
     # User B accepts the contact request
-    Given I log in as "UserB" with password "Kupuh1pa!"
-    When  I follow "pending contact"
-    Then I should see "Angela UserA (UserA)"
-    When I press "Approve"
-    Then I should see "Accepted contact request"
-    And I log out
-    Given I log in as "UserC" with password "Kupuh1pa!"
-    When  I follow "pending contact"
-    Then I should see "Angela UserA (UserA)"
-    When I press "Approve"
-    Then I should see "Accepted contact request"
-    And I log out
-    Given I log in as "UserD" with password "Kupuh1pa!"
-    When  I follow "pending contact"
-    Then I should see "Angela UserA (UserA)"
-    When I press "Approve"
-    Then I should see "Accepted contact request"
-    And I log out
+    # Given I log in as "UserB" with password "Kupuh1pa!"
+    # When  I follow "pending contact"
+    # Then I should see "Angela UserA (UserA)"
+    # When I press "Approve"
+    # Then I should see "Accepted contact request"
+    # And I log out
+    # Given I log in as "UserC" with password "Kupuh1pa!"
+    # When  I follow "pending contact"
+    # Then I should see "Angela UserA (UserA)"
+    # When I press "Approve"
+    # Then I should see "Accepted contact request"
+    # And I log out
+    # Given I log in as "UserD" with password "Kupuh1pa!"
+    # When  I follow "pending contact"
+    # Then I should see "Angela UserA (UserA)"
+    # When I press "Approve"
+    # Then I should see "Accepted contact request"
+    # And I log out
 
 Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
     Given I log in as "admin" with password "Kupuh1pa!"
@@ -119,26 +120,29 @@ Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
     And I wait "1" seconds
     When I click on "Join this group" in "The Avengers" row
     Then I should see "You are now a group member."
-    When I press "Recommend to friends"
-    Then I should see "Bob UserB"
-    And I should see "Cecilia UserC"
-    And I should see "Dave UserD"
-    When I select "Bob UserB" from "Potential members"
-    And I press "rightarrow"
-    And I select "Cecilia UserC" from "Potential members"
-    And I press "rightarrow"
-    And I select "Dave UserD" from "Potential members"
-    And I press "rightarrow"
-    And I press "Submit"
-    Then I should see "3 recommendations sent"
+    # PCNZ customisation: 'friends' -> 'contacts' and this is not encouraged
+    # so there is difficulty in finding anyone to add.
+    # When I press "Recommend to contacts"
+    # And I insert breakpoint
+    # Then I should see "Bob UserB"
+    # And I should see "Cecilia UserC"
+    # And I should see "Dave UserD"
+    # When I select "Bob UserB" from "Potential members"
+    # And I press "rightarrow"
+    # And I select "Cecilia UserC" from "Potential members"
+    # And I press "rightarrow"
+    # And I select "Dave UserD" from "Potential members"
+    # And I press "rightarrow"
+    # And I press "Submit"
+    # Then I should see "3 recommendations sent"
     And I log out
     # Contact logs in and should see notification to join group
-    Given I log in as "UserB" with password "Kupuh1pa!"
-    And I wait "2" seconds
-    Then I should see "Angela UserA suggested you join a group"
-    When I follow "Angela UserA suggested you join a group"
-    Then I should see "Angela UserA suggested that you join the group \"The Avengers\" on Mahara - Acceptance test site"
-    When I go to group "The Avengers"
-    Then I should see "About | The Avengers"
-    When I press "Join this group"
-    Then I should see "You are now a group member."
+    # Given I log in as "UserB" with password "Kupuh1pa!"
+    # And I wait "2" seconds
+    # Then I should see "Angela UserA suggested you join a group"
+    # When I follow "Angela UserA suggested you join a group"
+    # Then I should see "Angela UserA suggested that you join the group \"The Avengers\" on Mahara - Acceptance test site"
+    # When I go to group "The Avengers"
+    # Then I should see "About | The Avengers"
+    # When I press "Join this group"
+    # Then I should see "You are now a group member."
