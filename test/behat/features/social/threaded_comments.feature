@@ -13,6 +13,10 @@ Background:
      | name | displayname | commentthreaded | allowinstitutionpublicviews |
      | instone | Institution One | 1 | 1 |
 
+    And the following "institutions" exist:
+    | name | displayname | registerallowed | registerconfirm |
+    | pcnz | Institution One | ON | OFF |
+
     Given the following "users" exist:
      | username | password | email | firstname | lastname | institution | authname | role |
      | AdminA | Kupuh1pa! | AdminA@example.org | Page | Owner | instone | internal | admin |

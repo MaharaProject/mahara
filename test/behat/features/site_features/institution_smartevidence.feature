@@ -9,6 +9,10 @@ Background:
     | UserA | Kupuh1pa! | UserA@example.org | Alice | User | mahara | internal | member |
     | UserB | Kupuh1pa! | UserB@example.org | Bob | User | mahara | internal | staff |
 
+    And the following "institutions" exist:
+ 	| name | displayname | registerallowed | registerconfirm |
+ 	| pcnz | Institution One | ON | OFF |
+
 And the following "pages" exist:
     | title | description | ownertype | ownername |
     | Page UserA_01 | Page 01 | user | UserA |
@@ -35,7 +39,9 @@ And the following "pages" exist:
     And I press "Upload matrix"
     # Enable Institutions to allow SmartEvidence
     And I choose "Settings" in "Institutions" from administration menu
-    And I press "Edit"
+    # PCNZ customisation: as we require pcnz auth instance, there are now two 'Edit' buttons
+    # so need to be explicit which one
+    And I press "Edit \"No Institution\""
     And I enable the switch "Allow SmartEvidence"
     And I press "Submit"
     Then I log out
@@ -44,8 +50,8 @@ Scenario: SmartEvidence interaction by member / staff
     # Creating a collection of existing pages
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I press "Add"
-    When I click on "Collection" in the dialog
+    # PCNZ customisation - 'Add' button is hidden
+    Then I go to "/collection/edit.php?new=1"
     And I fill in the following:
     | Collection name | Smart Evidence Collection 1 |
     | Collection description | Smart Evidence Collection 1 description |

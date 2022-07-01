@@ -9,7 +9,7 @@ Background:
     | name | displayname | registerallowed | registerconfirm |
     | pcnz | Institution One | ON | OFF |
 
-    Given the following "institutions" exist:
+    And the following "institutions" exist:
      | name | displayname | commentthreaded | allowinstitutionpublicviews |
      | instone | Institution One | 1 | 1 |
 
