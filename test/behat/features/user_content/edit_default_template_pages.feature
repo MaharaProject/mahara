@@ -27,9 +27,9 @@ Feature: Site admin includes special blocks for the "Profile" site template and 
     And I click on "Show more"
     And I wait "1" seconds
     And I should see "My portfolios" in the "Content types" "Blocks" property
-    And I should see "Pages I am watching" in the "Content types" property
-    And I click on "My contacts" in the "Content types" property
-    Then I should see "My contacts" in the "Page content" "Views" property
+    And I should see "Pages I am watching" in the "Content types" "Blocks" property
+    And I click on "My Contacts" in the "Content types" "Blocks" property
+    Then I should see "My Contacts" in the "Page content" "Views" property
     # add "My groups" block and verify it is displayed on the page
     When I click on the add block button
     And I press "Add"

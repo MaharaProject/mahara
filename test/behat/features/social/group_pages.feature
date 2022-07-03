@@ -50,7 +50,7 @@ Scenario: Copying a group page retains title (Bug 1519374)
  Then I go to "/view/choosetemplate.php?searchcollection=1"
  And I click on "Copy page" in "Page GroupA_01" row
  And the following fields match these values:
- | Page title | Page GroupA_01 v.2 |
+ | Page title | Page GroupA_01 v.2|
  Then I press "Save"
 
 Scenario: Group homepage basic settings and skins can't be edited ($cfg->skins must not be set) - Bug 1718806
