@@ -27,7 +27,7 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   And I follow "Collection admin_01"
   And I should see "Collection admin_01 by admin"
   And I press "Close"
-  Then I should not see "Collection admin_01 by
+  Then I should not see "Collection admin_01 by admin"
 
   # Add a block to the page
   When I choose "Pages and collections" in "Create" from main menu

@@ -84,13 +84,12 @@ Scenario: Creating a page with content in it (Bug 1426983)
     Then I should see "Print"
     And I should see "Delete this page"
     # User share page with public and enable copy page functionality
-    # PCNZ customisation - advanced sharing is disabled
-    # And I choose "Pages and collections" in "Create" from main menu
-    # And I click on "Manage access" in "This is the edited page title" card access menu
+    And I choose "Pages and collections" in "Create" from main menu
+    And I click on "Manage access" in "This is the edited page title" card access menu
     # And I press "Advanced options"
     # And I enable the switch "Allow copying"
-    # And I select "Public" from "General" in shared with select2 box
-    # And I press "Save"
+    And I select "Public" from "General" in shared with select2 box
+    And I press "Save"
     And I log out
 
     # Log in as UserA and copy the page

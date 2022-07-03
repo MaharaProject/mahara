@@ -123,7 +123,6 @@ Scenario: Turning on and off switches on Group Edit page (Bug 1431569)
     # PCNZ customisation: 'friends' -> 'contacts' and this is not encouraged
     # so there is difficulty in finding anyone to add.
     # When I press "Recommend to contacts"
-    # And I insert breakpoint
     # Then I should see "Bob UserB"
     # And I should see "Cecilia UserC"
     # And I should see "Dave UserD"

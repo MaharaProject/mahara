@@ -1,4 +1,4 @@
-@javascript @core @core_view @dorycron
+@javascript @core @core_view
 Feature: Unsubscribing from watchlist via link in email
 In order to unsubscribe from watchlist for page I am watching
 As a user

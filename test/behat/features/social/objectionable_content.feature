@@ -1,4 +1,4 @@
-@javascript @core @core_portfolio @dorycron
+@javascript @core @core_portfolio
 Feature: objectionable content functionality
 
 Background:

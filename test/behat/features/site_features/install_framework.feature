@@ -7,7 +7,11 @@ So I can benefit from the recording/marking of SmartEvidence in a
 Mahara institution
 
 Background:
-  Given the following "users" exist:
+  Given the following "institutions" exist:
+    | name | displayname | registerallowed | registerconfirm |
+    | pcnz | Institution One | ON | OFF |
+
+  And the following "users" exist:
     | username | password | email | firstname | lastname | institution | authname | role |
     | UserA | Kupuh1pa! | UserA@example.org | Angela | User | mahara | internal | admin |
 
@@ -70,7 +74,7 @@ Scenario: Installing framework module and activating for an institution
  And I choose "Pages and collections" in "Create" from main menu
  And I click the card "Collection admin_01"
  And I should see "You are on page 1/9"
- And I should see "by Admin Account (admin)"
+ And I should see "by Admin Account"
  And I press "Next" in the "matrix table" "Smartevidence" property
  Then I should see "Page admin_06"
  And I press "Prev" in the "matrix table" "Smartevidence" property

@@ -27,7 +27,7 @@ Given the following "users" exist:
     | group  | title           | description                            | creator | config |
     | GroupA | Group A's forum | Talking about things this group can do | UserA   | indentmode=full_indent, autosubscribe=1 |
 
-    And the following "forumposts" exist
+    And the following "forumposts" exist:
     | group  | forum           | user  | topic                | subject | message                                                 | attachments |
     | GroupA | Group A's forum | UserA | Taking photos of cats|         | The difficulty of cat photography is often underrated.  | Image2.png, mahara_about.pdf, Image3.png |
     | GroupA | Group A's forum | UserB | Taking photos of cats|         | I don't know Angela, I just use my phone to photograph my cat, and I've got some pretty good ones! ||

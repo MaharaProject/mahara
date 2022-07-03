@@ -37,11 +37,20 @@ Scenario: Copying a group page retains title (Bug 1519374)
 
  Given I log in as "UserB" with password "Kupuh1pa!"
  And I am on homepage
- When I follow "Page GroupA_01"
+ # PCNZ customisation: The 'Portfolios shared with me' has custom settings
+ # in this case, only 'me' is selected.
+ When I press "Edit dashboard"
+ Then I configure the block "Portfolios shared with me"
+ And I set the following fields to these values:
+| My groups | 1 |
+ When I press "Save"
+ And I follow "Page GroupA_01"
  And I press "More options"
  And I follow "Copy"
+ Then I go to "/view/choosetemplate.php?searchcollection=1"
+ And I click on "Copy page" in "Page GroupA_01" row
  And the following fields match these values:
- | Page title | Page GroupA_01 |
+ | Page title | Page GroupA_01 v.2 |
  Then I press "Save"
 
 Scenario: Group homepage basic settings and skins can't be edited ($cfg->skins must not be set) - Bug 1718806

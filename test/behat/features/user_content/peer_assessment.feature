@@ -1,10 +1,7 @@
-@javascript @core @blocktype @blocktype_peerassessment @blocktype_signoff @PCNZ
-
-# PCNZ customisation WR 349172: The sign-off block was renamed to 'Page completion', which is reflected in the scenarios below.
-
-Feature: Interacting with the peer assessment and Page completion blocks
+@javascript @core @blocktype @blocktype_peerassessment @blocktype_signoff
+Feature: Interacting with the peer assessment and signoff blocks
     As an author
-    I want to add a peer assessment and Page completion block to my page
+    I want to add a peer assessment and signoff block to my page
     So I can get peer assessment before signing off the page
     As a peer
     I want to add a peer assessment to the page
@@ -18,6 +15,10 @@ Background:
     | UserB | Kupuh1pa! | UserB@example.org | Bob     | User | mahara | internal | member |
     | UserC | Kupuh1pa! | UserC@example.org | Cecilia | User | mahara | internal | member |
     | UserD | Kupuh1pa! | UserD@example.org | Dmitri  | User | mahara | internal | member |
+
+    And the following "institutions" exist:
+ 	| name | displayname | registerallowed | registerconfirm |
+ 	| pcnz | Institution One | ON | OFF |
 
     And the following "pages" exist:
     | title | description | ownertype | ownername |
@@ -48,69 +49,63 @@ Background:
     | Page UserA_01 | user       | userC      | manager | 1                   |
     | Page UserA_02 | user       | userB      | peer    | 0                   |
     | Page UserA_02 | user       | userC      | manager | 1                   |
+    # PCNZ customisation: need to reorder these steps as the role 'peer' is no available, only 'verifier' so peer assessments
+# are not available without peers
+    | Page UserA_03 | user       | UserD      | peer    | 0                   |
 
     Given the following "collections" exist:
     | title | description| ownertype | ownername | pages |
     | Collection UserA_01 | Collection 01 | user | UserA | Page UserA_01, Page UserA_02 |
 
-    # PCNZ Customisation WR349172
-    # Add 'Page completion' block to Page UserA_00
+    # PCNZ customisation: sign-off -> page completion
+    # Add signoff block to Page UserA_00
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I go to portfolio page "Page UserA_00"
-    And I press on "Edit"
-    # Author adds 'Page completion' block
-    ## End customisation
-    # Author adds 'Page completion' block/sign off block
+    And I press "Edit"
+    # Author adds sign off block
     When I click on the add block button
     And I press "Add"
-    # PCNZ Customisation WR349172
     And I click on blocktype "Page completion"
-    ## End customisation
     And I enable the switch "Verify"
     And I press "Save"
     Then I should see "This block's content is displayed aligned to the right hand side. The block is best placed at top right of the page."
     And I wait "1" seconds
     And I press "Return to pages and collections"
     And I go to portfolio page "Page UserA_01"
-    And I press on "Edit"
-    # PCNZ Customisation WR349172
-    ## End customisation
-    # Author adds 'Page completion' block/sign off block
+    And I press "Edit"
+    # Author adds sign off block
     When I click on the add block button
     And I press "Add"
-    # PCNZ Customisation WR349172
     And I click on blocktype "Page completion"
-    ## End customisation
     And I enable the switch "Verify"
     And I press "Save"
     Then I should see "This block's content is displayed aligned to the right hand side. The block is best placed at top right of the page."
     And I wait "1" seconds
     And I press "Return to pages and collections"
-    # PCNZ Customisation WR349172
-    # Add peer assessment and 'Page completion'/signoff blocks to Page Page UserA_03
+    # Add peer assessment and signoff blocks to Page Page UserA_03
     Given I go to portfolio page "Page UserA_03"
-    And I press on "Edit"
-    # Author adds 'Page completion' block/sign off block
+    And I press "Edit"
+    # Author adds sign off block
     When I click on the add block button
     And I press "Add"
     And I click on blocktype "Page completion"
-    ## End customisation
     And I enable the switch "Verify"
     And I press "Save"
     Then I should see "This block's content is displayed aligned to the right hand side. The block is best placed at top right of the page."
-    And I wait "1" seconds
-    And I press "Return to pages and collections"
-    # share the page with people and give a role
-    When I choose "Shared by me" in "Share" from main menu
-    And I follow "Pages"
-    And I click on "Edit access" in "Page UserA_03" row
-    And I select "Person" from "accesslist[0][searchtype]"
-    And I select "Dmitri User" from select2 nested search box in row number "1"
-    And I select "Peer and manager" from "accesslist[0][role]"
-    And I press "Save"
+    # PCNZ customisation: the role 'peer' is not available to do peer assessments
+    # And I wait "1" seconds
+    # And I press "Return to pages and collections"
+    # # share the page with people and give a role
+    # When I choose "Shared by me" in "Share" from main menu
+    # And I follow "Pages"
+    # And I click on "Edit access" in "Page UserA_03" row
+    # And I select "Person" from "accesslist[0][searchtype]"
+    # And I select "Dmitri User" from select2 nested search box in row number "1"
+    # And I select "Verifier" from "accesslist[0][role]"
+    # And I press "Save"
     And I log out
 
-Scenario: Log in as UserB with role of Peer and Interact with a peer assessment / completion combo for a single page
+Scenario: Log in as UserB with role of Peer and Interact with a peer assessment / signoff combo for a single page
     # Add peer assessmentimage jpg
     Given I log in as "UserB" with password "Kupuh1pa!"
     And I go to portfolio page "Page UserA_00"
@@ -143,9 +138,7 @@ Scenario: Log in as UserB with role of Peer and Interact with a peer assessment 
     And I go to portfolio page "Page UserA_00"
     And I click on "Update page sign-off"
     And I click on "Yes" in the "Signoff page" "Peerassessment" property
-    # PCNZ Customisation WR349172
     Then I should see "Page completion status updated"
-    ## End customisation
     And I log out
 
     # Verify peer can't add any assessment after page is signed off
@@ -177,7 +170,7 @@ Scenario: Log in as UserB with role of Peer and Interact with a peer assessment 
     And I press "Publish"
     And I log out
 
-Scenario: Log in as UserB with the role of Peer and Interact with a peer assessment / page completion combo on a collection page that has no peer assessment block
+Scenario: Log in as UserB with the role of Peer and Interact with a peer assessment / signoff combo on a collection page that has no peer assessment block
     Given I log in as "UserB" with password "Kupuh1pa!"
     And I wait "1" seconds
     And I follow "Collection UserA_01"

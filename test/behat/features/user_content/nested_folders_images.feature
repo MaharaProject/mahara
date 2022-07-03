@@ -1,4 +1,4 @@
-@javascript @core @core_artefact @core_content @dot
+@javascript @core @core_artefact @core_content
 Feature: Creating folders and subfolders with images inside
    In order to organise my files
    As an user I need to create folders with other folders inside

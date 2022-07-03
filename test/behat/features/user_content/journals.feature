@@ -1,4 +1,4 @@
-@javascript @core @blocktype @blocktype_journals @dot
+@javascript @core @blocktype @blocktype_journals
 Feature: Add journal blocktypes to a page
     In order to make sure they appear on the page
     when added by a user
