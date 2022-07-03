@@ -157,18 +157,18 @@ Scenario: Log in as UserB with role of Peer and Interact with a peer assessment 
     And I log out
 
 # Log in as UserD with role of Peer and Manager verify they can see published content and make an assessment
-    Given I log in as "UserD" with password "Kupuh1pa!"
-    And I go to portfolio page "Page UserA_03"
-    And I should see "This is some text"
-    And I follow "Add peer assessment"
-    And I expand "Instructions" node
-    Then I should see "This is the custom peer assessment instructions"
-    And I set the field "Assessment" to "UserB first assessment - draft"
-    And I press "Save draft"
-    And I follow "Add peer assessment"
-    And I set the field "Assessment" to "UserD second assessment - published"
-    And I press "Publish"
-    And I log out
+    # Given I log in as "UserD" with password "Kupuh1pa!"
+    # And I go to portfolio page "Page UserA_03"
+    # And I should see "This is some text"
+    # And I follow "Add peer assessment"
+    # And I expand "Instructions" node
+    # Then I should see "This is the custom peer assessment instructions"
+    # And I set the field "Assessment" to "UserB first assessment - draft"
+    # And I press "Save draft"
+    # And I follow "Add peer assessment"
+    # And I set the field "Assessment" to "UserD second assessment - published"
+    # And I press "Publish"
+    # And I log out
 
 Scenario: Log in as UserB with the role of Peer and Interact with a peer assessment / signoff combo on a collection page that has no peer assessment block
     Given I log in as "UserB" with password "Kupuh1pa!"

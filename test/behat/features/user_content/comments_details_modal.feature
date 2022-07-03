@@ -29,7 +29,8 @@ Scenario: Create a block and see comments and details modal and headers update a
     And I press "Save"
     And I display the page
     And I click on "Details"
-    And I should see "Add comment" in the "Block header" "Blocks" property
+    # # PCNZ customisation: comments are not in the details view
+    # And I should see "Add comment" in the "Block header" "Blocks" property
     And I should see "Details" in the "Block header" "Blocks" property
     # Open the modal and see metadata details and add comment form
     When I follow "Add comment"

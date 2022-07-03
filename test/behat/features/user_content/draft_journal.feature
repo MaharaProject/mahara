@@ -69,7 +69,7 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
  Then I should see "My diary entry two"
  And I go to portfolio page "Page UserA_01"
  And I press "Edit"
- And I press "Share" in the "Toolbar buttons" property
+ And I press "Share" in the "Toolbar buttons" "Nav" property
  # PCNZ customisation WR349184
  And I select "Person" from "accesslist[0][searchtype]"
  And I select "Britta Briggs" from select2 nested search box in row number "1"
