@@ -418,17 +418,17 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
-    // # PCNZ customisation: already have this and go it early
-    // if ($oldversion < 2021040800) {
-    //     log_debug('Adding verifier role');
-    //     $roles = array('verifier' => 1);
-    //     foreach ($roles as $role => $state) {
-    //         $obj = new stdClass();
-    //         $obj->role              = $role;
-    //         $obj->see_block_content = $state;
-    //         insert_record('usr_access_roles', $obj);
-    //     }
-    // }
+    # PCNZ customisation: already have this and go it early
+    if ($oldversion < 2020092124) {
+        log_debug('Adding verifier role');
+        $roles = array('verifier' => 1);
+        foreach ($roles as $role => $state) {
+            $obj = new stdClass();
+            $obj->role              = $role;
+            $obj->see_block_content = $state;
+            insert_record('usr_access_roles', $obj);
+        }
+    }
 
     if ($oldversion < 2021040801) {
         log_debug('Add "lock" column to collection');
@@ -452,7 +452,7 @@ function xmldb_core_upgrade($oldversion=0) {
         }
         // Create default progress template
         set_field('usr', 'admin', 1, 'username', 'root');
-        install_system_progress_view();
+        //install_system_progress_view();
         set_field('usr', 'admin', 0, 'username', 'root');
         // Make sure any existing progress collections now get the 'progress' page
         if ($collections = get_records_sql_array("SELECT c.id FROM {collection} c
