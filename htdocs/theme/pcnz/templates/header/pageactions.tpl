@@ -37,7 +37,6 @@
                         <a id="copyview-button{if $headertype == "progresscompletion"}-progress{/if}" title="{str tag=copythisportfolio section=view}" href="{$copyurl}">
                     {/if}
                     <span class="icon icon-regular icon-copy left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=copy section=mahara}</span>
-                    {str tag=copy section=mahara}
                     </a>
                 </li>
             {/strip}{/if}
