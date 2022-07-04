@@ -418,16 +418,17 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
-    if ($oldversion < 2021040800) {
-        log_debug('Adding verifier role');
-        $roles = array('verifier' => 1);
-        foreach ($roles as $role => $state) {
-            $obj = new stdClass();
-            $obj->role              = $role;
-            $obj->see_block_content = $state;
-            insert_record('usr_access_roles', $obj);
-        }
-    }
+    // # PCNZ customisation: already have this and go it early
+    // if ($oldversion < 2021040800) {
+    //     log_debug('Adding verifier role');
+    //     $roles = array('verifier' => 1);
+    //     foreach ($roles as $role => $state) {
+    //         $obj = new stdClass();
+    //         $obj->role              = $role;
+    //         $obj->see_block_content = $state;
+    //         insert_record('usr_access_roles', $obj);
+    //     }
+    // }
 
     if ($oldversion < 2021040801) {
         log_debug('Add "lock" column to collection');
