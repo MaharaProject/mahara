@@ -530,6 +530,8 @@ $form-grid-gutter-width:                .625 !default;
 $form-group-margin-bottom:              1rem !default;
 $form-switch-padding-start:             0 !default;
 
+$form-select-indicator:                 url('../../raw/images/caret-down-solid.svg') !default;
+
 $input-group-addon-color:               $input-color !default;
 $input-group-addon-bg:                  $gray-200 !default;
 $input-group-addon-border-color:        $input-border-color !default;
@@ -839,6 +841,8 @@ $card-inner-border-radius:          calc(#{$card-border-radius} - #{$card-border
 $card-cap-bg:                       rgba($black, .03) !default;
 $card-cap-color:                    inherit !default;
 $card-bg:                           $white !default;
+$card-cap-padding-y:                $card-spacer-y !default;
+$card-cap-padding-x:                $card-spacer-x !default;
 
 $card-img-overlay-padding:          1.25rem !default;
 

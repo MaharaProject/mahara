@@ -11,11 +11,11 @@ body, p {
 
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
-  margin-bottom: $headings-margin-bottom !important;
-  font-family: $headings-font-family !important;
-  font-weight: $headings-font-weight !important;
-  line-height: $headings-line-height !important;
-  color: $headings-color !important;
+  margin-bottom: $headings-margin-bottom;
+  font-family: $headings-font-family;
+  font-weight: $headings-font-weight;
+  line-height: $headings-line-height;
+  color: $headings-color;
 }
 
 h1, .h1 { @include font-size($h1-font-size); }
@@ -366,17 +366,17 @@ pre {
 .viewinstructions,
 .bt-groupinfo {
   h1, h2, h3, h4, h5, h6  {
-    font-family: $font-family-base;
-    font-weight: $font-weight-bold;
-    color: $theme-text-color;
+    font-family: $font-family-base !important;
+    font-weight: $font-weight-bold !important;
+    color: $theme-text-color !important;
 
     /* but not some titles */
     &.list-group-item-heading,
     &.title,
     &.card-header {
-      font-family: $headings-font-family;
-      font-weight: $headings-font-weight;
-      color: $headings-color;
+      font-family: $headings-font-family !important;
+      font-weight: $headings-font-weight !important;
+      color: $headings-color !important;
     }
   }
 
@@ -451,4 +451,13 @@ a.verify_action,
 a.unsignoff_action,
 a.signoff_action {
     text-decoration: none;
+}
+
+// adding/removing members headings
+.userlisttable .h3 {
+    margin-bottom: $headings-margin-bottom !important;
+    font-family: $headings-font-family !important;
+    font-weight: $headings-font-weight !important;
+    line-height: $headings-line-height !important;
+    color: $headings-color !important;
 }

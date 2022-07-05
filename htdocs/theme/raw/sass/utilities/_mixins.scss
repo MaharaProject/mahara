@@ -1,3 +1,5 @@
+@use "sass:math";
+
 // visually-hidden (a workaround for including visually-hidden in media query)
 // Note: Maybe bootstrap will add this to their mixins in the future
 @mixin visually-hidden() {
@@ -98,4 +100,26 @@
   // WebKit
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
+}
+
+// styling rules from @mixin make-grid-columns() and make-col() from Bootstrap 4
+@mixin adjust-col($columns: $grid-columns, $breakpoints: $grid-breakpoints) {
+    position: relative;
+    max-width: 100%;
+    padding-right: math.div($grid-gutter-width, 2);
+    padding-left: math.div($grid-gutter-width, 2);
+
+    @include media-breakpoint-up(md) {
+        @each $breakpoint in map-keys($breakpoints) {
+            $infix: breakpoint-infix($breakpoint, $breakpoints);
+            @if $columns > 0 {
+                @for $i from 1 through $columns {
+                .col#{$infix}-#{$i} {
+                    flex: 0 0 percentage(math.div($i, $columns));
+                    max-width: percentage(math.div($i, $columns));
+                    }
+                }
+            }
+        }
+    }
 }

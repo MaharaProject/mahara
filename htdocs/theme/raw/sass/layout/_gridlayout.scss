@@ -1,3 +1,5 @@
+@use "sass:math";
+
 /*
   Gridstack layout CSS
 */
@@ -64,4 +66,9 @@
 // fixing the draggable arrow position
 .grid-stack > .grid-stack-item.ui-resizable > .ui-icon-gripsmall-diagonal-se {
   right: 12px;
+}
+
+// fixing the changes from Bootstrap 4 to 5
+[class*="col-"] {
+    @include adjust-col();
 }

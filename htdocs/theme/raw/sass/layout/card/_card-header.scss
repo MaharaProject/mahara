@@ -6,7 +6,7 @@
     color: $card-header-color;
     position: relative;
     display: block;
-    font-family: $font-family-base;
+    font-family: $font-family-base !important;
     font-weight: $font-weight-light;
 
     a,
@@ -107,7 +107,7 @@ h2,
 h3 {
     &.card-header {
         font-size: $font-size-base * 1.25; // 20px
-        margin: 0;
+        margin: 0 !important;
     }
 }
 

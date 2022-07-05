@@ -51,10 +51,10 @@
             }
 
             h2 {
-                margin: $spacing-base 0 !important; // 5px 0;
-                font-weight: $font-weight-bold !important;
-                color: $dashboard-widget-title-color !important;
-                line-height: 1 !important;
+                margin: $spacing-base 0; // 5px 0;
+                font-weight: $font-weight-bold;
+                color: $dashboard-widget-title-color;
+                line-height: 1;
             }
 
             p {

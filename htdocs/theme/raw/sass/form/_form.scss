@@ -31,7 +31,7 @@ select {
     @extend .form-control;
     .modal &,
     .singular & {
-        width: auto;
+        width: auto !important;
         max-width: 100%;
     }
 }
@@ -269,7 +269,7 @@ textarea {
     @include media-breakpoint-up(sm) {
         .form-control {
             display: inline-block;
-            width: auto;
+            width: auto !important;
             vertical-align: middle;
           }
     }

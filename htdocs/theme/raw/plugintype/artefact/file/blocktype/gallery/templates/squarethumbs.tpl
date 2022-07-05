@@ -1,7 +1,7 @@
 <div id="thumbnails{$instanceid}" class="card-body thumbnails js-masonry">
     {foreach from=$images item=image}
         <div {if $image.squaredimensions}style="width:{$image.squaredimensions}px;height:{$image.squaredimensions}px;"{/if} class="thumb">
-            <a {if $image.fancybox}class="gallery-popup" data-target="#gallerymodal" data-toggle="modal" data-link="{$image.link}" data-caption="{$image.description}"{/if} title="{$image.title}">
+            <a {if $image.fancybox}class="gallery-popup" data-bs-target="#gallerymodal" data-toggle="modal" data-link="{$image.link}" data-caption="{$image.description}"{/if} title="{$image.title}">
                 <img src="{$image.source}" alt="{$image.title}" title="{$image.title}" width="{$width}" height="{$width}"/>
             </a>
         {if $showdescription && $image.description}
@@ -25,7 +25,7 @@
             <div class="modal-header gallery">
                 <div class="modal-header-title"></div>
                 <div class="modal-title gallery">
-                    <button class="deletebutton btn-close gallery" data-dismiss="modal" aria-label="{str tag=Close}">
+                    <button class="deletebutton btn-close gallery" data-bs-dismiss="modal" aria-label="{str tag=Close}">
                         <span class="times">×</span>
                         <span class="visually-hidden">{str tag=Close}</span>
                     </button>

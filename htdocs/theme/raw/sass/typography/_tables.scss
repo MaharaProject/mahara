@@ -138,8 +138,8 @@ td.tiny {
             }
         }
         h2 {
-            font-weight: $font-weight-normal;
-            font-family: $font-family-base;
+            font-weight: $font-weight-normal !important;
+            font-family: $font-family-base !important;
             font-size: $font-size-lg;
             margin: 0;
         }

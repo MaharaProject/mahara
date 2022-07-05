@@ -1,3 +1,4 @@
+@use "sass:math";
 /* Custom css to go here to override what is supplied in the following files
 - htdocs/js/DataTables/datatables.min.css
 - htdocs/module/submissions/js/piertables.css
@@ -20,20 +21,27 @@ table.dataTable {
       &::before {
         font-family: "Font Awesome 6 Free Solid", "Font Awesome 6 Free";
         font-weight: 900;
-        content: "\f0d8";
-        top: 2px;
-        right: 4px;
+        font-size: $font-size-base !important;
+        line-height: $line-height-base !important;
+        content: "\f0d8" !important;
+        top: 2px !important;
+        right: 4px !important;
         text-decoration: none;
         color: $theme-text-midtone-color;
+        opacity: 0.3 !important;
       }
       &::after {
         font-family: "Font Awesome 6 Free Solid", "Font Awesome 6 Free";
         font-weight: 900;
-        content: "\f0d7";
-        right: 4px;
+        font-size: $font-size-base !important;
+        line-height: $line-height-base !important;
+        content: "\f0d7" !important;
+        right: 4px !important;
         text-decoration: none;
         color: $theme-text-midtone-color;
-        top: 10px;
+        top: 10px !important;
+        opacity: 0.3 !important;
+        bottom: 0.9em !important;
       }
     }
   }
@@ -117,9 +125,22 @@ div.dataTables_wrapper div.dataTables_paginate ul.pagination {
   }
 }
 
-// row color when selected
-table.dataTable tbody tr.selected {
+// override datatables row color when selected
+table.dataTable tbody tr.selected > * {
   background-color: $table-active-bg !important;
+  color: $theme-text-color !important;
+  box-shadow: inset 0 0 0 9999px var(--#{$variable-prefix}table-accent-bg) !important;
+}
+
+// override Bootstrap row color when selected
+.table-striped {
+  > tbody > tr:nth-of-type(#{$table-striped-order}) {
+    &.selected {
+      --#{$variable-prefix}table-accent-bg: var(--#{$variable-prefix}table-active-bg);
+      color: $theme-text-color !important;
+      box-shadow: inset 0 0 0 9999px var(--#{$variable-prefix}table-accent-bg) !important;
+    }
+}
 }
 
 // Display comment fields correctly
@@ -215,4 +236,15 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td.dtr-control::befor
 // override BS5 make-col-ready() function
 .dataTables_filter {
   width: auto;
+  padding: 0;
+}
+
+table.dataTable.table-striped>tbody>tr.odd>* {
+  box-shadow: inset 0 0 0 9999px var(--#{$variable-prefix}table-accent-bg);
+}
+
+.search-category {
+  width: auto;
+  padding: 0;
+  margin-top: 15px;
 }

@@ -29,9 +29,10 @@
     > .card-header, .card-header-nested {
         padding: $card-spacer-y math.div($card-spacer-x, 2) $card-spacer-y 0px;
         background: transparent;
-        font-family: $headings-font-family;
+        font-family: $headings-font-family !important;
         font-size: $h3-font-size;
-        font-weight: $headings-font-weight;
+        color: $card-secondary-header-color !important;
+        font-weight: $headings-font-weight !important;
         border-bottom: $card-secondary-border-width solid $card-secondary-border-color;
         margin-top: 0;
 

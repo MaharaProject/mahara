@@ -45,7 +45,7 @@ if ($accesschanged = $SESSION->get('pageaccesschanged')) {
     $closestr = get_string('Close', 'mahara');
     $inlinejs = <<<EOF
 jQuery(function($) {
-    var message = $('<div id="changestatusline" class="alert alert-dismissible alert-warning" role="alert"><button type="button" class="btn-close" data-dismiss="alert" aria-label="$closestr"><span aria-hidden="true">&times;</span></button><p>$alertstr</p></div>');
+    var message = $('<div id="changestatusline" class="alert alert-dismissible alert-warning" role="alert"><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="$closestr"><span aria-hidden="true">&times;</span></button><p>$alertstr</p></div>');
     $('#messages').append(message);
 });
 EOF;

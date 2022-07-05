@@ -13,3 +13,7 @@ Changes:
 Changes for the tempusdominus version:
 -Added styles to datepicker.scss, converted to scss, and added variables
 -Added lines to fix error when using the clear button, this code should be merged with the release soon. See: https://github.com/tempusdominus/bootstrap-4/issues/34#issuecomment-448905186
+
+Changes for Bootstrap 5 compatibility:
+- data-toggle renamed to data-bs-toggle
+- data-target renamed to data-bs-target

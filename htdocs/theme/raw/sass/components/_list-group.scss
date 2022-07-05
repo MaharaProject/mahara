@@ -100,9 +100,9 @@
 }
 
 .card-secondary .list-group-item-heading {
-    font-family: $font-family-base;
+    font-family: $font-family-base !important;
     margin-top: 0;
-    margin-bottom: 0;
+    margin-bottom: 0 !important;
     font-size: $font-size-lg; // 18px
     font-weight: $font-weight-normal !important;
 }

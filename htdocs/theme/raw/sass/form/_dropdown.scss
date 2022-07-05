@@ -53,7 +53,7 @@
             margin: 0;
             cursor: pointer;
             top: 0;
-            width: 100%;
+            width: 100% !important;
             max-width: 100%;
             z-index: 5;
             &:disabled {

@@ -83,7 +83,7 @@ echo $form_tag;
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                   <div class="modal-header">
-                      <button class="deletebutton btn-close" name="action_removeblockinstance_id_80" data-dismiss="modal-docked" aria-label="<?php echo get_string('Close'); ?>">
+                      <button class="deletebutton btn-close" name="action_removeblockinstance_id_80" data-bs-dismiss="modal-docked" aria-label="<?php echo get_string('Close'); ?>">
                           <span class="times">&times;</span>
                           <span class="visually-hidden">Close</span>
                       </button>

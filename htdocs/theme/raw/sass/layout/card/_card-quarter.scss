@@ -35,8 +35,8 @@
         .card-header {
             background-color: transparent;
             border: none;
-            font-family: $font-family-base;
-            font-weight: $font-weight-base;
+            font-family: $font-family-base !important;
+            font-weight: $font-weight-base !important;
             a.title-link {
               padding: $spacing-sm $spacing-base;
               overflow: hidden;

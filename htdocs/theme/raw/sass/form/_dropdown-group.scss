@@ -19,7 +19,7 @@
         border-bottom: none;
         .form-control {
             max-width: none;
-            width: 12.5rem; // 200px;
+            width: 12.5rem !important; // 200px;
         }
     }
     .with-dropdown {
@@ -116,7 +116,7 @@
         }
         .dropdown-group .with-dropdown {
             @include media-breakpoint-up(md) {
-                width: 16.875rem; // 270px;
+                width: 16.875rem !important; // 270px;
             }
         }
     }

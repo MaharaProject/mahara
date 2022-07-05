@@ -215,7 +215,7 @@ $(function() {
             if (data.returnCode == '0') {
                 $('#placeholderlist').replaceWith(data.message.html);
                 if (data.message.message) {
-                    var okmessage = $('<div id="changestatusline" class="alert alert-dismissible alert-success" role="alert"><button type="button" class="btn-close" data-dismiss="alert" aria-label="' + get_string('Close') + '"><span aria-hidden="true">&times;</span></button><p>' + data.message.message + '</p></div>');
+                    var okmessage = $('<div id="changestatusline" class="alert alert-dismissible alert-success" role="alert"><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="' + get_string('Close') + '"><span aria-hidden="true">&times;</span></button><p>' + data.message.message + '</p></div>');
                     $('#messages').empty().append(okmessage);
                 }
                 wiresortables();
