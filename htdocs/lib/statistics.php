@@ -270,9 +270,10 @@ function institution_data_verifier_current($institution) {
     $current = institution_data_current($institution);
 
     // How many portfolios are currently for the current rollover year
+    // PCNZ customisation
     $data['verifierportfolios'] = count_records_sql("SELECT COUNT(*) AS count FROM {collection_template} ct
                                                      JOIN {collection} c ON c.id = ct.collection
-                                                     WHERE ct.rolloverdate IS NULL // PCNZ customisation
+                                                     WHERE ct.rolloverdate IS NULL
                                                      AND c.owner IN (" . $current['memberssql'] . ")", $current['memberssqlparams']);
 
     // How many of those collections currently have a verifier assigned
