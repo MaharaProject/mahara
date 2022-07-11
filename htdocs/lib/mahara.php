@@ -3240,7 +3240,7 @@ function can_view_view($view, $user_id=null) {
 
     // PCNZ customisation
     // If the page has been marked "undo verification" then people that can action this should be able to view
-    if ($results = get_records_sql_array("SELECT * FROM {pcnz_verification_undo} WHERE view = ? AND usr = ?", array($view->get('id'), $user_id))) {
+    if ($results = get_records_sql_array("SELECT * FROM {blocktype_verification_undo} WHERE view = ? AND usr = ?", array($view->get('id'), $user_id))) {
         return true;
     }
 

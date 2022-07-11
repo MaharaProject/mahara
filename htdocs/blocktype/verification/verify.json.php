@@ -95,7 +95,7 @@ else {
     unset($config['verifieddate']);
     unset($config['verifierid']);
     // PCNZ customisation
-    if ($undo = get_record_sql("SELECT * FROM {pcnz_verification_undo} WHERE block = ? LIMIT 1", array($block->get('id')))) {
+    if ($undo = get_record_sql("SELECT * FROM {blocktype_verification_undo} WHERE block = ? LIMIT 1", array($block->get('id')))) {
         $goto = get_config('wwwroot') . 'collection/progresscompletion.php?id=' . $view->get_collection()->get('id');
         $users = array($view->get('owner'), $undo->reporter);
         $message = (object) array(
@@ -106,7 +106,7 @@ else {
                                     'urltext' => $view->get_collection()->get('name'),
              );
         activity_occurred('maharamessage', $message);
-        delete_records('pcnz_verification_undo', 'block', $block->get('id'));
+        delete_records('blocktype_verification_undo', 'block', $block->get('id'));
     }
 
     $verifiedon = '';

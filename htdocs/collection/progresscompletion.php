@@ -374,7 +374,7 @@ function undo_verification_form_submit(Pieform $form, $values) {
     $users = array_keys(array_flip($users));
     // Save these user ids so we know who is allowed to undo the verification
     foreach ($users as $u) {
-        ensure_record_exists('pcnz_verification_undo', (object) array('usr' => $u,
+        ensure_record_exists('blocktype_verification_undo', (object) array('usr' => $u,
                                                                       'block' => $values['options'],
                                                                       'reporter' => $USER->get('id'),
                                                                       'view' => $pview->get('id')),

@@ -168,4 +168,24 @@ function xmldb_local_upgrade($oldversion=0) {
             upgrade_plugin($data);
         }
     }
+
+    if ($oldversion < 2022071100) {
+        log_debug('Add the "blocktype_verification_undo" table');
+        $table = new XMLDBTable('blocktype_verification_undo');
+        if (!table_exists($table)) {
+            $table->addFieldInfo('view', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('usr', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('block', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('reporter', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+            create_table($table);
+        }
+
+        # copy data from old pcnz_ table to this table
+        execute_sql("INSERT INTO {blocktype_verification_undo} SELECT * FROM {pcnz_verification_undo};");
+
+        # drop old pcnz_ table
+        execute_sql("DROP TABLE IF EXISTS {pcnz_verification_undo};");
+
+
+    }
 }

@@ -353,7 +353,7 @@ class PluginBlocktypeVerification extends MaharaCoreBlocktype {
         }
 
         // PCNZ Customisation
-        if ($resetverification && $undo = get_record_sql("SELECT * FROM {pcnz_verification_undo} WHERE block = ? LIMIT 1", array($instanceid))) {
+        if ($resetverification && $undo = get_record_sql("SELECT * FROM {blocktype_verification_undo} WHERE block = ? LIMIT 1", array($instanceid))) {
             $goto = get_config('wwwroot') . 'collection/progresscompletion.php?id=' . $instance->get_view()->get_collection()->get('id');
             $users = array($instance->get_view()->get('owner'), $undo->reporter);
             $message = (object) array(
@@ -364,7 +364,7 @@ class PluginBlocktypeVerification extends MaharaCoreBlocktype {
                 'urltext' => $instance->get_view()->get_collection()->get('name'),
             );
             activity_occurred('maharamessage', $message);
-            delete_records('pcnz_verification_undo', 'block', $instanceid);
+            delete_records('blocktype_verification_undo', 'block', $instanceid);
         }
         // END PCNZ
 
