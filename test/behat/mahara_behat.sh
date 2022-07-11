@@ -6,18 +6,11 @@ REPORT=$3
 SCRIPTPATH=`readlink -f "${BASH_SOURCE[0]}"`
 MAHARAROOT=`dirname $( dirname $( dirname "$SCRIPTPATH" ))`
 BEHATROOT=`php ${MAHARAROOT}/htdocs/testing/frameworks/behat/cli/util.php --behat-root`
-BEHATCONFIGFILE=`php ${MAHARAROOT}/htdocs/testing/frameworks/behat/cli/util.php --config`
 SERVER=0
 SERVERXVFB=
 test -z $SELENIUM_PORT && export SELENIUM_PORT=4444
 test -z $PHP_PORT && export PHP_PORT=8000
 test -z $XVFB_PORT && export XVFB_PORT=10
-if [ ! -f "$BEHATCONFIGFILE" ];
-then
-    # if BEHATCONFIGFILE is not a file it should contain the error message.
-    echo $BEHATCONFIGFILE
-    exit 1
-fi
 
 echo "Selenium port: $SELENIUM_PORT"
 echo "Behat root:    ${BEHATROOT}"
@@ -144,6 +137,14 @@ then
 
     # Initialise the test site for behat (database, dataroot, behat yml config)
     php ${MAHARAROOT}/htdocs/testing/frameworks/behat/cli/init.php $REPORT
+
+    BEHATCONFIGFILE=`php ${MAHARAROOT}/htdocs/testing/frameworks/behat/cli/util.php --config`
+    if [ ! -f "$BEHATCONFIGFILE" ];
+    then
+        # if BEHATCONFIGFILE is not a file it should contain the error message.
+        echo $BEHATCONFIGFILE
+        exit 1
+    fi
 
     # Run the Behat tests themselves (after any intial setup)
     if is_selenium_running; then
