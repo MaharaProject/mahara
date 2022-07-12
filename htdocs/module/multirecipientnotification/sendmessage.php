@@ -251,7 +251,7 @@ setpageicon($smarty, 'icon-regular icon-edit');
 $smarty->assign('form', $form);
 $smarty->assign('user', $USER);
 $smarty->assign('messages', $messages);
-$smarty->assign('link', get_config('wwwroot') . '/module/multirecipientnotification/sendmessage.php');
+$smarty->assign('link', get_config('wwwroot') . 'module/multirecipientnotification/sendmessage.php');
 $smarty->assign('returnto', $returnto);
 $smarty->display('module:multirecipientnotification:sendmessage.tpl');
 

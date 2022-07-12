@@ -644,7 +644,7 @@ class MaharaMediaPlayer_html5video extends MaharaMediaPlayer {
                 "fluid": true,
                 "width": ' . $width . ',
                 "height": ' . $height . ',
-                "swf": "' . $CFG->wwwroot . '/artefact/file/blocktype/internalmedia/videojs/video-js.swf"
+                "swf": "' . $CFG->wwwroot . 'artefact/file/blocktype/internalmedia/videojs/video-js.swf"
             }
         );';
     }

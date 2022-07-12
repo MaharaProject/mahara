@@ -42,7 +42,7 @@ if ((badgegroups_hosts instanceof Array && badgegroups_hosts.length >= 1)
             var params = {'host': h, 'email': e};
             count++;
             /* Fetching the badge info via ajax and render the pieform checkbox element */
-            sendjsonrequest(config['wwwroot'] + '/blocktype/openbadgedisplayer/badgegroupnames.json.php', params, 'POST', function(data) {
+            sendjsonrequest(config['wwwroot'] + 'blocktype/openbadgedisplayer/badgegroupnames.json.php', params, 'POST', function(data) {
                 var container = jQuery('<div class="alert alert-warning" role="alert">');
                 if (!data.uid) {
                     var msg = jQuery('<span>').text(data.nobackpackmsg);
