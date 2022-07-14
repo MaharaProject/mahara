@@ -190,6 +190,7 @@ $remoteuseracceptform = false;
 $remoteusernewfriendform = false;
 $remoteuserfriendscontrol = false;
 $remoteuserrelationship = false;
+$relationship = '';
 if (!empty($loggedinid) && $loggedinid != $userid) {
 
     $invitedlist = array();   // Groups admin'ed by the logged in user that the displayed user has been invited to
