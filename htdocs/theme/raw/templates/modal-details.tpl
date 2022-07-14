@@ -2,9 +2,9 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content" data-height=".modal-body">
             <div class="modal-header">
-                <button class="deletebutton close" name="close_configuration">
+                <button class="deletebutton btn-close" name="close_configuration">
                     <span class="times">&times;</span>
-                    <span class="sr-only">{str tag=closeconfiguration section=view}</span>
+                    <span class="visually-hidden">{str tag=closeconfiguration section=view}</span>
                 </button>
                 <h1 class="modal-title blockinstance-header text-inline"></h1>
             </div>

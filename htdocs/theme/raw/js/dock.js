@@ -6,7 +6,7 @@
  *
  * Works with bootstraps modal html init methods with modifications:
  * * Add a modal-docked class to the modal
- * * Use data-toggle="modal-docked" for the trigger (rather than data-toggle="modal")
+ * * Use data-bs-toggle="modal-docked" for the trigger (rather than data-bs-toggle="modal")
  * * Use data-dismiss="modal-docked" to the modal's close button (rather than data-dismiss="modal")
  */
 var dock = {};
@@ -69,10 +69,10 @@ jQuery(function($) {
 
     dock.init = function(scope){
 
-        scope.find('[data-toggle="modal-docked"]').on('click', function(e){
+        scope.find('[data-bs-toggle="modal-docked"]').on('click', function(e){
             e.preventDefault();
 
-            var targetID = $(this).attr('data-target'),
+            var targetID = $(this).attr('data-bs-target'),
                 target = $(targetID);
 
             if (!$(this).hasClass('no-modal')) {

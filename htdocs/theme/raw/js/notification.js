@@ -29,8 +29,8 @@ jQuery(function($) {
         });
 
         // Check all of type
-        $('[data-togglecheckbox]').on('change', function(){
-            var targetClass = '.' + $(this).attr('data-togglecheckbox');
+        $('[data-bs-togglecheckbox]').on('change', function(){
+            var targetClass = '.' + $(this).attr('data-bs-togglecheckbox');
             $(targetClass).prop('checked', $(this).prop('checked'));
             $(targetClass).trigger('change');
         });

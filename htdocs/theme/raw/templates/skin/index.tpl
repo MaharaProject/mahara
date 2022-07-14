@@ -5,11 +5,11 @@
         <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
         {str tag=createskin section=skin}
     </button>
-    <button type="button" class="btn btn-secondary dropdown-toggle" title="{str tag='moreoptions'}" data-toggle="dropdown" aria-expanded="false">
+    <button type="button" class="btn btn-secondary dropdown-toggle" title="{str tag='moreoptions'}" data-bs-toggle="dropdown" aria-expanded="false">
         <span class="icon icon-ellipsis-h" role="presentation" aria-hidden="true"></span>
-        <span class="sr-only">{str tag="moreoptions"}</span>
+        <span class="visually-hidden">{str tag="moreoptions"}</span>
     </button>
-    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+    <ul class="dropdown-menu dropdown-menu-end" role="menu">
         <li class="dropdown-item">
             <a href="{$WWWROOT}skin/import.php{if $siteskins}?site=1{/if}" type="submit">
                 <span class="icon icon-upload left" role="presentation" aria-hidden="true"></span>
@@ -35,11 +35,11 @@
     <div class="skin">
         <div class="card">
             <h2 class="card-header {if $skin.metadata} has-link {/if}">
-                <a href="" type="button" title="{str tag='viewmetadata' section='skin'}" class="title-link" data-toggle="modal" data-target="#skindata-modal-{$skin.id}" aria-labelledby="skin-info">
+                <a href="" type="button" title="{str tag='viewmetadata' section='skin'}" class="title-link" data-bs-toggle="modal" data-bs-target="#skindata-modal-{$skin.id}" aria-labelledby="skin-info">
                     {$skin.title|escape|safe}
-                    <span class="help float-right">
+                    <span class="help float-end">
                         <span class="icon icon-info-circle link-indicator" role="presentation" aria-hidden="true"></span>
-                        <span class="sr-only">
+                        <span class="visually-hidden">
                             {str tag=viewmetadataspecific section=skin arg1=$skin.title}
                         </span>
                     </span>
@@ -61,7 +61,7 @@
                     {if $skin.type == 'site'} onclick="return confirm('{str tag='editsiteskin?' section='skin'}');"{/if}
                     >
                     <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
-                    <span class="sr-only">
+                    <span class="visually-hidden">
                         {str tag=editspecific arg1=$skin.title}
                     </span>
                 </button>
@@ -71,14 +71,14 @@
                 {if $skin.removable}
                 <button data-url="{$WWWROOT}skin/export.php?id={$skin.id}" type="button" title="{str tag='exportthisskin' section='skin'}" class="btn btn-secondary btn-sm">
                     <span class="icon icon-download" role="presentation" aria-hidden="true"></span>
-                    <span class="sr-only">
+                    <span class="visually-hidden">
                         {str tag=exportspecific section=skin arg1=$skin.title}
                     </span>
                 </button>
 
                 <button data-url="{$WWWROOT}skin/delete.php?id={$skin.id}{if $skin.type == 'site'}&site=1{/if}" type="button" title="{str tag='deletethisskin' section='skin'}" class="btn btn-secondary btn-sm">
                     <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
-                    <span class="sr-only">
+                    <span class="visually-hidden">
                         {str tag=deletespecific arg1=$skin.title}
                     </span>
                 </button>
@@ -89,7 +89,7 @@
                         {if !$skin.favorite}
                         <button data-url="{$WWWROOT}skin/favorite.php?add={$skin.id}" title="{str tag='addtofavorites' section='skin'}" type="button" class="btn btn-secondary btn-sm">
                             <span class="icon icon-regular icon-heart" role="presentation" aria-hidden="true"></span>
-                            <span class="sr-only">
+                            <span class="visually-hidden">
                                 {str tag=addtofavoritesspecific section=skin arg1=$skin.title}
                             </span>
                         </button>
@@ -97,7 +97,7 @@
                         {else}
                         <button data-url="{$WWWROOT}skin/favorite.php?del={$skin.id}" title="{str tag='removefromfavorites' section='skin'}" type="button" class="btn btn-secondary btn-sm">
                             <span class="icon icon-heart" role="presentation" aria-hidden="true"></span>
-                            <span class="sr-only">
+                            <span class="visually-hidden">
                             {str tag=removefromfavoritesspecific section=skin arg1=$skin.title}
                             </span>
                         </button>
@@ -112,10 +112,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
                         <h1 class="modal-title" id="skin-info">
                             {str tag=metatitle section=skin}
                         </h1>

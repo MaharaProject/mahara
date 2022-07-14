@@ -162,7 +162,7 @@
     .hide-label & {
         padding: 0;
         label {
-            @include sr-only;
+            @include visually-hidden;
         }
     }
 
@@ -408,6 +408,7 @@
     .form-control {
         display: inline-block;
         max-width: calc(100% - 1.875rem); //calc(100% - 30px);
+        width: 100%;
         @include media-breakpoint-up(md) {
             width: 23.125rem; // 370px;
             .columns3 &,
@@ -466,7 +467,7 @@
             display: inline-block;
         }
         .pseudolabel {
-            @include media-breakpoint-down(md) {
+            @include media-breakpoint-down(lg) {
                 display: block;
                 min-width: auto;
                 max-width: none;
@@ -475,7 +476,7 @@
         .modal-docked & {
             .pseudolabel,
             .radio-wrapper {
-                @include media-breakpoint-down(lg) {
+                @include media-breakpoint-down(xl) {
                     display: block;
                 }
             }
@@ -501,7 +502,7 @@
 
     .errmsg {
         @extend .align-with-input;
-        color: theme-color("danger");
+        color: $danger;
         display: block;
         padding-top: $spacing-base;
         font-size: $font-size-sm;
@@ -518,7 +519,7 @@
         }
     }
 
-    label.sr-only ~ .errmsg {
+    label.visually-hidden ~ .errmsg {
         margin-left: 0px; // No margin if the label is hidden
     }
 
@@ -532,12 +533,12 @@
     }
     .requiredmarker,
     .oneofmarker {
-        color: scale-color(theme-color("danger"), $lightness: -8.5%);
+        color: scale-color($danger, $lightness: -8.5%);
     }
 
     &.requiredmarkerdesc,
     &.oneofmarkerdesc {
-        color: scale-color(theme-color("danger"), $lightness: -8.5%);
+        color: scale-color($danger, $lightness: -8.5%);
         border: 0;
         font-style: italic;
         font-size: $font-size-sm;
@@ -599,7 +600,7 @@
 }
 
 // upload forms browse button overlaps on phone
-@include media-breakpoint-down(sm) {
+@include media-breakpoint-down(md) {
   .form-upload .align-with-input {
     margin-top: 0;
   }

@@ -7,7 +7,7 @@
         {if $sbdata.count > 1}
         <form class="pieform" name="progresssidebarselect" method="post" action="" id="progresssidebarselect">
             <div id="progresssidebarselect_institution_container" class="select dropdown with-label-widthauto">
-                <label class="sr-only" for="progresssidebarselect_institution">{str tag=profilecompletionforwhichinstitution}</label>
+                <label class="visually-hidden" for="progresssidebarselect_institution">{str tag=profilecompletionforwhichinstitution}</label>
                 <select class="form-control select" id="progresssidebarselect_institution" name="institution" tabindex="1" style="">
                 {foreach from=$sbdata.institutions key=inst item=displayname}
                     <option value="{$inst}"{if $inst == $sbdata.institution} selected="selected"{/if}>{$displayname|str_shorten_html:25:true}</option>

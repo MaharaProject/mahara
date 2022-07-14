@@ -44,7 +44,7 @@
             </ol>
         {/if}
 
-        <div id="blocktype_externalfeed_lastupdate" class="content-text text-right text-small text-midtone">
+        <div id="blocktype_externalfeed_lastupdate" class="content-text text-end text-small text-midtone">
         {$lastupdated}
         </div>
     </div>

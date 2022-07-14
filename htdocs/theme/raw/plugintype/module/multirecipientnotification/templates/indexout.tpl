@@ -11,27 +11,27 @@
 
         <div class="btn-group bulk-actions" role="group">
             <label class="btn btn-secondary" for="selectall">
-                <input type="checkbox" name="selectall" id="selectall" data-togglecheckbox="tocheck">
-                <span class="sr-only">{str section='activity' tag='selectall'}</span>
+                <input type="checkbox" name="selectall" id="selectall" data-bs-togglecheckbox="tocheck">
+                <span class="visually-hidden">{str section='activity' tag='selectall'}</span>
             </label>
 
-            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                 {str section='admin' tag='bulkactions'}  <span class="icon icon-caret-down right"></span>
             </button>
 
             <div class="activity-buttons dropdown-menu" role="menu">
-                <button class="btn btn-link btn-link-danger text-left" data-action="deleteselected">
+                <button class="btn btn-link btn-link-danger text-start" data-action="deleteselected">
                     {str tag='delete'}
                 </button>
 
-                <a href="#delete_all_notifications_submit" class="btn btn-link btn-link-danger text-left" data-triggersubmit="delete_all_notifications_submit">
+                <a href="#delete_all_notifications_submit" class="btn btn-link btn-link-danger text-start" data-bs-triggersubmit="delete_all_notifications_submit">
                     {str section='activity' tag='deleteallnotifications'}
                 </a>
             </div>
         </div>
         <form method="post" class="form-inline form-select-filter pieform">
             <div class="form-group">
-                <label for="notifications_type" class="sr-only">{str section='activity' tag='type'}:</label>
+                <label for="notifications_type" class="visually-hidden">{str section='activity' tag='type'}:</label>
                 <div class="input-group select-group">
                     <div class="input-group-prepend" id="icon-addon-filter">
                         <span class="icon icon-filter" role="presentation" aria-hidden="true"></span>

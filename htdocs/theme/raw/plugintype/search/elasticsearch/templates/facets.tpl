@@ -19,14 +19,14 @@
         {if $term.count > 0}
             <li class="{if $term.term == $selected}current-tab active{/if}">
                 <a href="{$WWWROOT}search/elasticsearch/index.php?query={$query}&mainfacetterm={$term.term}{if $tagsonly}&tagsonly=true{/if}&limit={$limit}#onsearch"{if $term.term == $selected} class="current-tab {if $term.term == $selected}active{/if}"{/if}>{str tag=$term.display section=search.elasticsearch} ({$term.count})
-                <span class="accessible-hidden sr-only">({str tag=tab}{if $term.term == $selected} {str tag=selected}{/if})</span>
+                <span class="accessible-hidden visually-hidden">({str tag=tab}{if $term.term == $selected} {str tag=selected}{/if})</span>
                 </a>
             </li>
         {else}
             <li>
                 <a class="inactive">
                     {str tag=$term.display section=search.elasticsearch}
-                    <span class="accessible-hidden sr-only">({str tag=tab} {str tag=disabled})</span>
+                    <span class="accessible-hidden visually-hidden">({str tag=tab} {str tag=disabled})</span>
                 </a>
             </li>
         {/if}

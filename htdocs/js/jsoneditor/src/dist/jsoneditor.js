@@ -7489,7 +7489,7 @@ JSONEditor.defaults.editors.datetime = JSONEditor.defaults.editors.string.extend
         if (this.options.flatpickr.showToggleButton !== false) {
           var toggleButton = this.getButton('',this.schema.format == 'time' ? 'time' :'calendar', this.translate('flatpickr_toggle_button'));
           // Attribute for flatpicker
-          toggleButton.setAttribute('data-toggle','');
+          toggleButton.setAttribute('data-bs-toggle','');
           buttons.push(toggleButton);
         }
         if (this.options.flatpickr.showClearButton !== false) {
@@ -8612,7 +8612,7 @@ JSONEditor.defaults.themes.bootstrap3 = JSONEditor.AbstractTheme.extend({
     a.appendChild(text);
     a.setAttribute('aria-controls', tabId);
     a.setAttribute('role', 'tab');
-    a.setAttribute('data-toggle', 'tab');
+    a.setAttribute('data-bs-togglegle', 'tab');
     li.appendChild(a);
     return li;
   },
@@ -8624,7 +8624,7 @@ JSONEditor.defaults.themes.bootstrap3 = JSONEditor.AbstractTheme.extend({
     a.appendChild(text);
     a.setAttribute('aria-controls', tabId);
     a.setAttribute('role', 'tab');
-    a.setAttribute('data-toggle', 'tab');
+    a.setAttribute('data-bs-togglegle', 'tab');
     li.appendChild(a);
     return li;
   },
@@ -8850,7 +8850,7 @@ JSONEditor.defaults.themes.bootstrap4 = JSONEditor.AbstractTheme.extend({
     ael.classList.add("nav-link");
     ael.setAttribute("style",'padding:10px;');
     ael.setAttribute("href", "#" + tabId);
-    ael.setAttribute('data-toggle', 'tab');
+    ael.setAttribute('data-bs-togglegle', 'tab');
     ael.appendChild(text);
     liel.appendChild(ael);
     return liel;
@@ -8861,7 +8861,7 @@ JSONEditor.defaults.themes.bootstrap4 = JSONEditor.AbstractTheme.extend({
     var a = document.createElement('a');
     a.classList.add('nav-link');
     a.setAttribute('href','#'+tabId);
-    a.setAttribute('data-toggle', 'tab');
+    a.setAttribute('data-bs-togglegle', 'tab');
     a.appendChild(text);
     el.appendChild(a);
     return el;

@@ -2,9 +2,9 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button class="deletebutton close" name="action_objectionreview" data-dismiss="modal-docked" aria-label="{str tag=Close}">
+                    <button class="deletebutton btn-close" name="action_objectionreview" data-bs-dismiss="modal-docked" aria-label="{str tag=Close}">
                         <span class="times">&times;</span>
-                        <span class="sr-only">Close</span>
+                        <span class="visually-hidden">Close</span>
                     </button>
                     <h1 class="modal-title blockinstance-header text-inline objection-review-title" id="objection-review-label">{str tag="objectionreview"}</h1>
                 </div>

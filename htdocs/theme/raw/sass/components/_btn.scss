@@ -8,11 +8,11 @@
         outline: medium solid $input-focus-border-color;
     }
 
-    &.text-left {
+    &.text-start {
         text-align: left;
     }
 
-    &.text-right {
+    &.text-end {
         text-align: right;
     }
 
@@ -123,10 +123,10 @@
 }
 
 .btn-link-danger {
-    color: theme-color("danger");
+    color: $danger;
     &:hover,
     &:focus {
-      color: scale-color(theme-color("danger"), $lightness: -10%);
+      color: scale-color($danger, $lightness: -10%);
     }
 }
 
@@ -141,6 +141,54 @@
         background: none;
         border: 0;
         box-shadow: none;
+    }
+}
+
+// Block button (from Bootstrap 4)
+//
+
+.btn-block {
+    display: block;
+    width: 100%;
+  
+    // Vertically space out multiple block buttons
+    + .btn-block {
+      margin-top: $btn-block-spacing-y;
+    }
+}
+
+// Specificity overrides
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  &.btn-block {
+    width: 100%;
+  }
+}
+
+.btn-close {
+    width: auto;
+    height: auto;
+    float: right;
+    background: transparent;
+    @include font-size($btn-close-font-size);
+    font-weight: $btn-close-font-weight;
+    line-height: 1;
+    color: $btn-close-color;
+    text-shadow: $btn-close-text-shadow;
+    opacity: .5;
+
+    // Override <a>'s hover style
+    &:hover {
+      color: $btn-close-color;
+      text-decoration: none;
+    }
+
+    &:not(:disabled):not(.disabled) {
+        &:hover,
+        &:focus {
+            opacity: .75;
+        }
     }
 }
 
@@ -375,7 +423,7 @@ a[type="submit"],
 .assessment-item-buttons {
     .assessbtn + .assessbtn {
         button {
-            @include border-left-radius(0);
+            @include border-start-radius
         }
     }
 }

@@ -37,7 +37,7 @@
 
     <div class="btn-group btn-group-top{if $siteadmin && $countinstitutions == 1} only-button{/if}">
         {if $siteadmin}
-        <form class="form-as-button float-left btn-first" action="" method="post">
+        <form class="form-as-button float-start btn-first" action="" method="post">
             <button class="submit btn btn-secondary" type="submit" name="add" value="{str tag="addinstitution" section="admin"}" id="admininstitution_add">
                 <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
                 <span class="btn-title">{str tag="addinstitution" section="admin"}</span>
@@ -47,10 +47,10 @@
 
         {if $countinstitutions > 1}
 
-            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>
                 <span class="icon icon-ellipsis-h icon-xs" role="presentation" aria-hidden="true"></span>
-                <span class="btn-title sr-only">{str tag="edit"}</span>
+                <span class="btn-title visually-hidden">{str tag="edit"}</span>
             </button>
             <div class="dropdown-menu">
                 <li>
@@ -78,7 +78,7 @@
                 <th>{str tag="Staff" section="admin"}</th>
                 <th>{str tag="Admins" section="admin"}</th>
                 <th></th>
-                <th><span class="accessible-hidden sr-only">{str tag=edit}</span></th>
+                <th><span class="accessible-hidden visually-hidden">{str tag=edit}</span></th>
             </tr>
             </thead>
             <tbody>

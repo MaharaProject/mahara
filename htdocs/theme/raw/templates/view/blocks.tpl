@@ -22,7 +22,7 @@
             <div id="viewinstructions" class="last form-group collapsible-group small-group">
             <fieldset  class="pieform-fieldset collapsible collapsible-small">
                 <legend>
-                    <a href="#viewinstructions-dropdown" data-toggle="collapse" aria-expanded="{if $instructionscollapsed}false{else}true{/if}" aria-controls="viewinstructions-dropdown" class="{if $instructionscollapsed}collapsed{/if}">
+                    <a href="#viewinstructions-dropdown" data-bs-toggle="collapse" aria-expanded="{if $instructionscollapsed}false{else}true{/if}" aria-controls="viewinstructions-dropdown" class="{if $instructionscollapsed}collapsed{/if}">
                         {str tag='instructions' section='view'}<span class="icon icon-chevron-down collapse-indicator right text-inline"></span>
                     </a>
                 </legend>
@@ -59,9 +59,9 @@
     <div class="modal-dialog">
         <div class="modal-content" data-height=".modal-body">
             <div class="modal-header">
-                <button class="deletebutton close" name="action_removeblockinstance_id_{$id}">
+                <button class="deletebutton btn-close" name="action_removeblockinstance_id_{$id}">
                     <span class="times">&times;</span>
-                    <span class="sr-only">{str tag=Close}</span>
+                    <span class="visually-hidden">{str tag=Close}</span>
                 </button>
                 <h1 class="modal-title blockinstance-header text-inline" id="addblock-heading"></h1>
             </div>
@@ -76,12 +76,12 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content" data-height=".modal-body">
             <div class="modal-header">
-                <button class="deletebutton close" name="close_configuration">
+                <button class="deletebutton btn-close" name="close_configuration">
                     <span class="times">&times;</span>
-                    <span class="sr-only">{str tag=closeconfiguration section=view}</span>
+                    <span class="visually-hidden">{str tag=closeconfiguration section=view}</span>
                 </button>
-                <h1 class="modal-title blockinstance-header text-inline float-left"></h1>
-                <span class="icon icon-pencil-alt icon-2x float-right" role="presentation" aria-hidden="true"></span>
+                <h1 class="modal-title blockinstance-header text-inline float-start"></h1>
+                <span class="icon icon-pencil-alt icon-2x float-end" role="presentation" aria-hidden="true"></span>
             </div>
             <div class="modal-body blockinstance-content">
             </div>

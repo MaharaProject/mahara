@@ -6,7 +6,7 @@
         {else}
             <span>{$heading.name}</span>
         {/if}
-        {if $heading.link}<span class="accessible-hidden sr-only">({$heading.sr})</span></a>{/if}
+        {if $heading.link}<span class="accessible-hidden visually-hidden">({$heading.sr})</span></a>{/if}
         {if $heading.helplink}{$heading.helplink|safe}{/if}
     </th>
 {/if}

@@ -4,7 +4,7 @@
     <div id="comment{$item->id}" class="comment-item list-group-item {if $item->pubmessage}list-group-item-private{elseif $item->deletedmessage}deleted {/if} {cycle name=rows values='r0,r1'} {if $item->indent} indent-{$item->indent}{/if}">
         <div class="flex-row">
             <div class="usericon-heading flex-title flex-row">
-                <div class="float-left">
+                <div class="float-start">
                     <span class="user-icon user-icon-30" role="presentation" aria-hidden="true">
                     {if $item->author && !$item->author->deleted}
                         <a href="{$item->author->profileurl}"><img src="{profile_icon_url user=$item->author maxheight=30 maxwidth=30}" valign="middle" alt="{str tag=profileimagetext arg1=$item->author|display_default_name}"/></a>
@@ -50,9 +50,9 @@
                     <div class="btn-group btn-group-top comment-item-buttons">
                     {if !$onview}
                         {if $item->canedit}
-                        <button data-url="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&amp;view={$viewid}" type="button" class="btn btn-secondary btn-sm btn-group-item form-as-button float-left">
+                        <button data-url="{$WWWROOT}artefact/comment/edit.php?id={$item->id}&amp;view={$viewid}" type="button" class="btn btn-secondary btn-sm btn-group-item form-as-button float-start">
                             <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
-                            <span class="sr-only">{str tag=edit}</span>
+                            <span class="visually-hidden">{str tag=edit}</span>
                         </button>
                         {/if}
                     {/if}
@@ -60,9 +60,9 @@
                         {$item->deleteform|safe}
                     {/if}
                     {if $item->canreply}
-                    <button class="btn btn-secondary btn-sm float-left commentreplyto btn-group-item js-reply" id="commentreplyto{$item->id}" title="{str tag=reply section=artefact.comment}" data-replyto="{$item->id}" data-canprivatereply="{$item->canprivatereply}" data-canpublicreply="{$item->canpublicreply}" {if $blockid}data-blockid="{$blockid}"{/if}>
+                    <button class="btn btn-secondary btn-sm float-start commentreplyto btn-group-item js-reply" id="commentreplyto{$item->id}" title="{str tag=reply section=artefact.comment}" data-replyto="{$item->id}" data-canprivatereply="{$item->canprivatereply}" data-canpublicreply="{$item->canpublicreply}" {if $blockid}data-blockid="{$blockid}"{/if}>
                         <span class="icon icon-reply" role="presentation" aria-hidden="true"></span>
-                        <span class="sr-only">{str tag=reply section=artefact.comment}</span>
+                        <span class="visually-hidden">{str tag=reply section=artefact.comment}</span>
                     </button>
                     {/if}
                     </div>
@@ -114,10 +114,10 @@
             <div class="col-md-4 comment-attachment push-left-for-usericon">
                 <div class="card has-attachment collapsible">
                     <div class="card-header">
-                        <a class="collapsible collapsed" aria-expanded="false" href="#attachments_{$item->id}" data-toggle="collapse">
+                        <a class="collapsible collapsed" aria-expanded="false" href="#attachments_{$item->id}" data-bs-toggle="collapse">
                             <span class="icon left icon-paperclip icon-sm" role="presentation" aria-hidden="true"></span>
                             <span class="text-small">{str tag=Attachments section=artefact.comment} ({$item->filescount})</span>
-                            <span class="icon icon-chevron-down float-right collapse-indicator" role="presentation" aria-hidden="true"></span>
+                            <span class="icon icon-chevron-down float-end collapse-indicator" role="presentation" aria-hidden="true"></span>
                         </a>
                     </div>
                     <div id="attachments_{$item->id}" class="collapse" aria-expanded="false">
@@ -131,8 +131,8 @@
                                     </a>
                                 </span>
                                 <a href="{$WWWROOT}artefact/file/download.php?file={$a->attachid}&comment={$item->id}&view={$viewid}" class="download-link">
-                                    <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$a->attachtitle arg2=$a->attachsize}"></span>
-                                    <span class="sr-only">{str tag=downloadfilesize section=artefact.file arg1=$a->attachtitle arg2=$a->attachsize}</span>
+                                    <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$a->attachtitle arg2=$a->attachsize}"></span>
+                                    <span class="visually-hidden">{str tag=downloadfilesize section=artefact.file arg1=$a->attachtitle arg2=$a->attachsize}</span>
                                 </a>
                             </li>
                             {/foreach}

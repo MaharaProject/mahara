@@ -3,8 +3,8 @@
 </a>
 {/if}
 
-    <div class="media forum-post">
-        <div class="forumpostleft media-left text-small">
+    <div class="d-flex forum-post">
+        <div class="forumpostleft flex-shrink-0 text-small">
             {if $deleteduser}
                 <span class="user-icon user-icon-40"><img src="{profile_icon_url user=null maxwidth=40 maxheight=40}" valign="middle" alt="{str tag=profileimagetextanonymous}" class="media-object"></span>
 
@@ -26,7 +26,7 @@
             </div>
             {/if}
         </div>
-        <div class="postedits media-body">
+        <div class="postedits flex-grow-1 ms-3">
             {if $post->subject && !$nosubject}
             <div class="forumsubject media-heading">
                 <h3 class="title h4">
@@ -49,11 +49,11 @@
             {if $post->attachments}
             <div class="has-attachment card collapsible">
                 <div class="card-header">
-                    <a class="text-left collapsed" data-toggle="collapse" href="#post-attach-{$post->id}" aria-expanded="false">
+                    <a class="text-start collapsed" data-bs-toggle="collapse" href="#post-attach-{$post->id}" aria-expanded="false">
                         <span class="icon icon-paperclip left" role="presentation" aria-hidden="true"></span>
                         <span class="text-small"> {str tag="attachedfiles" section="artefact.blog"} </span>
                         <span class="metadata">({$post->filecount})</span>
-                        <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-chevron-down collapse-indicator float-end" role="presentation" aria-hidden="true"></span>
                     </a>
                 </div>
                 <div class="collapse" id="post-attach-{$post->id}">
@@ -71,7 +71,7 @@
                                 <span class="text-small">{$file->title}</span>
                             </span>
                             <a href="{$WWWROOT}artefact/file/download.php?file={$file->fileid}&post={$file->post}" class="download-link">
-                                <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$file->title arg2=$file->size|display_size}"></span>
+                                <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$file->title arg2=$file->size|display_size}"></span>
                             </a>
                         {if $file->description}
                             <div class="file-description text-small text-midtone">

@@ -4,7 +4,7 @@
     <div class="btn-group-vertical in-editor">
         <button class="btn btn-secondary editviews" data-url="{$viewurl}" title="{str tag=displayview section=view}">
             <span class="icon icon-tv icon-lg" aria-hidden="true" role="presentation"></span>
-            <span class="btn-title sr-only">{str tag=displayview section=view}</span>
+            <span class="btn-title visually-hidden">{str tag=displayview section=view}</span>
         </button>
     </div>
 </div>

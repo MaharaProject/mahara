@@ -22,12 +22,12 @@
                         {str tag="Topics" section="interaction.forum"}
                     </th>
                     <th class="subscribeth">
-                        <span class="accessible-hidden sr-only">
+                        <span class="accessible-hidden visually-hidden">
                             {str tag=Subscribe section=interaction.forum}
                         </span>
                     </th>
                     <th class="control-buttons">
-                        <span class="accessible-hidden sr-only">
+                        <span class="accessible-hidden visually-hidden">
                             {str tag=edit}
                         </span>
                     </th>
@@ -86,11 +86,11 @@
                     <div class="btn-group">
                         <button class="btn btn-secondary btn-sm" type="submit" data-url="{$WWWROOT}interaction/edit.php?id={$forum->id}&amp;returnto=index">
                             <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
-                            <span class="sr-only">{str tag=editspecific arg1=$forum->title}</span>
+                            <span class="visually-hidden">{str tag=editspecific arg1=$forum->title}</span>
                         </button>
                         <button class="btn btn-secondary btn-sm" type="submit" data-url="{$WWWROOT}interaction/delete.php?id={$forum->id}&amp;returnto=index">
                             <span class="text-danger icon icon-trash-alt" role="presentation" aria-hidden="true"></span>
-                            <span class="sr-only">{str tag=deletespecific arg1=$forum->title}</span>
+                            <span class="visually-hidden">{str tag=deletespecific arg1=$forum->title}</span>
                         </button>
                     </div>
                 </td>
@@ -108,7 +108,7 @@
             {str tag="groupadminlist" section="interaction.forum"}
         </p>
         {foreach from=$groupadmins item=groupadmin}
-            <a href="{profile_url($groupadmin)}" class="badge badge-default">
+            <a href="{profile_url($groupadmin)}" class="badge bg-default">
                 <span class="user-icon user-icon-20 user-icon-inline"><img src="{profile_icon_url user=$groupadmin maxheight=20 maxwidth=20}" alt="{str tag=profileimagetext arg1=$groupadmin|display_default_name}"></span> {$groupadmin|display_name}
             </a>
         {/foreach}

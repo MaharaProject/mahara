@@ -1,3 +1,5 @@
+@use "sass:math";
+
 // Custom styles for edit collection pages
 // See views.tpl and views.json.tpl
 .manage-collection-pages {
@@ -43,8 +45,8 @@
         }
         form[name^="removeview"] {
             position: absolute;
-            top: $list-group-item-padding-y - ($btn-padding-y-sm / 2);
-            right: $list-group-item-padding-x - ($btn-padding-x-sm / 2);
+            top: $list-group-item-padding-y - math.div($btn-padding-y-sm, 2);
+            right: $list-group-item-padding-x - math.div($btn-padding-x-sm, 2);
         }
     }
 }

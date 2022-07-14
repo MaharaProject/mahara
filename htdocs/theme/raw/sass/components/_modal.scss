@@ -112,15 +112,16 @@ $width-sm: 90%;
     .mce-title,
     .modal-title {
       color: $modal-header-color;
-      margin: 0;
+      margin: 0 !important;
       padding: 0 !important;
       font-size: $h4-font-size;
       font-family: $headings-font-family;
       font-weight: $headings-font-weight;
       border-bottom: 0;
       max-width: calc(100% - 4rem);
+      line-height: 1.5 !important;
     }
-    .close,
+    .btn-close,
     .mce-close {
         order: 1;
         padding: 0;
@@ -168,7 +169,7 @@ $width-sm: 90%;
         .modal-dialog {
             @include transition(right 0.5s ease-in-out);
             right: -($width + 5);
-            @include media-breakpoint-down(md) {
+            @include media-breakpoint-down(lg) {
                 right: -($width-sm + 5);
             }
         }
@@ -180,7 +181,7 @@ $width-sm: 90%;
         position: fixed;
         top: 0;
         bottom: 0;
-        @include media-breakpoint-down(md) {
+        @include media-breakpoint-down(lg) {
             width: ($width-sm + 5);
         }
     }
@@ -197,14 +198,14 @@ $width-sm: 90%;
           font-size: $h4-font-size;
           font-family: $headings-font-family;
           font-weight: $headings-font-weight;
-          &.float-left {
+          &.float-start {
             width: calc(100% - 45px); // The cog icon plus 5px space
           }
         }
         &.modal-section {
             margin: 0 0 $spacing-base 0;
         }
-        .close {
+        .btn-close {
            @include box-shadow(-2px 0 2px rgba(0,0,0,0.3));
             border-radius: $modal-content-border-radius 0 0 $modal-content-border-radius;
             opacity: 1;

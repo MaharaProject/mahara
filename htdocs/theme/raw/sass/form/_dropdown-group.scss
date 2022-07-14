@@ -32,7 +32,7 @@
         float: left;
         height: $input-height;
         input {
-            @include border-right-radius(0);
+            @include border-end-radius(0); // border-right-radius(0);
             margin-top: 1.6875rem; // 27px
         }
         label {
@@ -92,7 +92,7 @@
             }
         }
         label {
-            @include sr-only;
+            @include visually-hidden;
         }
     }
     ~ .btn {
@@ -104,7 +104,7 @@
 // User search dropdown-group
 .admin-user-search {
     .usersearchform {
-        @include media-breakpoint-between(sm, md) {
+        @include media-breakpoint-between(sm, lg) {
             width: 65%;
         }
     }

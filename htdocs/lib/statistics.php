@@ -556,7 +556,7 @@ function institution_statistics($institution, $full=false) {
         if ($portfolios = $SESSION->get('portfoliofilter')) {
             $btnstr = ' <button class="btn btn-secondary filter" id="removeportfoliofilter" title="' . get_string('removefilter', 'statistics') . '">
                             <span class="times">×</span>
-                            <span class="sr-only">' . get_string('removefilter', 'statistics') . '</span>
+                            <span class="visually-hidden">' . get_string('removefilter', 'statistics') . '</span>
                         </button>';
             $smarty->assign('verifierportfolios', get_string('countportfolios', 'admin', count($portfolios)) . $btnstr);
         }
@@ -581,7 +581,7 @@ function institution_statistics($institution, $full=false) {
         if ($portfolios = $SESSION->get('portfoliofilter')) {
             $btnstr = ' <button class="btn btn-secondary filter" id="removeportfoliofilter" title="' . get_string('removefilter', 'statistics') . '">
                             <span class="times">×</span>
-                            <span class="sr-only">' . get_string('removefilter', 'statistics') . '</span>
+                            <span class="visually-hidden">' . get_string('removefilter', 'statistics') . '</span>
                         </button>';
             $smarty->assign('verifierportfolios', get_string('countportfolios', 'admin', count($portfolios)) . $btnstr);
         }
@@ -4960,7 +4960,7 @@ function smartevidence_stats_headers($limit, $offset, $extra, $institution, $url
         else {
             // The statistics page uses the SmartEvidence status icon.
             $header['name'] = '<span class="' . $classes . '" title="' . $title . '"></span>' .
-                '<span class="sr-only">' . $description . '</span>';
+                '<span class="visually-hidden">' . $description . '</span>';
             $header['headingishtml'] = true;
         }
         $headers[] = $header;
@@ -6068,7 +6068,7 @@ function report_config_form($extra, $institutionelement) {
         'plugintype'      => 'core',
         'pluginname'      => 'admin',
         'renderer'        => 'div',
-        'class'           => 'form-as-button float-left',
+        'class'           => 'form-as-button float-start',
         'elements'   => array(
             'type' => array(
                 'type' => 'hidden',
@@ -6455,7 +6455,7 @@ function get_report_settings($settings) {
         $str .= get_string('selectednusers', 'admin', $settings['users']);
         $str .= ' <button class="btn btn-secondary filter" id="removeuserfilter" title="' . get_string('removefilter', 'statistics') . '">
                      <span class="times">×</span>
-                     <span class="sr-only">' . get_string('removefilter', 'statistics') . '</span>
+                     <span class="visually-hidden">' . get_string('removefilter', 'statistics') . '</span>
                  </button>';
         $str .= "</div>\n";
     }

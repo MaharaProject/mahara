@@ -107,7 +107,7 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
             'instructionstitle' => array(
                 'type' => 'html',
                 'value' => '<a href="#instconf_instructions_container" aria-controls="instconf_instructions_container"
-                 class="' . (empty($instructions) ? 'collapsed' : '') . '" data-toggle="collapse"
+                 class="' . (empty($instructions) ? 'collapsed' : '') . '" data-bs-toggle="collapse"
                  aria-expanded="' . (!empty($instructions) ? 'true' : 'false') . '">'
                     . get_string('instructions', 'view')
                     . '<span class="icon icon-chevron-down collapse-indicator right text-inline block-config-modal"></span>'

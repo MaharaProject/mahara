@@ -45,7 +45,7 @@ if ($accesschanged = $SESSION->get('pageaccesschanged')) {
     $closestr = get_string('Close', 'mahara');
     $inlinejs = <<<EOF
 jQuery(function($) {
-    var message = $('<div id="changestatusline" class="alert alert-dismissible alert-warning" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="$closestr"><span aria-hidden="true">&times;</span></button><p>$alertstr</p></div>');
+    var message = $('<div id="changestatusline" class="alert alert-dismissible alert-warning" role="alert"><button type="button" class="btn-close" data-dismiss="alert" aria-label="$closestr"><span aria-hidden="true">&times;</span></button><p>$alertstr</p></div>');
     $('#messages').append(message);
 });
 EOF;
@@ -108,7 +108,7 @@ if ($views) {
     foreach ($views['views'] as &$v) {
         $v->remove = pieform(array(
             'renderer' => 'div',
-            'class' => 'form-as-button float-right',
+            'class' => 'form-as-button float-end',
             'name' => 'removeview_' . $v->view,
             'successcallback' => 'removeview_submit',
             'elements' => array(
@@ -121,7 +121,7 @@ if ($views) {
                     'usebuttontag' => true,
                     'class' => 'btn-link btn-sm',
                     'confirm' => get_string('viewconfirmremove', 'collection'),
-                    'value' => '<span class="icon icon-times text-danger" role="presentation" aria-hidden="true"><span class="sr-only">' . get_string('remove') . '</span></span>',
+                    'value' => '<span class="icon icon-times text-danger" role="presentation" aria-hidden="true"><span class="visually-hidden">' . get_string('remove') . '</span></span>',
                 ),
             ),
         ));
@@ -149,7 +149,7 @@ if ($available = Collection::available_views($owner, $groupid, $institutionname)
     );
 
     $elements['submit'] = array(
-        'class' => 'btn-secondary float-right add-pages',
+        'class' => 'btn-secondary float-end add-pages',
         'type' => 'button',
         'usebuttontag' => true,
         'value' => '<span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>' . get_string('addviews','collection'),

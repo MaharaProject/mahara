@@ -7,7 +7,7 @@
                     {$currentindex = $dwoo.foreach.page.index}
                 {/if}
             {/foreach}
-            <button class="picker form-control" tabindex="0" data-toggle="collapse" data-target="#pagelist" aria-expanded="false" role="button" aria-controls="#pagelist">{str tag="viewingpage" section="collection"}<span id="currentindex" data-currentindex="{$currentindex}">{$currentindex + 1}</span>/{count($collection)}</button>
+            <button class="picker form-control" tabindex="0" data-bs-toggle="collapse" data-bs-target="#pagelist" aria-expanded="false" role="button" aria-controls="#pagelist">{str tag="viewingpage" section="collection"}<span id="currentindex" data-currentindex="{$currentindex}">{$currentindex + 1}</span>/{count($collection)}</button>
 
             <ul id="pagelist" class="collapse">
                 {foreach from=$collection item=view name=page}

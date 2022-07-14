@@ -9,7 +9,7 @@
       <tr>
         <th>{str tag=displayname}</th>
         <th>{str tag=Site}</th>
-        <th><span class="accessible-hidden sr-only">{str tag=edit}</span></th>
+        <th><span class="accessible-hidden visually-hidden">{str tag=edit}</span></th>
       </tr>
     </thead>
     <tbody>
@@ -25,7 +25,7 @@
         <td class="buttonscell">
           <div class="btn-group">
 
-            <button id="edit-{$item.id}" class="url-open-editform btn btn-secondary btn-sm float-left closed" title="{$item.elementtitle|safe}">
+            <button id="edit-{$item.id}" class="url-open-editform btn btn-secondary btn-sm float-start closed" title="{$item.elementtitle|safe}">
               <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
             </button>
             {$item.deleteform|safe}

@@ -7,7 +7,7 @@
     </div>
     <ul class="nav nav-tabs">
     {foreach from=$tagsortoptions key=tagsortfield item=selectedsort name=tagsortoptions}
-        <li><a href="{$WWWROOT}tags.php?ts={$tagsortfield}"{if $selectedsort} class="current-tab {if $selectedsort} active{/if}"{/if}>{str tag=sort$tagsortfield}<span class="accessible-hidden sr-only">({str tag=tab}{if $selectedsort} {str tag=selected}{/if})</span></a></li>
+        <li><a href="{$WWWROOT}tags.php?ts={$tagsortfield}"{if $selectedsort} class="current-tab {if $selectedsort} active{/if}"{/if}>{str tag=sort$tagsortfield}<span class="accessible-hidden visually-hidden">({str tag=tab}{if $selectedsort} {str tag=selected}{/if})</span></a></li>
     {/foreach}
     </ul>
     <div class="mytags">
@@ -23,20 +23,20 @@
         </h2>
         {if $not_institution_tag}
         <div class="btn-top-right btn-group btn-group-top d-block{if !$tag} d-none{/if}">
-            <button class="btn btn-secondary edit-tag float-right{if !$tag} d-none{/if}" data-url="{$WWWROOT}edittags.php?tag={$tag|urlencode|safe}"><span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>{str tag=editthistag}</button>
+            <button class="btn btn-secondary edit-tag float-end{if !$tag} d-none{/if}" data-url="{$WWWROOT}edittags.php?tag={$tag|urlencode|safe}"><span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>{str tag=editthistag}</button>
         </div>
         {/if}
         <div class="tag-filters">
-            <div id="results_sort" class="float-right">
+            <div id="results_sort" class="float-end">
                 <strong>{str tag=sortresultsby}</strong>
                 {foreach from=$results->sortcols item=sortfield name=sortcols}
                     <a href="{$results->baseurl}{$results->queryprefix}sort={$sortfield}"{if $results->sort == $sortfield} class="selected"{/if}>{str tag=$sortfield}</a>{if !$.foreach.sortcols.last} <span class="sep">|</span>{/if}
                 {/foreach}
             </div>
             <div class="btn-group dropright">
-                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-hidden="true" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-hidden="true" aria-haspopup="true" aria-expanded="false">
                     <span class="icon icon-filter left" role="presentation" aria-hidden="true"></span>
-                    <span class="sr-only">{str tag=filterresultsby}</span>
+                    <span class="visually-hidden">{str tag=filterresultsby}</span>
                     {foreach from=$results->filtercols key=filtername item=filterdisplay name=filtercols}
                         <span id="currentfilter" {if $results->filter != $filtername} class="d-none"{/if}>{$filterdisplay}</span>
                     {/foreach}

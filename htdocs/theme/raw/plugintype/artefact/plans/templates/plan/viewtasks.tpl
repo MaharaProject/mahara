@@ -10,17 +10,17 @@
             {if $task->completed == -1}
                 <td class="incomplete task-status">
                     <span class="icon icon-times icon-lg text-danger" role="presentation" aria-hidden="true"></span>
-                    <span class="sr-only">{str tag=overdue section=artefact.plans}</span>
+                    <span class="visually-hidden">{str tag=overdue section=artefact.plans}</span>
                 </td>
             {elseif $task->completed == 1}
                 <td class="completed task-status">
                     <span class="completed-checkbox icon icon-regular icon-check-square icon-lg text-success" data-taskid="{$task->id}" data-completed="{$task->completed}" role="presentation" aria-hidden="true"></span>
-                    <span class="sr-only">{str tag=completed section=artefact.plans}</span>
+                    <span class="visually-hidden">{str tag=completed section=artefact.plans}</span>
                 </td>
             {else}
                 <td class="incomplete task-status">
                     <span class="completed-checkbox icon icon-regular icon-square icon-lg" data-taskid="{$task->id}" data-completed="{$task->completed}" role="presentation" aria-hidden="true"></span>
-                    <span class="sr-only">{str tag=completed section=artefact.plans}</span>
+                    <span class="visually-hidden">{str tag=completed section=artefact.plans}</span>
                 </td>
             {/if}
         {/if}
@@ -36,7 +36,7 @@
             {if $task->tags}<span class="text-small text-midtone">{str tag=tags}: {list_tags owner=$task->owner tags=$task->tags}</span>{/if}
         </td>
 
-        <td class="planscontrols text-right">
+        <td class="planscontrols text-end">
             <div class="text-nowrap">
                 <div class="btn-group btn-tasks">
                     {if $task->taskview}
@@ -55,18 +55,18 @@
                         {if $task->outcomesubmissionurl}
                             <button data-url="{$task->outcomesubmissionurl}" type="submit" title="{$submitassignedoutcome}" class="btn btn-secondary btn-sm">
                                 <span class="icon icon-file-upload" role="presentation" aria-hidden="true"></span>
-                                <span class="sr-only">{$submitassignedoutcome}</span>
+                                <span class="visually-hidden">{$submitassignedoutcome}</span>
                             </button>
                         {/if}
 
                         {if $canedit}
                             <button data-url="{$WWWROOT}artefact/plans/task/edit.php?{$groupurlquery}id={$task->task}" type="button" title="{str tag=edit}" class="btn btn-secondary btn-sm">
                                 <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
-                                <span class="sr-only">{str(tag=editspecific arg1=$task->title)|escape:html|safe}</span>
+                                <span class="visually-hidden">{str(tag=editspecific arg1=$task->title)|escape:html|safe}</span>
                             </button>
                             <button data-url="{$WWWROOT}artefact/plans/task/delete.php?{$groupurlquery}id={$task->task}" type="button" title="{str tag=delete}" class="btn btn-secondary btn-sm">
                                 <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
-                                <span class="sr-only">{str(tag=deletespecific arg1=$task->title)|escape:html|safe}</span>
+                                <span class="visually-hidden">{str(tag=deletespecific arg1=$task->title)|escape:html|safe}</span>
                             </button>
                         {/if}
                     {/if}
@@ -97,7 +97,7 @@
                             </div>
                         </div>
                     {elseif $task->outcomeiscurrentlysubmitted}
-                        <div class="text-right">
+                        <div class="text-end">
                             <span>{str tag=outcomeiscurrentlysubmitted section=artefact.plans}</span>
                         </div>
                     {/if}

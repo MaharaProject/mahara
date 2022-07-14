@@ -21,6 +21,6 @@
     </ul>
     <a href="{$WWWROOT}user/online.php" class="online-users card-footer text-small" id="allonline">
         {str tag="allpeopleonline"}
-        <span class="icon icon-arrow-circle-right float-right" role="presentation" aria-hidden="true"></span>
+        <span class="icon icon-arrow-circle-right float-end" role="presentation" aria-hidden="true"></span>
     </a>
 </div>

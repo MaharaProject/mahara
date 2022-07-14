@@ -5,14 +5,14 @@
         {* Assess button that will show/ hide comments and details in block-comments-details-header.tpl *}
         <button id="details-btn" type="button" class="btn btn-secondary" title="{str tag=detailslinkalt section=view}">
             <span class="icon icon-search-plus icon-lg left" role="presentation" aria-hidden="true" ></span>
-            <span class="sr-only">{str tag=detailslinkalt section=view}</span>
+            <span class="visually-hidden">{str tag=detailslinkalt section=view}</span>
         </button>
         {/if}
 
         {if $editurl}{strip}
             <button data-url="{$editurl}" type="button" class="btn btn-secondary" title="{str tag=editthisview section=view}">
                 <span class="icon icon-pencil-alt icon-lg left" role="presentation" aria-hidden="true"></span>
-                <span class="sr-only">{str tag=editthisview section=view}</span>
+                <span class="visually-hidden">{str tag=editthisview section=view}</span>
             </button>
         {/strip}{/if}
 
@@ -20,15 +20,15 @@
         <button
             data-url="{$mnethost.url}" class="btn btn-secondary" title="{str tag=backto arg1=$mnethost.name}">
             <span class="icon icon-long-arrow-alt-right icon-lg left" role="presentation" aria-hidden="true"></span>
-            <span class="sr-only">{str tag=backto arg1=$mnethost.name}</span>
+            <span class="visually-hidden">{str tag=backto arg1=$mnethost.name}</span>
         </button>
         {/if}
 
-        <button type="button" class="btn btn-secondary dropdown-toggle" title="{str tag='moreoptions'}" data-toggle="dropdown" aria-expanded="false">
+        <button type="button" class="btn btn-secondary dropdown-toggle" title="{str tag='moreoptions'}" data-bs-toggle="dropdown" aria-expanded="false">
             <span class="icon icon-ellipsis-h icon-lg" role="presentation" aria-hidden="true"></span>
-            <span class="sr-only">{str tag="moreoptions"}</span>
+            <span class="visually-hidden">{str tag="moreoptions"}</span>
         </button>
-        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+        <ul class="dropdown-menu dropdown-menu-end" role="menu">
 
             {if $copyurl}{strip}
                 <li class="dropdown-item">
@@ -53,7 +53,7 @@
             <li class="dropdown-item">
                 <a title="{str tag=print section=view}" id="print_link" href="#" onclick="window.print(); return false;">
                     <span class="icon icon-print left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=print section=view}</span>
-                    <span class="sr-only">{str tag=print section=view}</span>
+                    <span class="visually-hidden">{str tag=print section=view}</span>
                 </a>
             </li>
 
@@ -78,7 +78,7 @@
                                     <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=objectionablematerialreported}</span>
                                 </span>
                             {else}
-                                <a id="objection_link" href="#" data-toggle="modal" data-target="#report-form">
+                                <a id="objection_link" href="#" data-bs-toggle="modal" data-bs-target="#report-form">
                                     <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=reportobjectionablematerial}</span>
                                 </a>
                             {/if}
@@ -88,21 +88,21 @@
                 {/if}
                 {if $undoverificationform}
                     <li class="dropdown-item">
-                        <a id="undoverificationlink" href="#" data-toggle="modal" data-target="#undoverification-form">
+                        <a id="undoverificationlink" href="#" data-bs-toggle="modal" data-bs-target="#undoverification-form">
                             <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=undoverification section=collection}</span>
                         </a>
                     </li>
                 {/if}
                 {if $revokeaccessform}
                     <li class="dropdown-item">
-                        <a id="revokeaccesslink" href="#" data-toggle="modal" data-target="#revokemyaccess-form">
+                        <a id="revokeaccesslink" href="#" data-bs-toggle="modal" data-bs-target="#revokemyaccess-form">
                             <span class="icon icon-trash-alt text-danger left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=removeaccess}</span>
                         </a>
                     </li>
                 {/if}
                 {if $userisowner && $objectedpage}
                 <li class="dropdown-item">
-                    <a id="review_link" href="#" data-toggle="modal" data-target="#review-form">
+                    <a id="review_link" href="#" data-bs-toggle="modal" data-bs-target="#review-form">
                         <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=objectionreview}</span>
                     </a>
                 </li>
@@ -111,7 +111,7 @@
                 <li class="dropdown-item">
                     <a href="{$WWWROOT}view/delete.php?id={$viewid}" title="{str tag=deletethisview section=view}">
                         <span class="icon icon-trash-alt text-danger left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=deletethisview section=view}</span>
-                        <span class="sr-only">{str(tag=deletespecific arg1=$maintitle)|escape:html|safe}</span>
+                        <span class="visually-hidden">{str(tag=deletespecific arg1=$maintitle)|escape:html|safe}</span>
                     </a>
                 </li>
                 {/if}
@@ -120,7 +120,7 @@
                 <li class="dropdown-item">
                   <a href="{$versionurl}">
                       <span class="icon icon-history left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=timeline section=view}</span>
-                      <span class="sr-only">{str(tag=timelinespecific section=view arg1=$maintitle)|escape:html|safe}</span>
+                      <span class="visually-hidden">{str(tag=timelinespecific section=view arg1=$maintitle)|escape:html|safe}</span>
                   </a>
                 </li>
             {/if}
@@ -128,7 +128,7 @@
                 <li class="dropdown-item">
                   <a href="{$createversionurl}">
                       <span class="icon icon-save left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=savetimeline section=view}</span>
-                      <span class="sr-only">{str(tag=savetimelinespecific section=view arg1=$maintitle)|escape:html|safe}</span>
+                      <span class="visually-hidden">{str(tag=savetimelinespecific section=view arg1=$maintitle)|escape:html|safe}</span>
                   </a>
                 </li>
             {/if}

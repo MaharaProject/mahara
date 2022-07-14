@@ -1,4 +1,5 @@
 .table>thead>tr>th {
+    border-bottom: (2 * $table-border-width) solid $table-border-color;
     border-color: $table-border-color;
     &.active {
         background: scale-color($table-active-bg, $lightness: 75%);
@@ -113,6 +114,8 @@ td.tiny {
     }
 
     td {
+        border-top: $table-border-width solid $table-border-color;
+        border-bottom-width: 0;
         white-space: normal;
         &.movebuttons {
             width: 3.125rem; // 50px;

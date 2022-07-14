@@ -1,3 +1,5 @@
+@use "sass:math";
+
 .dashboard-widget-container {
     clear: both;
     margin-top: $spacing-xl;
@@ -10,7 +12,7 @@
 
         @include media-breakpoint-up(md) {
             float:left;
-            width: 10 / 3 * 10%;
+            width: math.div(10, 3) * 10%;
             padding-left: 2%;
             margin-bottom: $spacing-xxxl;
             &.first {
@@ -49,10 +51,10 @@
             }
 
             h2 {
-                margin: $spacing-base 0; // 5px 0;
-                font-weight: $font-weight-bold;
-                color: $dashboard-widget-title-color;
-                line-height: 1;
+                margin: $spacing-base 0 !important; // 5px 0;
+                font-weight: $font-weight-bold !important;
+                color: $dashboard-widget-title-color !important;
+                line-height: 1 !important;
             }
 
             p {

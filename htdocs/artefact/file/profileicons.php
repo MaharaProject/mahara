@@ -111,7 +111,7 @@ var table = new TableRenderer(
             if (rowdata['isdefault'] == 't' || rowdata['isdefault'] == 1) {
                 options.checked = 'checked';
             }
-            var label = jQuery('<label>', {'class': 'accessible-hidden sr-only', 'for': 'setdefault_' + rowdata.id, 'text': rowdata.default_str});
+            var label = jQuery('<label>', {'class': 'accessible-hidden visually-hidden', 'for': 'setdefault_' + rowdata.id, 'text': rowdata.default_str});
             return jQuery('<td>', {'class': 'defaultcell'})
                 .append(jQuery('<input>', options).append(label))[0];
         },
@@ -126,7 +126,7 @@ var table = new TableRenderer(
             if (!rowdata.id) {
                 options.disabled = 'disabled';
             }
-            var label =  jQuery('<label>',{'class': 'accessible-hidden sr-only', 'for': 'markdelete_' + rowdata.id, 'text': rowdata.delete_str});
+            var label =  jQuery('<label>',{'class': 'accessible-hidden visually-hidden', 'for': 'markdelete_' + rowdata.id, 'text': rowdata.delete_str});
             return jQuery('<td>',{'class': 'deletecell'})
               .append(jQuery('<input>', options), label)[0];
         }

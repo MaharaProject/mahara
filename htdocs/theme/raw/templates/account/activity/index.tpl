@@ -21,7 +21,7 @@
         <table id="activitylist" class="fullwidth table table-striped">
             <thead>
                 <tr>
-                    <th><span class="accessible-hidden sr-only">{str section='activity' tag='messagetype'}</span></th>
+                    <th><span class="accessible-hidden visually-hidden">{str section='activity' tag='messagetype'}</span></th>
                     <th>{str section='activity' tag='subject'}</th>
                     <th>{str section='activity' tag='date'}</th>
                     <th class="center">{str section='activity' tag='read'}</th>
@@ -32,10 +32,10 @@
                 <tr>
                     <td colspan="3"></td>
                     <td class="center">
-                        <a href="" data-togglecheckbox="tocheckread">{str section='activity' tag='selectall'}<span class="accessible-hidden sr-only"> {str section='activity' tag='selectallread'}</span></a>
+                        <a href="" data-bs-togglecheckbox="tocheckread">{str section='activity' tag='selectall'}<span class="accessible-hidden visually-hidden"> {str section='activity' tag='selectallread'}</span></a>
                     </td>
                     <td class="center">
-                        <a href="" data-togglecheckbox="tocheckdel">{str section='activity' tag='selectall'} <span class="accessible-hidden sr-only">{str section='activity' tag='selectalldelete'}</span></a>
+                        <a href="" data-bs-togglecheckbox="tocheckdel">{str section='activity' tag='selectall'} <span class="accessible-hidden visually-hidden">{str section='activity' tag='selectalldelete'}</span></a>
                     </td>
                 </tr>
             </tfoot>

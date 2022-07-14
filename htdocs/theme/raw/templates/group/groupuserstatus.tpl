@@ -4,7 +4,7 @@
     {if $group->requests}
         <div class="text-small groupuserstatus">
             <a href="{$WWWROOT}group/members.php?id={$group->id}&amp;membershiptype=request">
-                <span class="badge badge-warning">{$group->requests}</span>
+                <span class="badge bg-warning">{$group->requests}</span>
                 <span class="text-warning">
                     {str tag="membershiprequests" section="group"}
                 </span>

@@ -14,14 +14,14 @@
                 {if $n->exists}
                 <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?id={$n->id}" title="{str tag=edit$n->artefacttype section=artefact.resume}">
                 {str tag=$n->artefacttype section='artefact.resume'}
-                <span class="icon icon-pencil-alt float-right" role="presentation" aria-hidden="true"></span>
-                <span class="sr-only">{str tag=edit}</span>
+                <span class="icon icon-pencil-alt float-end" role="presentation" aria-hidden="true"></span>
+                <span class="visually-hidden">{str tag=edit}</span>
                 </a>
                 {else}
                 <a id="skills_edit_{$n->artefacttype}" href="{$WWWROOT}artefact/resume/editgoalsandskills.php?type={$n->artefacttype}" title="{str tag=edit$n->artefacttype section=artefact.resume}">
                 {str tag=$n->artefacttype section='artefact.resume'}
-                <span class="icon icon-pencil-alt float-right" role="presentation" aria-hidden="true"></span>
-                <span class="sr-only">{str tag=edit}</span>
+                <span class="icon icon-pencil-alt float-end" role="presentation" aria-hidden="true"></span>
+                <span class="visually-hidden">{str tag=edit}</span>
                 </a>
                 {/if}
             </h3>
@@ -37,12 +37,12 @@
 
             {if $n->files}
             <div id="resume_{$n->id}" class="has-attachment">
-                <a class="card-footer collapsed" aria-expanded="false" href="#attach_skill_{$n->id}" data-toggle="collapse">
-                    <p class="text-left">
+                <a class="card-footer collapsed" aria-expanded="false" href="#attach_skill_{$n->id}" data-bs-toggle="collapse">
+                    <p class="text-start">
                         <span class="icon left icon-paperclip" role="presentation" aria-hidden="true"></span>
                         <span class="text-small">{str tag=attachedfiles section=artefact.blog}</span>
                         <span class="metadata">({$n->count})</span>
-                        <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-chevron-down collapse-indicator float-end" role="presentation" aria-hidden="true"></span>
                     </p>
                 </a>
                 <div id="attach_skill_{$n->id}" class="collapse">
@@ -60,7 +60,7 @@
                                     <span class="text-small">{$file->title|truncate:40}</span>
                                 </span>
                                 <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}">
-                                    <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$file->title arg2=$file->size|display_size}"></span>
+                                    <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$file->title arg2=$file->size|display_size}"></span>
                                 </a>
                             {if $file->description}
                                 <div class="file-description text-small text-midtone">

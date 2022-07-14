@@ -22,7 +22,7 @@
 
 <footer class="{if $editing == true}editcontent{/if} footer">
     <div class="footer-inner container">
-        <div id="powered-by" class="float-left mahara-logo">
+        <div id="powered-by" class="float-start mahara-logo">
             <a href="https://mahara.org/">
                 <img src="{theme_image_url filename='powered_by_mahara'}?v={$CACHEVERSION}" alt="Powered by Mahara" class="mahara-footer-logo">
             </a>
@@ -33,7 +33,7 @@
         NOTE: this image and link are a way that you can
         support the Mahara project. Please consider
         displaying them on your site to spread the word! -->
-        <ul class="nav nav-pills footer-nav float-left">
+        <ul class="nav nav-pills footer-nav float-start">
         {foreach from=$FOOTERMENU item=item name=footermenu}
             <li>
                 {if $item.fullurl}
@@ -44,7 +44,7 @@
             </li>
         {/foreach}
         </ul>
-        <div class="metadata float-right mahara-version" id="version">
+        <div class="metadata float-end mahara-version" id="version">
             {mahara_version}
         </div>
 

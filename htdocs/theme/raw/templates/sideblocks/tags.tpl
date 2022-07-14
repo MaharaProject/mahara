@@ -1,6 +1,6 @@
 <div class="card">
     <h2 class="card-header has-link">
-        <a href="{$WWWROOT}tags.php">{str tag="tags"} <span class="icon icon-arrow-right float-right" role="presentation" aria-hidden="true"></span></a>
+        <a href="{$WWWROOT}tags.php">{str tag="tags"} <span class="icon icon-arrow-right float-end" role="presentation" aria-hidden="true"></span></a>
     </h2>
     <div class="tagblock card-body">
         {if $sbdata.tags}

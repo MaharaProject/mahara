@@ -5,7 +5,10 @@ var gulp = require('gulp');
 require('es6-promise').polyfill();
 
 // Include Our Plugins
-var sass = require('gulp-sass');
+const sass = require('gulp-sass')
+sass.compiler = require('sass')
+const Fiber = require('fibers')
+
 var path = require('path');
 var cleanCSS = require('gulp-clean-css');
 var autoprefixer = require('gulp-autoprefixer');
@@ -16,27 +19,30 @@ var gulpif = require('gulp-if');
 
 // Locate all the themes (they're the directories with a "themeconfig.php" in them)
 var themes = globule.find('htdocs/theme/*/themeconfig.php');
-themes = themes.map(function(themepath){
+themes = themes.map(function (themepath) {
     themepath = path.join(themepath, '..');
     return themepath;
 });
 
 // Turn sass into css
-async function css () {
-    var tasks = themes.map(function(themepath){
+async function css() {
+    var tasks = themes.map(function (themepath) {
 
         console.log("Compiling CSS for " + themepath);
-        return gulp.src('sass/**/*.scss', {cwd: themepath})
-            .pipe(gulpif(argv.production !== 'false', sass().on('error', sass.logError), sass({
+        return gulp.src('sass/**/*.scss', { cwd: themepath })
+            .pipe(gulpif(argv.production !== 'false', sass({
+                includePaths: ['./node_modules'],
+                fiber: Fiber
+              }).on('error', sass.logError), sass({
                 style: 'expanded',
                 sourceComments: 'normal'
             }).on('error', sass.logError)))
             .pipe(autoprefixer({
-              browsers: ['last 4 version'],
-              cascade: false
+                browsers: ['last 4 version'],
+                cascade: false
             }))
             .pipe(gulpif(argv.production !== 'false', cleanCSS()))
-            .pipe(gulp.dest('style/', {cwd: themepath}));
+            .pipe(gulp.dest('style/', { cwd: themepath }));
     });
 
     return es.concat.apply(null, tasks);

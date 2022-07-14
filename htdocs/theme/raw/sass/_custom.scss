@@ -173,7 +173,7 @@
 .editgroup-container {
     padding-bottom: $spacing-xl;
     margin-bottom: $spacing-xl;
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(md) {
         .column-list {
             column-count: 1;
             column-gap: 0;
@@ -556,13 +556,13 @@ div.toolbarhtml {
 #institution_logoxshtml_container,
 #institution_deletelogoxs_container {
     padding-left: 17.1875rem; // 275px;
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(md) {
         padding-left: 0;
     }
 }
 
 // shared view filter in smaller screens too close to top element
-@include media-breakpoint-down(md) {
+@include media-breakpoint-down(lg) {
   #search_inputgroupsort_container {
     margin-top: $spacing-base;
   }
@@ -643,7 +643,7 @@ div.toolbarhtml {
 }
 
 #synclanguage .icon.icon-check-circle {
-    color: theme-color("success");
+    color: $theme-color-success;
 }
 #add_language_addlangdesc_container {
     margin-left: 0.5rem;

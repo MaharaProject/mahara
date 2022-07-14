@@ -4,7 +4,7 @@
  * Licensed under MIT (https://github.com/tempusdominus/bootstrap-3/blob/master/LICENSE)
  */
 
- .sr-only {
+ .visually-hidden {
  	position: absolute;
   width: 0.0625rem; // 1px;
   height: 0.0625rem; // 1px;
@@ -409,7 +409,7 @@
  		left: 0.4375rem; // 7px;
  	}
  }
- .bootstrap-datetimepicker-widget.dropdown-menu.float-right {
+ .bootstrap-datetimepicker-widget.dropdown-menu.float-end {
  	&:before {
  		left: auto;
  		right: 0.375rem; // 6px;
@@ -429,7 +429,7 @@
  	}
  }
  .input-group {
- 	[data-toggle="datetimepicker"] {
+ 	[data-bs-toggle="datetimepicker"] {
  		cursor: pointer;
  	}
  }

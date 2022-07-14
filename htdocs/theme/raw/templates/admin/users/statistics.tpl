@@ -1,6 +1,6 @@
 {include file='header.tpl'}
 <div class="btn-group btn-group-top">
-    <button id="configbtn" type="button" class="btn btn-secondary" data-toggle="modal-docked" data-target="#modal-configs">
+    <button id="configbtn" type="button" class="btn btn-secondary" data-bs-toggle="modal-docked" data-bs-target="#modal-configs">
         <span class="icon icon-cog" role="presentation" aria-hidden="true"></span>
         {str tag="configurereport" section="admin"}
     </button>
@@ -39,7 +39,7 @@
                             {$subpagedata.table.pagination|safe}
                         </div>
                         {if $subpagedata.table.csv}
-                            <a href="{$WWWROOT}download.php" id="csvdownload" class="csv-button float-right btn btn-secondary" title="{str tag="exportstatsascsv" section="admin"}">
+                            <a href="{$WWWROOT}download.php" id="csvdownload" class="csv-button float-end btn btn-secondary" title="{str tag="exportstatsascsv" section="admin"}">
                             <span class="icon icon-download" role="presentation" aria-hidden="true"></span>
                             <span>{str tag="Download" section="admin"}</span></a>
                         {/if}
@@ -62,9 +62,9 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button class="deletebutton close" data-dismiss="modal-docked" aria-label="{str tag=Close}">
+                <button class="deletebutton btn-close" data-bs-dismiss="modal-docked" aria-label="{str tag=Close}">
                     <span class="times">×</span>
-                    <span class="sr-only">{str tag=Close}</span>
+                    <span class="visually-hidden">{str tag=Close}</span>
                 </button>
                 <h1 class="modal-title blockinstance-header text-inline modal-configs-title">{str tag="reportconfig" section="statistics"}</h1>
             </div>

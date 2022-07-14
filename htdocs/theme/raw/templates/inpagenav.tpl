@@ -13,7 +13,7 @@
           <li {if $item.selected} class="active"{/if}>
             <button type="submit" class="btn-link btn{if $item.selected} active{/if}" name="report:{$item.id}" value="{$item.name}" />
               <span class="text">{$item.name}</span>
-               <span class="accessible-hidden sr-only">({if $item.selected} {str tag=selected}{/if})</span>
+               <span class="accessible-hidden visually-hidden">({if $item.selected} {str tag=selected}{/if})</span>
             </button>
           </li>
         {/foreach}
@@ -27,7 +27,7 @@
             <a {if $item.tooltip}title="{$item.tooltip}"{/if} class="{if $item.selected} current-tab{/if}" href="{$WWWROOT}{$item.url}">
                 {if $item.iconclass}<span class="{$item.iconclass} left"></span>{/if}
                 {$item.title}
-                <span class="accessible-hidden sr-only">({str tag=tab}{if $item.selected} {str tag=selected}{/if})</span>
+                <span class="accessible-hidden visually-hidden">({str tag=tab}{if $item.selected} {str tag=selected}{/if})</span>
             </a>
         </li>
         {/if}

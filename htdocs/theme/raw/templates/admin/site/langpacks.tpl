@@ -19,7 +19,7 @@
                             <th class="{if $c.class} {$c.class}{/if}">
                                 {$c.name}
                                 {if $c.accessible}
-                                    <span class="accessible-hidden sr-only">{$c.accessible}</span>
+                                    <span class="accessible-hidden visually-hidden">{$c.accessible}</span>
                                 {/if}
                                 {if $c.headhtml}<div class="headhtml allnone-toggles">{$c.headhtml|safe}</div>{/if}
                             </th>

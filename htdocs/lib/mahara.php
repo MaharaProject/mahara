@@ -219,6 +219,14 @@ function ensure_upgrade_sanity() {
     if (!record_exists('usr', 'id', 0)) {
         throw new ConfigSanityException(get_string('mahararootusermissing', 'error'));
     }
+    // bootstrap version matches compiled css
+    $bootstrap_major_version = 5;
+    for ($i = 0; $i < $bootstrap_major_version; $i++) {
+        if (file_exists(get_config('docroot') . 'theme/raw/sass/lib/bootstrap' . $i . '/bootstrap.scss')) {
+            // need to alert them to old css files
+            throw new ConfigSanityException(get_string('outdatedcompiledcssbs', 'error'));
+        }
+    }
 }
 
 /**

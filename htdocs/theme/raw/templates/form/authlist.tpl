@@ -15,18 +15,18 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
             {{if $instance->index + 1 < $instance->total}}
             <a class="btn text-default order-sort-control arrow-down text-midtone" href="" onclick="PieformAuthlist.move_down({{$instance->id}}); return false;">
                 <span class="icon icon-long-arrow-alt-down" role="presentation" aria-hidden="true"></span>
-                <span class="sr-only">{{str tag=moveitemdown}}</span>
+                <span class="visually-hidden">{{str tag=moveitemdown}}</span>
             </a>
             {{/if}}
             {{if $instance->index != 0 }}
             <a class="btn text-default order-sort-control arrow-up text-midtone" href="" onclick="PieformAuthlist.move_up({{$instance->id}}); return false;">
                 <span class="icon icon-long-arrow-alt-up" role="presentation" aria-hidden="true"></span>
-                <span class="sr-only">{{str tag=moveitemup}}</span>
+                <span class="visually-hidden">{{str tag=moveitemup}}</span>
             </a>
             {{/if}}
             <a href="" class="btn btn-sm" onclick="PieformAuthlist.remove_auth({{$instance->id}}); return false;">
                 <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
-                <span class="sr-only">{{str tag=deleteitem}}</span>
+                <span class="visually-hidden">{{str tag=deleteitem}}</span>
             </a>
         </span>
       </span>{{/strip}}
@@ -51,12 +51,12 @@ IMPORTANT: do not introduce any new whitespace into the instanceList div.
     <div class="modal-dialog modal-lg">
         <div class="modal-content" data-height=".modal-body">
             <div class="modal-header">
-                <button id="authlist_modal_closer" class="deletebutton close" name="close_configuration">
+                <button id="authlist_modal_closer" class="deletebutton btn-close" name="close_configuration">
                     <span class="times">&times;</span>
-                    <span class="sr-only">{str tag=cancel section=mahara}</span>
+                    <span class="visually-hidden">{str tag=cancel section=mahara}</span>
                 </button>
                 <h1 class="modal-title authinstance-header text-inline"></h1>
-                <span class="icon icon-cogs icon-2x float-right" role="presentation" aria-hidden="true"></span>
+                <span class="icon icon-cogs icon-2x float-end" role="presentation" aria-hidden="true"></span>
             </div>
             <div class="modal-body authinstance-content">
             </div>

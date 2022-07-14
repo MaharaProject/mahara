@@ -29,12 +29,12 @@
 
                 {if $topic->closed}
                 <span class="icon icon-lock icon-sm left" role="presentation" aria-hidden="true"></span>
-                <span class="sr-only">{str tag="Closed" section="interaction.forum"}</span>
+                <span class="visually-hidden">{str tag="Closed" section="interaction.forum"}</span>
                 {/if}
 
                 {if $topic->subscribed}
                 <span class="icon icon-star icon-sm left" role="presentation" aria-hidden="true"></span>
-                <span class="sr-only">{str tag="Subscribed" section="interaction.forum"}</span>
+                <span class="visually-hidden">{str tag="Subscribed" section="interaction.forum"}</span>
                 {/if}
             {/if}
             <a href="{$WWWROOT}interaction/forum/topic.php?id={$topic->id}">
@@ -87,13 +87,13 @@
         <div class="btn-group">
             <button data-url="{$WWWROOT}interaction/forum/edittopic.php?id={$topic->id}&amp;returnto=view" type="button"  class="btn btn-secondary btn-sm" title="{str tag="edit"}">
                 <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
-                <span class="sr-only">
+                <span class="visually-hidden">
                     {str tag=edittopicspecific section=interaction.forum arg1=$topic->subject}
                 </span>
             </button>
             <button data-url="{$WWWROOT}interaction/forum/deletetopic.php?id={$topic->id}&amp;returnto=view" type="button" class="btn btn-secondary btn-sm" title="{str tag="delete"}">
                 <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
-                <span class="sr-only">
+                <span class="visually-hidden">
                     {str tag=deletetopicspecific section=interaction.forum arg1=$topic->subject}
                 </span>
             </button>

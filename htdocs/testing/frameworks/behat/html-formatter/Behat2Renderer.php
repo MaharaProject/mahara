@@ -146,11 +146,11 @@ class Behat2Renderer
             <div class="switchers">
                 <a href="javascript:void(0)" id="behat_show_all">
                     <span class="icon icon-chevron-down"></span>
-                    <span class="sr-only">Show all tests</span>
+                    <span class="visually-hidden">Show all tests</span>
                 </a>
                 <a href="javascript:void(0)" id="behat_hide_all">
                     <span class="icon icon-chevron-up"></span>
-                    <span class="sr-only">Hide all tests</span>
+                    <span class="visually-hidden">Hide all tests</span>
                 </a>
             </div>
         </div> ' .$strPendingList. '

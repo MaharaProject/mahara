@@ -32,12 +32,12 @@
                     {if !$institution->site}</a>{/if}</td>
                 <td class="center">{if $institution->suspended}<span class="suspended">{str tag="suspendedinstitution" section=admin}</span>{/if}</td>
                 <td class="controls">
-                        <form action="" method="post"  class="btn-group float-right">
+                        <form action="" method="post"  class="btn-group float-end">
                           <input type="hidden" name="i" value="{$institution->name}">
                           {if $webserviceconnections}
                               <a class="btn-secondary btn-sm button btn btn-group-first" href="{$WWWROOT}webservice/admin/connections.php?i={$institution->name}">
                                   <span class="icon icon-plug text-default" role="presentation" aria-hidden="true"></span>
-                                  <span class="sr-only">
+                                  <span class="visually-hidden">
                                       {str(tag=connectspecific arg1=$institution->displayname)|escape:html|safe}
                                   </span>
                               </a>
@@ -47,7 +47,7 @@
                             {if !$webserviceconnections} btn-group-first {/if}"
                             title="{str(tag=editspecific arg1=$institution->displayname)|escape:html|safe}">
                                  <span class="icon icon-cog text-default" role="presentation" aria-hidden="true"></span>
-                                 <span class="sr-only">
+                                 <span class="visually-hidden">
                                      {str tag="edit"}
                                  </span>
                              </button>
@@ -55,7 +55,7 @@
                             <button type="submit" name="delete" value="1" class="btn-secondary btn-sm button btn btn-group-last" title="{str(tag=deletespecific arg1=$institution->displayname)|escape:html|safe}">
 
                                 <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
-                                <span class="sr-only">
+                                <span class="visually-hidden">
                                     {str tag="delete"}
                                 </span>
                             </button>

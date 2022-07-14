@@ -1,14 +1,36 @@
+@use "sass:math";
+
 // Basic type related customisation
 body, p {
     font-weight: $font-weight-normal;
 }
 
+//
+// Headings
+//
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  margin-bottom: $headings-margin-bottom !important;
+  font-family: $headings-font-family !important;
+  font-weight: $headings-font-weight !important;
+  line-height: $headings-line-height !important;
+  color: $headings-color !important;
+}
+
+h1, .h1 { @include font-size($h1-font-size); }
+h2, .h2 { @include font-size($h2-font-size); }
+h3, .h3 { @include font-size($h3-font-size); }
+h4, .h4 { @include font-size($h4-font-size); }
+h5, .h5 { @include font-size($h5-font-size); }
+h6, .h6 { @include font-size($h6-font-size); }
+
 h1 {
     @extend .page-header;
     padding-bottom: $line-height-computed * 0.5;
-    margin-bottom: $spacing-xl;
+    margin-bottom: $spacing-xl !important;
     border-bottom: $h1heading-border-width solid $h1heading-border-color;
-    @include media-breakpoint-down(md) {
+    @include media-breakpoint-down(lg) {
       border-bottom: 0;
       font-size: $h2-font-size; // making it smaller for mobile
     }
@@ -45,7 +67,7 @@ h1 {
         margin-top: -$spacing-xl; // -20px (from H1 margin)
         margin-bottom: $spacing-lg;
 
-        @include media-breakpoint-down(md) {
+        @include media-breakpoint-down(lg) {
             padding: $spacing-xl;
             margin-top: $spacing-sm; // 5px;
         }
@@ -79,7 +101,7 @@ h1 {
     ~ div.with-heading {
         padding-bottom: $spacing-base;
         margin-bottom: $spacing-base;
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             border-bottom: $h1heading-border-width solid $h1heading-border-color;
         }
         a {
@@ -198,7 +220,11 @@ img {
 }
 
 hr {
-    margin-top: #{$line-height-base / 2}rem;
+    margin-top: #{math.div($line-height-base, 2)}rem;
+    margin-bottom: $hr-margin-y;
+    background-color: transparent;
+    opacity: 1;
+    border-top: $hr-border-width solid $hr-border-color;
 }
 
 ul {
@@ -307,7 +333,7 @@ pre {
 
         .wsrequired {
             font-weight: $font-weight-bold;
-            color: theme-color("danger");
+            color: $theme-color-danger;
         }
         .wsoptional {
             font-weight: $font-weight-bold;

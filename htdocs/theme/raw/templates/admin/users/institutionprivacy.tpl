@@ -5,12 +5,12 @@
 {if $versionid === null || !in_array($versionid, $latestVersions)}
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active">
-            <a href="#privacy" role="tab" data-toggle="tab" aria-expanded="true" onclick="showTab('#privacy')">
+            <a href="#privacy" role="tab" data-bs-toggle="tab" aria-expanded="true" onclick="showTab('#privacy')">
                 {str tag="privacy" section="admin"}
             </a>
         </li>
         <li role="presentation">
-            <a href="#termsandconditions" role="tab" data-toggle="tab" aria-expanded="false" onclick="showTab('#termsandconditions')">
+            <a href="#termsandconditions" role="tab" data-bs-toggle="tab" aria-expanded="false" onclick="showTab('#termsandconditions')">
                 {str tag="termsandconditions" section="admin"}
             </a>
         </li>
@@ -22,9 +22,9 @@
         <div class="last form-group collapsible-group">
             <fieldset class="pieform-fieldset last collapsible">
                 <legend>
-                    <a href="#dropdown-privacyst-{$sitecontent['privacy']->id}" data-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
+                    <a href="#dropdown-privacyst-{$sitecontent['privacy']->id}" data-bs-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
                         {str tag="siteprivacy" section="admin"}
-                        <span class="icon icon-chevron-down collapse-indicator right float-right"> </span>
+                        <span class="icon icon-chevron-down collapse-indicator right float-end"> </span>
                     </a>
                 </legend>
                 <div class="fieldset-body collapse" id="dropdown-privacyst-{$sitecontent['privacy']->id}">
@@ -43,9 +43,9 @@
         <div class="last form-group collapsible-group">
             <fieldset class="pieform-fieldset last collapsible">
                 <legend>
-                    <a href="#dropdown-terms-{$sitecontent['termsandconditions']->id}" data-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
+                    <a href="#dropdown-terms-{$sitecontent['termsandconditions']->id}" data-bs-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
                         {str tag="sitetermsandconditions" section="admin"}
-                        <span class="icon icon-chevron-down collapse-indicator right float-right"> </span>
+                        <span class="icon icon-chevron-down collapse-indicator right float-end"> </span>
                     </a>
                 </legend>
                 <div class="fieldset-body collapse" id="dropdown-terms-{$sitecontent['termsandconditions']->id}">
@@ -75,7 +75,7 @@
                     <th>{str tag="author" section="admin"}</th>
                     <th>{str tag="content" section="admin"}</th>
                     <th>{str tag="creationdate" section="admin"}</th>
-                    <th><span class="accessible-hidden sr-only">{str tag=edit}</span></th>
+                    <th><span class="accessible-hidden visually-hidden">{str tag=edit}</span></th>
                 </tr>
                 </thead>
                     <tbody id="privacy" class="tab">

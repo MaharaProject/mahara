@@ -65,7 +65,7 @@ echo $form_tag;
             <h2 class="card-header"><?php echo get_string('create', 'admin'); ?></h2>
             <div class="card-body">
                 <!-- Button trigger modal -->
-                <button type="button" class="btn btn-link" data-toggle="modal-docked" data-target="#general-account-options">
+                <button type="button" class="btn btn-link" data-bs-toggle="modal-docked" data-bs-target="#general-account-options">
                     <span class="icon icon-cog left text-default" role="presentation" aria-hidden="true"></span>
                     <?php echo get_string('accountoptionsdesc', 'account'); ?>
                 </button>
@@ -83,9 +83,9 @@ echo $form_tag;
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                   <div class="modal-header">
-                      <button class="deletebutton close" name="action_removeblockinstance_id_80" data-dismiss="modal-docked" aria-label="<?php echo get_string('Close'); ?>">
+                      <button class="deletebutton btn-close" name="action_removeblockinstance_id_80" data-dismiss="modal-docked" aria-label="<?php echo get_string('Close'); ?>">
                           <span class="times">&times;</span>
-                          <span class="sr-only">Close</span>
+                          <span class="visually-hidden">Close</span>
                       </button>
                     <h1 class="modal-title blockinstance-header  text-inline general-account-options-title" id="general-account-options-label"><?php echo get_string('accountoptionsdesc', 'account'); ?></h1>
                   </div>

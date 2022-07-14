@@ -13,8 +13,7 @@
             {/if}
         {/foreach}
 
-        <button class="picker form-control dropdown-toggle"" type=" button" id="currentindex" data-currentindex="{$currentindex}" data-toggle="dropdown"
-          aria-haspopup="true" aria-expanded="false">
+        <button class="picker form-control dropdown-toggle"" type="button" id="currentindex" data-currentindex="{$currentindex}" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {* page title and page count *}
           {str tag="viewingpage" section="collection"}{$currentindex + 1}/{count($collection)}
         </button>

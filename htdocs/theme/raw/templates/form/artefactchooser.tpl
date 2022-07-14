@@ -7,7 +7,7 @@
 <div id="artefactchooser-body">
     <div class="artefactchooser-splitter">
         <div id="artefactchooser-searchform" class="artefactchooser-search input-group clearfix {if !$.request.s} d-none{/if}"> {* Use a smarty var, not smarty.request *}
-            <label class="sr-only" for="artefactchooser-searchfield">
+            <label class="visually-hidden" for="artefactchooser-searchfield">
                 {str tag=search section=mahara}
             </label>
             <input type="text" class="text form-control" id="artefactchooser-searchfield" name="search" value="{$.request.search}" tabindex="42">

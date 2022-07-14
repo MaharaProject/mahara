@@ -80,7 +80,7 @@ jQuery(function($) {
     }
 
     function attachTooltip() {
-        $('[data-toggle="tooltip"]').tooltip({
+        $('[data-bs-toggle="tooltip"]').tooltip({
             container: 'body',
             placement: 'right',
             viewport: 'body'
@@ -231,7 +231,7 @@ jQuery(function($) {
         var collapseModalTarget = $(e.target).data('target');
         var wantedDialog = $(collapseModalTarget);
         if (e.target !== dialog && !wantedDialog.length && !dialogParent) {
-            $(this).find('button.close').trigger('click');
+            $(this).find('button.btn-close').trigger('click');
         }
     });
 

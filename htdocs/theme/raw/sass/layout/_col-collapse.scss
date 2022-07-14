@@ -5,7 +5,7 @@
     @extend .col-lg-2;
     @extend .col-sm-3;
 
-    @include media-breakpoint-down(md) {
+    @include media-breakpoint-down(lg) {
         .title,
         .indicator {
             font-size: $font-size-sm;

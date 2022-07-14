@@ -52,9 +52,9 @@
         <td class='verification cell-center'>
           {if is_int($view.verification)}
             {if $view.verification}
-            <div class="icon text-success icon-check-square" role="presentation" title='{str tag=verificationdone arg1=$view.title arg2=$view.sharedby section=collection}'><span class="sr-only">{str tag=sharedviewverifiedchecked arg1=$view.title arg2=$view.sharedby section=collection}</span></div></a>
+            <div class="icon text-success icon-check-square" role="presentation" title='{str tag=verificationdone arg1=$view.title arg2=$view.sharedby section=collection}'><span class="visually-hidden">{str tag=sharedviewverifiedchecked arg1=$view.title arg2=$view.sharedby section=collection}</span></div></a>
             {else}
-            <a href="{$WWWROOT}collection/progresscompletion.php?id={$view.collid}"><div class="icon icon-regular icon-square" role="presentation" title='{str tag=verificationtobedone section=collection arg1=$view.title arg2=$view.sharedby}'><span class="sr-only">{str tag=sharedviewverifiedunchecked arg1=$view.title arg2=$view.sharedby section=collection}</span></div></a>
+            <a href="{$WWWROOT}collection/progresscompletion.php?id={$view.collid}"><div class="icon icon-regular icon-square" role="presentation" title='{str tag=verificationtobedone section=collection arg1=$view.title arg2=$view.sharedby}'><span class="visually-hidden">{str tag=sharedviewverifiedunchecked arg1=$view.title arg2=$view.sharedby section=collection}</span></div></a>
             {/if}
           {else}
             {$view.verification|safe}
@@ -64,7 +64,7 @@
       {if $canremoveownaccess}
         <td class='revokemyaccess cell-center'>
           {if $view.accessrevokable}
-            <button class="deletebutton btn btn-inverse btn-sm" data-toggle="modal" data-target="#revokemyaccess-form" data-viewid={$view.viewid} data-title="{$view.title}" title='{str tag=removeaccess arg1=$view.title arg2=$view.sharedby section=collection}'>
+            <button class="deletebutton btn btn-inverse btn-sm" data-bs-toggle="modal" data-bs-target="#revokemyaccess-form" data-viewid={$view.viewid} data-title="{$view.title}" title='{str tag=removeaccess arg1=$view.title arg2=$view.sharedby section=collection}'>
               <span class="icon icon-trash-alt text-danger" aria-label='{str tag=removemyaccessiconaria arg1=$view.title arg2=$view.sharedby section=collection}'></span>
             </button>
           {/if}

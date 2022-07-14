@@ -1,6 +1,6 @@
 {if $item->read && $item->type == 'usermessage'}
     <span class="icon icon-envelope type-icon" role="presentation" aria-hidden="true"></span>
-    <span class="sr-only">{$item->strtype} - {str tag='read' section='activity'}</span>
+    <span class="visually-hidden">{$item->strtype} - {str tag='read' section='activity'}</span>
 {else}
     {if $item->type == 'usermessage'}
         <span class="icon icon-envelope type-icon" role="presentation" aria-hidden="true"></span>
@@ -16,5 +16,5 @@
         <span class="icon icon-wrench type-icon" role="presentation" aria-hidden="true"></span>
     {/if}
 
-    <span class="sr-only">{$item->strtype}</span>
+    <span class="visually-hidden">{$item->strtype}</span>
 {/if}

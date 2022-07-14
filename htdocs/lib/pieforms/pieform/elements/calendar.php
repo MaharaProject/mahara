@@ -63,7 +63,7 @@ function pieform_element_calendar(Pieform $form, $element) {
         . ' id="' . $id . '"'
         . ' value="' . $value . '"'
         . ' autocomplete="off"'
-        . ' data-toggle="datetimepicker" data-target="#' . $id . '"'
+        . ' data-bs-toggle="datetimepicker" data-bs-target="#' . $id . '"'
         . ' aria-label="' . get_string('element.calendar.format.arialabel', 'pieforms') . '"
         ></span>';
     $result .= '

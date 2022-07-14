@@ -3,7 +3,7 @@
     <div class="card-body flush">
     {/if}
     {if $profileiconpath}
-        <div class="user-icon float-right user-icon-60">
+        <div class="user-icon float-end user-icon-60">
             <img src="{$profileiconpath}" alt="{$profileiconalt}" />
         </div>
     {/if}
@@ -18,7 +18,7 @@
         </ul>
     {/if}
     {if $profileinfo.socialprofiles}
-        <h3 class="sr-only">{str tag=socialprofiles section=artefact.internal}</h3>
+        <h3 class="visually-hidden">{str tag=socialprofiles section=artefact.internal}</h3>
         <ul class="unstyled profile-info">
         {foreach from=$profileinfo.socialprofiles item=item}
             <li><strong>{$item.description}:</strong>

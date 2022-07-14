@@ -5,9 +5,9 @@
         {if is_array($resumegroup.fields) && count($resumegroup.fields)}
         <fieldset id="{$resumegroup.id}_fs" class="pieform-fieldset collapsible">
             <legend>
-                <a id="{$resumegroup.id}" class="resumegroup collapsed" href="#resumefield-{$resumegroup.id}" data-toggle="collapse" aria-expanded="false" aria-controls="resumefield">
+                <a id="{$resumegroup.id}" class="resumegroup collapsed" href="#resumefield-{$resumegroup.id}" data-bs-toggle="collapse" aria-expanded="false" aria-controls="resumefield">
                     {$resumegroup.legend}
-                    <span class="icon icon-chevron-down collapse-indicator right float-right" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-chevron-down collapse-indicator right float-end" role="presentation" aria-hidden="true"></span>
                 </a>
             </legend>
             <div id="resumefield-{$resumegroup.id}" class="collapse list-group">
@@ -44,7 +44,7 @@
                                         <label for="decision_{$fieldvalue.id}_{$opt}">
                                             <input id="decision_{$fieldvalue.id}_{$opt}" class="fieldvaluedecision" type="radio" name="decision_{$fieldvalue.id}" value="{$opt}"{if $fieldvalue.decision == $opt} checked="checked"{/if}>
                                             {$displayopt}
-                                            <span class="accessible-hidden sr-only">({$fieldname})</span>
+                                            <span class="accessible-hidden visually-hidden">({$fieldname})</span>
                                         </label>
                                         {/if}
                                     {/foreach}

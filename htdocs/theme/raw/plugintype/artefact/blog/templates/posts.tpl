@@ -28,12 +28,12 @@
                 </span>
                 {elseif $post->canedit}
                 <div class="btn-group postcontrols">
-                    <form name="edit_{$post->id}" action="{$WWWROOT}artefact/blog/post.php" class="form-as-button float-left">
+                    <form name="edit_{$post->id}" action="{$WWWROOT}artefact/blog/post.php" class="form-as-button float-start">
                         <input type="hidden" name="id" value="{$post->id}">
                         <div class="first">
                             <button type="submit" class="submit btn btn-secondary btn-sm" title="{str(tag=edit)|escape:html|safe}">
                                 <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
-                                <span class="sr-only">{str tag=editspecific arg1=$post->title |escape:html|safe}</span>
+                                <span class="visually-hidden">{str tag=editspecific arg1=$post->title |escape:html|safe}</span>
                             </button>
                         </div>
                     </form>
@@ -65,18 +65,18 @@
         {if $post->files}
         <div class="has-attachment card collapsible" id="postfiles_{$post->id}">
             <div class="card-header">
-                <a class="text-left collapsed" data-toggle="collapse" href="#attach_{$post->id}" aria-expanded="false">
+                <a class="text-start collapsed" data-bs-toggle="collapse" href="#attach_{$post->id}" aria-expanded="false">
                     <span class="icon left icon-paperclip icon-sm" role="presentation" aria-hidden="true"></span>
                     <span class="text-small"> {str tag=attachedfiles section=artefact.blog} </span>
                     <span class="metadata">({$post->files|count})</span>
-                    <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-chevron-down collapse-indicator float-end" role="presentation" aria-hidden="true"></span>
                 </a>
             </div>
             <div class="collapse" id="attach_{$post->id}">
                 <ul class="list-group list-unstyled">
                 {foreach from=$post->files item=file}
                     <li class="list-group-item">
-                        <a class="file-icon-link" href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}" {if $file->description} title="{$file->description}" data-toggle="tooltip"{/if}>
+                        <a class="file-icon-link" href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}" {if $file->description} title="{$file->description}" data-bs-toggle="tooltip"{/if}>
                             {if $file->icon}
                             <img src="{$file->icon}" alt="" class="file-icon">
                             {else}
@@ -84,11 +84,11 @@
                             {/if}
                         </a>
                         <span class="title">
-                            <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}" {if $file->description} title="{$file->description}" data-toggle="tooltip"{/if}>
+                            <a href="{$WWWROOT}artefact/file/download.php?file={$file->attachment}" {if $file->description} title="{$file->description}" data-bs-toggle="tooltip"{/if}>
                                 <span class="text-small">{$file->title|truncate:40}</span>
                             </a>
                         </span>
-                        <span class="text-midtone text-small float-right">({$file->size|display_size})</span>
+                        <span class="text-midtone text-small float-end">({$file->size|display_size})</span>
                     </li>
                 {/foreach}
                 </ul>

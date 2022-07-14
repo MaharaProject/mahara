@@ -585,7 +585,7 @@ class ArtefactTypeBlog extends ArtefactType {
             'successcallback' => 'delete_blog_submit',
             'renderer' => 'div',
             'autofocus' => false,
-            'class' => 'form-as-button float-left btn-group-item',
+            'class' => 'form-as-button float-start btn-group-item',
             'elements' => array(
                 'submit' => array(
                     'type' => 'button',
@@ -594,7 +594,7 @@ class ArtefactTypeBlog extends ArtefactType {
                     'alt' => get_string('deletespecific', 'mahara', $title),
                     'elementtitle' => get_string('delete'),
                     'confirm' => $confirm,
-                    'value' => '<span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">' . get_string('deletespecific', 'mahara', $title) . '</span>',
+                    'value' => '<span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span><span class="visually-hidden">' . get_string('deletespecific', 'mahara', $title) . '</span>',
                 ),
                 'delete' => array(
                     'type' => 'hidden',
@@ -1205,10 +1205,10 @@ class ArtefactTypeBlogPost extends ArtefactType {
         }
         $title = hsc($title);
         if ($published) {
-            $strchangepoststatus = '<span class="icon icon-times left text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">' . get_string('unpublishspecific', 'artefact.blog', $title) . '</span> ' . get_string('unpublish', 'artefact.blog');
+            $strchangepoststatus = '<span class="icon icon-times left text-danger" role="presentation" aria-hidden="true"></span><span class="visually-hidden">' . get_string('unpublishspecific', 'artefact.blog', $title) . '</span> ' . get_string('unpublish', 'artefact.blog');
         }
         else {
-            $strchangepoststatus = '<span class="icon icon-check left text-success" role="presentation" aria-hidden="true"></span><span class="sr-only"> ' . get_string('publishspecific', 'artefact.blog', $title) . '</span> ' . get_string('publish', 'artefact.blog');
+            $strchangepoststatus = '<span class="icon icon-check left text-success" role="presentation" aria-hidden="true"></span><span class="visually-hidden"> ' . get_string('publishspecific', 'artefact.blog', $title) . '</span> ' . get_string('publish', 'artefact.blog');
         }
         return pieform(array(
             'name' => 'changepoststatus_' . $id,
@@ -1243,7 +1243,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
             'jsform' => true,
             'jssuccesscallback' => 'delete_success',
             'renderer' => 'div',
-            'class' => 'form-as-button float-left',
+            'class' => 'form-as-button float-start',
             'elements' => array(
                 'delete' => array(
                     'type' => 'hidden',
@@ -1256,7 +1256,7 @@ class ArtefactTypeBlogPost extends ArtefactType {
                     'class' => 'btn-secondary btn-sm last',
                     'elementtitle' => get_string('delete'),
                     'confirm' => get_string('deleteblogpost?', 'artefact.blog'),
-                    'value' => '<span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">' . get_string('deletespecific', 'mahara', $title) . '</span>',
+                    'value' => '<span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span><span class="visually-hidden">' . get_string('deletespecific', 'mahara', $title) . '</span>',
                 ),
             ),
         ));

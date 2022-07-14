@@ -1366,7 +1366,7 @@ function activate_plugin_form($plugintype, $plugin) {
         'renderer'        => 'div',
         'elementclasses'  => false,
         'successcallback' => 'activate_plugin_submit',
-        'class'           => 'form-inline form-as-button float-left last btn-group-item',
+        'class'           => 'form-inline form-as-button float-start last btn-group-item',
         'jsform'          => false,
         'action'          => get_config('wwwroot') . 'admin/extensions/pluginconfig.php',
         'elements' => array(

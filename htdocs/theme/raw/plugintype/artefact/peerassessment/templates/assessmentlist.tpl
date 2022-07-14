@@ -4,7 +4,7 @@
     <div id="assessment{$item->id}" class="comment-item list-group-item {cycle name=rows values='r0,r1'} {if $item->attachments}has-attachment{/if} {if $item->private}draft{/if}">
         <div class="flex-row">
             <div class="usericon-heading flex-title flex-row">
-                <div class="float-left">
+                <div class="float-start">
                     <span class="user-icon user-icon-30" role="presentation" aria-hidden="true">
                     {if $item->author && !$item->author->deleted}
                         <img src="{profile_icon_url user=$item->author maxheight=30 maxwidth=30}" valign="middle" alt="{str tag=profileimagetext arg1=$item->author|display_default_name}"/>

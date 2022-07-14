@@ -7,9 +7,9 @@
         <h2 class="card-header">{str tag='plugintype'}: {$plugintype}
         {if $plugins.configure}
             <div class="btn-group btn-group-top">
-                <button class="btn btn-secondary float-left btn-group-item" title="{str tag='configfor'} {$plugintype}" type="button" data-url="plugintypeconfig.php?plugintype={$plugintype}">
+                <button class="btn btn-secondary float-start btn-group-item" title="{str tag='configfor'} {$plugintype}" type="button" data-url="plugintypeconfig.php?plugintype={$plugintype}">
                     <span class="icon icon-cog" role="presentation" aria-hidden="true"></span>
-                    <span class="accessible-hidden sr-only ">{str tag='configfor'} {$plugintype}</span>
+                    <span class="accessible-hidden visually-hidden ">{str tag='configfor'} {$plugintype}</span>
                 </button>
             </div>
         {/if}
@@ -29,7 +29,7 @@
                         {if $data.notinstallable}
                             {str tag='notinstallable'}: {$data.notinstallable|clean_html|safe}
                         {else}
-                            <span id="{$plugintype}.{$plugin}.install">(<a href="" onClick="{$installlink}('{$plugintype}.{$plugin}'); return false;">{str tag='install' section='admin'}<span class="accessible-hidden sr-only"> {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span></a>)</span>
+                            <span id="{$plugintype}.{$plugin}.install">(<a href="" onClick="{$installlink}('{$plugintype}.{$plugin}'); return false;">{str tag='install' section='admin'}<span class="accessible-hidden visually-hidden"> {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span></a>)</span>
                         {/if}
                         {if $data.dependencies}
                             {if $data.dependencies.needs}<div class="notes">{$data.dependencies.needs|safe}</div>{/if}
@@ -51,16 +51,16 @@
                         {if $data.name}{$data.name}{else}{$plugin}{/if}
                         <div class="btn-group btn-group-top">
                         {if $data.info}
-                            <button class="btn btn-secondary btn-sm float-left btn-group-item info-item" data-toggle="modal-docked" data-target="#infomodal" type="button"
+                            <button class="btn btn-secondary btn-sm float-start btn-group-item info-item" data-bs-toggle="modal-docked" data-bs-target="#infomodal" type="button"
                                 title="{str tag='infofor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}" data-plugintype='{$plugintype}' data-pluginname='{$plugin}'>
                                  <span class="icon icon-info" role="presentation" aria-hidden="true"></span>
-                                 <span class="accessible-hidden sr-only ">{str tag='infofor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span>
+                                 <span class="accessible-hidden visually-hidden ">{str tag='infofor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span>
                             </button>
                         {/if}
                         {if $data.config}
-                            <button class="btn btn-secondary btn-sm float-left btn-group-item" title="{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}" type="button" data-url="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}">
+                            <button class="btn btn-secondary btn-sm float-start btn-group-item" title="{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}" type="button" data-url="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}">
                                  <span class="icon icon-cog" role="presentation" aria-hidden="true"></span>
-                                 <span class="accessible-hidden sr-only ">{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span>
+                                 <span class="accessible-hidden visually-hidden ">{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span>
                             </button>
                         {/if}
                         {if $data.activateform}
@@ -80,16 +80,16 @@
                             <li>
                             {$type}
                             {if $config.info}
-                                <button class="btn btn-secondary btn-sm btn-group float-right" data-toggle="modal-docked" data-target="#infomodal"
+                                <button class="btn btn-secondary btn-sm btn-group float-end" data-bs-toggle="modal-docked" data-bs-target="#infomodal"
                                     title="{str tag='infofor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}" type="button" data-plugintype='{$plugintype}' data-pluginname='{$plugin}' data-type='{$type}'>
                                     <span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true"></span>
-                                    <span class="accessible-hidden sr-only">{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span>
+                                    <span class="accessible-hidden visually-hidden">{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span>
                                 </button>
                             {/if}
                             {if $config.config}
-                                <button class="btn btn-secondary btn-sm btn-group float-right" title="{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}" type="button" data-url="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;type={$type}">
+                                <button class="btn btn-secondary btn-sm btn-group float-end" title="{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}" type="button" data-url="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;type={$type}">
                                     <span class="icon icon-cog" role="presentation" aria-hidden="true"></span>
-                                    <span class="accessible-hidden sr-only">{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span>
+                                    <span class="accessible-hidden visually-hidden">{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span>
                                 </button>
                             {/if}
                             </li>
@@ -128,7 +128,7 @@ jQuery(function($) {
     $("#infomodal").on('show.bs.modal', function (e) {
         show_config_info(infochosen);
     });
-    $("#infomodal .close").on('click', function () {
+    $("#infomodal .btn-close").on('click', function () {
         $("#infomodal").modal("hide");
     });
 });
@@ -138,9 +138,9 @@ jQuery(function($) {
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button class="deletebutton close" data-dismiss="modal-docked" aria-label="{str tag=Close}">
+                <button class="deletebutton btn-close" data-bs-dismiss="modal-docked" aria-label="{str tag=Close}">
                     <span class="times">×</span>
-                    <span class="sr-only">{str tag=Close}</span>
+                    <span class="visually-hidden">{str tag=Close}</span>
                 </button>
                 <h4 class="modal-title blockinstance-header text-inline modal-docks-title"></h4>
             </div>

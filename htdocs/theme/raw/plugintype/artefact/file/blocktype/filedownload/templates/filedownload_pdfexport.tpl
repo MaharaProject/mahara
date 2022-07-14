@@ -12,7 +12,7 @@
         <h3 class="title list-group-item-heading text-inline">
             <a href="{$WWWROOT}artefact/artefact.php?artefact={$file.id}&view={$viewid}">
                  {$file.title} {if $exporttype == 'pdf'}[export_info/files/{$file.id}-{$file.title}]{/if}
-                 <span class="sr-only">
+                 <span class="visually-hidden">
                     {str tag=Details section=artefact.file}
                 </span>
             </a>

@@ -1,3 +1,5 @@
+@use "sass:math";
+
 // This file handles/modifies both real collapsible cards,
 // and collapsible pieform fieldsets (which are styled to look like cards)
 
@@ -5,7 +7,7 @@
     margin-bottom: 0;
     border-radius: 0;
     .card-header {
-        padding: $card-spacer-y ($card-spacer-x / 2);
+        padding: $card-spacer-y math.div($card-spacer-x, 2);
         a {
             text-decoration: none;
             border-radius: 0;
@@ -180,12 +182,12 @@
         font-weight: $font-weight-normal;
         font-size: $font-size-base;
 
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             position: static;
             text-align: right;
         }
 
-        button[data-toggle="collapse"] {
+        button[data-bs-toggle="collapse"] {
             margin-top: -$btn-border-width;
             border-bottom-left-radius: $btn-border-radius;
             border-bottom-right-radius: $btn-border-radius;

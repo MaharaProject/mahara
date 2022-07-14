@@ -1,3 +1,5 @@
+@use "sass:math";
+
 $transition: 0.1s ease-in 0s;
 $height: 2rem; // 32px;
 $indicator-horizontal-margin: 0.625rem; // 10px;
@@ -26,7 +28,7 @@ $indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
         overflow: hidden;
         width: 3.75rem; // 60px; // Overridden with inline styles
         input {
-            @extend .sr-only;
+            @extend .visually-hidden;
 
             &:focus {
                 + .switch-label {
@@ -34,7 +36,7 @@ $indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
                    outline: medium solid $input-focus-border-color;
                    .switch-inner:before,
                    .switch-inner:after {
-                       background-color: scale-color(theme-color("secondary"), $lightness: -5.5%);
+                       background-color: scale-color($secondary, $lightness: -5.5%);
                    }
                 }
             }
@@ -53,7 +55,7 @@ $indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
         &:hover {
             .switch-inner:before,
             .switch-inner:after {
-                background-color: scale-color(theme-color("secondary"), $lightness: -5.5%);
+                background-color: scale-color($secondary, $lightness: -5.5%);
            }
         }
     }
@@ -65,7 +67,7 @@ $indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
         &:hover {
             .switch-inner:before,
             .switch-inner:after {
-                background-color: theme-color("secondary");
+                background-color: $secondary;
            }
         }
     }
@@ -104,10 +106,10 @@ $indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
         display: block;
         width: $indicator-size;
         height: $indicator-size;
-        margin: -($indicator-size / 2) $indicator-horizontal-margin 0;
+        margin: -(math.div($indicator-size, 2)) $indicator-horizontal-margin 0;
         margin-right: $indicator-horizontal-margin + $indicator-total-width;
-        background: rgba(theme-color("danger"), 0.8);
-        border: 1px solid rgba(scale-color(theme-color("danger"), $lightness: -8.5%), 0.8);
+        background: rgba($danger, 0.8);
+        border: 1px solid rgba(scale-color($danger, $lightness: -8.5%), 0.8);
         position: absolute;
         top: 50%;
         left: 0;
@@ -119,8 +121,8 @@ $indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
         left: 100%;
         right: 0;
         transform: translateX(#{-$indicator-total-width});
-        background-color: rgba(theme-color("success"), 0.8);
-        border: 1px solid rgba(scale-color(theme-color("success"), $lightness: -25%), 0.8);
+        background-color: rgba($success, 0.8);
+        border: 1px solid rgba(scale-color($success, $lightness: -25%), 0.8);
 
         ~ .off {
             transform: translateX(#{-$indicator-total-width}) translateX(100%);

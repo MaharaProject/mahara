@@ -11,7 +11,7 @@ Modifications:
 Download setup for datatables.js and datatables.css:
 
 1. Visit                        https://datatables.net/download/index
-2. Choose styling framework     Bootstrap4
+2. Choose styling framework     Bootstrap5
 3. Select packages              Datatables
 4. Extensions                   Buttons
                                     Column visibility

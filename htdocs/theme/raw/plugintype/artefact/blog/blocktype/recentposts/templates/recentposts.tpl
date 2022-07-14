@@ -41,16 +41,16 @@
     <div class="list-group-item flush-collapsible">
         <h3 class="list-group-item-heading title">
             {if !($editing)}
-                 <a class="modal_link text-left" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
+                 <a class="modal_link text-start" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$post->id}">
                      {$post->title}
                  </a>
             {else}
                 <span class="list-group-item-heading no-link">{$post->title}</span>
             {/if}
         </h3>
-        <a class="collapsed" data-toggle="collapse" href="#recent_post_{$post->id}" aria-expanded="false">
-            <span class="sr-only">{$post->title}</span>
-            <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
+        <a class="collapsed" data-bs-toggle="collapse" href="#recent_post_{$post->id}" aria-expanded="false">
+            <span class="visually-hidden">{$post->title}</span>
+            <span class="icon icon-chevron-down collapse-indicator float-end" role="presentation" aria-hidden="true"></span>
         </a>
 
         <div>

@@ -2,10 +2,17 @@
 // Extenstion to input groups so we can use them in pieforms
 // --------------------------------------------------
 .form-inline  {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
     // if one item in an input group has a label, push others down
     .no-label {
         margin-top: 1.5rem; // 24px;
     }
+}
+
+.input-group {
+    width: auto;
 }
 
 .input-group-append .btn {
@@ -50,7 +57,7 @@
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
             &.submitonchange {
-                @include border-right-radius($border-radius);
+                @include border-end-radius($border-radius); // used to be border-right-radius
             }
             max-width: 100%;
             &.text {
@@ -59,7 +66,7 @@
         }
         ~ .form-group {
             .form-control {
-                @include border-left-radius(0);
+                @include border-start-radius(0); // used to be border-left-radius(0);
                 margin-left: -$border-width;
                 @include media-breakpoint-up(sm) {
                     border-left:0;
@@ -67,7 +74,7 @@
             }
             &:last-child {
                 .form-control {
-                    @include border-right-radius($border-radius);
+                    @include border-end-radius($border-radius);// border-right-radius($border-radius);
                 }
             }
         }

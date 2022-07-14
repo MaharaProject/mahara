@@ -11,29 +11,29 @@
 
         <div class="btn-group bulk-actions" role="group">
             <label class="btn btn-secondary" for="selectall">
-                <input type="checkbox" name="selectall" id="selectall" data-togglecheckbox="tocheck">
-                <span class="sr-only">{str section='activity' tag='selectall'}</span>
+                <input type="checkbox" name="selectall" id="selectall" data-bs-togglecheckbox="tocheck">
+                <span class="visually-hidden">{str section='activity' tag='selectall'}</span>
             </label>
 
-            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                 {str section='admin' tag='bulkactions'}  <span class="icon icon-caret-down right"></span>
             </button>
 
             <div class="activity-buttons dropdown-menu" role="menu">
-                <button class="btn btn-link text-left" data-action="markasread">
+                <button class="btn btn-link text-start" data-action="markasread">
                     {str tag='markasread' section='activity'}
                 </button>
-                <button class="btn btn-link btn-link-danger text-left" data-action="deleteselected">
+                <button class="btn btn-link btn-link-danger text-start" data-action="deleteselected">
                     {str tag='delete'}
                 </button>
-                <a class="btn btn-link btn-link-danger text-left" href="#delete_all_notifications_submit" data-triggersubmit="delete_all_notifications_submit">
+                <a class="btn btn-link btn-link-danger text-start" href="#delete_all_notifications_submit" data-bs-triggersubmit="delete_all_notifications_submit">
                     {str section='activity' tag='deleteallnotifications'}
                 </a>
             </div>
         </div>
         <form method="post" class="form-inline form-select-filter pieform form-as-button">
             <div class="form-group">
-                <label class="sr-only" for="notifications_type">{str section='activity' tag='type'}:</label>
+                <label class="visually-hidden" for="notifications_type">{str section='activity' tag='type'}:</label>
                 <div class="input-group select-group">
                     <div class="input-group-prepend" id="icon-addon-filter">
                         <span class="icon icon-filter" role="presentation" aria-hidden="true"></span>

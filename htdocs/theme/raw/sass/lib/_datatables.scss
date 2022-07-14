@@ -40,20 +40,20 @@ table.dataTable {
 
   // in table small coloured buttons
   .btn-info {
-    background-color: theme-color("info");
-    border-color: theme-color("info");
+    background-color: $theme-color-info;
+    border-color: $theme-color-info;
   }
   .btn-warning {
-    background-color: theme-color("warning");
-    border-color: theme-color("warning");
+    background-color: $theme-color-warning;
+    border-color: $theme-color-warning;
   }
   .btn-danger {
-    background-color: theme-color("danger");
-    border-color: theme-color("danger");
+    background-color: $theme-color-danger;
+    border-color: $theme-color-danger;
   }
   .btn-success {
-    background-color: theme-color("success");
-    border-color: theme-color("success");
+    background-color: $theme-color-success;
+    border-color: $theme-color-success;
   }
 }
 
@@ -210,4 +210,9 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td.dtr-control::befor
   background-color: inherit !important;
   border: none;
   padding: 0.25rem 1rem 0.25rem 0;
+}
+
+// override BS5 make-col-ready() function
+.dataTables_filter {
+  width: auto;
 }

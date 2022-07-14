@@ -1,3 +1,5 @@
+@use "sass:math";
+
 // Extra icons to fit db defiend tyopes (cf pagebuilder)
 .icon { //fontawesome solid is the default
     @include fonttype(solid);
@@ -17,6 +19,10 @@
         margin-top: $spacing-xl;
         margin-left: $spacing-xxl;
     }
+}
+
+.icon-lg {
+    line-height: math.div(3em, 4);
 }
 
 .icon-placeholder {

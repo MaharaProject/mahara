@@ -32,11 +32,11 @@
                                 <div class="btn-top-right btn-group btn-group-top">
                                     <a id="copytoclipboard-{$item.id}" data-clipboard-text="{$item.url}" class="url-copytoclipboardbutton btn btn-secondary btn-sm" title="{str tag=copytoclipboard}" href="#">
                                         <span class="icon icon-regular icon-copy" role="presentation" aria-hidden="true"></span>
-                                        <span class="sr-only">{str tag=copytoclipboard}</span>
+                                        <span class="visually-hidden">{str tag=copytoclipboard}</span>
                                     </a>
                                     <a id="edit-{$item.id}" class="url-open-editform nojs-hidden-inline btn btn-secondary btn-sm closed" title="{str tag=edit}" href="">
                                         <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
-                                        <span class="sr-only">{str tag=edit}</span>
+                                        <span class="visually-hidden">{str tag=edit}</span>
                                     </a>
                                     {$item.deleteform|safe}
                                 </div>

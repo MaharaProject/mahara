@@ -2,7 +2,7 @@
 <div class="card">
     <h2 class="card-header">
         {str tag="networkservers" section="auth.xmlrpc"}
-        <span class="float-right">
+        <span class="float-end">
             {contextualhelp plugintype='auth' pluginname='xmlrpc' section='networkservers'}
         </span>
     </h2>

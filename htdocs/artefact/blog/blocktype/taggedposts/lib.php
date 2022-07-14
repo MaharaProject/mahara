@@ -410,7 +410,7 @@ function (item, container) {
     if (item.id[0] == "-") {
         container.addClass("tagexcluded");
         if (!item.text.match(/sr\-only/)) {
-            return '<span class="sr-only">{$excludetag}</span>' + jQuery('<div>').text(item.text).html();
+            return '<span class="visually-hidden">{$excludetag}</span>' + jQuery('<div>').text(item.text).html();
         }
     }
     return item.text;

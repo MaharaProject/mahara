@@ -1676,12 +1676,12 @@ EOF;
         $textliteral = $this->escaper->escapeLiteral($text);
         $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the collapsed section heading containing the text "' . $text . '"');
         $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' collapsible-group ')]" .
-                    "//a[contains(concat(' ', normalize-space(@data-toggle), ' '), ' collapse ')" .
+                    "//a[contains(concat(' ', normalize-space(@data-bs-toggle), ' '), ' collapse ')" .
                         " and contains(normalize-space(.), " . $textliteral . ")" .
                         " and contains(concat(' ', normalize-space(@class), ' '), ' collapsed ')]" .
                  " | " .
                  "//div[contains(concat(' ', normalize-space(@class), ' '), ' collapsible-group ')]" .
-                    "//button[contains(concat(' ', normalize-space(@data-toggle), ' '), ' collapse ')" .
+                    "//button[contains(concat(' ', normalize-space(@data-bs-toggle), ' '), ' collapse ')" .
                         " and contains(normalize-space(.), " . $textliteral . ")" .
                         " and contains(concat(' ', normalize-space(@class), ' '), ' collapsed ')]";
         $section_heading_link = $this->find('xpath', $xpath, $exception);
@@ -1704,12 +1704,12 @@ EOF;
         $textliteral = $this->escaper->escapeLiteral($text);
         $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the uncollapsed section heading containing the text "' . $text . '"');
         $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' collapsible-group ')]" .
-                    "//a[contains(concat(' ', normalize-space(@data-toggle), ' '), ' collapse ')" .
+                    "//a[contains(concat(' ', normalize-space(@data-bs-toggle), ' '), ' collapse ')" .
                         " and contains(normalize-space(.), " . $textliteral . ")" .
                         " and not(contains(concat(' ', normalize-space(@class), ' '), ' collapsed '))]" .
                  " | " .
                  "//div[contains(concat(' ', normalize-space(@class), ' '), ' collapsible-group ')]" .
-                    "//button[contains(concat(' ', normalize-space(@data-toggle), ' '), ' collapse ')" .
+                    "//button[contains(concat(' ', normalize-space(@data-bs-toggle), ' '), ' collapse ')" .
                         " and contains(normalize-space(.), " . $textliteral . ")" .
                         " and not(contains(concat(' ', normalize-space(@class), ' '), ' collapsed '))]";
         $section_heading_link = $this->find('xpath', $xpath, $exception);
@@ -1730,7 +1730,7 @@ EOF;
         // Find the dialog close button.
         $exception = new ElementNotFoundException($this->getSession(), 'dialog');
         $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' modal-dialog ')]" .
-                    "//button[contains(concat(' ', normalize-space(@class), ' '), ' close ')]";
+                    "//button[contains(concat(' ', normalize-space(@class), ' '), ' btn-close ')]";
         $dialogclosebuttons = $this->find_all('xpath', $xpath, $exception);
 
         foreach ($dialogclosebuttons as $closebutton) {
@@ -1754,7 +1754,7 @@ EOF;
         $exception = new ElementNotFoundException($this->getSession(), 'dialog');
         $xpath = "//div[@id='configureblock']" .
                  "//div[contains(concat(' ', normalize-space(@class), ' '), ' modal-dialog ')]" .
-                 "//button[contains(concat(' ', normalize-space(@class), ' '), ' close ')]";
+                 "//button[contains(concat(' ', normalize-space(@class), ' '), ' btn-close ')]";
         $closebutton = $this->find('xpath', $xpath, $exception);
         if ($closebutton->isVisible()) {
             $closebutton->click();

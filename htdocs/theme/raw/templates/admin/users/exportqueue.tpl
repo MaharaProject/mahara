@@ -37,7 +37,7 @@
         </div>
         {else}
         <div class="searchform text input-group">
-            <label class="sr-only" for="query">{str tag='usersearch' section='admin'}</label>
+            <label class="visually-hidden" for="query">{str tag='usersearch' section='admin'}</label>
             <input placeholder="{str tag='usersearch' section='admin'}" class="text form-control" type="text" name="query" id="query"{if $search->query} value="{$search->query}"{/if}>
             <div class="input-group-append button">
                 <button id="query-button" class="btn-search btn btn-secondary " type="submit">
@@ -60,12 +60,12 @@
                         {if $c.sort}
                             <a href="{$searchurl}&sortby={$f}&sortdir={if $f == $sortby && $sortdir == 'asc'}desc{else}asc{/if}">
                                 <span>{$c.name}</span>
-                                <span class="accessible-hidden sr-only">({str tag=sortby} {if $f == $sortby && $sortdir == 'asc'}{str tag=descending}{else}{str tag=ascending}{/if})</span>
+                                <span class="accessible-hidden visually-hidden">({str tag=sortby} {if $f == $sortby && $sortdir == 'asc'}{str tag=descending}{else}{str tag=ascending}{/if})</span>
                             </a>
                         {else}
                             {$c.name}
                             {if $c.accessible}
-                                <span class="accessible-hidden sr-only">{$c.accessible}</span>
+                                <span class="accessible-hidden visually-hidden">{$c.accessible}</span>
                             {/if}
                         {/if}
                         {if $c.help}

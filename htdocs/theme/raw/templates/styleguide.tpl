@@ -87,7 +87,7 @@ This pair of buttons is used for editing or deleting a block item on a page.
     <h2 class="card-header">
       <span class="blockinstance-header">Context</span>
       <span class="blockinstance-controls">
-          <span class="float-right btn-group btn-group-top">
+          <span class="float-end btn-group btn-group-top">
               <button class="configurebutton btn btn-inverse btn-sm">
                   <span class="icon icon-cog"></span>
               </button>
@@ -199,11 +199,11 @@ Switchboxes are used for Yes/No, On/Off or other true/false type fields. They ar
 This button is used to show there are more options available. An example can be found on a regular portfolio page where the items of the "Watchlist" and "Objectionable content" are available via the "More options" button. Note: Styles are only added for layout here in the style guide.
 ```
 <div class="btn-group" style="margin-left: 200px;">
-    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" title="{str tag='moreoptions'}" aria-expanded="false">
+    <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" title="{str tag='moreoptions'}" aria-expanded="false">
         <span class="icon icon-ellipsis-h" role="presentation" aria-hidden="true"></span>
-        <span class="sr-only">{str tag=moreoptions}</span>
+        <span class="visually-hidden">{str tag=moreoptions}</span>
     </button>
-    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+    <ul class="dropdown-menu dropdown-menu-end" role="menu">
         <li class="dropdown-item">
             <a id="toggle_watchlist_link" class="watchlist" href="">
                 <span class="icon icon-regular icon-eye left" role="presentation" aria-hidden="true"></span>
@@ -211,7 +211,7 @@ This button is used to show there are more options available. An example can be 
             </a>
         </li>
         <li class="dropdown-item">
-            <a id="objection_link" href="#" data-toggle="modal" data-target="#report-form">
+            <a id="objection_link" href="#" data-bs-toggle="modal" data-bs-target="#report-form">
                 <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                 {str tag=reportobjectionablematerial}
             </a>
@@ -257,16 +257,16 @@ section .navbar-form.navbar-collapse.search-form {
 </style>
 ```
 <div class="row">
-    <div class="navbar-default navbar-main float-right">
+    <div class="navbar-default navbar-main float-end">
         <div class="nav-toggle-area">
             <!-- Nav One Button -->
-            <button class="nav-one-toggle navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".nav-one" aria-expanded="false" aria-controls="nav-one" title="Nav one">
-                <span class="sr-only">Show nav one</span>
+            <button class="nav-one-toggle navbar-toggle collapsed" type="button" data-bs-toggle="collapse" data-bs-target=".nav-one" aria-expanded="false" aria-controls="nav-one" title="Nav one">
+                <span class="visually-hidden">Show nav one</span>
                 <span class="icon icon-bars icon-lg" role="presentation" aria-hidden="true"></span>
             </button>
             <!-- Nav Two Button -->
-            <button class="nav-two-toggle navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".nav-two" aria-expanded="false" aria-controls="nav-two" title="Nav two">
-                <span class="sr-only">Show nav two</span>
+            <button class="nav-two-toggle navbar-toggle collapsed" type="button" data-bs-toggle="collapse" data-bs-target=".nav-two" aria-expanded="false" aria-controls="nav-two" title="Nav two">
+                <span class="visually-hidden">Show nav two</span>
                 <span class="icon icon-wrench icon-lg" role="presentation" aria-hidden="true"></span>
             </button>
             <!-- Nav Three Button and icon -->
@@ -274,15 +274,15 @@ section .navbar-form.navbar-collapse.search-form {
                 <a href="" class="user-icon user-icon-25" title="Profile page">
                     <img src="{$WWWROOT}theme/raw/images/no_userphoto25.png">
                 </a>
-                <button class="user-toggle nav-three-toggle navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".nav-three" aria-expanded="false" aria-controls="nav-three" title="Nav three">
-                    <span class="sr-only">Show nav three</span>
+                <button class="user-toggle nav-three-toggle navbar-toggle collapsed" type="button" data-bs-toggle="collapse" data-bs-target=".nav-three" aria-expanded="false" aria-controls="nav-three" title="Nav three">
+                    <span class="visually-hidden">Show nav three</span>
                     <span class="icon icon-chevron-down collapsed"></span>
                 </button>
             </div>
             <!-- Hide Search When on Desktop -->
-            <button class="search-toggle navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".navbar-form" aria-expanded="false" aria-controls="navbar-form">
+            <button class="search-toggle navbar-toggle collapsed" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-form" aria-expanded="false" aria-controls="navbar-form">
                 <span class="icon icon-search icon-lg" role="presentation" aria-hidden="true"></span>
-                <span class="nav-title sr-only">{str tag=showsearch}</span>
+                <span class="nav-title visually-hidden">{str tag=showsearch}</span>
             </button>
         </div>
         <!-- Nav One -->
@@ -293,9 +293,9 @@ section .navbar-form.navbar-collapse.search-form {
               </li>
               <li>
                  <a href="">Link 2</a>
-                 <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="#navone" data-target="#subnavone">
+                 <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-bs-toggle="collapse"data-bs-parent="#navone" data-bs-target="#subnavone">
                      <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
-                     <span class="nav-title sr-only">Link 2</span>
+                     <span class="nav-title visually-hidden">Link 2</span>
                  </button>
                  <ul id="subnavone" class=" collapse child-nav" role="menu">
                     <li><a href="">Sublink 2</a></li>
@@ -304,9 +304,9 @@ section .navbar-form.navbar-collapse.search-form {
               </li>
               <li>
                  <a href="">Link 2</a>
-                 <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="#navone" data-target="#subnavtwo">
+                 <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-bs-toggle="collapse"data-bs-parent="#navone" data-bs-target="#subnavtwo">
                      <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
-                     <span class="nav-title sr-only">Link 2</span>
+                     <span class="nav-title visually-hidden">Link 2</span>
                  </button>
                  <ul id="subnavtwo" class=" collapse child-nav" role="menu">
                     <li><a href="">Sublink 1</a></li>
@@ -315,9 +315,9 @@ section .navbar-form.navbar-collapse.search-form {
               </li>
               <li>
                  <a href="">Link 4</a>
-                 <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="#navone" data-target="#subnavthree">
+                 <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-bs-toggle="collapse"data-bs-parent="#navone" data-bs-target="#subnavthree">
                      <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
-                     <span class="nav-title sr-only">Link 4</span>
+                     <span class="nav-title visually-hidden">Link 4</span>
                  </button>
                  <ul id="subnavthree" class=" collapse child-nav" role="menu">
                     <li><a href="">Sublink 1</a></li>
@@ -331,9 +331,9 @@ section .navbar-form.navbar-collapse.search-form {
             <ul id="navtwo" class="nav navbar-nav">
                 <li>
                     <a href="">Link 1</a>
-                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="#navtwo" data-target="#subnavfour">
+                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-bs-toggle="collapse"data-bs-parent="#navtwo" data-bs-target="#subnavfour">
                         <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
-                        <span class="nav-title sr-only">Link 1</span>
+                        <span class="nav-title visually-hidden">Link 1</span>
                     </button>
                     <ul id="subnavfour" class=" collapse child-nav" role="menu">
                         <li><a href="">Sublink 1</a></li>
@@ -342,9 +342,9 @@ section .navbar-form.navbar-collapse.search-form {
                 </li>
                 <li>
                     <a href="">Link 2</a>
-                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="#navtwo" data-target="#subnavfive">
+                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-bs-toggle="collapse"data-bs-parent="#navtwo" data-bs-target="#subnavfive">
                         <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
-                        <span class="nav-title sr-only">Link 2</span>
+                        <span class="nav-title visually-hidden">Link 2</span>
                     </button>
                     <ul id="subnavfive" class=" collapse child-nav" role="menu">
                         <li><a href="">Sublink 1</a></li>
@@ -353,9 +353,9 @@ section .navbar-form.navbar-collapse.search-form {
                 </li>
                 <li>
                     <a href="">Link 3</a>
-                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="#navtwo" data-target="#subnavsix">
+                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-bs-toggle="collapse"data-bs-parent="#navtwo" data-bs-target="#subnavsix">
                         <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
-                        <span class="nav-title sr-only">Link 3</span>
+                        <span class="nav-title visually-hidden">Link 3</span>
                     </button>
                     <ul id="subnavsix" class=" collapse child-nav" role="menu">
                         <li><a href="">Sublink 1</a></li>
@@ -378,9 +378,9 @@ section .navbar-form.navbar-collapse.search-form {
                         <span class="icon icon-cogs" role="presentation" aria-hidden="true"></span>
                         <span class="nav-title">Link 2</span>
                     </a>
-                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-toggle="collapse" data-parent="#navuser" data-target="#subnavseven">
+                    <button type="button" class="navbar-showchildren navbar-toggle dropdown-toggle collapsed" data-bs-toggle="collapse"data-bs-parent="#navuser" data-bs-target="#subnavseven">
                         <span class="icon icon-chevron-down" role="presentation" aria-hidden="true"></span>
-                        <span class="nav-title sr-only">Link 2</span>
+                        <span class="nav-title visually-hidden">Link 2</span>
                     </button>
                     <ul id="subnavseven" class=" collapse child-nav" role="menu">
                         <li><a href="">Sublink 1</a></li>
@@ -411,10 +411,10 @@ section .navbar-form.navbar-collapse.search-form {
 The pagination has "Previous" and "Next" buttons.
 ```
 <ul class="pagination pagination-sm">
-    <li class="page-item"><span class="page-link">«<span class="sr-only">{str tag=prevpage section=collection}</span></span></li>
+    <li class="page-item"><span class="page-link">«<span class="visually-hidden">{str tag=prevpage section=collection}</span></span></li>
     <li class="active page-item"><span class="page-link">1</span></li>
     <li class="page-item"><a class="page-link" title="" href="link">2</a></li>
-    <li class="page-item"><a class="page-link" title="Next page" href="link"> »<span class="sr-only">{str tag=nextpage section=collection}</span></a></li>
+    <li class="page-item"><a class="page-link" title="Next page" href="link"> »<span class="visually-hidden">{str tag=nextpage section=collection}</span></a></li>
 </ul>
 ```
 </section>
@@ -425,12 +425,12 @@ The pagination has "Previous" and "Next" buttons buttons and a drop-down menu to
 ```
 <div>
     <div class="pagination-wrapper">
-        <div class="lead text-small results float-right">
+        <div class="lead text-small results float-end">
             11 {str tag=results}
         </div>
         <ul class="pagination pagination-sm">
             <li class="page-item">
-                <span class="page-link">«<span class="sr-only">{str tag=prevpage section=collection}</span></span>
+                <span class="page-link">«<span class="visually-hidden">{str tag=prevpage section=collection}</span></span>
             </li>
             <li class="active page-item">
                 <span class="page-link">1</span>
@@ -441,7 +441,7 @@ The pagination has "Previous" and "Next" buttons buttons and a drop-down menu to
             <li class="page-item">
                 <a class="page-link" href="" title="Next page">
                     »
-                    <span class="sr-only">{str tag=nextpage section=collection}</span>
+                    <span class="visually-hidden">{str tag=nextpage section=collection}</span>
                 </a>
             </li>
         </ul>
@@ -472,16 +472,16 @@ These are tabs to switch between pages within one section, for example in the "P
 ```
 <ul class="nav nav-tabs" role="tablist">
     <li role="presentation">
-        <a href="#" role="tab" data-toggle="tab" aria-expanded="true" class="active">Tab 1</a>
+        <a href="#" role="tab" data-bs-toggle="tab" aria-expanded="true" class="active">Tab 1</a>
     </li>
     <li role="presentation">
-        <a href="#" role="tab" data-toggle="tab" aria-expanded="false">Tab 2</a>
+        <a href="#" role="tab" data-bs-toggle="tab" aria-expanded="false">Tab 2</a>
     </li>
     <li role="presentation">
-        <a href="#" role="tab" data-toggle="tab" aria-expanded="false">Tab 3</a>
+        <a href="#" role="tab" data-bs-toggle="tab" aria-expanded="false">Tab 3</a>
     </li>
     <li role="presentation">
-        <a href="#" role="tab" data-toggle="tab" aria-expanded="false">Tab 4</a>
+        <a href="#" role="tab" data-bs-toggle="tab" aria-expanded="false">Tab 4</a>
     </li>
 </ul>
 ```
@@ -502,25 +502,25 @@ This style of tabs is used for third-level navigation in areas where each page w
             <li class=" current-tab active">
                 <a class=" current-tab" href="#">
                     Tab 1
-                    <span class="accessible-hidden sr-only">({str tag=tab} {str tag=selected})</span>
+                    <span class="accessible-hidden visually-hidden">({str tag=tab} {str tag=selected})</span>
                 </a>
             </li>
             <li class=" current-tab">
                 <a class=" current-tab" href="#">
                     Tab 2
-                    <span class="accessible-hidden sr-only">({str tag=tab})</span>
+                    <span class="accessible-hidden visually-hidden">({str tag=tab})</span>
                 </a>
             </li>
             <li class=" current-tab ">
                 <a class=" current-tab" href="#">
                     Tab 3
-                    <span class="accessible-hidden sr-only">({str tag=tab})</span>
+                    <span class="accessible-hidden visually-hidden">({str tag=tab})</span>
                 </a>
             </li>
             <li class=" current-tab">
                 <a class=" current-tab" href="#">
                     Tab 4
-                    <span class="accessible-hidden sr-only">({str tag=tab})</span>
+                    <span class="accessible-hidden visually-hidden">({str tag=tab})</span>
                 </a>
             </li>
         </ul>
@@ -584,7 +584,7 @@ A side card is used in the sideblock area, e.g. on the dashboard for "Online use
         </ul>
         <a href="" class="card-footer text-small">
             Side card footer
-            <span class="icon icon-arrow-circle-right float-right"></span>
+            <span class="icon icon-arrow-circle-right float-end"></span>
         </a>
     </div>
 </div>
@@ -598,7 +598,7 @@ A side card without a footer. An examples is the "Tags" sideblock on the dashboa
 <div class="col-lg-3 sidebar">
     <div class="card">
         <h2 class="card-header has-link">
-            <a href="">Side card<span class="icon icon-arrow-right float-right" role="presentation" aria-hidden="true"></span></a>
+            <a href="">Side card<span class="icon icon-arrow-right float-end" role="presentation" aria-hidden="true"></span></a>
         </h2>
         <div class="tagblock card-body">
             <div class="no-results-small text-small">Lorem ipsum</div>
@@ -615,15 +615,171 @@ A dropdown card.
 <div class="last form-group collapsible-group">
     <fieldset class="pieform-fieldset last collapsible">
         <legend>
-            <a href="#dropdown" data-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
+            <a href="#dropdown" data-bs-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
                 Drop-down
-                <span class="icon icon-chevron-down collapse-indicator right float-right"> </span>
+                <span class="icon icon-chevron-down collapse-indicator right float-end"> </span>
             </a>
         </legend>
         <div class="fieldset-body collapse" id="dropdown">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lobortis metus orci, in posuere nulla tempus quis. Curabitur aliquet, turpis sit amet fermentum euismod, nisl massa posuere nulla, sed tempor lorem magna a urna. In porttitor lobortis mauris, et tristique ipsum hendrerit a. In et quam fringilla, accumsan enim et, fermentum diam. Ut risus lectus, feugiat eget dolor sed, fringilla fringilla nulla. Vivamus laoreet mollis ex ut pulvinar. Praesent ultrices enim sem, vel mattis tellus feugiat et.
         </div>
-</fieldset>
+    </fieldset>
+</div>
+```
+</section>
+
+<section data-markdown data-category="cards">
+### A Bootstrap 5 accordion
+First body set to open by default
+```
+<div class="accordion accordion" id="accordionExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+        aria-expanded="true" aria-controls="collapseOne">
+        Accordion Item #1
+      </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+      data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lobortis metus orci, in posuere nulla tempus quis. Curabitur aliquet, turpis sit amet fermentum euismod, nisl massa posuere nulla, sed tempor lorem magna a urna. In porttitor lobortis mauris, et tristique ipsum hendrerit a. In et quam fringilla, accumsan enim et, fermentum diam. Ut risus lectus, feugiat eget dolor sed, fringilla fringilla nulla. Vivamus laoreet mollis ex ut pulvinar. Praesent ultrices enim sem, vel mattis tellus feugiat et.
+      </div>
+    </div>
+  </div>
+</div>
+```
+A Bootstrap 5 accordion flushed
+```
+<div class="accordion accordion-flush" id="accordionExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+        aria-expanded="true" aria-controls="collapseOne">
+        Accordion Item #1
+      </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+      data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lobortis metus orci, in posuere nulla tempus quis. Curabitur aliquet, turpis sit amet fermentum euismod, nisl massa posuere nulla, sed tempor lorem magna a urna. In porttitor lobortis mauris, et tristique ipsum hendrerit a. In et quam fringilla, accumsan enim et, fermentum diam. Ut risus lectus, feugiat eget dolor sed, fringilla fringilla nulla. Vivamus laoreet mollis ex ut pulvinar. Praesent ultrices enim sem, vel mattis tellus feugiat et.
+      </div>
+    </div>
+</div>
+```
+</section>
+
+<section data-markdown data-category="cards">
+### Accordion
+```
+<div class="accordion" id="accordionExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        Accordion Item #1
+      </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingTwo">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+        Accordion Item #2
+      </button>
+    </h2>
+    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingThree">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+        Accordion Item #3
+      </button>
+    </h2>
+    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+      </div>
+    </div>
+  </div>
+</div>
+```
+</section>
+
+<section data-markdown data-category="cards">
+### BS5 dropdown attachment
+```
+<div class="accordion" id="accordionExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        <span class="icon icon-paperclip left icon-sm" role="presentation" aria-hidden="true"></span>
+        <span class="text-small">Attachments</span>
+        <span class="metadata">(2)</span>
+      </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <ul class="list-unstyled list-group">
+            <li class="list-group-item">
+                <a class="modal_link file-icon-link" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
+                    <span class="icon icon-file left icon-lg text-default file-icon" role="presentation" aria-hidden="true"></span>
+                </a>
+                <span class="title">
+                    <a class="modal_link" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
+                      <span class="text-small">File name 1</span>
+                    </a>
+                </span>
+                <a href="#">
+                  <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="attachment-details"></span>
+                </a>
+                <div class="file-description text-small text-midtone">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lobortis metus orci, in posuere nulla tempus quis. Curabitur aliquet, turpis sit amet fermentum euismod, nisl massa posuere nulla, sed tempor lorem magna a urna. In porttitor lobortis mauris, et tristique ipsum hendrerit a. In et quam fringilla, accumsan enim et, fermentum diam. Ut risus lectus, feugiat eget dolor sed, fringilla fringilla nulla. Vivamus laoreet mollis ex ut pulvinar. Praesent ultrices enim sem, vel mattis tellus feugiat et.
+                </div>
+            </li>
+            <li class="list-group-item">
+                <a class="modal_link file-icon-link" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
+                    <span class="icon icon-file left icon-lg text-default file-icon" role="presentation" aria-hidden="true"></span>
+                </a>
+                <span class="title">
+                    <a class="modal_link" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
+                      <span class="text-small">File name 2</span>
+                    </a>
+                </span>
+                <a href="#">
+                  <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="attachment-details"></span>
+                </a>
+                <div class="file-description text-small text-midtone">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lobortis metus orci, in posuere nulla tempus quis. Curabitur aliquet, turpis sit amet fermentum euismod, nisl massa posuere nulla, sed tempor lorem magna a urna. In porttitor lobortis mauris, et tristique ipsum hendrerit a. In et quam fringilla, accumsan enim et, fermentum diam. Ut risus lectus, feugiat eget dolor sed, fringilla fringilla nulla. Vivamus laoreet mollis ex ut pulvinar. Praesent ultrices enim sem, vel mattis tellus feugiat et.
+                </div>
+            </li>
+            <li class="list-group-item">
+                <a class="modal_link file-icon-link" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
+                    <span class="icon icon-file left icon-lg text-default file-icon" role="presentation" aria-hidden="true"></span>
+                </a>
+                <span class="title">
+                    <a class="modal_link" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
+                      <span class="text-small">File name 3</span>
+                    </a>
+                </span>
+                <a href="#">
+                  <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="attachment-details"></span>
+                </a>
+                <div class="file-description text-small text-midtone">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lobortis metus orci, in posuere nulla tempus quis. Curabitur aliquet, turpis sit amet fermentum euismod, nisl massa posuere nulla, sed tempor lorem magna a urna. In porttitor lobortis mauris, et tristique ipsum hendrerit a. In et quam fringilla, accumsan enim et, fermentum diam. Ut risus lectus, feugiat eget dolor sed, fringilla fringilla nulla. Vivamus laoreet mollis ex ut pulvinar. Praesent ultrices enim sem, vel mattis tellus feugiat et.
+                </div>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </div>
 ```
 </section>
@@ -634,58 +790,58 @@ A attachment card.
 ```
 <div class="has-attachment card collapsible">
     <div class="card-header">
-        <a class="text-left collapsed" aria-expanded="false" href="#attachment" data-toggle="collapse">
+        <a class="text-start collapsed" aria-expanded="false" href="#attachment" data-bs-toggle="collapse">
             <span class="icon icon-paperclip left icon-sm" role="presentation" aria-hidden="true"></span>
             <span class="text-small">Attachments</span>
             <span class="metadata">(2)</span>
-            <span class="icon icon-chevron-down float-right collapse-indicator" role="presentation" aria-hidden="true"></span>
+            <span class="icon icon-chevron-down float-end collapse-indicator" role="presentation" aria-hidden="true"></span>
         </a>
     </div>
     <div id="attachment" class="collapse">
         <ul class="list-unstyled list-group">
             <li class="list-group-item">
-                <a class="modal_link file-icon-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
+                <a class="modal_link file-icon-link" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
                     <span class="icon icon-file left icon-lg text-default file-icon" role="presentation" aria-hidden="true"></span>
                 </a>
                 <span class="title">
-                    <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
+                    <a class="modal_link" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
                       <span class="text-small">File name 1</span>
                     </a>
                 </span>
                 <a href="#">
-                  <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="attachment-details"></span>
+                  <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="attachment-details"></span>
                 </a>
                 <div class="file-description text-small text-midtone">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lobortis metus orci, in posuere nulla tempus quis. Curabitur aliquet, turpis sit amet fermentum euismod, nisl massa posuere nulla, sed tempor lorem magna a urna. In porttitor lobortis mauris, et tristique ipsum hendrerit a. In et quam fringilla, accumsan enim et, fermentum diam. Ut risus lectus, feugiat eget dolor sed, fringilla fringilla nulla. Vivamus laoreet mollis ex ut pulvinar. Praesent ultrices enim sem, vel mattis tellus feugiat et.
                 </div>
             </li>
             <li class="list-group-item">
-                <a class="modal_link file-icon-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
+                <a class="modal_link file-icon-link" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
                     <span class="icon icon-file left icon-lg text-default file-icon" role="presentation" aria-hidden="true"></span>
                 </a>
                 <span class="title">
-                    <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
+                    <a class="modal_link" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
                       <span class="text-small">File name 2</span>
                     </a>
                 </span>
                 <a href="#">
-                  <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="attachment-details"></span>
+                  <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="attachment-details"></span>
                 </a>
                 <div class="file-description text-small text-midtone">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lobortis metus orci, in posuere nulla tempus quis. Curabitur aliquet, turpis sit amet fermentum euismod, nisl massa posuere nulla, sed tempor lorem magna a urna. In porttitor lobortis mauris, et tristique ipsum hendrerit a. In et quam fringilla, accumsan enim et, fermentum diam. Ut risus lectus, feugiat eget dolor sed, fringilla fringilla nulla. Vivamus laoreet mollis ex ut pulvinar. Praesent ultrices enim sem, vel mattis tellus feugiat et.
                 </div>
             </li>
             <li class="list-group-item">
-                <a class="modal_link file-icon-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
+                <a class="modal_link file-icon-link" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
                     <span class="icon icon-file left icon-lg text-default file-icon" role="presentation" aria-hidden="true"></span>
                 </a>
                 <span class="title">
-                    <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
+                    <a class="modal_link" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="attachments" data-artefactid="attachments">
                       <span class="text-small">File name 3</span>
                     </a>
                 </span>
                 <a href="#">
-                  <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="attachment-details"></span>
+                  <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="attachment-details"></span>
                 </a>
                 <div class="file-description text-small text-midtone">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut lobortis metus orci, in posuere nulla tempus quis. Curabitur aliquet, turpis sit amet fermentum euismod, nisl massa posuere nulla, sed tempor lorem magna a urna. In porttitor lobortis mauris, et tristique ipsum hendrerit a. In et quam fringilla, accumsan enim et, fermentum diam. Ut risus lectus, feugiat eget dolor sed, fringilla fringilla nulla. Vivamus laoreet mollis ex ut pulvinar. Praesent ultrices enim sem, vel mattis tellus feugiat et.
@@ -703,17 +859,17 @@ This type of drop-down card is used in blocks, for example the "Inbox" block.
 ```
 <div class="bt-inbox card card-secondary clearfix collapsible">
     <h2 class="title card-header js-heading">
-        <a data-toggle="collapse" href="#target" aria-expanded="true" class="outer-link"></a>
+        <a data-bs-toggle="collapse" href="#target" aria-expanded="true" class="outer-link"></a>
         Blocks drop-down
-        <span class="icon icon-chevron-up collapse-indicator float-right inner-link" role="presentation" aria-hidden="true"></span>
+        <span class="icon icon-chevron-up collapse-indicator float-end inner-link" role="presentation" aria-hidden="true"></span>
     </h2>
     <div class="block collapse show" id="target" aria-expanded="true">
         <div class="inboxblock list-group">
             <div class="has-attachment card collapsible list-group-item">
-                <a class="collapsed link-block" data-toggle="collapse" href="#item1" aria-expanded="false">
+                <a class="collapsed link-block" data-bs-toggle="collapse" href="#item1" aria-expanded="false">
                     <span class="icon icon-university text-default left" role="presentation" aria-hidden="true"></span>
                     Item 1
-                    <span class="icon icon-chevron-down collapse-indicator float-right text-small" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-chevron-down collapse-indicator float-end text-small" role="presentation" aria-hidden="true"></span>
                 </a>
                 <div class="collapse" id="item1">
                     <p class="content-text">
@@ -722,10 +878,10 @@ This type of drop-down card is used in blocks, for example the "Inbox" block.
                 </div>
             </div>
             <div class="has-attachment card collapsible list-group-item">
-                <a class="collapsed link-block" data-toggle="collapse" href="#item2" aria-expanded="false">
+                <a class="collapsed link-block" data-bs-toggle="collapse" href="#item2" aria-expanded="false">
                     <span class="icon icon-wrench text-default left" role="presentation" aria-hidden="true"></span>
                     Item 2
-                    <span class="icon icon-chevron-down collapse-indicator float-right text-small" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-chevron-down collapse-indicator float-end text-small" role="presentation" aria-hidden="true"></span>
                 </a>
                 <div class="collapse" id="item2">
                     <p class="content-text">
@@ -807,7 +963,7 @@ This is the general layout of blocks. An example of this being used is the 'Port
                 <a href="" data-index="2">Page 3</a>
             </li>
         </ul>
-        <button class="picker form-control" tabindex="0" data-toggle="collapse" data-target="#pagelist" aria-expanded="false" role="button" aria-controls="#pagelist">{str tag=viewingpage section=collection}
+        <button class="picker form-control" tabindex="0" data-bs-toggle="collapse" data-bs-target="#pagelist" aria-expanded="false" role="button" aria-controls="#pagelist">{str tag=viewingpage section=collection}
             <span id="currentindex" data-currentindex="1">2</span>
             /3
         </button>
@@ -833,17 +989,17 @@ This card is used to show a page.
         <div class="card-footer">
             <div class="page-access"></div>
             <div class="page-controls">
-                <a href="#" class="dropdown-toggle moremenu btn btn-link" data-toggle="dropdown" aria-expanded="false" title="{str tag='moreoptions'}">
+                <a href="#" class="dropdown-toggle moremenu btn btn-link" data-bs-toggle="dropdown" aria-expanded="false" title="{str tag='moreoptions'}">
                     <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                     <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
-                    <span class="sr-only">More options for "Dashboard page"</span>
+                    <span class="visually-hidden">More options for "Dashboard page"</span>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                <ul class="dropdown-menu dropdown-menu-end" role="menu">
                     <li class="dropdown-item">
                         <a href="" title="Edit content and layout">
                         <span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">Edit</span>
-                        <span class="sr-only">Edit "Dashboard page"</span>
+                        <span class="visually-hidden">Edit "Dashboard page"</span>
                         </a>
                     </li>
                     <li class="view-details dropdown-item">
@@ -882,17 +1038,17 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
         </div>
         <div class="card-footer">
             <div class="page-access">
-                <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false" title="Manage access">
+                <a href="#" class="dropdown-toggle btn btn-link" data-bs-toggle="dropdown" aria-expanded="false" title="Manage access">
                     <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                     <span class="icon icon-unlock close-indicator" role="presentation" aria-hidden="true"></span>
-                    <span class="sr-only">Access rules for "Unnamed page"</span>
+                    <span class="visually-hidden">Access rules for "Unnamed page"</span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     <li class="dropdown-item">
                         <a class="seperator" href="">
                             <span class="icon icon-unlock left" role="presentation" aria-hidden="true"></span>
                             <span class="link-text">Manage access</span>
-                            <span class="sr-only">Manage access for "Unnamed page"</span>
+                            <span class="visually-hidden">Manage access for "Unnamed page"</span>
                         </a>
                     </li>
                     <li class="dropdown-item">
@@ -904,17 +1060,17 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
                 </ul>
             </div>
             <div class="page-controls">
-                <a href="#" class="dropdown-toggle moremenu btn btn-link" data-toggle="dropdown" aria-expanded="false" title="{str tag='moreoptions'}">
+                <a href="#" class="dropdown-toggle moremenu btn btn-link" data-bs-toggle="dropdown" aria-expanded="false" title="{str tag='moreoptions'}">
                     <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                     <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
-                    <span class="sr-only">More options for "Dashboard page"</span>
+                    <span class="visually-hidden">More options for "Dashboard page"</span>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                <ul class="dropdown-menu dropdown-menu-end" role="menu">
                     <li class="dropdown-item">
                         <a href="" title="Edit content and layout">
                         <span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">Edit</span>
-                        <span class="sr-only">Edit "Unnamed page"</span>
+                        <span class="visually-hidden">Edit "Unnamed page"</span>
                         </a>
                     </li>
                     <li class="view-details dropdown-item">
@@ -954,17 +1110,17 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
         </div>
         <div class="card-footer">
             <div class="page-access">
-                <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false" title="Manage access">
+                <a href="#" class="dropdown-toggle btn btn-link" data-bs-toggle="dropdown" aria-expanded="false" title="Manage access">
                 <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                 <span class="icon icon-unlock close-indicator" role="presentation" aria-hidden="true"></span>
-                <span class="sr-only">Access rules for "collection"</span>
+                <span class="visually-hidden">Access rules for "collection"</span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     <li class="dropdown-item">
                         <a class="seperator" href="">
                         <span class="icon icon-unlock left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">Manage access</span>
-                        <span class="sr-only">Manage access for "collection"</span>
+                        <span class="visually-hidden">Manage access for "collection"</span>
                         </a>
                     </li>
                     <li class="dropdown-item">
@@ -976,31 +1132,31 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
                 </ul>
             </div>
             <div class="page-controls">
-                <a href="#" class="dropdown-toggle moremenu btn btn-link" data-toggle="dropdown" aria-expanded="false" title="{str tag='moreoptions'}">
+                <a href="#" class="dropdown-toggle moremenu btn btn-link" data-bs-toggle="dropdown" aria-expanded="false" title="{str tag='moreoptions'}">
                 <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                 <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
-                <span class="sr-only">More options for "collection"</span>
+                <span class="visually-hidden">More options for "collection"</span>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                <ul class="dropdown-menu dropdown-menu-end" role="menu">
                     <li class="dropdown-item">
                         <a href="" title="Manage pages">
                         <span class="icon icon-list left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">Manage</span>
-                        <span class="sr-only">Manage pages in "collection"</span>
+                        <span class="visually-hidden">Manage pages in "collection"</span>
                         </a>
                     </li>
                     <li class="dropdown-item">
                         <a href="" title="Edit title and description">
                         <span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">Edit</span>
-                        <span class="sr-only">Edit "collection"</span>
+                        <span class="visually-hidden">Edit "collection"</span>
                         </a>
                     </li>
                     <li class="dropdown-item">
                         <a href="" title="Delete collection">
                         <span class="icon icon-trash-alt text-danger left" role="presentation" aria-hidden="true"></span>
                         <span class="link-text">Delete</span>
-                        <span class="sr-only">Delete "collection"</span>
+                        <span class="visually-hidden">Delete "collection"</span>
                         </a>
                     </li>
                     <li class="view-details dropdown-item">
@@ -1012,7 +1168,7 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
                 </ul>
             </div>
             <div class="collection-list" title="1 page in collection">
-                <a href="#" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false">
+                <a href="#" class="dropdown-toggle btn btn-link" data-bs-toggle="dropdown" aria-expanded="false">
                 <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                 <span class="page-count">1</span>
                 <span class="icon icon-file close-indicator" role="presentation" aria-hidden="true">
@@ -1078,16 +1234,16 @@ Used to show information about Mahara. Usually, this is only shown to administra
 ### Modal docked
 A slide-out modal. This is used to show a block's configuration for example.
 ```
-<button type="button" class="btn btn-primary" data-toggle="modal-docked" data-target="#modal-docks">
+<button type="button" class="btn btn-primary" data-bs-toggle="modal-docked" data-bs-target="#modal-docks">
     Launch demo modal
 </button>
 <div class="modal modal-docked modal-docked-right modal-shown closed" id="modal-docks" tabindex="-1" role="dialog" aria-labelledby="#modal-docks-label">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button class="deletebutton close" data-dismiss="modal-docked" aria-label="{str tag=Close}">
+                <button class="deletebutton btn-close" data-bs-dismiss="modal-docked" aria-label="{str tag=Close}">
                   <span class="times">×</span>
-                  <span class="sr-only">{str tag=Close}</span>
+                  <span class="visually-hidden">{str tag=Close}</span>
                 </button>
                 <h1 class="modal-title blockinstance-header text-inline modal-docks-title">Modal heading</h1>
             </div>
@@ -1104,15 +1260,15 @@ A slide-out modal. This is used to show a block's configuration for example.
 ### Modal
 A fold down modal. This is typially used to report objectionable content.
 ```
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#report-form">
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#report-form">
     Launch demo modal
 </button>
 <div class="modal fade" id="report-form" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}">
-                    <span aria-hidden="true">×</span>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{str tag=Close}">
+                    <span aria-hidden="true">&times;</span>
                 </button>
                 <h1 class="modal-title">
                     <span class="icon icon-lg icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
@@ -1192,7 +1348,7 @@ A striped table is most frequently found in the administration area where tables
             <th class="center">Column 3</th>
             <th>Column 4</th>
             <th>Column 5</th>
-            <th><span class="accessible-hidden sr-only">{str tag=edit}</span></th>
+            <th><span class="accessible-hidden visually-hidden">{str tag=edit}</span></th>
         </tr>
     </thead>
     <tbody>
@@ -1205,10 +1361,10 @@ A striped table is most frequently found in the administration area where tables
             <td class="right">
                 <div class="btn-group">
                     <a class="btn btn-secondary btn-sm" title="{str tag=groupmanage section=admin}" href="">
-                        <span class="icon icon-cog"></span><span class="sr-only">{str tag=groupmanagespecific section=admin arg1='Item 1'}</span>
+                        <span class="icon icon-cog"></span><span class="visually-hidden">{str tag=groupmanagespecific section=admin arg1='Item 1'}</span>
                     </a>
                     <a class="btn btn-secondary btn-sm" title="{str tag=delete}" href="">
-                        <span class="icon icon-trash-alt text-danger"></span><span class="sr-only">{str tag=deletespecific section=mahara arg1='Item 1'}</span>
+                        <span class="icon icon-trash-alt text-danger"></span><span class="visually-hidden">{str tag=deletespecific section=mahara arg1='Item 1'}</span>
                     </a>
                 </div>
             </td>
@@ -1222,10 +1378,10 @@ A striped table is most frequently found in the administration area where tables
             <td class="right">
                 <div class="btn-group">
                     <a class="btn btn-secondary btn-sm" title="{str tag=groupmanage section=admin}" href="">
-                        <span class="icon icon-cog"></span><span class="sr-only">{str tag=groupmanagespecific section=admin arg1='Item 2'}</span>
+                        <span class="icon icon-cog"></span><span class="visually-hidden">{str tag=groupmanagespecific section=admin arg1='Item 2'}</span>
                     </a>
                     <a class="btn btn-secondary btn-sm" title="{str tag=delete}" href="">
-                        <span class="icon icon-trash-alt text-danger"></span><span class="sr-only">{str tag=deletespecific section=mahara arg1='Item 2'}</span>
+                        <span class="icon icon-trash-alt text-danger"></span><span class="visually-hidden">{str tag=deletespecific section=mahara arg1='Item 2'}</span>
                     </a>
                 </div>
             </td>

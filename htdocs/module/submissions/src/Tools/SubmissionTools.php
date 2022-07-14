@@ -288,7 +288,7 @@ class SubmissionTools {
     public static function createPortfolioTitleHtml(string $link, string $title, string $hoverText, string $portfolioElementType, bool $showPortfolioButtons) {
         $containerClasses = '';
         $titleClasses = 'portfolio-element';
-        $previewClasses = 'portfolio-type-' . $portfolioElementType . ' portfolio-element-preview icon icon-regular icon-eye btn btn-sm btn-secondary ml-1';
+        $previewClasses = 'portfolio-type-' . $portfolioElementType . ' portfolio-element-preview icon icon-regular icon-eye btn btn-sm btn-secondary ms-1';
 
         if ($showPortfolioButtons) {
             $containerClasses = 'portfolio-element-container btn-group btn-group-sm';

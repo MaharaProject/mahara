@@ -3,9 +3,9 @@
 <!--[if IE 9 ]><html{if $LANGDIRECTION == 'rtl'} dir="rtl"{/if} lang="{$LANGUAGE}" class="ie ie9"><![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!--><html{if $LANGDIRECTION == 'rtl'} dir="rtl"{/if} lang="{$LANGUAGE}"><!--<![endif]-->
 {include file="header/head.tpl"}
-<body data-usethemedjs="true" class="no-js {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF || $INSTITUTIONALSUPPORTADMIN}admin{/if} {if $loggedout}loggedout{/if} {if $pagename}{$pagename}{/if} {$presentation|default:'window'}">
+<body data-bs-usethemedjs="true" class="no-js {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF || $INSTITUTIONALSUPPORTADMIN}admin{/if} {if $loggedout}loggedout{/if} {if $pagename}{$pagename}{/if} {$presentation|default:'window'}">
     <div class="skiplink btn-group btn-group-top">
-        <a class="sr-only sr-only-focusable btn btn-secondary" {if $headertype=='page'}href="#header-target-main"{else}href="#header-main"{/if}>{str tag=skipmenu}</a>
+        <a class="visually-hidden visually-hidden-focusable btn btn-secondary" {if $headertype=='page'}href="#header-target-main"{else}href="#header-main"{/if}>{str tag=skipmenu}</a>
     </div>
 
     {if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}
@@ -54,7 +54,7 @@
             <div class="container">
                 <div id="logo-area" class="logo-area">
                     <a href="{$WWWROOT}" class="logo {if $sitelogocustomsmall || (!$sitelogocustomsmall && !$sitelogocustom)}change-to-small{/if}">
-                        <img src="{$sitelogo}" alt="{$sitename}" data-customlogo="{$sitelogocustom}" >
+                        <img src="{$sitelogo}" alt="{$sitename}" data-bs-customlogo="{$sitelogocustom}" >
                     </a>
                     {if $sitelogocustomsmall}
                         <a href="{$WWWROOT}" class="logoxs">
@@ -78,14 +78,14 @@
 
                 <div class="nav-toggle-area">
                     {if $MAINNAV}
-                        <button class="main-nav-toggle navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".nav-main" aria-expanded="false" aria-controls="main-nav" title='{str tag="mainmenu"}'>
-                            <span class="sr-only">{str tag="showmainmenu"}</span>
+                        <button class="main-nav-toggle navbar-toggle collapsed" type="button" data-bs-toggle="collapse" data-bs-target=".nav-main" aria-expanded="false" aria-controls="main-nav" title='{str tag="mainmenu"}'>
+                            <span class="visually-hidden">{str tag="showmainmenu"}</span>
                             <span class="icon icon-bars icon-lg" role="presentation" aria-hidden="true"></span>
                         </button>
                     {/if}
                     {if $MAINNAVADMIN}
-                        <button class="admin-toggle navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".nav-main-admin" aria-expanded="false" aria-controls="main-nav-admin" title='{str tag="adminmenu"}'>
-                            <span class="sr-only">{str tag="showadminmenu"}</span>
+                        <button class="admin-toggle navbar-toggle collapsed" type="button" data-bs-toggle="collapse" data-bs-target=".nav-main-admin" aria-expanded="false" aria-controls="main-nav-admin" title='{str tag="adminmenu"}'>
+                            <span class="visually-hidden">{str tag="showadminmenu"}</span>
                             <span class="icon icon-wrench icon-lg" role="presentation" aria-hidden="true"></span>
                         </button>
                     {/if}
@@ -94,8 +94,8 @@
                             <a href="{profile_url($USER)}" class="user-icon user-icon-25" title='{str tag="profilepage"}'>
                                 <img src="{profile_icon_url user=$USER maxheight=25 maxwidth=25}" alt="{str tag=profileimagefor section=artefact.internal arg1=display_name($USER->get('id'))}">
                             </a>
-                            <button class="user-toggle" type="button" data-toggle="collapse" data-target=".nav-main-user" aria-expanded="false" aria-controls="main-nav-user" title='{str tag="usermenu1"}'>
-                                <span class="sr-only">{str tag="showusermenu1"}</span>
+                            <button class="user-toggle" type="button" data-bs-toggle="collapse" data-bs-target=".nav-main-user" aria-expanded="false" aria-controls="main-nav-user" title='{str tag="usermenu1"}'>
+                                <span class="visually-hidden">{str tag="showusermenu1"}</span>
                                 <span class="icon icon-chevron-down collapsed"></span>
                             </button>
                         </div>
@@ -103,7 +103,7 @@
                     {if $MESSAGEBOX}
                         {foreach from=$MESSAGEBOX item=item}
                         <a href="{$WWWROOT}{$item.url}" title="{$item.alt}" role="button" id="nav-{$item.path}" class="navbar-toggle navbar-messages collapsed">
-                            <span class="sr-only">{$item.title} <span class="{$item.countclasssr}">{$item.unread}</span></span>
+                            <span class="visually-hidden">{$item.title} <span class="{$item.countclasssr}">{$item.unread}</span></span>
                             <span class="icon icon-{$item.iconclass} icon-lg" role="presentation" aria-hidden="true"></span>
                             {if $item.count}
                                 <span class="navbar-messages-count">
@@ -114,15 +114,15 @@
                         {/foreach}
                     {/if}
                     {if $LANGCHOICES}
-                        <button class="lang-toggle navbar-toggle" type="button" data-toggle="collapse" data-target=".nav-language" aria-expanded="false" aria-controls="main-language" title='{str tag="chooselanguage"}'>
-                            <span class="sr-only">{str tag="chooselanguage"}</span>
+                        <button class="lang-toggle navbar-toggle" type="button" data-bs-toggle="collapse" data-bs-target=".nav-language" aria-expanded="false" aria-controls="main-language" title='{str tag="chooselanguage"}'>
+                            <span class="visually-hidden">{str tag="chooselanguage"}</span>
                             <span class="icon icon-language icon-lg" role="presentation" aria-hidden="true"></span>
                         </button>
                     {/if}
                     {if !$nosearch && ($LOGGEDIN || $publicsearchallowed)}
-                    <button class="search-toggle navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".navbar-form" aria-expanded="false" aria-controls="usf">
+                    <button class="search-toggle navbar-toggle collapsed" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-form" aria-expanded="false" aria-controls="usf">
                         <span class="icon icon-search icon-lg" role="presentation" aria-hidden="true"></span>
-                        <span class="nav-title sr-only">{str tag="showsearch"}</span>
+                        <span class="nav-title visually-hidden">{str tag="showsearch"}</span>
                     </button>
                     {/if}
                 </div>
@@ -194,7 +194,7 @@
                                 </span>
                                 {if $PAGEHELPNAME}<span class="page-help-icon">{$PAGEHELPICON|safe}</span>{/if}
                                 {if $publicgroup && $rsswithtitle}
-                                <a href="{$feedlink}" class="mahara-rss-icon text-small float-right " role="presentation" aria-hidden="true">
+                                <a href="{$feedlink}" class="mahara-rss-icon text-small float-end " role="presentation" aria-hidden="true">
                                     <span class="icon-rss icon icon-lg" role="presentation" aria-hidden="true"></span>
                                 </a>
                                 {/if}

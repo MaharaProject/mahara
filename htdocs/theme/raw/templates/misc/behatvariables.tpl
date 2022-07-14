@@ -9,9 +9,9 @@
         {if $prevkey !== $k}
             <fieldset id="fs_{$dwoo.foreach.data.index}" class="pieform-fieldset collapsible {if $dwoo.foreach.data.last} last{/if}">
                 <legend>
-                    <a id="link_{$dwoo.foreach.data.index}" class="collapsed" href="#behatfield-{$dwoo.foreach.data.index}" data-toggle="collapse" aria-expanded="false" aria-controls="#behatfield-{$dwoo.foreach.data.index}">
+                    <a id="link_{$dwoo.foreach.data.index}" class="collapsed" href="#behatfield-{$dwoo.foreach.data.index}" data-bs-toggle="collapse" aria-expanded="false" aria-controls="#behatfield-{$dwoo.foreach.data.index}">
                         {$k}
-                        <span class="icon icon-chevron-down collapse-indicator right float-right"></span>
+                        <span class="icon icon-chevron-down collapse-indicator right float-end"></span>
                     </a>
                 </legend>
                 <div id="behatfield-{$dwoo.foreach.data.index}" class="fieldset-body collapse list-group">
@@ -21,7 +21,7 @@
         {else}
             {foreach from=$v key=sk item=sv name=subdata}
                 <div id="fs_{$dwoo.foreach.data.index}_{$dwoo.foreach.subdata.index}" class="pieform-fieldset collapsible {if $dwoo.foreach.v.last} last{/if}">
-                    <div><a id="link_{$dwoo.foreach.data.index}_{$dwoo.foreach.subdata.index}" class="collapsed" href="#behatfield-{$dwoo.foreach.data.index}-{$dwoo.foreach.subdata.index}" data-toggle="collapse" aria-expanded="false" aria-controls="#behatfield-{$dwoo.foreach.data.index}-{$dwoo.foreach.subdata.index}">{str tag=behatmatchingrows section=admin arg1=count($sv)} {$sk}.feature</a></div>
+                    <div><a id="link_{$dwoo.foreach.data.index}_{$dwoo.foreach.subdata.index}" class="collapsed" href="#behatfield-{$dwoo.foreach.data.index}-{$dwoo.foreach.subdata.index}" data-bs-toggle="collapse" aria-expanded="false" aria-controls="#behatfield-{$dwoo.foreach.data.index}-{$dwoo.foreach.subdata.index}">{str tag=behatmatchingrows section=admin arg1=count($sv)} {$sk}.feature</a></div>
                     <div id="behatfield-{$dwoo.foreach.data.index}-{$dwoo.foreach.subdata.index}" class="fieldset-body collapse list-group">
                     {foreach $sv key=row item=value}
                         <div>line {$row}: {$value} </div>

@@ -5,9 +5,9 @@
         {if is_array($profilegroup.fields) && count($profilegroup.fields)}
         <fieldset id="{$profilegroup.id}_fs" class="pieform-fieldset collapsible {if $dwoo.foreach.profilegroups.last} last{/if}">
             <legend>
-                <a id="{$profilegroup.id}" class="profilegroup collapsed" href="#profilefield-{$profilegroup.id}" data-toggle="collapse" aria-expanded="false" aria-controls="#profilefield-{$profilegroup.id}">
+                <a id="{$profilegroup.id}" class="profilegroup collapsed" href="#profilefield-{$profilegroup.id}" data-bs-toggle="collapse" aria-expanded="false" aria-controls="#profilefield-{$profilegroup.id}">
                     {$profilegroup.legend}
-                    <span class="icon icon-chevron-down collapse-indicator right float-right" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-chevron-down collapse-indicator right float-end" role="presentation" aria-hidden="true"></span>
                 </a>
             </legend>
             <div id="profilefield-{$profilegroup.id}" class="collapse list-group">
@@ -44,7 +44,7 @@
                                     <label for="decision_{$fieldvalue.id}_{$opt}">
                                         <input id="decision_{$fieldvalue.id}_{$opt}" class="fieldvaluedecision" type="radio" name="decision_{$fieldvalue.id}" value="{$opt}"{if $fieldvalue.decision == $opt} checked="checked"{/if}>
                                         {$displayopt}
-                                        <span class="accessible-hidden sr-only">({str tag=$fieldname section=artefact.internal}: {$fieldvalue.html|safe|strip_tags|str_shorten_text:80:true})</span>
+                                        <span class="accessible-hidden visually-hidden">({str tag=$fieldname section=artefact.internal}: {$fieldvalue.html|safe|strip_tags|str_shorten_text:80:true})</span>
                                     </label>
                                     {/if}
                                 {/foreach}

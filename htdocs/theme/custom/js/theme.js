@@ -80,7 +80,7 @@ jQuery(function($) {
     }
 
     function attachTooltip() {
-        $('[data-toggle="tooltip"]').tooltip({
+        $('[data-bs-toggle="tooltip"]').tooltip({
             container: 'body',
             placement: 'right',
             viewport: 'body'
@@ -270,7 +270,7 @@ jQuery(function($) {
             dialogParent = $(e.target).closest('.modal-dialog').length;
 
         if (e.target !== dialog && !dialogParent) {
-            $(this).find('button.close').trigger('click');
+            $(this).find('button.btn-close').trigger('click');
         }
     });
 

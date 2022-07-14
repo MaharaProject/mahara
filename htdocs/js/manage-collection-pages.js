@@ -40,7 +40,7 @@ jQuery(function($) {
 
                         var warningClass = data.message.messagestatus === 'ok' ? 'success' : 'warning';
 
-                        var warnmessage = $('<div id="changestatusline" class="alert alert-dismissible alert-' + warningClass + '" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="' + get_string('Close') + '"><span aria-hidden="true">&times;</span></button><p>' + data.message.message + '</p></div>');
+                        var warnmessage = $('<div id="changestatusline" class="alert alert-dismissible alert-' + warningClass + '" role="alert"><button type="button" class="btn-close" data-dismiss="alert" aria-label="' + get_string('Close') + '"><span aria-hidden="true">&times;</span></button><p>' + data.message.message + '</p></div>');
 
                         $('#messages').empty().append(warnmessage);
                     }

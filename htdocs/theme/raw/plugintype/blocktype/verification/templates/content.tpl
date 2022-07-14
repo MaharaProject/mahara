@@ -13,8 +13,8 @@
             {if $canunverify && !$inedit}
             <a href="#" id="verify-{$blockid}">
             {/if}
-                <span class="verificationicon icon icon-check-square float-right"></span>
-                <span class="sr-only">{str tag='verifiedspecific' section='blocktype.verification' arg1=$title}</span>
+                <span class="verificationicon icon icon-check-square float-end"></span>
+                <span class="visually-hidden">{str tag='verifiedspecific' section='blocktype.verification' arg1=$title}</span>
             {if $canunverify && !$inedit}
             </a>
             {/if}
@@ -22,8 +22,8 @@
             {if !$inedit}
             <a href="#" id="verify-{$blockid}">
             {/if}
-                <span class="verificationicon icon icon-square icon-regular float-right"></span>
-                <span class="sr-only">{str tag='toverifyspecific' section='blocktype.verification' arg1=$title}</span>
+                <span class="verificationicon icon icon-square icon-regular float-end"></span>
+                <span class="visually-hidden">{str tag='toverifyspecific' section='blocktype.verification' arg1=$title}</span>
             {if !$inedit}
             </a>
             {/if}
@@ -52,7 +52,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="btn close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
                     <h1 class="modal-title">
                         {str tag=verificationmodaltitle section=blocktype.verification arg1=$title}
                     </h1>

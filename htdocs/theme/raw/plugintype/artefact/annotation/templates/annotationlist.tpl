@@ -2,7 +2,7 @@
 <div class="{if $item->highlight} list-group-item-warning{/if}{if $item->makepublicform} list-group-item-private{/if} list-group-item comment-item">
     <div class="flex-row">
         <div class="usericon-heading flex-title flex-row">
-            <div class="float-left">
+            <div class="float-start">
                 <span class="user-icon user-icon-30" role="presentation" aria-hidden="true">
                 {if $item->author}
                     <img src="{profile_icon_url user=$item->author maxheight=30 maxwidth=30}" alt="{str tag=profileimagetext arg1=$item->author|display_default_name}">
@@ -36,7 +36,7 @@
                     {if $item->canedit}
                     <button data-url="{$WWWROOT}artefact/annotation/edit.php?id={$item->id}&amp;viewid={$viewid}" type="button" class="btn btn-secondary btn-sm">
                         <span class="icon icon-pencil-alt text-default" role="presentation" aria-hidden="true"></span>
-                        <span class="sr-only">{str tag=edit}</span>
+                        <span class="visually-hidden">{str tag=edit}</span>
                     </button>
                     {/if}
                     {if $item->deleteform}

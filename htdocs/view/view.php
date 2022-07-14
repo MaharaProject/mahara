@@ -326,7 +326,7 @@ function release_form($text, $releasecollection) {
     $form['elements']['submit'] = array(
         'type'  => 'button',
         'usebuttontag' => true,
-        'class' => 'btn-secondary float-right',
+        'class' => 'btn-secondary float-end',
         'value' => $releasecollection ? '<span class="icon icon-unlock left" role="presentation" aria-hidden="true"></span>' . get_string('releasecollection', 'group') : '<span class="icon icon-unlock left" role="presentation" aria-hidden="true"></span>' . get_string('releaseview', 'group'),
     );
     return pieform($form);
@@ -729,7 +729,7 @@ if ($modal = param_integer('modal', null)) {
     if ($block = param_integer('block', null)) {
         $javascript .= <<<EOF
         jQuery(window).on('blocksloaded', {}, function() {
-            $('#main-column-container').append('<a id="tmp_modal_link" class="modal_link" href="#" data-toggle="modal-docked" data-target="#configureblock" data-blockid="' + $block + '" data-artefactid="' + $artefact + '" ></a>');
+            $('#main-column-container').append('<a id="tmp_modal_link" class="modal_link" href="#" data-bs-toggle="modal-docked" data-bs-target="#configureblock" data-blockid="' + $block + '" data-artefactid="' + $artefact + '" ></a>');
             $('a#tmp_modal_link').off('click');
             $('a#tmp_modal_link').on('click', function(e) {
                 open_modal(e);
@@ -742,7 +742,7 @@ EOF;
     else {
         $javascript .= <<<EOF
         jQuery(window).on('blocksloaded', {}, function() {
-            $('#main-column-container').append('<a id="tmp_modal_link" class="modal_link" href="#" data-toggle="modal-docked" data-target="#configureblock" data-artefactid="' + $artefact + '" ></a>');
+            $('#main-column-container').append('<a id="tmp_modal_link" class="modal_link" href="#" data-bs-toggle="modal-docked" data-bs-target="#configureblock" data-artefactid="' + $artefact + '" ></a>');
             $('a#tmp_modal_link').off('click');
             $('a#tmp_modal_link').on('click', function(e) {
                 open_modal(e);

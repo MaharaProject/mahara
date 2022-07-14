@@ -1,7 +1,7 @@
 {include file="header.tpl"}
     {if !$noedit}
     <div class="btn-top-right btn-group btn-group-top {if $GROUP} pagetabs{/if}">
-        <button id="addview-button" class="btn btn-secondary" type="button" data-target="{$WWWROOT}view/editlayout.php?new=1{$urlparamsstr}" >
+        <button id="addview-button" class="btn btn-secondary" type="button" data-bs-target="{$WWWROOT}view/editlayout.php?new=1{$urlparamsstr}" >
             <span class="icon icon-plus left" role="presentation" aria-hidden="true" ></span>
             {str section=mahara tag=add}
         </button>
@@ -37,7 +37,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="btn close" data-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
                     <h1 class="modal-title">
                         <span class="icon icon-plus"></span>
                         {str tag=confirmaddtitle section=view}
@@ -56,7 +56,7 @@
 
     <script>
 
-    var addurl = $j("#addview-button").attr('data-target');
+    var addurl = $j("#addview-button").attr('data-bs-target');
 
     $j("#addview-button").on('click', function(event) {
         event.preventDefault();

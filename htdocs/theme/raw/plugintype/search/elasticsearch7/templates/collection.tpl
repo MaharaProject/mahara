@@ -6,7 +6,7 @@
     </h2>
 {else}
     <h2 class="list-group-item-heading text-inline">
-        <span class="icon float-left icon-folder-open left" role="presentation" aria-hidden="true"></span>
+        <span class="icon float-start icon-folder-open left" role="presentation" aria-hidden="true"></span>
         {if $record->viewid}
         <a href="{$WWWROOT}view/view.php?id={$record->viewid}">
             {$record->name}

@@ -8,7 +8,7 @@
 </form>
 {if $searchdata->searchtext}
 <div class="notifications-tabswrap">
-    <span class="accessible-hidden sr-only">{str section='activity' tag='messagetype'}</span>
+    <span class="accessible-hidden visually-hidden">{str section='activity' tag='messagetype'}</span>
     <ul class="in-page-tabs searchtab nav nav-tabs">
         {foreach from=$searchdata->tabs item=term}
         <li class="{if $searchdata->searcharea === $term->name}current-tab active{/if}">
@@ -19,7 +19,7 @@
             {else}
                 <a class="inactive">
                     {str section='module.multirecipientnotification' tag=$term->tag}
-                    <span class="accessible-hidden sr-only">({str tag=tab} {str tag=disabled})</span>
+                    <span class="accessible-hidden visually-hidden">({str tag=tab} {str tag=disabled})</span>
                 </a>
             {/if}
         </li>

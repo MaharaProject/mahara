@@ -6,27 +6,27 @@
                 {if $item->table === 'module_multirecipient_notification'}
                 <span class="control">
                     <input type="checkbox" class="tocheck" name="select-{$item->table}-{$item->id}" id="select-{$item->table}-{$item->id}">
-                    <span class="sr-only">{str tag='select' section='mahara'}</span>
+                    <span class="visually-hidden">{str tag='select' section='mahara'}</span>
                 </span>
                 {/if}
             </label>
-            <a class="collapsed" href="#notification-{$item->id}" data-toggle="collapse" aria-expanded="false" aria-controls="notification-{$item->id}" data-list="{$item->table}">
+            <a class="collapsed" href="#notification-{$item->id}" data-bs-toggle="collapse" aria-expanded="false" aria-controls="notification-{$item->id}" data-list="{$item->table}">
                 <span class="details-group">
                     {if $item->read && $item->type == 'usermessage'}
-                    <span class="icon icon-envelope type-icon" role="presentation" aria-hidden="true"></span><span class="sr-only">{$item->strtype} - {str tag='read' section='activity'}</span>
+                    <span class="icon icon-envelope type-icon" role="presentation" aria-hidden="true"></span><span class="visually-hidden">{$item->strtype} - {str tag='read' section='activity'}</span>
                     {elseif $item->strtype == 'usermessage'}
-                    <span class="icon icon-envelope type-icon" role="presentation" aria-hidden="true"></span><span class="sr-only">{$item->strtype}</span>
+                    <span class="icon icon-envelope type-icon" role="presentation" aria-hidden="true"></span><span class="visually-hidden">{$item->strtype}</span>
                     {elseif $item->strtype == 'Institution message'}
                          <span class="icon icon-university type-icon" role="presentation" aria-hidden="true"></span>
-                         <span class="sr-only">{$item->strtype}</span>
+                         <span class="visually-hidden">{$item->strtype}</span>
                     {else}
                     <span class="icon icon-wrench type-icon" role="presentation" aria-hidden="true"></span>
-                    <span class="sr-only">{$item->strtype}</span>
+                    <span class="visually-hidden">{$item->strtype}</span>
                     {/if}
 
-                    <span class="sr-only">{str section='activity' tag='subject'}</span>
+                    <span class="visually-hidden">{str section='activity' tag='subject'}</span>
                     {if !$item->read}
-                        <span class="accessible-hidden sr-only">
+                        <span class="accessible-hidden visually-hidden">
                             {str tag='unread' section='activity'}:
                         </span>
                     {/if}
@@ -46,7 +46,7 @@
                                     {$tousr['display']|truncate:$maxnamestrlength}
                                 {/if}
                                 <span>... ({count($item->tousr)})</span>
-                                <span class="sr-only">more</span>
+                                <span class="visually-hidden">more</span>
                             {else}
                                 {assign var="tousr" value=$item->tousr[0]}
                                 {$tousr['username']|truncate:$maxnamestrlength}
@@ -56,7 +56,7 @@
                         , {$item->date}
                         </span>
                     </span>
-                    <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-chevron-down collapse-indicator float-end" role="presentation" aria-hidden="true"></span>
                  </span>
             </a>
         </h3>

@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{str tag=Close}">
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <h1 class="modal-title">{str tag=editmembershipforuser section=group arg1=display_name($userid)}</h1>

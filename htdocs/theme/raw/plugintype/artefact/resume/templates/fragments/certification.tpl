@@ -11,7 +11,7 @@
         <thead>
             <tr>
                 <th class="resumecontrols">
-                    <span class="accessible-hidden sr-only">{str tag=move}</span>
+                    <span class="accessible-hidden visually-hidden">{str tag=move}</span>
                 </th>
 
                 <th>{str tag='title' section='artefact.resume'}</th>
@@ -21,7 +21,7 @@
                 </th>
 
                 <th class="resumecontrols">
-                    <span class="accessible-hidden sr-only">{str tag=edit}</span>
+                    <span class="accessible-hidden visually-hidden">{str tag=edit}</span>
                 </th>
             </tr>
         </thead>
@@ -33,11 +33,11 @@
             {$compositeforms.certification|safe}
         </div>
 
-        <button id="addcertificationbutton" data-toggle="collapse" data-target="#certificationform" aria-expanded="false" aria-controls="certificationform" class="float-right btn btn-secondary btn-sm collapsed expand-add-button">
+        <button id="addcertificationbutton" data-bs-toggle="collapse" data-bs-target="#certificationform" aria-expanded="false" aria-controls="certificationform" class="float-end btn btn-secondary btn-sm collapsed expand-add-button">
             <span class="show-form">
                 {str tag='add'}
                 <span class="icon icon-chevron-down right" role="presentation" aria-hidden="true"></span>
-                <span class="accessible-hidden sr-only">{str tag='addcertification' section='artefact.resume'}</span>
+                <span class="accessible-hidden visually-hidden">{str tag='addcertification' section='artefact.resume'}</span>
             </span>
             <span class="hide-form">
                 {str tag='cancel'}
@@ -61,9 +61,9 @@
 
         {if $row->description || $row->attachments}
             <h4 class="list-group-item-heading">
-                <a href="#certification-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="text-left collapsed collapsible" aria-expanded="false" data-toggle="collapse">
+                <a href="#certification-content-{$row->id}{if $artefactid}-{$artefactid}{/if}" class="text-start collapsed collapsible" aria-expanded="false" data-bs-toggle="collapse">
                     {$row->title}
-                    <span class="icon icon-chevron-down float-right collapse-indicator" role="presentation" aria-hidden="true"></span>
+                    <span class="icon icon-chevron-down float-end collapse-indicator" role="presentation" aria-hidden="true"></span>
                 </a>
             </h4>
         {else}
@@ -104,7 +104,7 @@
                         displayiconsonly = true}
                     <li class="list-group-item">
                     {if !$editing}
-                        <a class="modal_link file-icon-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-artefactid="{$item->id}">
+                        <a class="modal_link file-icon-link" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-artefactid="{$item->id}">
                         {if $item->iconpath}
                             <img class="file-icon" src="{$item->iconpath}" alt="">
                         {else}
@@ -122,7 +122,7 @@
                     {/if}
                         <span class="title">
                         {if !$editing}
-                            <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-artefactid="{$item->id}">
+                            <a class="modal_link" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-artefactid="{$item->id}">
                         {/if}
                             <span class="text-small">{$item->title}</span>
                         {if !$editing}
@@ -130,7 +130,7 @@
                         {/if}
                         </span>
                         <a href="{$item->downloadpath}" class="download-link">
-                            <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$item->title arg2=$item->size}"></span>
+                            <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$item->title arg2=$item->size}"></span>
                         </a>
                     {if $item->description}
                         <div class="file-description text-small text-midtone">

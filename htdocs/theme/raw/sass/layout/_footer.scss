@@ -3,7 +3,7 @@
     .footer-nav {
         font-size: $font-size-sm;
 
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             float: none !important;
             text-align: center;
             display: block;
@@ -39,14 +39,14 @@
         padding-bottom: $spacing-xxl;
         .mahara-logo {
             margin-right: $spacing-xl;
-            @include media-breakpoint-down(sm) {
+            @include media-breakpoint-down(md) {
                 float: none !important;
                 text-align: center;
             }
         }
         .mahara-version {
             padding-top: 0.5rem; // 8px;
-            @include media-breakpoint-down(sm) {
+            @include media-breakpoint-down(md) {
                 float: none !important;
                 text-align: center;
                 padding-top: $spacing-xl;

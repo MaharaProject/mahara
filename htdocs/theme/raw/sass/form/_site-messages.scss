@@ -41,7 +41,7 @@
             color: scale-color($danger, $lightness: -30%);
         }
     }
-    @include media-breakpoint-down(sm) {
+    @include media-breakpoint-down(md) {
         display: none;
     }
 
@@ -59,7 +59,7 @@
     .header.message-count-#{$i} {
         top: $site-message-height * $i;
 
-        @include media-breakpoint-down(sm) {
+        @include media-breakpoint-down(md) {
             top: 0;
         }
 
@@ -104,7 +104,7 @@
 }
 
 .errmsg {
-    color: theme-color("danger");
+    color: $theme-color-danger;
 }
 
 .sidebar,

@@ -1,7 +1,7 @@
 <div class="peoplelistinfo list-group-item clearfix">
     <div class="usericon-heading">
-        <span class="user-icon user-icon-40 small-icon float-left">
-            <img id="staffinfo_{$user->id}" src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$user|display_default_name}" class="float-left">
+        <span class="user-icon user-icon-40 small-icon float-start">
+            <img id="staffinfo_{$user->id}" src="{profile_icon_url user=$user maxwidth=40 maxheight=40}" alt="{str tag=profileimagetext arg1=$user|display_default_name}" class="float-start">
         </span>
         <h3 class="list-group-item-heading">
             <a href="{profile_url($user)}">{$user->display_name}</a>

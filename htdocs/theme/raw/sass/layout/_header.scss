@@ -42,7 +42,7 @@
     }
 
     .admin-title {
-        @extend .sr-only;
+        @extend .visually-hidden;
     }
 
     .navbar-main.navbar {

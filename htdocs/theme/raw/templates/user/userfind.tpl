@@ -1,7 +1,7 @@
 <div class="list-group-item {if $user->pending} list-group-item-warning{/if}">
     <div class="row" id="friendinfo_{$user->id}">
         <div class="col-md-8">
-            <div class="user-icon user-icon-60 float-left">
+            <div class="user-icon user-icon-60 float-start">
                 <img src="{profile_icon_url user=$user maxwidth=60 maxheight=60}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
             </div>
             <h3 class="list-group-item-heading">
@@ -36,7 +36,7 @@
             {/if}
             {if $user->introduction}
             <div class="text-small detail text-midtone push-left-for-usericon-60">
-                <a class="text-link collapsed with-introduction" data-toggle="collapse" data-target="#userintro{$user->id}"
+                <a class="text-link collapsed with-introduction" data-bs-toggle="collapse" data-bs-target="#userintro{$user->id}"
                     href="#userintro{$user->id}" role="button" aria-expanded="false"
                     aria-controls="userintro{$user->id}">
                     {str tag=showintroduction section=group}
@@ -96,7 +96,7 @@
                 {elseif $user->friendscontrol == 'auto'}
                 <li class="friend">
                     <span class="icon icon-user-plus left" role="presentation" aria-hidden="true"></span>
-                    <a href="#addfriend{$user->id}_addfriend_submit" data-triggersubmit="addfriend{$user->id}_addfriend_submit">
+                    <a href="#addfriend{$user->id}_addfriend_submit" data-bs-triggersubmit="addfriend{$user->id}_addfriend_submit">
                         {str tag='addtofriendslist' section='group'}
                     </a>
                     <div class="d-none">

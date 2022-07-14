@@ -3,7 +3,7 @@
 
     {if $enabled->readyforassessment}
         <td class="completedsum readyforassessment text-center">
-            <span class="sr-only">{str tag="assessmenttypecount" section="module.framework"}: {$statusestodisplay->readyforassessment.title}</span>
+            <span class="visually-hidden">{str tag="assessmenttypecount" section="module.framework"}: {$statusestodisplay->readyforassessment.title}</span>
             <span>
                 {$statustotals.readyforassessment}
             </span>
@@ -13,7 +13,7 @@
 
     {if $enabled->dontmatch}
         <td class="completedsum dontmatch text-center">
-            <span class="sr-only">{str tag="assessmenttypecount" section="module.framework"}: {$statusestodisplay->dontmatch.title}</span>
+            <span class="visually-hidden">{str tag="assessmenttypecount" section="module.framework"}: {$statusestodisplay->dontmatch.title}</span>
             <span>
                 {$statustotals.dontmatch}
             </span>
@@ -23,7 +23,7 @@
 
     {if $enabled->partiallycomplete}
         <td class="completedsum partiallycomplete text-center">
-            <span class="sr-only">{str tag="assessmenttypecount" section="module.framework"}: {$statusestodisplay->partiallycomplete.title}</span>
+            <span class="visually-hidden">{str tag="assessmenttypecount" section="module.framework"}: {$statusestodisplay->partiallycomplete.title}</span>
             <span>
                 {$statustotals.partiallycomplete}
             </span>
@@ -33,7 +33,7 @@
 
     {if $enabled->completed}
         <td class="completedsum completed text-center">
-            <span class="sr-only">{str tag="assessmenttypecount" section="module.framework"}: {$statusestodisplay->completed.title}</span>
+            <span class="visually-hidden">{str tag="assessmenttypecount" section="module.framework"}: {$statusestodisplay->completed.title}</span>
             <span>
                 {$statustotals.completed}
             </span>

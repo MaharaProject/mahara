@@ -1,6 +1,6 @@
     <a class="quickeditlink {if $withdisplay}with-displaylink {/if}modal_link list-group-heading "
-        data-toggle="modal-docked"
-        data-target="#configureblock"
+        data-bs-toggle="modal-docked"
+        data-bs-target="#configureblock"
         href="#"
         data-blockid="{$blockid}"
         title="{str tag=quickedit section=view}">

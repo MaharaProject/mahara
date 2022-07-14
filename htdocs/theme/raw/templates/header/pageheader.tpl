@@ -26,7 +26,7 @@
                                     {str tag=objectionablematerialreportedreply}
                                 {/if}
                                 <div class="form-group">
-                                <a id="review_link" class="btn btn-secondary" href="#" data-toggle="modal" data-target="#review-form">
+                                <a id="review_link" class="btn btn-secondary" href="#" data-bs-toggle="modal" data-bs-target="#review-form">
                                     <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span>
                                     {str tag=objectionreview}
                                 </a>
@@ -38,7 +38,7 @@
                         <h1 id="viewh1" class="page-header">
                             {if $title}
                                 <span class="subsection-heading">{$title|safe}</span>
-                                {if $collectiontitle}<span class="sr-only">{str tag=pageincollectiontitle section=collection arg1=$collectiontitle|safe}</span>{/if}
+                                {if $collectiontitle}<span class="visually-hidden">{str tag=pageincollectiontitle section=collection arg1=$collectiontitle|safe}</span>{/if}
                             {else}
                                 <span class="section-heading">{$maintitle|safe}</span>
                             {/if}
@@ -60,7 +60,7 @@
                                 {if $moretags}
                                     <a href="#" class="moretags">
                                     <span class="icon icon-ellipsis-h" role="presentation" aria-hidden="true"></span>
-                                    <span class="sr-only">{str tag="more..."}</span>
+                                    <span class="visually-hidden">{str tag="more..."}</span>
                                     </a>
                                 {/if}
                             </div>

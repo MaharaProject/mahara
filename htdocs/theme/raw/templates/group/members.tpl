@@ -25,7 +25,7 @@
     <div class="card">
         {if $membershiptype}
         <h2 id="searchresultsheading" class="card-header">
-            <span class="sr-only">{str tag=Results}: </span>
+            <span class="visually-hidden">{str tag=Results}: </span>
             {str tag=pendingmembers section=group}
         </h2>
         {else}

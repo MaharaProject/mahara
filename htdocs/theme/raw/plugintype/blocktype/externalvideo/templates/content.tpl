@@ -4,7 +4,7 @@
     {if $jsurl}
         <script>
         var blockinstance_{$blockid}_loaded = false;
-        $j('#blockinstance_{$blockid} .js-heading a[data-toggle="collapse"]').on("click", function() {
+        $j('#blockinstance_{$blockid} .js-heading a[data-bs-toggle="collapse"]').on("click", function() {
             if (blockinstance_{$blockid}_loaded === false) {
                 {if $jsflashvars}
                 var embedobj = $j('<object></object>').attr('width', '{$width}')

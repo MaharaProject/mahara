@@ -87,10 +87,10 @@ jQuery(function($) {
       var type = eval(item.type);
       var linkedto = $('<a>', {'href':item.linkedto, 'text': item.linktext});
       var edit = $('<button>', {'type':'button','class':'button btn btn-secondary btn-sm','title':{$getstring['edit']}})
-        .append($('<span>', {'class':'icon icon-pencil-alt', 'role':'presentation'}), $('<span>', {'class':'sr-only','text': {$getstring['edit']}}));
+        .append($('<span>', {'class':'icon icon-pencil-alt', 'role':'presentation'}), $('<span>', {'class':'visually-hidden','text': {$getstring['edit']}}));
       edit.on('click', function () { edititem(item); });
       var del = $('<button>', {'type':'button','class':'button btn btn-secondary btn-sm','title': {$getstring['delete']}})
-      .append($('<span>', {'class':'icon icon-trash-alt text-danger', 'role':'presentation'}), $('<span>', {'class':'sr-only','text': {$getstring['delete']}}));
+      .append($('<span>', {'class':'icon icon-trash-alt text-danger', 'role':'presentation'}), $('<span>', {'class':'visually-hidden','text': {$getstring['delete']}}));
       del.on('click', function() { delitem(item.id); });
       var buttonGroup = $('<span>', {'class':'btn-group'}).append(edit, del);
 
@@ -118,7 +118,7 @@ jQuery(function($) {
       // Either a save, a cancel button, or both.
       var savecancel = [];
       var save = $('<button>', {'type':'button','class':'button btn btn-secondary','title': {$getstring['update']}})
-        .append($('<span>', {'class':'icon icon-plus', 'role':'presentation'}), $('<span>', {'class':'sr-only','text': {$getstring['update']}}));
+        .append($('<span>', {'class':'icon icon-plus', 'role':'presentation'}), $('<span>', {'class':'visually-hidden','text': {$getstring['update']}}));
       save.on('click', function () { saveitem(item.id); });
 
       // The link field will be a text box or a select in the case of an admin file.
@@ -138,7 +138,7 @@ jQuery(function($) {
           // The save button says 'add', and there's no cancel button.
           save.prop('value',{$getstring['add']});
           save.prop('title',{$getstring['add']});
-          var savesr = $(save).find('span.sr-only').first();
+          var savesr = $(save).find('span.visually-hidden').first();
           savesr.innerHTML = {$getstring['add']};
           savecancel = [save];
       }
@@ -155,7 +155,7 @@ jQuery(function($) {
 
       // A text field for the name
       var name = $('<span>')
-        .append($('<label>', {'for':'name'+item.id,'class':'sr-only', 'text': $namelabel}),
+        .append($('<label>', {'for':'name'+item.id,'class':'visually-hidden', 'text': $namelabel}),
           $('<input>', {'type':'text','class':'text form-control input-sm','id':'name'+item.id,'value':item.name}));
 
       if (item.type == 'sitefile') {
@@ -167,7 +167,7 @@ jQuery(function($) {
           else {
               // Select the currently selected file.
               linkedtoselect = $('<select>', {'id':'linkedto'+item.id});
-              linkedto = $('<span>').append($('<label>', {'for':'linkedto'+item.id,'class':'sr-only', 'text': $linkedtolabel}), linkedtoselect);
+              linkedto = $('<span>').append($('<label>', {'for':'linkedto'+item.id,'class':'visually-hidden', 'text': $linkedtolabel}), linkedtoselect);
               for (var i = 0; i < adminfiles.length; i++) {
                   if (item.file == adminfiles[i].id) {
                     $(linkedtoselect).append($('<option>', {'value':adminfiles[i].id, 'selected':true, 'text': adminfiles[i].name }));
@@ -181,7 +181,7 @@ jQuery(function($) {
       }
       else { // type = externallist
           linkedto = $('<span>').append(
-            $('<label>', {'for':'linkedto'+item.id,'class':'sr-only', 'text': $linkedtolabel}),
+            $('<label>', {'for':'linkedto'+item.id,'class':'visually-hidden', 'text': $linkedtolabel}),
             $('<input>', {'type':'text','class':'text form-control input-sm','id':'linkedto'+item.id,'value':item.linkedto})
           );
           elink.prop('checked',true);

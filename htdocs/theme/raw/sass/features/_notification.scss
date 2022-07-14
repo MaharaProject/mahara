@@ -37,7 +37,7 @@
     .card-control {
         padding-top: $spacing-lg + 0.125rem;
         padding-bottom: $spacing-lg;
-        + a[data-toggle="collapse"] {
+        + a[data-bs-toggle="collapse"] {
             padding-left: 4rem; // 64px
             padding-right: 2rem; // 32px
         }

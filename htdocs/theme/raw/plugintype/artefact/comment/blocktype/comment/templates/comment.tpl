@@ -8,7 +8,7 @@
 </p>
 {elseif $feedback}
     {if $enablecomments}
-    <a id="add_feedback_link" class="js-add-comment-modal feedback link-blocktype" href="#" data-toggle="modal-docked" data-target="#feedback-form">
+    <a id="add_feedback_link" class="js-add-comment-modal feedback link-blocktype" href="#" data-bs-toggle="modal-docked" data-bs-target="#feedback-form">
         <span class="icon icon-plus" role="presentation" aria-hidden="true"></span>
         {str tag=addcomment section=artefact.comment}
     </a>

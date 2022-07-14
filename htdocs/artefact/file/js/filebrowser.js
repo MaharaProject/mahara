@@ -946,7 +946,7 @@ var FileBrowser = (function($) {
             tbody.append(jQuery('<tr>', {'class': (highlight ? ' highlight-file' : '')}).append(
                 jQuery('<td>', {'class':'icon-container'}).append(fileIconImg),
                 jQuery('<td>', {'class':'filename'}).append(filelink),
-                jQuery('<td>', {'class':'text-right text-small'}).append(remove, jQuery('<input>', {'type':'hidden', 'class':'d-none', 'id':self.id+'_selected[' + id + ']',
+                jQuery('<td>', {'class':'text-end text-small'}).append(remove, jQuery('<input>', {'type':'hidden', 'class':'d-none', 'id':self.id+'_selected[' + id + ']',
                                                                                             'name':self.id+'_selected[' + id + ']', 'value':id}))
             ));
         }

@@ -134,7 +134,7 @@
 <table class="userlisttable fullwidth">
      <tr>
         <td colspan="3" class="form-group last">
-            <label for="{{$name}}_search" class="plain sr-only">{{str tag='filter'}}</label>
+            <label for="{{$name}}_search" class="plain visually-hidden">{{str tag='filter'}}</label>
             <div class="input-group">
                 <input id="{{$name}}_search" type="text" class="text form-control">
                 <span class="input-group-append">
@@ -154,11 +154,11 @@
             <div class="btn-group btn-group-vertical">
                 <button type="button" name="rightarrow" onClick="{{$name}}_moveopts('potential','members')" class="rightarrow btn btn-secondary btn-lg">
                     <span class="icon icon-long-arrow-alt-right" role="presentation" aria-hidden="true"></span>
-                    <span class="sr-only">{{$rightarrowlabel}}</span>
+                    <span class="visually-hidden">{{$rightarrowlabel}}</span>
                 </button>
                 <button type="button" name="leftarrow" onClick="{{$name}}_moveopts('members','potential')" class="leftarrow btn btn-secondary btn-lg">
                      <span class="icon icon-long-arrow-alt-left" role="presentation" aria-hidden="true"></span>
-                     <span class="sr-only">{{$leftarrowlabel}}</span>
+                     <span class="visually-hidden">{{$leftarrowlabel}}</span>
                 </button>
             </div>
         </td>

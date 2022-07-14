@@ -47,7 +47,7 @@
     input, .picker {
         max-width: 12.5rem; // 200px;
     }
-    @include media-breakpoint-between(lg, lg) {
+    @include media-breakpoint-between(lg, xl) {
         label {
             min-width: 100%;
         }
@@ -100,7 +100,7 @@
     margin-top: 3.125rem; // 50px;
     padding: $spacing-base $spacing-xl $spacing-xl;
 
-    .close {
+    .btn-close {
         width: 100%;
         text-align: right;
         float: none;

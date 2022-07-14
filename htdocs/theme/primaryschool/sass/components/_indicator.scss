@@ -11,8 +11,8 @@
         .move-indicator {
             color: $white !important;
         }
-        [data-toggle="collapse"].outer-link:focus ~ .collapse-indicator,
-        [data-toggle="collapse"].outer-link:hover ~ .collapse-indicator  {
+        [data-bs-toggle="collapse"].outer-link:focus ~ .collapse-indicator,
+        [data-bs-toggle="collapse"].outer-link:hover ~ .collapse-indicator  {
             color: $white;
             &.collapsed {
                 ~ .collapse-indicator {

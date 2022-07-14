@@ -43,19 +43,19 @@
             <button data-url="{$WWWROOT}group/edit.php?id={$group->id}" title="{str(tag=editspecific arg1=$group->name)|escape:html|safe} {str tag=settings}" type="button" class="btn btn-secondary">
                 <span class="icon icon-cog text-default" role="presentation" aria-hidden="true"></span>
                 <span class="btn-title">{str tag=settings}</span>
-                <span class="sr-only">{str(tag=editspecific arg1=$group->name)|escape:html|safe}</span>
+                <span class="visually-hidden">{str(tag=editspecific arg1=$group->name)|escape:html|safe}</span>
             </button>
             {if $cancopy}
             <button data-url="{$WWWROOT}group/copy.php?id={$group->id}&return=mygroups" title="{str(tag=copygroup section=group arg1=$group->name)|escape:html|safe}" type="button" class="btn btn-secondary">
                 <span class="icon icon-regular icon-clone text-default" role="presentation" aria-hidden="true"></span>
                 <span class="btn-title">{str tag=copy}</span>
-                <span class="sr-only">{str(tag=copygroup section=group arg1=$group->name)|escape:html|safe}</span>
+                <span class="visually-hidden">{str(tag=copygroup section=group arg1=$group->name)|escape:html|safe}</span>
             </button>
             {/if}
             <button data-url="{$WWWROOT}group/delete.php?id={$group->id}" title="{str(tag=deletespecific arg1=$group->name)|escape:html|safe}" type="submit" class="btn btn-secondary">
                 <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
                 <span class="btn-title">{str tag=delete}</span>
-                <span class="sr-only">{str(tag=deletespecific arg1=$group->name)|escape:html|safe}</span>
+                <span class="visually-hidden">{str(tag=deletespecific arg1=$group->name)|escape:html|safe}</span>
             </button>
     </div>
 

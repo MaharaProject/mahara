@@ -4,11 +4,11 @@
 {if isset($attachments)}
 <div class="has-attachment card collapsible">
     <div class="card-header">
-        <a class="text-left collapsed" aria-expanded="false" href="#cv-attach-{$id}{if $artefactid}-{$artefactid}{/if}" data-toggle="collapse">
+        <a class="text-start collapsed" aria-expanded="false" href="#cv-attach-{$id}{if $artefactid}-{$artefactid}{/if}" data-bs-toggle="collapse">
             <span class="icon left icon-paperclip icon-sm" role="presentation" aria-hidden="true"></span>
             <span class="text-small">{str tag=attachedfiles section=artefact.blog}</span>
             <span class="metadata">({$count})</span>
-            <span class="icon icon-chevron-down float-right collapse-indicator" role="presentation" aria-hidden="true"></span>
+            <span class="icon icon-chevron-down float-end collapse-indicator" role="presentation" aria-hidden="true"></span>
         </a>
     </div>
     <!-- Attachment list with view and download link -->
@@ -27,7 +27,7 @@
             displayiconsonly = true}
             <li class="list-group-item">
             {if !$editing}
-                <a class="modal_link file-icon-link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$item->id}">
+                <a class="modal_link file-icon-link" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$item->id}">
                 {if $item->iconpath}
                     <img class="file-icon" src="{$item->iconpath}" alt="">
                 {else}
@@ -45,7 +45,7 @@
             {/if}
                 <span class="title">
                 {if !$editing}
-                    <a class="modal_link" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$item->id}">
+                    <a class="modal_link" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$item->id}">
                 {/if}
                         <span class="text-small">{$item->title}</span>
                 {if !$editing}
@@ -53,7 +53,7 @@
                 {/if}
                 </span>
                 <a href="{$item->downloadpath}" class="download-link">
-                    <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$item->title arg2=$item->size}"></span>
+                    <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$item->title arg2=$item->size}"></span>
                 </a>
             {if $item->description}
                 <div class="file-description text-small text-midtone">

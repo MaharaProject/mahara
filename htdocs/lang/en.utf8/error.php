@@ -64,6 +64,7 @@ $string['mysqlnotriggerprivilege'] = 'Mahara requires permission to create datab
 $string['mbstringneeded'] = 'Please install the mbstring extension for php. This is needed if you have UTF-8 characters in usernames. Otherwise, people might not be able to log in.';
 $string['cssnotpresent'] = 'CSS files are not present in your htdocs/theme/raw/style directory. If you are running Mahara from a git checkout, run "make css" to build the CSS files. If you are running Mahara from a ZIP download, try downloading and unzipping again.';
 $string['mahararootusermissing'] = 'The "root" account is missing from the database so we cannot continue. This account needs to be present for Mahara to function correctly. To add the root account back in, please make another install of the Mahara version you are using and see what is contained for account id = 0 in the "usr" and "usr_custom_layout" tables and add that data to your instance of Mahara before trying to upgrade again.';
+$string['outdatedcompiledcssbs'] = 'Your compiled CSS is of an older version of bootstrap, please run "make clean-css && make css" to update it for the current version.';
 
 // general exception error messages
 $string['blocktypenametaken'] = "Block type %s is already taken by another plugin (%s).";

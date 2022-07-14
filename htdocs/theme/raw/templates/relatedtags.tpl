@@ -7,16 +7,16 @@
             <a class="tag secondary-link" href="{$results->baseurl}">{$tag|str_shorten_text:50}</a>
         </h2>
         <div class="tag-filters">
-            <div id="results_sort" class="float-right">
+            <div id="results_sort" class="float-end">
                 <strong>{str tag=sortresultsby}</strong>
                 {foreach from=$results->sortcols item=sortfield name=sortcols}
                     <a href="{$results->baseurl}{$results->queryprefix}type={$results->filter}&sort={$sortfield}"{if $results->sort == $sortfield} class="selected"{/if}>{str tag=$sortfield}</a>{if !$.foreach.sortcols.last} <span class="sep">|</span>{/if}
                 {/foreach}
             </div>
             <div class="btn-group">
-                <button type="button" class="btn btn-secondary select-title dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-secondary select-title dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="icon icon-filter left" role="presentation" aria-hidden="true"></span>
-                    <span class="sr-only">{str tag=filterresultsby}</span>
+                    <span class="visually-hidden">{str tag=filterresultsby}</span>
                     {foreach from=$results->filtercols key=filtername item=filterdisplay name=filtercols}
                         <span id="currentfilter" {if $results->filter != $filtername} class="d-none"{/if}>{$filterdisplay}</span>
                     {/foreach}

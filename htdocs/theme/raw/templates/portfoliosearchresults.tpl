@@ -13,7 +13,7 @@
             {/if}
         {else}
             <h2 class="title list-group-item-heading text-inline">
-            <span class="icon left float-left icon-{$result->typestr}" role="presentation" aria-hidden="true"></span>
+            <span class="icon left float-start icon-{$result->typestr}" role="presentation" aria-hidden="true"></span>
             {if $result->link}
                 <a href="{$WWWROOT}{$result->link}">
                     {$result->title|str_shorten_html:50:true|safe}
@@ -94,7 +94,7 @@
         </div>
         {elseif $result->type == 'blocktype'}
         <h2 class="title list-group-item-heading text-inline">
-        <span class="icon left float-left icon-{$result->typestr}" role="presentation" aria-hidden="true"></span>
+        <span class="icon left float-start icon-{$result->typestr}" role="presentation" aria-hidden="true"></span>
         {if $result->link}
             <a href="{$WWWROOT}{$result->link}">
                 {$result->title|str_shorten_html:50:true|safe}
@@ -136,7 +136,7 @@
         </div>
         {else}
         <h2 class="list-group-item-heading title text-inline">
-            <span class="icon left float-left icon-{$result->typestr}" role="presentation" aria-hidden="true"></span>
+            <span class="icon left float-start icon-{$result->typestr}" role="presentation" aria-hidden="true"></span>
             <a href="{$result->url}">{$result->title}</a>
         </h2>
         <span class="tag-type text-midtone">({$result->typelabel})</span>

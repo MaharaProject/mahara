@@ -630,7 +630,7 @@ for ($i = 0; $i < count($records); $i++) {
             'name'             => 'deleteurl_' . $i,
             'successcallback'  => 'deleteurl_submit',
             'renderer'         => 'div',
-            'class'            => 'form-as-button btn-group form-inline float-left',
+            'class'            => 'form-as-button btn-group form-inline float-start',
             'renderelementsonly' => true,
             'elements'         => array(
                 'token'  => array(
@@ -643,7 +643,7 @@ for ($i = 0; $i < count($records); $i++) {
                     'class'        => 'btn-secondary btn-sm',
                     'elementtitle' => get_string('delete'),
                     'confirm'      => get_string('reallydeletesecreturl', 'view'),
-                    'value'        => '<span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span><span class="sr-only">' . get_string('delete') . '</span>',
+                    'value'        => '<span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span><span class="visually-hidden">' . get_string('delete') . '</span>',
                 ),
             ),
         )),

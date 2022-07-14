@@ -49,7 +49,7 @@
             </ul>
 
             <div class="has-form">
-                <div class="float-left">
+                <div class="float-start">
                     {$form|safe}
                 </div>
 
@@ -76,9 +76,9 @@
         <div class="collapsible-group skins">
             <div class="card collapsible collapsible-group first">
                 <h4 class="card-header has-link">
-                    <a href="#userskins" data-toggle="collapse" aria-expanded="false" aria-controls="#userskins">
+                    <a href="#userskins" data-bs-toggle="collapse" aria-expanded="false" aria-controls="#userskins">
                         {str tag=userskins section=skin}
-                        <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-chevron-down collapse-indicator float-end" role="presentation" aria-hidden="true"></span>
                     </a>
                 </h4>
                 <div id="userskins" class="card-body collapse show">
@@ -97,9 +97,9 @@
             {if $favorskins}
             <div class="card collapsible collapsible-group">
                 <h4 class="card-header has-link">
-                    <a href="#favorskins" data-toggle="collapse" aria-expanded="false" aria-controls="#favorskins" class="collapsed">
+                    <a href="#favorskins" data-bs-toggle="collapse" aria-expanded="false" aria-controls="#favorskins" class="collapsed">
                         {str tag=favoriteskins section=skin}
-                        <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-chevron-down collapse-indicator float-end" role="presentation" aria-hidden="true"></span>
                     </a>
                 </h4>
                 <div id="favorskins" class="card-body collapse">
@@ -118,9 +118,9 @@
             {/if}
             <div class="card collapsible collapsible-group last">
                 <h4 class="card-header has-link">
-                    <a href="#siteskins" data-toggle="collapse" aria-expanded="false" aria-controls="#siteskins" class="collapsed">
+                    <a href="#siteskins" data-bs-toggle="collapse" aria-expanded="false" aria-controls="#siteskins" class="collapsed">
                         {str tag=siteskins section=skin}
-                        <span class="icon icon-chevron-down collapse-indicator float-right" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-chevron-down collapse-indicator float-end" role="presentation" aria-hidden="true"></span>
                     </a>
                 </h4>
                 <div id="siteskins" class="card-body no-footer collapse">

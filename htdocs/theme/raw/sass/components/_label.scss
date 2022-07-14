@@ -18,13 +18,20 @@ a.label.label-default,
     margin-right: $spacing-sm;
     padding: $badge-padding-y $badge-padding-x;
     @include border-radius($badge-border-radius);
-    &.badge-warning {
+    &.bg-warning {
         @extend .text-white;
     }
 
-    &.badge-primary {
+    &.bg-primary {
         text-decoration: none;
     }
+
+    @at-root a#{&} {
+        &:hover,
+        &:focus {
+            text-decoration: none;
+        }
+      }
 }
 
 .field-label-bold {

@@ -12,7 +12,7 @@
                 {str tag=nposts section=artefact.blog arg1=$blog->postcount}
             </span>
         {/if}
-         <span class="icon icon-arrow-right float-right link-indicator" role="presentation" aria-hidden="true"></span>
+         <span class="icon icon-arrow-right float-end link-indicator" role="presentation" aria-hidden="true"></span>
         </a>
     </h2>
 
@@ -26,17 +26,17 @@
     <div class="card-footer has-form">
         <button data-url="{$WWWROOT}artefact/blog/post.php?blog={$blog->id}" class="btn btn-secondary btn-sm">
             <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
-            <span class="sr-only">{str tag=addpostspecific arg1=$blog->title section=artefact.blog |escape:html|safe}</span>
+            <span class="visually-hidden">{str tag=addpostspecific arg1=$blog->title section=artefact.blog |escape:html|safe}</span>
             {str tag=addpost section=artefact.blog}
         </button>
 
-        <div class="btn-group float-right">
+        <div class="btn-group float-end">
             {if $blog->locked}
                 <span class="text-small">{str tag=submittedforassessment section=view}</span>
             {else}
             <button data-url="{$WWWROOT}artefact/blog/settings/index.php?id={$blog->id}" type="button" title="{str(tag=settingsspecific arg1=$blog->title)|escape:html|safe}" class="btn btn-secondary btn-sm btn-group-item">
                 <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
-                <span class="sr-only">{str tag=editspecific arg1=$blog->title}</span>
+                <span class="visually-hidden">{str tag=editspecific arg1=$blog->title}</span>
             </button>
             {$blog->deleteform|safe}
             {/if}

@@ -106,8 +106,8 @@
                 paginate: {
                     'first':      '{/literal}{str tag="first" section="module.submissions"}{literal}',
                     'last':       '{/literal}{str tag="last" section="module.submissions"}{literal}',
-                    'next':       '{/literal}<span class="sr-only">{str tag="next" section="module.submissions"}</span>{literal}',
-                    'previous':   '{/literal}<span class="sr-only">{str tag="previous" section="module.submissions"}</span>{literal}'
+                    'next':       '{/literal}<span class="visually-hidden">{str tag="next" section="module.submissions"}</span>{literal}',
+                    'previous':   '{/literal}<span class="visually-hidden">{str tag="previous" section="module.submissions"}</span>{literal}'
                 },
                 aria: {
                     'sortAscending':  '{/literal}{str tag="previous" section="module.submissions"}{literal}',

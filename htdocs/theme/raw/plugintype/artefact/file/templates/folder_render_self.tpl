@@ -17,7 +17,7 @@
 
 <div id="commentfiles" class="folder-card">
     {if (isset($children))}
-    <h3 class="sr-only">
+    <h3 class="visually-hidden">
         {str tag=foldercontents section=artefact.file}:
     </h3>
 
@@ -37,7 +37,7 @@
                 displayiconsonly=true}
             <li class="filedownload-item list-group-item flush">
                 {if !$editing}
-                  <a class="modal_link file-icon-link" title="{$child->hovertitle}" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$child->id}">
+                  <a class="modal_link file-icon-link" title="{$child->hovertitle}" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$child->id}">
                   {if $child->iconsrc}
                       <img src="{$child->iconsrc}" alt="{$child->artefacttype}" class="file-icon text-inline">
                   {else}
@@ -55,7 +55,7 @@
                 {/if}
                 <span class="title">
                   {if !$editing}
-                    <a class="modal_link" title="{$child->hovertitle}" data-toggle="modal-docked" data-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$child->id}">
+                    <a class="modal_link" title="{$child->hovertitle}" data-bs-toggle="modal-docked" data-bs-target="#configureblock" href="#" data-blockid="{$blockid}" data-artefactid="{$child->id}">
                   {/if}
                       <span class="text-small">{$child->title}</span>
                   {if !$editing}
@@ -64,7 +64,7 @@
                 </span>
                 {if $child->artefacttype != 'folder'}
                 <a href="{$WWWROOT}artefact/file/download.php?file={$child->id}&amp;view={$viewid}" class="download-link">
-                    <span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true" data-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$child->title arg2=$child->size}"></span>
+                    <span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true" data-bs-toggle="tooltip" title="{str tag=downloadfilesize section=artefact.file arg1=$child->title arg2=$child->size}"></span>
                 </a>
                 {/if}
                 {if $child->description}

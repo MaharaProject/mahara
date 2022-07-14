@@ -1221,7 +1221,7 @@ EOF;
     public function make_class($element) {/*{{{*/
         $classes = array();
 
-        $formcontrols = array('text', 'textarea', 'select', 'password', 'calendar', 'date', 'expiry', 'file');
+        $formcontrols = array('text', 'textarea', 'select', 'password', 'calendar', 'date', 'expiry');
 
         if(in_array($element['type'], $formcontrols)){
             $classes[] = 'form-control';
@@ -1644,7 +1644,7 @@ EOF;
             }
 
             if (!empty($element['hiddenlabel'])) {
-                $labelclass = ' class="sr-only"';
+                $labelclass = ' class="visually-hidden"';
             }
             else {
                 $labelclass = '';

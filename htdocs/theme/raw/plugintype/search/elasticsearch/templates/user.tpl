@@ -5,7 +5,7 @@
 {else}
 <div class="peoplelistinfo" id="{$type}_{$user->id}">
     <div class="profile usericon-heading flex-row">
-        <span class="user-icon user-icon-30 float-left" role="presentation" aria-hidden="true">
+        <span class="user-icon user-icon-30 float-start" role="presentation" aria-hidden="true">
             <img src="{profile_icon_url user=$user maxwidth=30 maxheight=30}" alt="{str tag=profileimagetext arg1=$user|display_default_name}">
         </span>
         <h2 class="list-group-item-heading text-inline flex-title">

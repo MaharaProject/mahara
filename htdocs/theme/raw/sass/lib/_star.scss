@@ -4,7 +4,7 @@
 .star .radio-wrapper {
     // hide all radio divs after the first (the jquery module hides the inputs)
     > div.radio ~ div.radio {
-       @include sr-only;
+       @include visually-hidden;
     }
 }
 
@@ -111,7 +111,7 @@
     padding: 6px 0 6px 0;
 }
 .ratingicon:hover {
-    color: theme-color("success") !important;
+    color: $theme-color-success !important;
 }
 
 #pluginconfig_ratingexample_container > div,

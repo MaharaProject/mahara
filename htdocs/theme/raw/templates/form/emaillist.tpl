@@ -2,7 +2,7 @@
   {{foreach from=$validated item=email}}
     <div class="validated">
         <label for="{{$form}}_{{$name}}">
-            <span class="accessible-hidden sr-only">{{$title}}: </span>
+            <span class="accessible-hidden visually-hidden">{{$title}}: </span>
         </label>
         <input disabled {{if $email == $default}} checked{{/if}}{{if $describedby}} aria-describedby="{{$describedby}}"{{/if}} type="radio" name="{{$name}}_locked" value="{{$email}}" id="{{$form}}_{{$name}}">
         {{$email}}
@@ -37,7 +37,7 @@
                     jQuery('<input>', {'type': 'hidden', 'name': '{{$name}}_unsent[]'       , 'value': email}),
                     ' ',
                     jQuery('<span>', {'class': 'pseudolabel'}).append(email),' ',
-                    jQuery('<button>', {'class': 'btn btn-secondary btn-sm float-right', 'onclick': '{{$name}}_remove(this); return false'}).append(
+                    jQuery('<button>', {'class': 'btn btn-secondary btn-sm float-end', 'onclick': '{{$name}}_remove(this); return false'}).append(
                       jQuery('<span>', {'class': 'icon icon-trash-alt text-danger', 'role': 'presentation'})
                     ),
                     jQuery('<div>', {'class': 'clearfix description'}).append({{$validationemailstr|safe}})
@@ -105,10 +105,10 @@
         <input{{if $email == $default}} checked{{/if}} type="radio" id="{{$name}}_radio_{{$i}}" name="{{$name}}_selected" value="{{$email}}" class="text-inline">
         <input type="hidden" name="{{$name}}_valid[]" value="{{$email}}">
         <label for="{{$name}}_radio_{{$i}}" class="stacked-label">
-            <span class="accessible-hidden sr-only">{{$title}}: </span>{{$email}}
+            <span class="accessible-hidden visually-hidden">{{$title}}: </span>{{$email}}
         </label>
         {{if $email != $default}}
-        <button class="btn btn-secondary btn-sm float-right" onclick="{{$name}}_remove(this); return false;" title="{{str tag=delete}}">
+        <button class="btn btn-secondary btn-sm float-end" onclick="{{$name}}_remove(this); return false;" title="{{str tag=delete}}">
             <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
         </button>
         {{/if}}
@@ -121,7 +121,7 @@
         <span class="stacked-label">
             {{$email}}
         </span>
-        <button class="btn btn-secondary btn-sm float-right" onclick="{{$name}}_remove(this); return false;" title="{{str tag=delete}}">
+        <button class="btn btn-secondary btn-sm float-end" onclick="{{$name}}_remove(this); return false;" title="{{str tag=delete}}">
             <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
         </button>
         <div class="description">{{str tag=validationemailsent section=artefact.internal}}</div>

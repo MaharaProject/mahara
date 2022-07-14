@@ -41,14 +41,14 @@
 }
 
 .modal-tinymce .hidden-xs {
-    @extend .sr-only;
+    @extend .visually-hidden;
 }
 
 .tinymce-large iframe{
     min-height: 300px;
 }
 
-label.sr-only + div.tox-tinymce {
+label.visually-hidden + div.tox-tinymce {
     max-width: 100%;
     width: 99%;
 }
@@ -109,7 +109,7 @@ label.sr-only + div.tox-tinymce {
     color: $btn-primary-bg;
     box-shadow: none;
     &:hover {
-        background-color: scale-color($btn-secondary-bg, $lightness: -10.05) !important;
+        background-color: scale-color($btn-secondary-bg, $lightness: -10.05%) !important;
         border-color: transparent !important;
     }
 }
@@ -117,7 +117,7 @@ label.sr-only + div.tox-tinymce {
     background-color: transparent;
     border-color: transparent;
     &:hover {
-        background-color: scale-color($btn-secondary-bg, $lightness: -10.05) !important;
+        background-color: scale-color($btn-secondary-bg, $lightness: -10.05%) !important;
         border-color: transparent !important;
     }
 }

@@ -1174,7 +1174,7 @@ EOF;
                 var up =
                     jQuery('<a>', {'href': '', 'class': 'moveup'}).append(
                         jQuery('<span>',{'class': 'icon icon-long-arrow-alt-up','role':'presentation'}),
-                        jQuery('<span>',{'class': 'sr-only', 'text': {$upjsstr}})
+                        jQuery('<span>',{'class': 'visually-hidden', 'text': {$upjsstr}})
                     );
                     up.on('click', function (e) {
                     e.preventDefault();
@@ -1186,7 +1186,7 @@ EOF;
                 var down =
                     jQuery('<a>', {'href': '', 'class':'movedown'}).append(
                       jQuery('<span>',{'class': 'icon icon-long-arrow-alt-down','role':'presentation'}),
-                      jQuery('<span>',{'class': 'sr-only', 'text': {$downjsstr}})
+                      jQuery('<span>',{'class': 'visually-hidden', 'text': {$downjsstr}})
                     );
                     down.on('click', function (e) {
                     e.preventDefault();
@@ -1207,12 +1207,12 @@ EOF;
                 jQuery('<button>', {'data-url': 'editcomposite.php?id=' + row.id + '&artefact=' + row.artefact,
                                'title': {$editstr}, 'class': 'btn btn-secondary btn-sm'}).append(
                                     jQuery('<span>',{'class': 'icon icon-pencil-alt', 'role':'presentation'}),
-                                    jQuery('<span>',{'class': 'sr-only'}).append({$editjsstr})
+                                    jQuery('<span>',{'class': 'visually-hidden'}).append({$editjsstr})
                                );
             var dellink =
                 jQuery('<button>', {'data-ignore':'true', 'data-url': '', 'title': {$delstr}, 'class': 'btn btn-secondary btn-sm'}).append(
                     jQuery('<span>',{'class': 'icon icon-trash-alt text-danger','role':'presentation'}),
-                    jQuery('<span>',{'class': 'sr-only'}).append({$deljsstr})
+                    jQuery('<span>',{'class': 'visually-hidden'}).append({$deljsstr})
                 );
                 dellink.on('click', function (e) {
                 e.preventDefault();
@@ -1259,8 +1259,8 @@ function listAttachments(attachments) {
         for (var i=0; i < attachments.length; i++) {
             var item = attachments[i];
             var href = self.config.wwwroot + 'artefact/file/download.php?file=' + item.attachment;
-            var linkcontent = '<span class="sr-only">' + {$downloadstr} + ' "' + item.title + '"</span>';
-            linkcontent += '<span class="icon icon-download icon-lg float-right text-watermark icon-action" role="presentation" aria-hidden="true"></span>';
+            var linkcontent = '<span class="visually-hidden">' + {$downloadstr} + ' "' + item.title + '"</span>';
+            linkcontent += '<span class="icon icon-download icon-lg float-end text-watermark icon-action" role="presentation" aria-hidden="true"></span>';
             var link = jQuery('<a href="' + href + '">' + linkcontent + '</a>');
             var icon = '<span class="icon icon-file left icon-lg text-default file-icon" role="presentation" aria-hidden="true"></span>';
             if (item.icon) {

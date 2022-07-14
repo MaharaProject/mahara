@@ -1,3 +1,5 @@
+@use "sass:math";
+
 // modifications for list elements such a list of pages, collections
 
 .list-group {
@@ -19,7 +21,7 @@
         margin-left: -$list-group-item-padding-x;
         margin-right: -$list-group-item-padding-x;
         > li > a {
-            padding: ($list-group-item-padding-y / 2) $list-group-item-padding-x;
+            padding: math.div($list-group-item-padding-y, 2) $list-group-item-padding-x;
             display: block;
             line-height: 1;
         }
@@ -31,16 +33,16 @@
         border: 0;
         > .list-group-item {
             border: 0;
-            padding: ($list-group-item-padding-y / 2) 0; // 5px 0
+            padding: math.div($list-group-item-padding-y, 2) 0; // 5px 0
         }
         li {
             border:0;
-            padding: ($list-group-item-padding-y / 2) ($list-group-item-padding-x / 2); // 5px 7.5px
+            padding: math.div($list-group-item-padding-y, 2) math.div($list-group-item-padding-x, 2); // 5px 7.5px
         }
         .small {
             padding: 0;
             a {
-                padding: ($list-group-item-padding-y / 2) 0; // 5px 0
+                padding: math.div($list-group-item-padding-y, 2) 0; // 5px 0
             }
         }
     }
@@ -102,7 +104,7 @@
     margin-top: 0;
     margin-bottom: 0;
     font-size: $font-size-lg; // 18px
-    font-weight: $font-weight-normal;
+    font-weight: $font-weight-normal !important;
 }
 
 .list-group-item.draft,
@@ -202,8 +204,8 @@
 
     .btn-title {
         padding-left: 0.3125rem; // 5px
-        @include media-breakpoint-down(md) {
-            @include sr-only;
+        @include media-breakpoint-down(lg) {
+            @include visually-hidden;
         }
     }
 
@@ -225,7 +227,7 @@
     }
 
     // in search/tag results, the right column needs a slight gap when stacking
-    @include media-breakpoint-down(md) {
+    @include media-breakpoint-down(lg) {
         .col-md-4,
         .col-md-5 {
             margin-top: $spacing-base;
@@ -251,7 +253,7 @@
 }
 
 .list-group-item-default {
-    background-color: rgba(scale-color($gray-100, $lightness: 62.75), 0.5);
+    background-color: rgba(scale-color($gray-100, $lightness: 62.75%), 0.5);
 }
 
 .list-group-item-text {
@@ -281,7 +283,7 @@
     -webkit-column-gap: 20px;
     column-count: 4;
     column-gap: 20px;
-    @include media-breakpoint-down(md) {
+    @include media-breakpoint-down(lg) {
         -moz-column-count: 3;
         -moz-column-gap: 20px;
         -webkit-column-count: 3;
@@ -289,7 +291,7 @@
         column-count: 3;
         column-gap: 20px;
     }
-    @include media-breakpoint-down(md) {
+    @include media-breakpoint-down(lg) {
         -moz-column-count: 2;
         -moz-column-gap: 20px;
         -webkit-column-count: 2;

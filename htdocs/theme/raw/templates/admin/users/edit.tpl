@@ -52,7 +52,7 @@
                        </p>
                     {/if}
                     {if $suspendable && $deletable}
-                        <a href="" data-toggle="modal" data-target="#suspenddeletemodal">
+                        <a href="" data-bs-toggle="modal" data-bs-target="#suspenddeletemodal">
                             {str tag=suspendordeletethisuser section=admin}
                         </a>
                     {/if}
@@ -67,7 +67,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="{str tag=Close}">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{str tag=Close}">
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <h1 id="suspenddeletemodaltitle" class="modal-title">{str tag=suspendordeletethisuser section=admin}</h1>
