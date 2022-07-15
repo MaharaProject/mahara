@@ -4,7 +4,7 @@
  * @package    mahara
  * @subpackage auth-saml
  * @author     Piers Harding <piers@catalyst.net.nz>
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -100,7 +100,7 @@ $config = array (
     /**
      * If you set the debug parameter to true, all SAML messages will be visible in the
      * browser, and require the user to click the submit button. If debug is set to false,
-     * Browser/POST SAML messages will be automaticly submitted.
+     * Browser/POST SAML messages will be automatically submitted.
      */
     'debug'                 => !get_config('productionmode'), // TODO: should go to Mahara UI.
     'showerrors'            => !get_config('productionmode'), // TODO: should go to Mahara UI.
@@ -153,7 +153,7 @@ $config = array (
      * LOG_WARNING  No statistics, only warnings/errors
      * LOG_NOTICE   Statistics and errors
      * LOG_INFO     Verbose logs
-     * LOG_DEBUG    Full debug logs - not reccomended for production
+     * LOG_DEBUG    Full debug logs - not recommended for production
      *
      * Choose logging handler.
      *
@@ -208,7 +208,7 @@ $config = array (
 
     /*
      * Sets the duration, in seconds, data should be stored in the datastore. As the datastore is used for
-     * login and logout requests, thid option will control the maximum time these operations can take.
+     * login and logout requests, this option will control the maximum time these operations can take.
      * The default is 4 hours (4*60*60) seconds, which should be more than enough for these operations.
      */
     // 'session.datastore.timeout' => (4*60*60), // 4 hours
@@ -247,7 +247,7 @@ $config = array (
 
     /*
      * IdP Discovery service look configuration.
-     * Wether to display a list of idp or to display a dropdown box. For many IdP' a dropdown box
+     * Whether to display a list of idp or to display a dropdown box. For many IdP' a dropdown box
      * gives the best use experience.
      *
      * When using dropdown box a cookie is used to highlight the previously chosen IdP in the dropdown.

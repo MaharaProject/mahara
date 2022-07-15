@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage artefact-comment
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -45,7 +45,7 @@ function xmldb_artefact_comment_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2015100100) {
-        // Add new column '' to table artefact_comment_comment used for diplaying comments by threads
+        // Add new column '' to table artefact_comment_comment used for displaying comments by threads
         $table = new XMLDBTable('artefact_comment_comment');
         $field = new XMLDBField('threadedposition');
         $field->setAttributes(XMLDB_TYPE_INTEGER, 4, null, null);
@@ -57,7 +57,7 @@ function xmldb_artefact_comment_upgrade($oldversion=0) {
             $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('threadedposition'));
             add_index($table, $index);
 
-            // Update the threaded position for all exising comments
+            // Update the threaded position for all existing comments
             // We assume there is no child comment in the database before this release
             // Comments on views
             $commented_views = get_column_sql('

@@ -55,7 +55,7 @@ Background:
     | UserA | Coffee and Coding |  |
 
     And the following "coverletters" exist:
-    # Availble fields: user*, content*
+    # Available fields: user*, content*
     | user  | content |
     | UserA |UserA In Te Reo Māori, "mahara" means "to think, thinking, thought" and that fits the purpose of Mahara very well. Having been started in New Zealand, it was fitting to choose a Māori word to signify the concept of the ePortfolio system |
     | UserB |UserB In Te Reo Māori, "mahara" means "to think, thinking, thought" and that fits the purpose of Mahara very well. Having been started in New Zealand, it was fitting to choose a Māori word to signify the concept of the ePortfolio system |

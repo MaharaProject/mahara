@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage lang
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -55,7 +55,7 @@ $string['commentsubmitted'] = 'Comment submitted';
 $string['commentsubmittedmoderatedanon'] = 'Comment submitted, awaiting moderation';
 $string['commentsubmittedprivateanon'] = 'Private comment submitted';
 $string['forcepubliccomment'] = 'Public';
-$string['forceprivatecomment'] = 'Private: This reply will only be visible to you and the author of the preceeding comment.';
+$string['forceprivatecomment'] = 'Private: This reply will only be visible to you and the author of the preceding comment.';
 $string['importedfeedback'] = 'Imported feedback';
 $string['lastcomment'] = 'Last comment';
 $string['makecommentpublic'] = 'Make comment public';

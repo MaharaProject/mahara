@@ -7,7 +7,7 @@
  * Name:     clean_html<br>
  * Date:     July 10, 2007<br>
  * Purpose:  Fetch the mahara version number if in the admin section
- * @author   Catalyst IT Ltd
+ * @author   Catalyst IT
  * @version  1.0
  * @return html to display in the footer.
  */

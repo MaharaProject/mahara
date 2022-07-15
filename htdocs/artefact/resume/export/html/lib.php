@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage artefact-resume-export-html
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -20,7 +20,7 @@ class HtmlExportResume extends HtmlExportArtefactPlugin {
         if (($this->exporter->get('viewexportmode') == PluginExport::EXPORT_LIST_OF_VIEWS
             || $this->exporter->get('viewexportmode') == PluginExport::EXPORT_LIST_OF_COLLECTIONS)
             && $this->exporter->get('artefactexportmode') == PluginExport::EXPORT_ARTEFACTS_FOR_VIEWS) {
-            // Dont' care about resume in this case
+            // Don't care about resume in this case
             return;
         }
         $rootpath = $this->exporter->get_root_path(3);

@@ -4,7 +4,7 @@
  *
  * @package    mahara
  * @subpackage auth-webservice
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -110,7 +110,7 @@ function build_webservice_log_search_results($search) {
  * Contents of double-quoted strings are counted as a single term,
  * '"' can be entered as '\"', '\' as '\\'.
  *
- * @param string $query The value to be chuncked in to search terms
+ * @param string $query The value to be chunked in to search terms
  * @return array $terms
  */
 function split_query_string($query) {

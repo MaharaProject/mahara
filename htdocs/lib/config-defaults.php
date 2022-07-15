@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -158,7 +158,7 @@ $cfg->sendemail = true;
 /**
  * @global bool $cfg->perftolog capture performance information and print it
  * @global bool $cfg->perftofoot needs a call to mahara_performance_info (smarty callback) - see default theme's footer.tpl
- * if neither are set, performance info wont be captured.
+ * if neither are set, performance info won't be captured.
  */
 // $cfg->perftolog = true;
 // $cfg->perftofoot = true;
@@ -188,7 +188,7 @@ $cfg->sendemail = true;
 // $cfg->smtpuser = '';
 // $cfg->smtppass = '';
 /**
- * @global string $cfg->smtpsecure If smtp server requres secure connection, specify the protocol type below.
+ * @global string $cfg->smtpsecure If smtp server requires secure connection, specify the protocol type below.
  * Valid options are '', 'ssl' or 'tls'. Setting it to '' or leaving the line
  * commented means that secure connection will not be used.
  */
@@ -251,7 +251,7 @@ $cfg->bounceprefix    = 'AAA-';
 //$cfg->bouncedomain    = '';
 
 /**
- * @global number $cfg->bounces_resetdays number of days before reseting the
+ * @global number $cfg->bounces_resetdays number of days before resetting the
  * emailsent and emailbounced values for each email
  */
  $cfg->bounces_resetdays = 30;
@@ -694,7 +694,7 @@ MathJax.Hub.Configured();
 ';
 
 /**
- * @global string $cfg->maxuploadsize The maximun upload size in bytes
+ * @global string $cfg->maxuploadsize The maximum upload size in bytes
  * This allow to limit the upload size
  * The real maximum upload size will be calculated on
  *  - PHP settings: post_max_size and upload_max_filesize
@@ -752,7 +752,7 @@ $cfg->sessionhandler = 'file';
  * Redis session handling
  */
 // If accessing a redis sentinel server
-//$cfg->redissentinelservers = "localhost:26379";  // A comma seperated string of hosts:ports
+//$cfg->redissentinelservers = "localhost:26379";  // A comma separated string of hosts:ports
 //$cfg->redismastergroup = 'mymaster';
 //$cfg->redisprefix = 'mahara';
 // Otherwise use direct redis connection
@@ -818,13 +818,13 @@ $cfg->saml_log_attributes = false;
 
 /**
  * Uncomment the following line if you do not wish to allow friends and friend related
- * activites on your install of Mahara. No friends allowed - this is a site-wide setting.
+ * activities on your install of Mahara. No friends allowed - this is a site-wide setting.
  */
 //$cfg->friendsnotallowed = true;
 
 /**
  * Restrict the site to only allow the upload of certain file types.
- * Set as a comma seperated string of valid file extensions
+ * Set as a comma separated string of valid file extensions
  */
 //$cfg->validfiletypes = 'doc,docx,gif,jpeg,jpg,m4a,mp3,mp4,pdf,png'; // for example
 
@@ -833,7 +833,7 @@ $cfg->saml_log_attributes = false;
  * With modern privacy laws some IdPs will not include identifying things like firstname/lastname,
  * email address in their minimum packet of info about an authenticated user.
  * Mahara expect these to exist to create a new user.
- * To get passed this, by allowing just a unique identifier/username, we set the follwing flag
+ * To get passed this, by allowing just a unique identifier/username, we set the following flag
  */
 // $cfg->saml_create_minimum_user=true;
 

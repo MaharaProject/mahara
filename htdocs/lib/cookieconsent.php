@@ -2,7 +2,7 @@
 /**
  *
  * @package    mahara
- * @subpackge  admin
+ * @subpackage admin
  * @author     Gregor Anzelj
  * @author     Silktide Ltd.
  * @author URI http://sitebeam.net/cookieconsent/
@@ -45,7 +45,7 @@ function get_cookieconsent_code() {
     $values = unserialize(get_config('cookieconsent_settings'));
     // To see full list of options go to https://cookieconsent.insites.com/documentation/javascript-api/
     // * needs the messagelink template to be able to set target=_self
-    // the fix for this hasnt been released yet https://github.com/insites/cookieconsent/pull/396
+    // the fix for this hasn't been released yet https://github.com/insites/cookieconsent/pull/396
     $initialisation = json_encode(array(
         'theme' => 'classic',
         'content' => array(

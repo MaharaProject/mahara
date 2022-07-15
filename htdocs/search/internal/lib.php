@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage search-internal
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -83,7 +83,7 @@ class PluginSearchInternal extends PluginSearch {
      *                can contain:
      *             'friends' => boolean     // only return $USER's friends
      *             'group' => integer, // only users in this group
-     *             'owner' => boolean  // include the group ownwer (only if group is set)
+     *             'owner' => boolean  // include the group owner (only if group is set)
      *             'exclude'=> int     // excludes a user
      * @return array  A data structure containing results looking like ...
      *         $results = array(

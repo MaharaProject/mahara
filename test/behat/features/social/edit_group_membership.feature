@@ -43,7 +43,7 @@ Scenario: User view members page, verify user list displayed and sorted by selec
     And I should see "Hugo User" in the "Search results heading row 4" "Groups" property
     And I should see "Fergus User" in the "Search results heading row 6" "Groups" property
 
-Scenario: Check modal is working for the "Edit group memebership" on find people page (Bug 1513265)
+Scenario: Check modal is working for the "Edit group membership" on find people page (Bug 1513265)
     # Log in as "Admin" user
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "People" in "Engage" from main menu

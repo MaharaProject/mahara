@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage admin
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -55,7 +55,7 @@ $usertypeselectorelements = array(
 );
 
 if ($usertype == 'lastinstitution') {
-    // Change intitution dropdown to show possible last insitutions
+    // Change intitution drop-down to show possible last institutions
     $lastinstitution = param_alphanum('lastinstitution', false);
     $usertypeselectorelements['lastinstitution'] = get_institution_selector(false, true);
     $usertypeselectorelements['lastinstitution']['title'] = get_string('lastinstitution', 'admin');

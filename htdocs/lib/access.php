@@ -18,7 +18,7 @@ defined('INTERNAL') || die();
  *
  * @param int $view id of the user that will be viewing the records
  * @param bool $areknownfriends true if we know beforehand that the viewer and owner of the base object are friends
- * @return array of access condition sql snipet and param list pairs
+ * @return array of access condition sql snippet and param list pairs
  */
 function get_artefact_access_conditions($viewer, $areknownfriends = false) {
     $artefactAccessConditions = array();
@@ -117,7 +117,7 @@ function get_artefact_access_conditions($viewer, $areknownfriends = false) {
  *
  * @param int $view id of the user that will be viewing the records
  * @param bool $areknownfriends true if we know beforehand that the viewer and owner of the base object are friends
- * @return array of access condition sql snipet and param list pairs
+ * @return array of access condition sql snippet and param list pairs
  */
 function get_view_access_conditions($viewer, $areknownfriends = false) {
     $viewAccessConditions = array();

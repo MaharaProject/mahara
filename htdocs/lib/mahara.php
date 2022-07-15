@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  * @copyright  (C) portions from Moodle, (C) Martin Dougiamas http://dougiamas.com
@@ -615,7 +615,7 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
     }
 
     // If the preferred language was English (utf8) we can abort now
-    // saving some checks beacuse it's the only "root" lang
+    // saving some checks because it's the only "root" lang
     if ($lang == 'en.utf8') {
         return '[[' . $identifier . '/' . $section . ']]';
     }
@@ -1016,7 +1016,7 @@ function ini_get_bool($ini_get_arg) {
  * from the database table
  * note that it doesn't load plugin config
  * as not every page needs them
- * @return boolean false if the assignment fails (generally if the databse is not installed)
+ * @return boolean false if the assignment fails (generally if the database is not installed)
  */
 function load_config($behat=false) {
    global $CFG;
@@ -1309,7 +1309,7 @@ function get_config_institution($institutionname, $key) {
         $inst = $CFG->fetchedinst->{$institutionname};
     }
     else {
-        // No cache hit, so instatiate a new Institution object
+        // No cache hit, so instantiate a new Institution object
         try {
             $inst = new Institution($institutionname);
 
@@ -1343,7 +1343,7 @@ function set_config_institution($institutionname, $key, $value) {
         $inst = $CFG->fetchedinst->{$institutionname};
     }
     else {
-        // No cache hit, so instatiate a new Institution object
+        // No cache hit, so instantiate a new Institution object
         try {
             $inst = new Institution($institutionname);
         }
@@ -3137,7 +3137,7 @@ function pieform_template_dir($file, $pluginlocation='') {
  * @param integer $user_id      User trying to look at the view (defaults to
  * currently logged in user, or null if user isn't logged in)
  *
- * @returns boolean Wether the specified user can look at the specified view.
+ * @returns boolean Whether the specified user can look at the specified view.
  */
 function can_view_view($view, $user_id=null) {
     global $USER, $SESSION;
@@ -3612,13 +3612,13 @@ function is_collection_suspended($id) {
     return false;
 }
 /**
- * Given a view id will return wether this view is suspended or not.
+ * Given a view id will return whether this view is suspended or not.
  *
  * @param mixed $view           viewid or View to check
  * @param bool  $artefacts      Whether to check if there are suspended artefacts on the view.
  *                              If there are any then the view is treated as suspended.
  *
- * @returns boolean Wether the specified view is suspended or not.
+ * @returns boolean Whether the specified view is suspended or not.
  */
 function is_view_suspended($view, $artefacts=true) {
     require_once(get_config('libroot') . 'view.php');
@@ -5323,10 +5323,10 @@ function check_if_institution_tag($tag) {
 /**
  * Check to make sure table is case sensitive (currently only for MySql)
  * If it is not then reduce supplied array to a case insensitive version
- * Preserving the first occurance of any duplicates.
+ * Preserving the first occurrence of any duplicates.
  * E.g. 'Test,test,cat,TEST,CAT,Cat' will return 'Test,cat'
  *
- * @param array     Array of case senstive strings
+ * @param array     Array of case sensitive strings
  * @param string    Name of table
  *
  * @return array    Array of strings
@@ -5975,7 +5975,7 @@ function drop_elasticsearch_triggers() {
 }
 
 /**
- * Paired with  drop_elasticsearch_triggers(); - see it's info for useage
+ * Paired with  drop_elasticsearch_triggers(); - see it's info for usage
  *
  * @deprecated Will be removed in the future.
  */
@@ -6074,7 +6074,7 @@ function is_isolated() {
     global $CFG;
     // If isolated institutions are turned on in $config.php we need to make sure
     // that the correct site settings exist in case they don't edit / save the Admin -> Config form
-    // Note: we ned to save 'isolatedinstitutionset' in db as it needs to be different to the one set in $cfg
+    // Note: we need to save 'isolatedinstitutionset' in db as it needs to be different to the one set in $cfg
     if (isset($CFG->isolatedinstitutions) && $CFG->isolatedinstitutions && !get_field('config', 'value', 'field', 'isolatedinstitutionset')) {
         // Setting $cfg->isolatedinstitutions to true
         set_config('loggedinprofileviewaccess', false);
@@ -6344,7 +6344,7 @@ function does_search_plugin_have($method) {
 
 /**
  * Move a key in an associated array to a new position
- * Useful if we are looping thru an associated array and dealing with keys based
+ * Useful if we are looping through an associated array and dealing with keys based
  * on their relative positions in the array.
  *
  * @param array  $array The array we want to positional sort

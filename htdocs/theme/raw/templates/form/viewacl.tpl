@@ -161,7 +161,7 @@ jQuery(function($) {
         });
 
         function setDatePicker(target) {
-            var loc = '{{strstr(current_language(), '.', true)}}'; // Get current langauge to use for locale
+            var loc = '{{strstr(current_language(), '.', true)}}'; // Get current language to use for locale
             target.each(function() {
                 // ugly fix for open issue in tempusdominus bootstrap lib not getting the value from html tag
                 // https://github.com/tempusdominus/bootstrap-4/issues/126
@@ -610,7 +610,7 @@ jQuery(function($) {
                 selectedOption =  $(self).find('option:selected');
 
             // Friend is a type of user, so we need a special case so we can still search for friends
-            // but the backend will recieve 'user' as the type attribute
+            // but the backend will receive 'user' as the type attribute
             if (value === 'friend') {
                 value = 'user';
             }

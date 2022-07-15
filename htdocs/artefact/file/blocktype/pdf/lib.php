@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage blocktype-pdf
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -112,7 +112,7 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
                 // In case the language file exists as a string with both lower and upper case, eg fr_FR we test for this
                 $language = substr($language, 0, 2) . '-' . strtoupper(substr($language, 0, 2));
                 if (!file_exists(get_config('docroot') . 'artefact/file/blocktype/pdf/js/pdfjs/web/locale/' . $language . '/viewer.properties')) {
-                    // In case we fail to find a language of 5 chars, eg pt_BR (Portugese, Brazil) we try the 'parent' pt (Portugese)
+                    // In case we fail to find a language of 5 chars, eg pt_BR (Portuguese, Brazil) we try the 'parent' pt (Portuguese)
                     $language = substr($language, 0, 2);
                     if ($language != 'en' && !file_exists(get_config('docroot') . 'artefact/file/blocktype/pdf/js/pdfjs/web/locale/' . $language . '/viewer.properties')) {
                         $language = 'en-GB';

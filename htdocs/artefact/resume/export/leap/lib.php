@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage artefact-resume-export-leap
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -15,7 +15,7 @@
  */
 
 /**
- * The contact information artefact is deliberatly skipped from leap export, as
+ * The contact information artefact is deliberately skipped from leap export, as
  * the information is duplicated from the profile anyway
  */
 class LeapExportElementContactinformation extends LeapExportElement {

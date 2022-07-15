@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  * @copyright  (C) 2013 Mike Kelly UAL m.f.kelly@arts.ac.uk
@@ -754,7 +754,7 @@
         showDock($('#configureblock'), true);
 
         // delay processing so animation can complete smoothly
-        // this may not be neccessary once json requests are done with jquery
+        // this may not be necessary once json requests are done with jquery
         setTimeout(function(){
 
             pd[button.attr('name')] = 1;

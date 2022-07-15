@@ -4,7 +4,7 @@
  *
  * @package    mahara
  * @subpackage import-file
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -119,7 +119,7 @@ class PluginImportFile extends PluginImport {
         $bad_c = count($badfiles);
         $man_c = count($this->manifest);
         if ($ok_c != $man_c) {
-            throw new ImportException($this, 'Files receieved did not exactly match what was in the manifest');
+            throw new ImportException($this, 'Files received did not exactly match what was in the manifest');
             // @todo penny later - better reporting (missing files, too many files, etc)
         }
         $this->files = $okfiles;

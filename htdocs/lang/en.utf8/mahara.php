@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage lang
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -516,7 +516,7 @@ $string['passwordstrength2'] = 'Weak';
 $string['passwordstrength3'] = 'Strong';
 $string['passwordstrength4'] = 'Very strong';
 $string['passworddescription'] = '';
-$string['passworddescriptionbase'] = 'The mininum length of the password is %s characters.';
+$string['passworddescriptionbase'] = 'The minimum length of the password is %s characters.';
 $string['passworddescription1.ul'] = 'It must contain upper case letters [A-Z] and lower case letters [a-z].';
 $string['passworddescription1.uln'] = 'It must contain upper case letters [A-Z], lower case letters [a-z], and numbers [0-9].';
 $string['passworddescription1.ulns'] = 'It must contain upper case letters [A-Z], lower case letters [a-z], numbers [0-9], and symbols [e.g. ! . @ # $ & * - _ ].';

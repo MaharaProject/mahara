@@ -1915,7 +1915,7 @@ EOF;
         //
         // This is because a user self-registering with another institution might pick
         // a username that matches the username from this SAML service, allowing them
-        // to highjack someone else's account.
+        // to hijack someone else's account.
         //
         // (see the comments in the request_user_authorise function above).
         if ((!$values['remoteuser']) && ($values['weautocreateusers']) && ($institutions = get_column('institution', 'name', 'registerallowed', '1'))) {

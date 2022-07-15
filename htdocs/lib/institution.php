@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage auth-internal
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -439,17 +439,17 @@ class Institution {
     }
 
     public function addUserAsStaff($user, $authid=null) {
-        // Only to be used to add a member to an institution and bump ther permissions to staff
+        // Only to be used to add a member to an institution and bump their permissions to staff
         $this->addUserAsMember($user, true, null, null, $authid);
     }
 
     public function addUserAsAdmin($user, $authid=null) {
-        // Only to be used to add a member to an institution and bump ther permissions to admin
+        // Only to be used to add a member to an institution and bump their permissions to admin
         $this->addUserAsMember($user, null, true, null, $authid);
     }
 
     public function addUserAsSupportAdmin($user, $authid=null) {
-        // Only to be used to add a member to an institution and bump ther permissions to admin
+        // Only to be used to add a member to an institution and bump their permissions to admin
         $this->addUserAsMember($user, null, null, true, $authid);
     }
 
@@ -574,7 +574,7 @@ class Institution {
      * Else send the messege to the site admin(s).
      *
      * @param integer $studentid The id of the user who has refused the privacy statement.
-     * @param string $reason The reson why the user refused the privacy statement.
+     * @param string $reason The reason why the user refused the privacy statement.
      * @param array $whathasbeenrefused The content (privacy statement or terms or both) that the user has refused.
      */
     public function send_admin_institution_refused_privacy_message($studentid, $reason, $whathasbeenrefused) {

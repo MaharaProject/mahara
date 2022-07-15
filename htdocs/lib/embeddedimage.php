@@ -96,7 +96,7 @@ class EmbeddedImage {
                         else {
                             $publicimages[] = $imgid;
                             $imgispublic = get_field('artefact_file_embedded', 'id', 'fileid', $imgid, 'resourcetype', $resourcetype, 'resourceid', $resourceid);
-                            // add to embedded_images table for public access, specifiying context
+                            // add to embedded_images table for public access, specifying context
                             if (!$imgispublic) {
                                 insert_record('artefact_file_embedded', (object) array('fileid' => $imgid, 'resourcetype' => $resourcetype, 'resourceid' => $resourceid));
                             }

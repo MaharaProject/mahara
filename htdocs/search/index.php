@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -52,7 +52,7 @@ $limit  = param_integer('limit', 10);
 $filter = 'all';
 
 $query = clean_str_replace($query, ' ', array("'", '@', '&', '*', '|'));
-// Every search plugin should impliment 'search_all'. We can use $search_class
+// Every search plugin should implement 'search_all'. We can use $search_class
 // from here without needing to reassign it and does_search_plugin_have() can
 // be called to test the truthyness of the test for the method.
 $search_class = does_search_plugin_have('search_all');

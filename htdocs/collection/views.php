@@ -4,7 +4,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -232,7 +232,7 @@ function addviews_submit(Pieform $form, $values) {
     $different = false;
     $differentarray = array();
 
-    // If the collection has been set to be auto copy and it doesnt have any
+    // If the collection has been set to be auto copy and it doesn't have any
     // views yet, make sure the new views are shared with the institution.
     $institution = $collection->get('institution');
     if (isset($institution) && $institution && empty($viewids) && $collection->get('autocopytemplate')) {

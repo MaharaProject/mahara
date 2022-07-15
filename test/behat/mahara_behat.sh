@@ -54,7 +54,7 @@ function run_xvfb {
 
 function cleanup {
     echo "Shutdown Selenium"
-    # we cant kill it this way anymore as the option has been removed
+    # We can't kill it this way anymore as the option has been removed.
     # curl -o /dev/null --silent http://localhost:${SELENIUM_PORT}/selenium-server/driver/?cmd=shutDownSeleniumServer
     # so find the process running on the prot and kill it
     if is_selenium_running; then
@@ -146,7 +146,7 @@ then
         exit 1
     fi
 
-    # Run the Behat tests themselves (after any intial setup)
+    # Run the Behat tests themselves (after any initial setup)
     if is_selenium_running; then
         echo "Selenium is running"
     else

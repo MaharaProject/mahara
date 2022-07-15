@@ -4,7 +4,7 @@
  *
  * @package    mahara
  * @subpackage interaction-forum
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -122,7 +122,7 @@ if (!empty($postid)) {
             $SESSION->add_error_msg(get_string('postnotapprovederror', 'interaction.forum'), false);
         }
     }
-    // caculated offset value to jump to the page of the post
+    // calculated offset value to jump to the page of the post
     $offset = count_records_select('interaction_forum_post', 'topic = ? AND path < ?', array($topicid, $post->path));
     $offset = $offset - ($offset % $limit);
     redirect(get_config('wwwroot') . 'interaction/forum/topic.php?id=' . $topicid . '&offset=' . $offset . '&limit=' . $limit . '#post' . $postid);

@@ -54,7 +54,7 @@ $string['plugininfo'] = '<p>To display information about a person\'s course comp
 <li>Web service type: Choose \'REST\'.</li>
 <li>Auth type: Choose \'Token\'.</li>
 <li>Web service URL: Set to the URL of the external source\'s REST server, e.g. https://moodle/webservice/rest/server.php.</li>
-<li>Token: Set to the token generated on the external service\'s side that has access to the exteral functions that are required here.</li>
+<li>Token: Set to the token generated on the external service\'s side that has access to the external functions that are required here.</li>
 <li>Fixed parameters to pass: Add any special parameters that the URL needs to pass, e.g. for Moodle you need to add \'moodlewsrestformat=json\'.</li>
 <li>JSON encoded: Set to \'Yes\'.</li>
 <li>External function for account ID: Set this to the external service\'s function that can return an ID based on the email address, e.g. for Moodle \'core_user_get_users_by_field\'.</li>

@@ -1,5 +1,15 @@
 <?php
 
+/**
+ *
+ * @package    mahara
+ * @subpackage search-elasticsearch
+ * @author     Catalyst IT
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ *
+ */
+
 // Required because we use the PluginSearchInternal class for some functions
 require_once(get_config('docroot') . 'search/internal/lib.php');
 require_once(get_config('libroot') . '/elasticsearch/autoload.php');
@@ -2205,7 +2215,7 @@ class PluginSearchElasticsearch7 extends PluginSearch {
             $status_class = 'success';
         }
         else {
-            $message = "Server(s) are not running or not accessable.";
+            $message = "Server(s) are not running or not accessible.";
         }
 
         $status = [
@@ -2257,7 +2267,7 @@ class PluginSearchElasticsearch7 extends PluginSearch {
 
         }
         else {
-            $message = "Server(s) are not running or not accessable.";
+            $message = "Server(s) are not running or not accessible.";
         }
 
         $status = [

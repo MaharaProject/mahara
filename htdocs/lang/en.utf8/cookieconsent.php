@@ -1,8 +1,9 @@
 <?php
+
 /**
  *
  * @package    mahara
- * @subpackge  admin
+ * @subpackage admin
  * @author     Gregor Anzelj
  * @author     Silktide Ltd.
  * @author URI http://sitebeam.net/cookieconsent/
@@ -61,7 +62,7 @@ $string['readdirectiveSK'] = 'Read Directive 2009/136/EC in Slovak';
 $string['readdirectiveSL'] = 'Read Directive 2009/136/EC in Slovene';
 $string['readdirectiveSV'] = 'Read Directive 2009/136/EC in Swedish';
 $string['cookieconsentintro4'] = 'In short, this means before somebody can store or retrieve any information from a computer, mobile phone or other device, the user must give informed consent to do so. The intention is to increase the privacy of the end user and prevent organisations from obtaining information about people without them knowing about it.';
-$string['cookieconsentintro52'] = 'Enable %sCookie Consent%s below. Users will see the Cookie Consent banner at the bottom of their screen with a link to your Privacy page. Please make sure you inform your users about your use of cookies there.';
+$string['cookieconsentintro52'] = 'Enable %sCookie Consent%s below. People will see the Cookie Consent banner at the bottom of their screen with a link to your privacy page. Please make sure to include information about your use of cookies there.';
 $string['cookieconsentenable'] = 'Enable Cookie Consent';
 $string['cookieconsentenabled'] = 'Cookie Consent enabled';
 $string['cookieconsentdisabled'] = 'Cookie Consent disabled';

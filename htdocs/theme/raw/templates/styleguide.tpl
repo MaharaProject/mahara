@@ -13,7 +13,7 @@
 ### Title of element
 Description of element, this can include any markdown formatting, multiple paragraphs etc (optional).
 ```
-<code for the element goes in between the triple backticks - there should only be one triple backtick part per section - Make sure you dont include any blank lines in the code>
+<code for the element goes in between the triple backticks - there should only be one triple backtick part per section - Make sure you don't include any blank lines in the code>
 ```
 </section>
 

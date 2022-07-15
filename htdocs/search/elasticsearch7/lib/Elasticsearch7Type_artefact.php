@@ -1,5 +1,15 @@
 <?php
 
+/**
+ *
+ * @package    mahara
+ * @subpackage search-elasticsearch
+ * @author     Catalyst IT
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ *
+ */
+
 require_once(dirname(__FILE__) . '/Elasticsearch7Type.php');
 
 class Elasticsearch7Type_artefact extends Elasticsearch7Type {
@@ -397,7 +407,7 @@ class Elasticsearch7Type_artefact extends Elasticsearch7Type {
             $results = get_records_sql_assoc($query, [$record->id]);
         }
         catch ( SQLException $e ) {
-            // Checking for the existance of a table is... complicated.
+            // Checking for the existence of a table is... complicated.
             // We'll just handle the SQL Exception instead. Setting $results so
             // we can continue.
             $results = [];

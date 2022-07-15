@@ -69,7 +69,7 @@
  *
  * $options['question'] = new stdClass();
  * $options['question']->exampleValue = 'value';
- * $options['question']->description = 'This is an example description for question - it typicaly takes an argument and has an alias of q';
+ * $options['question']->description = 'This is an example description for question - it typically takes an argument and has an alias of q';
  * $options['question']->shortoptions = array('q');
  *
  * $settings = new stdClass();
@@ -138,7 +138,7 @@ class cli {
         $verbose->description = 'Increase verbosity of the CLI script to show more information';
         $settings->options['verbose'] = $verbose;
 
-        // Process longoption configuraiton
+        // Process longoption configuration
         foreach ($settings->options as $name => $optionsettings) {
             // Store the default value
             $this->defaultvalues[$name] = (isset($optionsettings->defaultvalue)) ? $optionsettings->defaultvalue : false;
@@ -297,7 +297,7 @@ class cli {
      * @param string $name The name of the argument to retrieve
      * @param mixed $default The default value for the parameter
      * @return mixed the value of that parameter, or true if the value has no
-     * paramter but is set
+     * parameter but is set
      */
     public function _get_cli_param($name) {
         list($cliparams) = $this->_get_cli_params();

@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -25,7 +25,7 @@ $linklist= array();
 list($collections, $views) = View::get_views_and_collections( $USER->get('id'));
 if (!empty($views) || !empty($collections)) {
     foreach ($views as $view) {
-        if ($viewid != $view['id']) { // dont list the current view
+        if ($viewid != $view['id']) { // don't list the current view
             $linklist[] = array(
                 'title' => $view['name'],
                 'value' => $view['url'],

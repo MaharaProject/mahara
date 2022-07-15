@@ -4,7 +4,7 @@
  * @package    mahara
  * @subpackage auth-ldap
  * @author     Patrick Pollet <pp@patrickpollet.net>
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  * @copyright  (C) 2011 INSA de Lyon France
@@ -48,7 +48,7 @@
  * For the synchronisation of group members , this script MUST be run after
  * the mahara_sync_users script
  *
- * This script is strongly inspired of synching Moodle's cohorts with LDAP groups
+ * This script is strongly inspired of syncing Moodle's cohorts with LDAP groups
  * as described here : http://moodle.org/mod/forum/discuss.php?d=160751
  *
  * Sample cron entry:
@@ -56,7 +56,7 @@
  * 5 4 * * * $sudo -u www-data /usr/bin/php /var/www/mahara/local/ldap/cli/mahara_sync_groups.php -i='my institution'
  *
  * Notes:
- *   - run this script on command line without any paramters to get help on all options
+ *   - run this script on command line without any parameters to get help on all options
  *   - it is required to use root or the the web server accounts when executing PHP CLI scripts
  *   - you need to change the "www-data" to match the apache user account
  *   - use "su" if "sudo" not available

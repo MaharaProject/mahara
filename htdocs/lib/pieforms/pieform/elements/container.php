@@ -1,7 +1,7 @@
 <?php
 /**
  * Pieforms: Advanced web forms made easy
- * Copyright (C) 2012 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2012 Catalyst IT (http://www.catalyst.net.nz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  * @subpackage element
  * @author     Hugh Davenport <hugh@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
- * @copyright  (C) 2012 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2012 Catalyst IT http://catalyst.net.nz
  *
  */
 

@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage artefact-resume
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -195,7 +195,7 @@ class ArtefactTypeResume extends ArtefactType {
     }
 
     public static function get_links($id) {
-        // @todo Catalyst IT Ltd
+        // @todo Catalyst IT
     }
 
     /**
@@ -373,7 +373,7 @@ class ArtefactTypePersonalinformation extends ArtefactTypeResume {
 
     public function set_composite($field, $value) {
         if (!array_key_exists($field, $this->composites)) {
-            throw new InvalidArgumentException("Tried to set a non existant composite, $field");
+            throw new InvalidArgumentException("Tried to set a non existent composite, $field");
         }
         if ($this->composites[$field] == $value) {
             return true;
@@ -648,7 +648,7 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume implements
      * @param unknown_type $values
      * @param unknown_type $compositetype
      * @param unknown_type $owner
-     * @return array If successful, an array contaning 'artefactid' and 'itemid'
+     * @return array If successful, an array containing 'artefactid' and 'itemid'
      *               Otherwise, an array containing 'error' and optionally 'goto'
      * @throws SystemException
      */

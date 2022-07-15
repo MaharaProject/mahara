@@ -81,7 +81,7 @@ while (<>) {
             bad_line("cuddled elses/catches are against Mahara coding guidelines", $_);
         }
         if (/\belseif\b/) {
-            bad_line("a single space is requred between an else and an if on the same line", $_);
+            bad_line("a single space is required between an else and an if on the same line", $_);
         }
         if (/\b(if|while|for)\(/ || /\b(if|while|for)\s\s+\(/) {
             bad_line("conditional and looping statements should have a space between keywords ".
@@ -105,7 +105,7 @@ while (<>) {
     }
 
     #Implement aging of the stack to prevent
-    #erroneous matches of seccond condition
+    #erroneous matches of second condition
     if ($stackage > 0) {
         $stackage = 0;
         $stack = "";

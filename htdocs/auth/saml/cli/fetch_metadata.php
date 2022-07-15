@@ -4,7 +4,7 @@
  * @package    mahara
  * @subpackage auth-saml
  * @author     Francis Devine <francis@catalyst.net.nz>
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  * @copyright  (C) 2011 INSA de Lyon France

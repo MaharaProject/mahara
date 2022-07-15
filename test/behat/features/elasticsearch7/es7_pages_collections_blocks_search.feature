@@ -24,7 +24,7 @@ Background:
     | UserB    | Kupuh1pa!| UserB@example.org | Mechania  | Mahara   | mahara      | internal | member |
 
  And the following "groups" exist:
-    # Availble fields: name*, owner*, description, grouptype, open, controlled, request, invitefriends, suggestfriends, submittableto, allowarchives,
+    # Available fields: name*, owner*, description, grouptype, open, controlled, request, invitefriends, suggestfriends, submittableto, allowarchives,
     #                 editwindowstart, editwindowstart, editwindowend, members, staff, admins, institution, public
     | name           | owner | description                   | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members | staff |
     | Fantastic Five | UserB | Fantastic Five owned by UserB | standard  | ON   | OFF           | all       | ON            | OFF           | UserA   |       |

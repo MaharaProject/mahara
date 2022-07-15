@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage module-mobileapi
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  */
@@ -115,7 +115,7 @@ class module_mobileapi_sync extends external_api {
         );
 
         // Modify to indicate that each of these return
-        // fields is optional in the ouput. (Only present
+        // fields is optional in the output. (Only present
         // if asked for.)
         foreach ($keys as $item) {
             $item->required = VALUE_OPTIONAL;

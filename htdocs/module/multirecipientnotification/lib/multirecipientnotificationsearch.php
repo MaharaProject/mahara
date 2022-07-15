@@ -26,8 +26,8 @@ defined('INTERNAL') || die();
 
 /**
  * At first step it reads out the ids from all messages which where
- * recieved or send by the user with the id $usr.
- * After this it is searching for the searchterm in the recieved
+ * received or send by the user with the id $usr.
+ * After this it is searching for the searchterm in the received
  * messages with the ids
  *
  * example result:

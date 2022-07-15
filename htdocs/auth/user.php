@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -1581,7 +1581,7 @@ class User {
     * which require approval to delete the user
     */
     public function get_approval_admins() {
-        // get all institutions the user belogs to
+        // get all institutions the user belongs to
         $institutions = $this->get('institutions');
         $admins = array();
         foreach ($institutions as $institution) {
@@ -1860,7 +1860,7 @@ class User {
         if ($collection) {
             // Copy the collection to the current users portfolio
             $this->copy_collections($templateids, false, true);
-            // Need to loop thru collections to find the list of viewids
+            // Need to loop through collections to find the list of viewids
             $results = get_records_select_array('collection_view', 'collection IN (' . implode(', ', db_array_to_ph($templateids)) . ')', $templateids, '', 'collection, view, displayorder');
             if ($results) {
                 foreach ($results as $result) {
@@ -1878,7 +1878,7 @@ class User {
         else {
             // Copy the page to the current users portfolio
             $this->copy_views($templateids, false, true);
-            // Loop thru viewids to add them to the done table
+            // Loop through viewids to add them to the done table
             foreach ($templateids as $id) {
                 $where = new stdClass();
                 $where->view = $id;
@@ -2216,7 +2216,7 @@ class LiveUser extends User {
 
         update_record('usr', (object) array('id' => $user->id, 'logintries' => 0));
 
-        // finally, after all is done, call the (maybe non existant) hook on their auth plugin
+        // finally, after all is done, call the (maybe non existent) hook on their auth plugin
         $authobj = AuthFactory::create($authinstance);
         $authobj->login();
     }

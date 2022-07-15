@@ -213,7 +213,7 @@ function activitylistin_html($type='all', $limit=10, $offset=0) {
             $record->message = clean_html($record->message);
             // used to identify notification as internal for json-calls
             $record->table = 'notification_internal_activity';
-            $record->url = preg_replace('|^' . get_config('wwwroot') . '|', '', $record->url); // Remove the wwwroot form url as it will ba added again in template
+            $record->url = preg_replace('|^' . get_config('wwwroot') . '|', '', $record->url); // Remove the wwwroot form url as it will be added again in template
             $records[] = $record;
         // messages from plugin
         }

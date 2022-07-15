@@ -110,7 +110,7 @@ function denydeletion_submit(Pieform $form, $values) {
 function approvedeletion_submit(Pieform $form, $values) {
     global $SESSION, $usertodelete, $USER;
 
-    // cant delete the last site admin
+    // can't delete the last site admin
     $admins = get_site_admins();
     $lastadminid = 0;
     if (count($admins)== 1) {

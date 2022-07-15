@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage admin
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -50,7 +50,7 @@ if ($action = param_alphanum('action', null)) {
     if ($action == 'delete' && !empty($rowids)) {
         foreach ($rowids as $rowid) {
             db_begin();
-            // Need to relese any pending archiving
+            // Need to release any pending archiving
             if ($items = get_records_select_array('export_queue_items', 'exportqueueid = ?', array($rowid), 'id')) {
                 $views = array();
                 // To make sure we process the item with this id only once we keep a track of the $lastid

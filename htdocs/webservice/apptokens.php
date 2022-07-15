@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage auth-webservice
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -245,7 +245,7 @@ if (!empty($dbservices)) {
 }
 
 /*
- * get the list of OAuth acccess tokens for this user
+ * get the list of OAuth access tokens for this user
  */
 $dbtokens = get_records_sql_assoc('
         SELECT  ost.id                  as id,

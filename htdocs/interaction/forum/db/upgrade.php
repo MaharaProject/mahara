@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage artefact-internal
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -78,7 +78,7 @@ function xmldb_interaction_forum_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2012071100) {
-        // Add new column 'path' to table interaction_forum_post used for diplaying posts by threads
+        // Add new column 'path' to table interaction_forum_post used for displaying posts by threads
         $table = new XMLDBTable('interaction_forum_post');
         $field = new XMLDBField('path');
         $field->setAttributes(XMLDB_TYPE_CHAR, 2048, null, null);

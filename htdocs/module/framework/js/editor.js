@@ -4,7 +4,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -991,7 +991,7 @@ jQuery(function($) {
 
     /**
     * Set the parent id dropdown of the element to have
-    * elements ids beloging to the standard in the standardid field
+    * elements ids belonging to the standard in the standardid field
     * @param element in the select html element that contains the standard id
     * @param standardid standard id
     */
@@ -1006,7 +1006,7 @@ jQuery(function($) {
             var pid_field = editor.getEditor("root.standardelements." + index + ".parentid");
             pid_field = $('[name="' + pid_field.formname + '"]');
 
-            // get the hidden parent id, to slect it from the dropdown
+            // get the hidden parent id to select it from the dropdown
             var parentid_field = editor.getEditor("root.standardelements." + index + ".parentelementid");
 
             // Clear old element ids from the dropdown
@@ -1123,7 +1123,7 @@ jQuery(function($) {
             // delete all the standard elements under the standard that was removed
             delete_child_standard_elements(standardid, '');
 
-            // if the standard is the last one (or the one that has focus) change the standar element count
+            // if the standard is the last one (or the one that has focus), change the standard element count
             if ((last_standardid == standardid)) {
                 update_eid_number();
             }
@@ -1149,7 +1149,7 @@ jQuery(function($) {
                 eid = spl[spl.length-1];
             }
             else {
-                // last added standard doesnt have standard elements
+                // last added standard doesn't have standard elements
                 eid = 0;
             }
         }

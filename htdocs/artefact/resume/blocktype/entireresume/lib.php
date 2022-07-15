@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage blocktype-entireresume
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -139,7 +139,7 @@ class PluginBlocktypeEntireresume extends MaharaCoreBlocktype {
                         'block' => $blockinstance->get('id'),
                     );
                     /* There are multiple calls to the DB via asynch json calls causing multiple records to be created
-                    * * until that issue is fixed, we ignore the warnigns for now */
+                    * * until that issue is fixed, we ignore the warnings for now */
                     ensure_record_exists('view_artefact', $record, $record, false, false , IGNORE_MULTIPLE);
                 }
             }

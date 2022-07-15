@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -3000,7 +3000,7 @@ function group_homepage_url($group, $full=true, $useid=false) {
 }
 
 /**
- * Returns whether 'send now' is set for all memebers or not
+ * Returns whether 'send now' is set for all members or not
  * If not set only admins/tutors/moderators can use 'send now'
  *
  * @param string $groupid the id of the group

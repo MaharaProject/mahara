@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  * @copyright  (C) portions from Moodle, (C) Martin Dougiamas http://dougiamas.com
@@ -291,7 +291,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                         // In case the language file exists as a string with both lower and upper case, eg fr_FR we test for this
                         $language = substr($language, 0, 2) . '_' . strtoupper(substr($language, 0, 2));
                         if (!file_exists(get_config('docroot') . 'js/tinymce/langs/' . $language . '.js')) {
-                            // In case we fail to find a language of 5 chars, eg pt_BR (Portugese, Brazil) we try the 'parent' pt (Portugese)
+                            // In case we fail to find a language of 5 chars, eg pt_BR (Portuguese, Brazil) we try the 'parent' pt (Portuguese)
                             $language = substr($language, 0, 2);
                             if ($language != 'en' && !file_exists(get_config('docroot') . 'js/tinymce/langs/' . $language . '.js')) {
                                 $language = 'en';
@@ -472,7 +472,7 @@ function custom_urlconvert (u, n, e) {
     }
     var t = tinyMCE.activeEditor, s = t.settings;
 
-    // Don't convert link href since thats the CSS files that gets loaded into the editor also skip local file URLs
+    // Don't convert link href since that's the CSS files that gets loaded into the editor also skip local file URLs
     if (!s.convert_urls || (e && e.nodeName == 'LINK') || u.indexOf('file:') === 0)
       return u;
 
@@ -914,7 +914,7 @@ EOF;
         }
     }
 
-    // If Cookie Consent is enabled, than define conent
+    // If Cookie Consent is enabled, then define content
     if (get_config('cookieconsent_enabled')) {
         require_once('cookieconsent.php');
         $smarty->assign('COOKIECONSENTCODE', get_cookieconsent_code());
@@ -1351,7 +1351,7 @@ class Theme {
     }
 
     /**
-     * Adds the URL of an image by trying differents extensions.
+     * Adds the URL of an image by trying different extensions.
      * Searching for svg, png, gif and jpg in last.
      *
      * @param string $filename The name of the file without the extension and the images folder.
@@ -1588,7 +1588,7 @@ function json_headers() {
 /**
  * This function sends a JSON message, and ends the script.
  *
- * Scripts receiving replies will recieve a JSON array with two fields:
+ * Scripts receiving replies will receive a JSON array with two fields:
  *
  *  - error: True or false depending on whether the request was successful
  *  - message: JSON data representing a message sent back from the script
@@ -4113,7 +4113,7 @@ function clean_css($input_css, $preserve_css=false) {
     // we're not actually interested in the html response though
     $html = $purifier->purify('<style>'.$input_css.'</style>');
 
-    // The "style" blocks are stored seperately
+    // The "style" blocks are stored separately
     $output_css = $purifier->context->get('StyleBlocks');
 
     // Get the first style block

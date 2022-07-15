@@ -178,7 +178,7 @@ EOD;
      * Takes care of setting up the database correctly as this doesn't
      * happen in unit test through init.php properly.
      *
-     * parent::setUp() must always be called if it is overriden in
+     * parent::setUp() must always be called if it is overridden in
      * subclasses
      *
      * @return void

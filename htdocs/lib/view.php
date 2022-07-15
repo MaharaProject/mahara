@@ -6,7 +6,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -569,7 +569,7 @@ class View {
      *
      *                        Note that you set who owns the View by setting
      *                        either the owner, group or institution field as
-     *                        approriate.
+     *                        appropriate.
      *
      *                        Currently, you cannot pass in access data. Use
      *                        $view->set_access() after retrieving the $view
@@ -3439,7 +3439,7 @@ class View {
                     $bi->set('height', $blockinstance['height']);
                     if (isset($blockinstance['row'])) {
                         // if we are importing and the layout is not a grid one,
-                        // we'll need this values whn updating the heights of the blocks
+                        // we'll need this values when updating the heights of the blocks
                         $bi->set('row', $blockinstance['row']);
                         $bi->set('column', $blockinstance['column']);
                         $bi->set('order', $blockinstance['order']);
@@ -4041,7 +4041,7 @@ class View {
      * @param int $offset Sets the OFFSET value in sql query
      * @param string $query Text to search for (treated as comma separated list when $searchin = tagsonly)
      * @param string $tag Text to search for in the tags. Not used anymore, we use $query instead
-     * @param int $groupid Contains the group, if searching in group pages ans collections
+     * @param int $groupid Contains the group, if searching in group pages and collections
      * @param string $institution Contains the institution, if searching in institution pages and collections
      * @param string $searchin Fields to search in
      *        values: tagsonly, titleanddescription, titleanddescriptionandtags
@@ -4675,7 +4675,7 @@ class View {
     }
 
     /**
-     * SmartEvidence and progess completion pages do not have an id.
+     * SmartEvidence and progress completion pages do not have an id.
      * When downloading or copying a special page, apply to collection.
      *
      * @return array copy      to get copy url
@@ -4703,7 +4703,7 @@ class View {
      * - u is a site admin
      * - v is owned by u
      * - v is owned by a group g, and u has a role (within g) with view editing permission
-     * - v is publically visible at t (in view_access)
+     * - v is publicly visible at t (in view_access)
      * - v is visible to logged in users at t (in view_access)
      * - v is visible to friends at t, and u is a friend of the view owner (in view_access)
      * - v is visible to institution at t, and u is a member of the institution (in view_access)
@@ -7718,7 +7718,7 @@ class View {
      * Lock the instructions edit for this copy
      * @param integer $templateid the view id of the template this view is a copy of
      */
-    public function lock_instructions_edit($templateid) { //todo: dont allow to change the template id if the record exists already
+    public function lock_instructions_edit($templateid) { //todo: don't allow to change the template id if the record exists already
         ensure_record_exists('view_instructions_lock',
             (object) array(
                 'view'=> $this->get('id')

@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  * @copyright  (C) portions from Moodle, (C) Martin Dougiamas http://dougiamas.com
@@ -193,7 +193,7 @@ class mahara_url {
      * The added param overrides existing one if they have the same name.
      *
      * @param string $paramname name
-     * @param string $newvalue Param value. If new value specified current value is overriden or parameter is added
+     * @param string $newvalue Param value. If new value specified current value is overridden or parameter is added
      * @return mixed string parameter value, null if parameter does not exist
      */
     public function param($paramname, $newvalue = '') {

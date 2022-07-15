@@ -22,12 +22,12 @@
 # the alignment is still correct
 # Note:
 # If the input contains {...} that is
-# NOT preceeded by a ) then skip
+# NOT preceded by a ) then skip
 # Note:
 # If the braces are empty (ie. { })
 # then ignore
 # Note:
-# If the } preceeds any of }; }); }, or }),
+# If the } precedes any of }; }); }, or }),
 # then keep that on same line as }
 # Note:
 # If the } is after a single line comment //
@@ -51,7 +51,7 @@
 # \6 = code after '}\s*;?' (stripped of whitespace)
 
     s~\(\s*\)\(    \S.*\S\)\?\s*}\(\s*)\?\s*[;,]\)\?\(\s*\(//.*\)\)\?\s*\(.*\)~\1\2\n\1}\3\4\n\1\6~
-# If there was no statment before/after the }
+# If there was no statement before/after the }
 # on the same line, then remove it the
 # extra line(s)
     s/^\s*\n//

@@ -4,7 +4,7 @@
  *
  * @package    mahara
  * @subpackage import-leap
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -614,7 +614,7 @@ class PluginImportLeap extends PluginImport {
     private function ensure_document_valid() {
 
 
-        // Check all the namespaces we're gonna need are declared, and warn if
+        // Check that all the namespaces we need are declared, and warn if
         // they're not there
         if($this->leap2anamespace == self::NS_LEAP) {
             $namespaces = array(self::NS_ATOM, self::NS_RDF, self::NS_LEAP, self::NS_CATEGORIES);

@@ -258,7 +258,7 @@
     font-size: $font-size-sm;
 }
 
-// Remove the link colour from a comment that has an attachement
+// Remove the link colour from a comment that has an attachment
 @include media-breakpoint-up(lg) {
     .viewfooter .comment-item .comment-attachment .card.collapsible h3 a.collapsed {
         color: $theme-text-color;

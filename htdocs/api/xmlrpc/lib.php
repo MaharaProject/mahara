@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage auth
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -267,7 +267,7 @@ function user_authorise($token, $useragent) {
 
     $email = get_field('artefact_internal_profile_email', 'email', 'owner', $sso_session->userid, 'principal', 1);
     if (false == $email) {
-        throw new XmlrpcServerException("No email adress for user");
+        throw new XmlrpcServerException("No email address for account");
     }
 
     $userdata = array();
@@ -1591,7 +1591,7 @@ class OpenSslRepo {
         $locality     = get_config('locality');
 
         //TODO: Create additional fields on site setup and read those from
-        //      config. Then remove the next 3 linez
+        //      config. Then remove the next 3 lines.
         if (empty($country))  $country  = 'NZ';
         if (empty($province)) $province = 'Wellington';
         if (empty($locality)) $locality = 'Te Aro';

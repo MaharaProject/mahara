@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage export
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -929,7 +929,7 @@ function export_process_queue($id = false) {
 /**
  * In between function for adding thing to export queue that are submitted items.
  * Would be useful if we need to do special checking/handling of these compared to normal exports.
- * Currently only passes thru the variables.
+ * Currently only passes through the variables.
  */
 function add_submission_to_export_queue($object, $submitter, $external=null) {
     return export_add_to_queue($object, $external, $submitter);

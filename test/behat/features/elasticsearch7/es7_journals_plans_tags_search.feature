@@ -140,7 +140,7 @@ Scenario: Testing search functions
    When I click on "Finance"
    Then I should see "Take over the world"
 
- # Seach by task description
+ # Search by task description
    When I set the following fields to these values:
    | Search | president |
    And I click on "Go"

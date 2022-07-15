@@ -42,7 +42,7 @@ jQuery(function($) {
 
         // If we are filling the modal dynamically (c.f page builder)
         if (hasContent) {
-            // Dock alreay has content
+            // Dock already has content
         }
         else {
             // Open form here even though it's currently empty (its quicker)

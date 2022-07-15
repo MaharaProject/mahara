@@ -6,7 +6,7 @@
  * Type:     function<br>
  * Date:     June 22, 2006<br>
  * Purpose:  Provide inline contextual help for arbitrary sections
- * @author   Catalyst IT Ltd
+ * @author   Catalyst IT
  * @version  1.0
  * @return HTML snippet for help icon
  */

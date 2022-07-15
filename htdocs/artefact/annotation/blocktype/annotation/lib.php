@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage blocktype-annotation
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -328,7 +328,7 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
     public static function instance_config_validate(Pieform $form, $values) {
 
         if (!empty($values['smartevidence'])) {
-            // Check that the new smartevidence standard we are changing to is not alreay covered by another annotation block
+            // Check that the new smartevidence standard we are changing to is not already covered by another annotation block
             $block = $form->get_element_option('blockconfig', 'value');
             $viewid = $form->get_element_option('id', 'value');
             require_once('view.php');

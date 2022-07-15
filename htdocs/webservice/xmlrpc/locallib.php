@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage auth-webservice
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -14,7 +14,7 @@
  *
  * @package   webservice
  * @copyright 2009 Moodle Pty Ltd (http://moodle.com)
- * @copyright  Copyright (C) 2011 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * @copyright  Copyright (C) 2011 Catalyst IT (http://www.catalyst.net.nz)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Piers Harding
  */
@@ -188,7 +188,7 @@ function webservice_mnet_get_file($username, $id) {
 }
 
 /**
- * serach folders and files
+ * search folders and files
  *
  * @param string $username
  * @param string $search
@@ -278,7 +278,7 @@ class webservice_xmlrpc_server extends webservice_base_server {
     protected $response;
 
     /**
-     * Contructor
+     * Constructor
      * @param integer $authmethod authentication method one of WEBSERVICE_AUTHMETHOD_*
      */
     public function __construct($authmethod) {
@@ -371,7 +371,7 @@ class webservice_xmlrpc_server extends webservice_base_server {
         // Add the decoded parameters to the methodvariables array.
         if (is_array($decodedparams)) {
             foreach ($decodedparams as $index => $param) {
-                // See MDL-53962 - XML-RPC requests will usually be sent as an array (as in, one with indicies).
+                // See MDL-53962 - XML-RPC requests will usually be sent as an array (as in, one with indices).
                 // We need to use a bit of "magic" to add the correct index back. Zend used to do this for us.
                 $methodvariables[$methodparams[$index]] = $param;
             }

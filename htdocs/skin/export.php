@@ -42,7 +42,7 @@ else {
 }
 
 // ===============================
-//  Dinamically create export XML
+//  Dynamically create export XML
 // ===============================
 
 $xmldoc = new DOMDocument('1.0', 'UTF-8');

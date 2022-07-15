@@ -4,7 +4,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -471,7 +471,7 @@ class Collection {
                       $institution
                     );
 
-                    // move to cover image forlder
+                    // move to cover image folder
                     $userobj = null;
                     if ($owner) {
                         $userobj = new User();
@@ -1853,7 +1853,7 @@ class Collection {
 
         // We don't send out notifications about the release of remote-submitted Views & Collections
         // (though I'm not sure why)
-        // if the method is called in an upgrade and we dont have a release user
+        // if the method is called in an upgrade and we don't have a release user
         if (!defined('INSTALLER') && $this->submittedgroup) {
             $releaseuserdisplay = display_name($releaseuser, $this->owner);
             $releaseuserid = ($releaseuser instanceof User) ? $releaseuser->get('id') : $releaseuser->id;

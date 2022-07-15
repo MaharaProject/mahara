@@ -57,7 +57,7 @@ Scenario: Editing admin profile page (Bug: 1426983)
     | Student ID ||
     |  Display name   | Admin Account|
     And I click on "Save profile"
-    # Verifing settings saved
+    # Verifying settings saved
     And I should see "Profile saved successfully"
     # Editing contact information
     And I click on "Contact information"

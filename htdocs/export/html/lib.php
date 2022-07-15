@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage export-html
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -883,7 +883,7 @@ class PluginExportHtml extends PluginExport {
 
 /**
 *  Creates the hard-coded modals for recent posts (Recent journal entries)
-* @param array &$idarray       Exisiting array that stores ids of modals to be created
+* @param array &$idarray       Existing array that stores ids of modals to be created
 * @param BlockInstance $bi     The recent journal entries block containing the posts
 */
     private function get_recent_posts_modals(&$idarray, BlockInstance $bi) {
@@ -900,7 +900,7 @@ class PluginExportHtml extends PluginExport {
 
 /**
 *  Creates the hard-coded modals for all attachments in the entire resume block
-* @param array &$idarray       The exisiting array that stores modal ids to be created
+* @param array &$idarray       The existing array that stores modal ids to be created
 * @param BlockInstance $bi     The entire resume block containing the attachments
 */
     private function get_entire_resume_modals(&$idarray, BlockInstance $bi) {
@@ -922,7 +922,7 @@ class PluginExportHtml extends PluginExport {
 
 /**
 *  Creates the hard-coded modals for all attachments in the one resume field block
-* @param array &$idarray        The exisiting array that stores modal ids to be created
+* @param array &$idarray        The existing array that stores modal ids to be created
 * @param BlockInstance $bi      The resume field block containing the attachments
 */
     private function get_resume_field_modals(&$idarray, BlockInstance $bi) {
@@ -943,7 +943,7 @@ class PluginExportHtml extends PluginExport {
 
 /**
 *  Creates the hard-coded modals for File(s) to download block
-* @param array  &$idarray       The exisiting array that stores modal ids to be created
+* @param array  &$idarray       The existing array that stores modal ids to be created
 * @param BlockInstance $bi      The File(s) to download block
 */
 private function get_folder_modals(&$idarray, BlockInstance $bi) {
@@ -1547,7 +1547,7 @@ class HtmlExportOutputFilter {
                 $distance = 3;
             }
             else {
-                // we are not in a view, could be blog post attachement or Notes attachement
+                // we are not in a view, could be blog post attachment or Notes attachment
                 $distance = 4;
             }
         }

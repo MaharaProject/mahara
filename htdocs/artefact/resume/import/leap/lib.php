@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage artefact-file-import-leap
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -63,7 +63,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
     const STRATEGY_IMPORT_AS_SELECTION = 8;
 
     /**
-     * Personal information map in Mahara to personal informations
+     * Personal information map in Mahara to personal information
      */
     const STRATEGY_IMPORT_AS_PERSONALINFORMATION = 9;
 

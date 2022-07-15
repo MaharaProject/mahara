@@ -50,7 +50,7 @@ class Skin {
     /**
      * Settings for dynamically creating a preview image of skin and thumbnail from that image.
      * Image resolution: 1920x1080 (Full HD)
-     * Thumbnail resolution: 240x135 (original image shrinked to 12.5%)
+     * Thumbnail resolution: 240x135 (original image shrunk to 12.5%)
      */
     const PREVIEW_WIDTH = 1920;
     const PREVIEW_HEIGHT = 1080;

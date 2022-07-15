@@ -99,7 +99,7 @@
 
     // Styles for cell hover crosshair
     // Make tbody display table to clip the crosshair
-    // Set tablematrix postition relative so that tooltip does not get cropped.
+    // Set tablematrix position relative so that tooltip does not get cropped.
     tbody {
         overflow: hidden;
         display: table;
@@ -237,7 +237,7 @@ th.smartevidencedash, td.smartevidencedash {
 .completedcount {
   // Pick the screen size you want it might be $screen-md-min.
   @include media-breakpoint-up(md) {
-    // addjust pixel value
+    // adjust pixel value
     max-width: 0.875rem; // 14px;
   }
 }
@@ -245,7 +245,7 @@ th.smartevidencedash, td.smartevidencedash {
   // Pick the screen size you want it might be $screen-md-min.
   // might not need media query because you might want to force the dash cell to be all the same.
   @include media-breakpoint-up(md) {
-    // addjust pixel value
+    // adjust pixel value
     max-width: $spacing-xs;
   }
 }

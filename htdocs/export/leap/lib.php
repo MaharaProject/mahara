@@ -4,7 +4,7 @@
  *
  * @package    mahara
  * @subpackage export-leap
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -1233,7 +1233,7 @@ abstract class LeapExportArtefactPlugin {
     /**
     * contract method used to detect whether the entire plugin should override the export
     * here for consistency but there's really no point overriding this to return false
-    * the existance of a subclass kind of implies overriding.
+    * the existence of a subclass kind of implies overriding.
     */
     public static function override_entire_export() {
         return true;

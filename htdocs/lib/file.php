@@ -470,7 +470,7 @@ function is_image_type($type) {
 function is_image_file($path) {
     if (function_exists('exif_imagetype')) {
         // exif_imagetype is faster
-        // surpressing errors because exif_imagetype spews "read error!" to the logs on small files
+        // suppressing errors because exif_imagetype spews "read error!" to the logs on small files
         // http://nz.php.net/manual/en/function.exif-imagetype.php#79283
         if (!$type = @exif_imagetype($path)) {
             return false;
@@ -522,7 +522,7 @@ function is_image_file($path) {
  *                                         180 (inverted),
  *                                         270 (90 deg anti-clockwise)
  *
- * @param bool $generateifpossible Whether to attempt to create the file if it doesnt exist
+ * @param bool $generateifpossible Whether to attempt to create the file if it doesn't exist
  * @return string The path on disk where the appropriate file resides, or false
  *                if an appropriate file could not be located or generated.
  */
