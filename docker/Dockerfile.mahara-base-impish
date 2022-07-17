@@ -24,6 +24,7 @@ RUN apt-get update && \
         php-redis \
         php-zip \
         php-xml \
+        php-xmlrpc \
         curl \
         openjdk-8-jre-headless \
         lsof
