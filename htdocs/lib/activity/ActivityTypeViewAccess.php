@@ -187,14 +187,19 @@ class ActivityTypeViewAccess extends ActivityType {
       return false;
   }
 
-  /**
-   * Internal function to get a formatted message based on the template.
-   *
-   * @param object $user A database user object.
-   * @param string $template Name of the .tpl file.
-   * @return string Message body.
-   */
-  public function _getmessage($user, $template) {
+    /**
+     * Internal function to get a formatted message based on the template.
+     *
+     * @param object $user A database user object.
+     * @param string $template Name of the .tpl file.
+     *
+     * Customisation for WR 349183 PCNZ
+     * @param string type   needed to discern which type of template should be used
+     * message = internal, emailmessage = plain text, htmlmessage = html email
+     *
+     * @return string Message body.
+     */
+    public function _getmessage($user, $template, $type = null) {
       $accessitems = array();
       if ($items = $this->get_view_titles_urls($user)) {
           $accessitems = $items;
@@ -223,6 +228,17 @@ class ActivityTypeViewAccess extends ActivityType {
       $smarty->assign('url', (get_config('emailexternalredirect') ? append_email_institution($user, $this->url) : $this->url));
       $smarty->assign('sitename', $sitename);
       $smarty->assign('prefurl', $prefurl);
+
+        // Customisation for WR 349183 PCNZ
+        require_once(get_config('libroot') . 'view.php');
+        $view = new View($this->view);
+        if ((($view->get('type') == 'portfolio') || ($view->get('type') == 'progress')) && $view->get('owner')) {
+            $this->ownername ? $smarty->assign('pharmacistname', $this->ownername) : $smarty->assign('pharmacistname', get_string('apharmacist', 'accessvierfier'));
+            return $smarty->fetch('account/activity/accessverifier' . $type . '.tpl');
+            // End customisations
+        }
+
+
       $messagebody = $smarty->fetch($template);
 
       return $messagebody;
@@ -234,9 +250,10 @@ class ActivityTypeViewAccess extends ActivityType {
    * @param object $user A database user object.
    * @return string
    */
-  public function get_message($user) {
-      return strip_tags($this->_getmessage($user, 'account/activity/accessinternal.tpl'));
-  }
+    public function get_message($user) {
+        // Customisation for WR 349183 PCNZ
+        return strip_tags($this->_getmessage($user, 'account/activity/accessinternal.tpl', 'internal'));
+    }
 
   /**
    * Fetch a Plain Text formatted message to send via email.
@@ -246,8 +263,9 @@ class ActivityTypeViewAccess extends ActivityType {
    * @return string
    */
   public function get_emailmessage($user) {
-      return strip_tags($this->_getmessage($user, 'account/activity/accessemail.tpl'));
-  }
+        //Customisation for WR 349183 PCNZ
+        return strip_tags($this->_getmessage($user, 'account/activity/accessemail.tpl', 'email'));
+    }
 
   /**
    * Fetch an HTML formatted message to send via email.
@@ -257,8 +275,9 @@ class ActivityTypeViewAccess extends ActivityType {
    * @return string
    */
   public function get_htmlmessage($user) {
-      return $this->_getmessage($user, 'account/activity/accessemail.tpl');
-  }
+        // Customisation for WR 349183 PCNZ
+        return $this->_getmessage($user, 'account/activity/accessemail.tpl', 'html');
+    }
 
   /**
    * Get the minimum required data parameters for this activity type.
