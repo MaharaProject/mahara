@@ -103,7 +103,7 @@ class ActivityTypeViewAccess extends ActivityType {
       if ($titles = $this->get_view_titles_urls($user)) {
           // Covers collection(s), page(s) and combination of both.
           if ($this->ownername) {
-              $subject = get_string('newaccesssubjectname', 'activity', count($titles), $this->ownername);
+                $subject = get_string('newaccesssubjectname1', 'activity', count($titles), $this->ownername);
           }
           else {
               $subject = get_string('newaccesssubject', 'activity', count($titles));
@@ -112,7 +112,7 @@ class ActivityTypeViewAccess extends ActivityType {
       else {
           // Dealing with a single page.
           if ($this->ownername) {
-              $subject = get_string('newaccesssubjectname', 'activity', 1, $this->ownername);
+                $subject = get_string('newaccesssubjectname1', 'activity', 1, $this->ownername);
           }
           else {
               $subject = get_string('newaccesssubject', 'activity', 1);
