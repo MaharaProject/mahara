@@ -246,6 +246,7 @@ define('PROFILE', array(
 
 //VIEWS is Pages and Collections, just shorter to write
 define('VIEWS', array(
+    'Create' => '#main-column-container div.btn-group-top',
     'Pages and Collections boxes' => '.grouppageswrap',
     'Collections text-box' => '.select2-selection__rendered',
     'Return to pages and collections button' => '#view-return-controls .btn-secondary:nth-of-type(2)',

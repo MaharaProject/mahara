@@ -22,7 +22,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I choose "Pages and collections" in "Create" from main menu
     And I scroll to the base of id "addview-button"
     And I should see "Pages and collections" in the "H1 heading" "Common" property
-    And I click on "Add" in the ".btn-top-right" "css_element"
+    And I click on "Create" in the "Create" "Views" property
     And I click on "Page" in the dialog
     And I fill in the following:
     | Page title       | Test view         |

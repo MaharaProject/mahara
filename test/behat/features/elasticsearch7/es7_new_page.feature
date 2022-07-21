@@ -23,8 +23,7 @@ Scenario: Testing search functions with new data
     And I click on "Save"
     And I click on "Reset"
     And I choose "Pages and collections" in "Create" from main menu
-    And I scroll to the base of id "addview-button"
-    And I click on "Add"
+    And I click on "Create" in the "Create" "Views" property
     And I click on "Page" in the dialog
     And I fill in the following:
     | Page title       | Ziggy Stardust |
