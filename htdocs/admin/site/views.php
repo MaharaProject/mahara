@@ -63,7 +63,7 @@ $urlparams['institution'] = 'mahara';
 $urlparamsstr = '&' . http_build_query($urlparams);
 
 $smarty = smarty(array('paginator'));
-setpageicon($smarty, 'icon-file-alt');
+setpageicon($smarty, 'icon-layer-group');
 
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('views', $views);
