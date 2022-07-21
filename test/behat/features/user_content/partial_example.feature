@@ -13,7 +13,7 @@ Scenario: Meta test testing Behat's functionality (Bug #1387836)
     | First name | test first name |
     | Last name | test last name |
     And I click on "Save profile"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     # Creating a page
     And I click on "Create" in the "Create" "Views" property
     And I click on "Page" in the dialog
@@ -22,7 +22,7 @@ Scenario: Meta test testing Behat's functionality (Bug #1387836)
     # Verifying it saved
     And I should see "Page saved successfully"
     # Creating a collection
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Create" in the "Create" "Views" property
     And I click on "Collection" in the dialog
     And I fill in "Collection name" with "test collection name"
@@ -37,7 +37,7 @@ Scenario: Meta test testing Behat's functionality (Bug #1387836)
     And the "test page name 1" checkbox should be checked
     And I click on "Add pages"
     And I click on "Next: Edit access"
-    And I click on "Return to pages and collections"
+    And I click on "Return to portfolios"
     And I click on "test collection name" card menu
     And I should see "Delete"
     And I go to the homepage

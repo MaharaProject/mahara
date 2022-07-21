@@ -55,7 +55,7 @@ Feature: Mahara users can create their blogs
     And I scroll to the base of id "editpost_tags_container"
     And I fill in select2 input "editpost_tags" with "blogentry" and select "blogentry"
     And I click on "Save entry"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     When I click on the add block button
     And I click on "Add" in the "Add new block" "Blocks" property

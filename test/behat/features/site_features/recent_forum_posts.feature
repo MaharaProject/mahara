@@ -36,7 +36,7 @@ Given the following "users" exist:
 
 Scenario: Create forum and add block to group page
     Given I log in as "UserC" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Edit" in "Page UserC_01" card menu
     # TODO could test other options
     And I display the page

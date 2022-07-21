@@ -16,7 +16,7 @@ Scenario: Add some externalfeed blocks
     # Externalfeed block should be added in a page from several feed sources in
     # RSS or Atom format
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     When I click on the add block button
     And I click on "Add" in the "Add new block" "Blocks" property

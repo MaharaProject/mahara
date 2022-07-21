@@ -14,7 +14,7 @@ Background:
 
 Scenario: Check templates not editable then create and use the Page template with a profile block.
     Given I log in as "admin" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Configure site" from administration menu
+    And I choose "Portfolios" in "Configure site" from administration menu
     # Check there is no access to "Share" on any of the four template cards BUG - # 1824767
     And I should not see "Manage access"
     # Check there is no access to "Share" on each of the four edit template pages BUG - # 1824767
@@ -23,19 +23,19 @@ Scenario: Check templates not editable then create and use the Page template wit
     When I go to "/view/accessurl.php?id=2"
     Then I should see "Access denied"
     And I should see "You do not have access to view this page."
-    When I choose "Pages and collections" in "Configure site" from administration menu
+    When I choose "Portfolios" in "Configure site" from administration menu
     And I click on "Group homepage template"
     Then I should not see "Share" in the "Vertical button group" "Views" property
     When I go to "/view/accessurl.php?id=3"
     Then I should see "Access denied"
     And I should see "You do not have access to view this page."
-    When I choose "Pages and collections" in "Configure site" from administration menu
+    When I choose "Portfolios" in "Configure site" from administration menu
     And I click on "Profile template"
     Then I should not see "Share" in the "Vertical button group" "Views" property
     When I go to "/view/accessurl.php?id=1"
     Then I should see "Access denied"
     And I should see "You do not have access to view this page."
-    When I choose "Pages and collections" in "Configure site" from administration menu
+    When I choose "Portfolios" in "Configure site" from administration menu
     And I click on "Page template"
     Then I should not see "Share" in the "Vertical button group" "Views" property
     When I go to "/view/accessurl.php?id=4"
@@ -43,7 +43,7 @@ Scenario: Check templates not editable then create and use the Page template wit
     And I should see "You do not have access to view this page."
 
     # Add a text block into the site default portfolio page and create a new portfolio page (Bug 1488255)
-    When I choose "Pages and collections" in "Configure site" from administration menu
+    When I choose "Portfolios" in "Configure site" from administration menu
     And I click on "Create" in the "Create" "Views" property
     And I click on "Page" in the dialog
     And I set the field "Page title" to "Site page with block templates"
@@ -74,7 +74,7 @@ Scenario: Check templates not editable then create and use the Page template wit
 
     # Copy site portfolio page for UserA
     And I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Copy"
     And I click on "Copy page"
     And I click on "Edit"
@@ -84,7 +84,7 @@ Scenario: Check templates not editable then create and use the Page template wit
 
     # Copy site portfolio page for UserB
     And I log in as "UserB" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Copy"
     And I click on "Copy page"
     And I click on "Edit"

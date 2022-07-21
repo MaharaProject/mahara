@@ -44,19 +44,19 @@ Background:
 Scenario: Testing that views & collections are collated properly
     # Putting some comments on the pages
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Page UserA_01" in "Collection UserA_01" card collection
     And I click on "Add comment"
     And I fill in "I am on UserA_01 page" in editor "Comment"
     And I click on "Comment" in the "Comment button" "Comment" property
 
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Page UserA_02" in "Collection UserA_01" card collection
     And I click on "Add comment"
     And I fill in "I am on UserA_02 page" in editor "Comment"
     And I click on "Comment" in the "Comment button" "Comment" property
 
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click the card "Page UserA_03"
     And I click on "Add comment"
     And I fill in "I am on Page UserA_03" in editor "Comment"
@@ -89,7 +89,7 @@ Scenario: Testing that views & collections are collated properly
     # Part2: make some more comments (Bug 1890973) - to change shared item display order
     When I log out
     And I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Page UserA_01" in "Collection UserA_01" card collection
     And I click on "Comments"
     And I fill in "I am on only the UserA_01 page again" in editor "Comment"

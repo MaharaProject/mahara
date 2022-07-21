@@ -41,7 +41,7 @@ Feature: Mahara account permissions in institutions
   Scenario: Site admin vs institution admin when sharing institution page
     # Site admin can only share institution page with institution it belongs to
     Given I log in as "admin" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Institutions" from administration menu
+    And I choose "Portfolios" in "Institutions" from administration menu
     And I click on "Page InstOne_01"
     And I click on "Edit"
     And I click on "Share" in the "Toolbar buttons" "Nav" property
@@ -55,7 +55,7 @@ Feature: Mahara account permissions in institutions
 
     # Institution admin can share institution page with any of the institutions they belong to
     Given I log in as "UserB" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Institutions" from administration menu
+    And I choose "Portfolios" in "Institutions" from administration menu
     And I click on "Page InstOne_01"
     And I click on "Edit"
     And I click on "Share" in the "Toolbar buttons" "Nav" property

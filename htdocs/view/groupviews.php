@@ -25,13 +25,13 @@ $offset = param_integer('offset', 0);
 $urlparams = array();
 
 define('GROUP', param_integer('group'));
-define('SUBSECTIONHEADING', get_string('Viewscollections', 'view'));
+define('SUBSECTIONHEADING', get_string('Viewscollections1', 'view'));
 $group = group_current_group();
 if (!is_logged_in() && !$group->public) {
     throw new AccessDeniedException();
 }
 
-define('TITLE', $group->name . ' - ' . get_string('groupviews', 'view'));
+define('TITLE', $group->name . ' - ' . get_string('groupviews1', 'view'));
 
 $role = group_user_access($group->id);
 $can_edit = $role && group_role_can_edit_views($group, $role);

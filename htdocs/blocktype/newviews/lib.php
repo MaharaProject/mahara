@@ -18,7 +18,7 @@ class PluginBlocktypeNewViews extends MaharaCoreBlocktype {
     }
 
     public static function get_description() {
-        return get_string('description2', 'blocktype.newviews');
+        return get_string('description3', 'blocktype.newviews');
     }
 
     public static function get_categories() {

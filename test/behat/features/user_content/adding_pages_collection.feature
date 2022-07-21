@@ -22,7 +22,7 @@ Scenario: Creating a collection AND adding pages
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Create Test collection
     # This is the test for manually creating a collection
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Create" in the "Create" "Views" property
     And I click on "Collection" in the dialog
     And I fill in the following:
@@ -59,14 +59,14 @@ Scenario: Creating a collection AND adding pages
     And I click on "Edit access"
     And I select "Registered people" from "accesslist[0][searchtype]"
     And I click on "Save"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Create" in the "Create" "Views" property
     And I click on "Page" in the dialog
     And I set the following fields to these values:
     | Page title | New page |
     | Page description | testing |
     And I click on "Save"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Manage" in "Test Collection" card menu
     And I click on "All"
     And I click on "Add pages"

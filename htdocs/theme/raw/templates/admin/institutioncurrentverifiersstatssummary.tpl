@@ -1,5 +1,5 @@
 {if $viewcount == 0}
-<p>{str tag=noviews1 section=view}</p>
+<p>{str tag=noviews2 section=view}</p>
 {/if}
 <div class="card-body">
     <canvas class="graphcanvas" id="sitestatscurrentverifiersgraph" width="300" height="200"></canvas>

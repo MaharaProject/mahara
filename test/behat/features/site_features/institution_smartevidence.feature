@@ -43,7 +43,7 @@ And the following "pages" exist:
 Scenario: SmartEvidence interaction by member / staff
     # Creating a collection of existing pages
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Create" in the "Create" "Views" property
     When I click on "Collection" in the dialog
     And I fill in the following:
@@ -54,7 +54,7 @@ Scenario: SmartEvidence interaction by member / staff
     And I click on "All"
     And I click on "Add pages"
     When I click on "Next: Edit access"
-    Then I click on "Return to pages and collections"
+    Then I click on "Return to portfolios"
 
     # Mahara member makes page visible to public
     And I click on "Manage access" in "SmartEvidence Collection 1" card access menu

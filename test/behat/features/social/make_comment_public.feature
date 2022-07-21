@@ -85,7 +85,7 @@ Background:
 
     # log in as page owner to authorise the above comments to be public, make some private/public comments against a collection
     And I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Page UserA_03"
     And I click on "Comments"
     And I click on "Make comment public" in the "This is comment 2" comment
@@ -97,7 +97,7 @@ Background:
     And I click on "Make comment public" in the "This is comment 11" comment
     And I click on "Comments"
     And I should see "A message has been sent to Bob User to request that the comment be made public."
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Collection UserA_01"
     And I click on "Add comment"
     And I fill in "This is comment 1" in editor "Comment"

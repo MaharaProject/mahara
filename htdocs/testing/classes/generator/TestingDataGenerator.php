@@ -2538,7 +2538,7 @@ EOD;
       $title = strtolower(trim($record['title']));
       $ids = get_records_sql_array($sql, array($title, $title));
       if (!$ids || count($ids) > 1) {
-        throw new SystemException("Invalid page/collection name '" . $record['title'] . "'. The page/collection title does not exist, or is duplicated.");
+        throw new SystemException("Invalid portfolio name '" . $record['title'] . "'. The portfolio title does not exist, or is duplicated.");
       }
       $id = $ids[0];
       $viewids = array();

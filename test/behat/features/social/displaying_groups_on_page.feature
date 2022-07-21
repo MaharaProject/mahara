@@ -32,13 +32,13 @@ Scenario: Create groups and limit display on profile page (Bug 1426983)
     | Group description | GroupA owned by UserA |
     And I click on "Save group"
     # Changing the amount of groups seen in My groups block
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Profile page"
     And I click on "Edit"
     And I configure the block "My groups"
     And I set the following fields to these values:
     | Maximum number of groups to display | 3 |
     And I click on "Save"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Profile page"
     And I should see "11 groups"

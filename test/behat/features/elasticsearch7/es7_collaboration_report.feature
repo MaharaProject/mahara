@@ -99,7 +99,7 @@ Scenario: Testing collaboration report generation
 
 # Add annotation block and share page and collection with specified person, group, institution, registered people, public and Friends
     Given I log in as "teeny" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Greatest Hits"
     And I click on "Edit"
     When I click on the add block button
@@ -115,7 +115,7 @@ Scenario: Testing collaboration report generation
     And I select "League of Legumes" from select2 group search box in row number "2"
     And I select "Hall of Fame" from "accesslist[2][searchtype]"
     And I click on "Save"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Manage access" in "Proud Mary" card access menu
     And I select "Person" from "accesslist[0][searchtype]"
     And I select "Bruce Springsteen" from select2 hidden search box in row number "1"

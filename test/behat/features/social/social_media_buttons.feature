@@ -42,7 +42,7 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  And I select "Yahoo Messenger" from "Social media"
  And I fill in "maharayahoo" for "Your URL or username"
  And I click on "Save"
- And I choose "Pages and collections" in "Create" from main menu
+ And I choose "Portfolios" in "Create" from main menu
  And I click on "Edit" in "Page UserA_01" card menu
  When I click on the add block button
  And I click on "Add" in the "Add new block" "Blocks" property

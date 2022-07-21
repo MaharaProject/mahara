@@ -19,9 +19,9 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I choose "Files" in "Create" from main menu
     # Navigating to Portfolio to create a page
     # This is the test for manually creating a page
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I scroll to the base of id "addview-button"
-    And I should see "Pages and collections" in the "H1 heading" "Common" property
+    And I should see "Portfolios" in the "H1 heading" "Common" property
     And I click on "Create" in the "Create" "Views" property
     And I click on "Page" in the dialog
     And I fill in the following:
@@ -81,7 +81,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     Then I should see "Print"
     And I should see "Delete this page"
     # User share page with public and enable copy page functionality
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Manage access" in "This is the edited page title" card access menu
     And I click on "Advanced options"
     And I enable the switch "Allow copying"
@@ -108,14 +108,14 @@ Scenario: Creating a page with content in it (Bug 1426983)
     # check page can be deleted (Bug 1755682)
     Given I log in as "admin" with password "Kupuh1pa!"
     # Go to version page
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "This is the edited page title"
     And I click on "More options"
     And I click on "Timeline"
 
     Then I should see "Timeline"
     # check page can be deleted (Bug 1755682)
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Delete" in "This is the edited page" card menu
     And I should see "Do you really want to delete this page?"
     And I click on "Yes"

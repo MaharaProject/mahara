@@ -129,7 +129,7 @@ The list of shared pages must take into account of access date (Bug 1374163)
     And I scroll to the id "column-container"
     And I configure the block "Group portfolios"
     When I set the following fields to these values:
-      | Sort shared pages and collections by | Most recently updated |
+      | Sort shared portfolios by | Most recently updated |
     And I click on "Save"
     Then "GroupB_01" "text" should appear before "GroupB_02" "text"
     And "GroupB_03" "text" should appear after "GroupB_02" "text"

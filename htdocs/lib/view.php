@@ -4041,8 +4041,8 @@ class View {
      * @param int $offset Sets the OFFSET value in sql query
      * @param string $query Text to search for (treated as comma separated list when $searchin = tagsonly)
      * @param string $tag Text to search for in the tags. Not used anymore, we use $query instead
-     * @param int $groupid Contains the group, if searching in group pages and collections
-     * @param string $institution Contains the institution, if searching in institution pages and collections
+     * @param int $groupid Contains the group, if searching in group portfolios
+     * @param string $institution Contains the institution, if searching in institution portfolios
      * @param string $searchin Fields to search in
      *        values: tagsonly, titleanddescription, titleanddescriptionandtags
      * @param string $orderby Sets the order of the results
@@ -7424,26 +7424,26 @@ class View {
         if (!$group && !$institution) {
             return array(
                 'url' => get_config('wwwroot') . "view/index.php",
-                'title' => get_string('returntoviews', 'view'),
+                'title' => get_string('returntoviews1', 'view'),
             );
         }
         else if ($group) {
             return array(
                 'url' => get_config('wwwroot') . 'view/groupviews.php?group=' . $group,
-                'title' => get_string('returntogroupportfolios', 'group'),
+                'title' => get_string('returntogroupportfolios1', 'group'),
             );
         }
         else if ($institution) {
             if ($institution == 'mahara') {
                 return array(
                     'url' => get_config('wwwroot') . 'admin/site/views.php',
-                    'title' => get_string('returntositeportfolios', 'view'),
+                    'title' => get_string('returntositeportfolios1', 'view'),
                 );
             }
             else {
                 return array(
                     'url' => get_config('wwwroot') . 'view/institutionviews.php?institution=' . $institution,
-                    'title' => get_string('returntoinstitutionportfolios', 'view'),
+                    'title' => get_string('returntoinstitutionportfolios1', 'view'),
                 );
             }
         }

@@ -55,22 +55,22 @@ Scenario: In the participation report pages should be seen in a collection
  And I click on "Save group"
  # Making group page 01 public
  When I click on "Group one"
- And I click on "Pages and collections" in the "Arrow-bar nav" "Nav" property
+ And I click on "Portfolios" in the "Arrow-bar nav" "Nav" property
  And I click on "Manage access" in "Group collection 01" card access menu
  And I select "Public" from "accesslist[0][searchtype]"
  And I click on "Save"
  # Making group page 03 public
- When I click on "Pages and collections" in the "Arrow-bar nav" "Nav" property
+ When I click on "Portfolios" in the "Arrow-bar nav" "Nav" property
  And I click on "Manage access" in "Group page 03" card access menu
  And I select "Public" from "accesslist[0][searchtype]"
  And I click on "Save"
  # Making group page 04 public
- When I click on "Pages and collections" in the "Arrow-bar nav" "Nav" property
+ When I click on "Portfolios" in the "Arrow-bar nav" "Nav" property
  And I click on "Manage access" in "Group page 04" card access menu
  And I select "Public" from "accesslist[0][searchtype]"
  And I click on "Save"
  # UserA comments on group page 01
- When I click on "Pages and collections" in the "Arrow-bar nav" "Nav" property
+ When I click on "Portfolios" in the "Arrow-bar nav" "Nav" property
  And I click on "Group collection 01"
  And I click on "Add comment"
  And I fill in "Adding a comment to group page 01!" in editor "Comment"
@@ -85,7 +85,7 @@ Scenario: In the participation report pages should be seen in a collection
  # UserA comments on group page 03
  And I choose "Groups" in "Engage" from main menu
  And I click on "Group one"
- And I click on "Pages and collections" in the "Arrow-bar nav" "Nav" property
+ And I click on "Portfolios" in the "Arrow-bar nav" "Nav" property
  And I click on "Group page 03"
  And I click on "Add comment"
  And I fill in "Adding a comment to group page 03!" in editor "Comment"
@@ -94,7 +94,7 @@ Scenario: In the participation report pages should be seen in a collection
  # UserA comments on group page 04
  And I choose "Groups" in "Engage" from main menu
  And I click on "Group one"
- And I click on "Pages and collections" in the "Arrow-bar nav" "Nav" property
+ And I click on "Portfolios" in the "Arrow-bar nav" "Nav" property
  And I click on "Group page 04"
  And I click on "Add comment"
  And I fill in "Adding a comment to group page 04!" in editor "Comment"
@@ -107,7 +107,7 @@ Scenario: In the participation report pages should be seen in a collection
  # UserB comments on the group page 01
  And I choose "Groups" in "Engage" from main menu
  And I click on "Group one"
- And I click on "Pages and collections" in the "Navigation" "Groups" property
+ And I click on "Portfolios" in the "Navigation" "Groups" property
  And I click on "Group collection 01"
  And I click on "Comments"
  And I fill in "Adding a comment as UserB to group page 01!" in editor "Comment"
@@ -122,7 +122,7 @@ Scenario: In the participation report pages should be seen in a collection
  # UserB comments on group page 03
  And I choose "Groups" in "Engage" from main menu
  And I click on "Group one"
- And I click on "Pages and collections" in the "Navigation" "Groups" property
+ And I click on "Portfolios" in the "Navigation" "Groups" property
  And I click on "Group page 03"
  And I click on "Comments"
  And I fill in "Adding a comment as UserB to group page 03!" in editor "Comment"
@@ -131,7 +131,7 @@ Scenario: In the participation report pages should be seen in a collection
  # UserB comments on group page 04
  And I choose "Groups" in "Engage" from main menu
  And I click on "Group one"
- And I click on "Pages and collections" in the "Navigation" "Groups" property
+ And I click on "Portfolios" in the "Navigation" "Groups" property
  And I click on "Group page 04"
  And I click on "Comments"
  And I fill in "Adding a comment as UserB to group page 04!" in editor "Comment"
@@ -144,7 +144,7 @@ Scenario: In the participation report pages should be seen in a collection
  And I choose "Groups" in "Engage" from main menu
  And I click on "searching for groups"
  And I click on "Group one"
- And I click on "Pages and collections" in the "Navigation" "Groups" property
+ And I click on "Portfolios" in the "Navigation" "Groups" property
  And I click on "Group collection 01"
  And I click on "Comments"
  And I fill in "Adding a comment as UserC to group page 01!" in editor "Comment"
@@ -160,7 +160,7 @@ Scenario: In the participation report pages should be seen in a collection
  And I choose "Groups" in "Engage" from main menu
  And I click on "searching for groups"
  And I click on "Group one"
- And I click on "Pages and collections" in the "Navigation" "Groups" property
+ And I click on "Portfolios" in the "Navigation" "Groups" property
  And I click on "Group page 03"
  And I click on "Comments"
  And I fill in "Adding a comment as UserC to group page 03!" in editor "Comment"
@@ -170,7 +170,7 @@ Scenario: In the participation report pages should be seen in a collection
  And I choose "Groups" in "Engage" from main menu
  And I click on "searching for groups"
  And I click on "Group one"
- And I click on "Pages and collections" in the "Navigation" "Groups" property
+ And I click on "Portfolios" in the "Navigation" "Groups" property
  And I click on "Group page 04"
  And I click on "Comments"
  And I fill in "Adding a comment as UserC to group page 04!" in editor "Comment"
@@ -183,10 +183,10 @@ Scenario: In the participation report pages should be seen in a collection
  And I choose "Groups" in "Engage" from main menu
  And I click on "Group one"
  And I click on "Report" in the "Arrow-bar nav" "Nav" property
- # Check elements in Pages and collections shared with this group table
+ # Check elements in Portfolios shared with this group table
  And I should see "Collection 01" in the "Shared with this group report" "Report" property
  And I should see "Page 03" in the "Shared with this group report" "Report" property
- # Check elements in Group pages and collections table
+ # Check elements in Group portfolios table
  # the following works, but is inelegant. It would be nice to have a step to specify table then row and column by text @TODO
  And I should see "Group collection 01" in the "Group views report tr1 tc1" "Report" property
  Then I should see "4 comments" in the "Group collection 01" row

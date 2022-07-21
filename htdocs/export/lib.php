@@ -725,8 +725,8 @@ function export_process_queue($id = false) {
                 $exporter = new $class($user, $views, PluginExport::EXPORT_LIST_OF_COLLECTIONS);
                 break;
             default:
-                $errors[] = get_string('unabletoexportportfoliousingoptionsadmin', 'export');
-                log_warn(get_string('unabletoexportportfoliousingoptionsadmin', 'export'));
+                $errors[] = get_string('unabletoexportportfoliousingoptionsadmin1', 'export');
+                log_warn(get_string('unabletoexportportfoliousingoptionsadmin1', 'export'));
         }
 
         if ($row->exporttype == 'leap') {

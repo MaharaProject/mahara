@@ -29,7 +29,7 @@ Scenario: Checking menu items are available as a student (Bug 1467368)
  And I should see "Manage" in the "Main menu" "Nav" property
  # Checking the sub navigation in Create
  When I click on "Create"
- Then I should see "Pages and collections" in the "Create sub-menu" "Nav" property
+ Then I should see "Portfolios" in the "Create sub-menu" "Nav" property
  And I should see "Files" in the "Create sub-menu" "Nav" property
  And I should see "Journals" in the "Create sub-menu" "Nav" property
  And I should see "Résumé" in the "Create sub-menu" "Nav" property
@@ -84,7 +84,7 @@ Scenario: Checking menu items are available as site admin (Bug 1467368)
  And I should see "Legal" in the "Configure site sub-menu" "Nav" property
  And I should see "Networking" in the "Configure site sub-menu" "Nav" property
  And I should see "Licenses" in the "Configure site sub-menu" "Nav" property
- And I should see "Pages and collections" in the "Configure site sub-menu" "Nav" property
+ And I should see "Portfolios" in the "Configure site sub-menu" "Nav" property
  And I should see "Journals" in the "Configure site sub-menu" "Nav" property
  And I should see "Share" in the "Configure site sub-menu" "Nav" property
  And I scroll to the base of id "navadmin"
@@ -117,7 +117,7 @@ Scenario: Checking menu items are available as site admin (Bug 1467368)
  And I should see "Administrators" in the "Institutions sub-menu" "Nav" property
  And I should see "Admin notifications" in the "Institutions sub-menu" "Nav" property
  And I should see "Profile completion" in the "Institutions sub-menu" "Nav" property
- And I should see "Pages and collections" in the "Institutions sub-menu" "Nav" property
+ And I should see "Portfolios" in the "Institutions sub-menu" "Nav" property
  And I should see "Journals" in the "Institutions sub-menu" "Nav" property
  And I scroll to the base of id "navadmin"
  And I should see "Share" in the "Institutions sub-menu" "Nav" property
@@ -173,7 +173,7 @@ Scenario: Checking menu items are available as Institution Administrator (Bug 14
  And I should see "Staff" in the "Institutions sub-menu" "Nav" property
  And I should see "Administrators" in the "Institutions sub-menu" "Nav" property
  And I should see "Admin notifications" in the "Institutions sub-menu" "Nav" property
- And I should see "Pages and collections" in the "Institutions sub-menu" "Nav" property
+ And I should see "Portfolios" in the "Institutions sub-menu" "Nav" property
  And I should see "Share" in the "Institutions sub-menu" "Nav" property
  And I should see "Files" in the "Institutions sub-menu" "Nav" property
  And I scroll to the base of id "navadmin"

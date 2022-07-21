@@ -12,5 +12,5 @@
 {/foreach}
 </ul>
 {else}
-<p>{str tag=youhavenoviews1 section=view}</p>
+<p>{str tag=youhavenoviews2 section=view}</p>
 {/if}

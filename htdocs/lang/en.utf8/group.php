@@ -311,7 +311,6 @@ $string['findnewfriends'] = 'Find new friends';
 $string['Collections']    = 'Collections';
 $string['Views']          = 'Pages';
 $string['Portfolios'] = 'Portfolios';
-$string['Viewscollections'] = 'Pages and collections';
 $string['Files']          = 'Files';
 $string['noviewstosee']   = 'None that you can see';
 $string['whymakemeyourfriend'] = 'This is why you should make me your friend:';
@@ -415,7 +414,7 @@ $string['allowssubmissionsdescription1'] = "Members can submit pages to the grou
 $string['allowssubmissionsdescription'] = 'Members can submit pages to the group.';
 $string['allowsarchives'] = 'Allow archiving of submissions';
 $string['allowsarchiveserror'] = 'You can only allow archiving if submissions are allowed.';
-$string['allowsarchivesdescription1'] = 'Pages / collections are archived as zipped files during the submission release process.';
+$string['allowsarchivesdescription2'] = 'Portfolios are archived as zipped files during the submission release process.';
 
 // Group reports
 $string['report'] = 'Report';
@@ -439,7 +438,7 @@ $string['grouparchivereports'] = "Access archive of submissions";
 $string['grouparchivereportsdesc'] = "Group administrators can access archived submission files.";
 $string['grouparchivereportserror'] = 'You can only allow archive submission report if submissions are allowed.';
 
-$string['returntogroupportfolios'] = "Return to group pages and collections";
+$string['returntogroupportfolios1'] = "Return to group portfolios";
 $string['showintroduction'] = "Introduction";
 
 $string['addgrouplabel'] = 'Add group labels';

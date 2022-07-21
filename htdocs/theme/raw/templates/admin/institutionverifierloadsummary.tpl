@@ -15,5 +15,5 @@
         </script>
     </div>
 {else}
-<p>{str tag=noviews1 section=view}</p>
+<p>{str tag=noviews2 section=view}</p>
 {/if}

@@ -22,7 +22,7 @@ Scenario: Testing search functions with new data
     And I click on "Select all"
     And I click on "Save"
     And I click on "Reset"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Create" in the "Create" "Views" property
     And I click on "Page" in the dialog
     And I fill in the following:

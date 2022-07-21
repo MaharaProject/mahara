@@ -57,7 +57,7 @@ class PluginExportPdfLite extends PluginExportPdf {
      * @return string
      */
     public static function get_title() {
-        return get_string('title', 'export.pdflite');
+        return get_string('title1', 'export.pdflite');
     }
 
     /**

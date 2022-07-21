@@ -95,15 +95,15 @@ Background:
      | title       | description | ownertype | ownername | pages | progresscompletion |
      | Coll GroupA | Group PC    | group     | GroupA    | Page GroupA | ON |
 
-Scenario: The list of group pages, shared/submitted pages and collections should
+Scenario: The list of group portfolios. Shared/submitted portfolios should
 be displayed page by page and sorted by "page title (A-Z)" or "most recently updated".
-These list must take into account the sort option chosen in the block config (Bug 1457246)
+This list must take into account the sort option chosen in the block config (Bug 1457246)
     # Log in as a normal user
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Verifying log in was successful
     And I should see "Angela"
     And I should see "GroupA"
-    # Share pages and collections to the "GroupA"
+    # Share portfolios to the "GroupA"
     # Edit access for Page UserA_01
     And I choose "Shared by me" in "Share" from main menu
     And I click on "Pages" in the "Share tabs" "Misc" property
@@ -125,7 +125,7 @@ These list must take into account the sort option chosen in the block config (Bu
     # Verifying log in was successful
     And I should see "Bob"
     And I should see "GroupA"
-    # Share pages and collections to the "GroupA"
+    # Share portfolios to the "GroupA"
     # Edit access for pages
     And I choose "Shared by me" in "Share" from main menu
     And I click on "Edit access" in "Page UserB_01" row
@@ -184,18 +184,18 @@ These list must take into account the sort option chosen in the block config (Bu
     And I click on "GroupA (Administrator)"
     And I wait "1" seconds
     And I should see "Page UserB_01"
-    And I click on "Pages and collections" in the "Navigation" "Groups" property
+    And I click on "Portfolios" in the "Navigation" "Groups" property
     And I click on "Edit" in "Group homepage" card menu
     And I scroll to the id "column-container"
     And I configure the block "Group portfolios"
     And I set the following fields to these values:
-    | Sort group pages and collections by | Most recently updated |
-    | Sort shared pages and collections by | Most recently updated |
-    | Sort submitted pages and collections by | Most recently submitted |
+    | Sort group portfolios by | Most recently updated |
+    | Sort shared portfolios by | Most recently updated |
+    | Sort submitted portfolios by | Most recently submitted |
     And I click on "Save"
     And I display the page
     # Update the group page "Page GroupA_06"
-    And I click on "Pages and collections" in the "Navigation" "Groups" property
+    And I click on "Portfolios" in the "Navigation" "Groups" property
     And I click on "Edit" in "Page GroupA_06" card menu
     And I click on "Settings" in the "Toolbar buttons" "Nav" property
     And I set the field "Page description" to "<p>Group page 06 (updated)</p>"
@@ -204,8 +204,8 @@ These list must take into account the sort option chosen in the block config (Bu
     And I display the page
     #add test for group button lang string (Bug 1772327)
     And I click on "Edit"
-    And I click on "Return to group pages and collections"
-    And I should see "Pages and collections | GroupA"
+    And I click on "Return to group portfolios"
+    And I should see "Portfolios | GroupA"
     # Check if it is now in the first page of the list of group pages
     And I choose "Groups" in "Engage" from main menu
     And I scroll to the center of id "findgroups"
@@ -215,7 +215,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I jump to next page of the list "groupviews_pagination"
     And I should not see "Page GroupA_06" in the "Group portfolios" "Groups" property
     # Update the shared page "Page UserA_01"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I scroll to the base of id "showmorebtn"
     And I click on "Edit" in "Page UserA_01" card menu
     And I click on "Settings" in the "Toolbar buttons" "Nav" property
@@ -232,7 +232,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I jump to page "2" of the list "sharedviews_pagination"
     And I should not see "Page UserA_01" in the "Pages shared with this group" "Groups" property
     # Update the shared collection "Collection UserA_06"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Edit" in "Collection UserA_06" card menu
     And I fill in "Collection description" with "Collection 06 (updated)"
     And I scroll to the base of id "edit_submitform"
@@ -245,7 +245,7 @@ These list must take into account the sort option chosen in the block config (Bu
     #And I click on "2" in the "div#sharedcollections_pagination" "css_element"
     And I jump to page "2" of the list "sharedcollections_pagination"
     And I should not see "Collection UserA_06" in the "Collections shared with this group" "Groups" property
-    # Submit some pages and collections to the group "GroupA"
+    # Submit some portfolios to the group "GroupA"
     And I select "Page UserA_01" from "group_view_submission_form_1_options"
     And I click on "Submit"
     And I click on "Yes"
@@ -273,14 +273,14 @@ These list must take into account the sort option chosen in the block config (Bu
     And I should see "Page UserA_01" in the "Submissions to this group" "Groups" property
     And I should not see "Page UserA_02" in the "Submissions to this group" "Groups" property
     And I log out
-    # Check pages and collections are shown in correct section
-    # Share and submit pages and collections
+    # Check portfolios are shown in correct section
+    # Share and submit portfolios
     # Log in as a normal user
     Given I log in as "UserC" with password "Kupuh1pa!"
     # Verifying log in was successful
     And I should see "Cecilia"
     And I should see "GroupD"
-    # Share pages and collections to the standard "GroupD"
+    # Share portfolios to the standard "GroupD"
     # Edit access for Page UserC_01, Page UserC_03, Page UserC_04
     And I choose "Shared by me" in "Share" from main menu
     And I click on "Pages" in the "Share tabs" "Misc" property
@@ -295,7 +295,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I set the select2 value "Collection UserC_01, Collection UserC_03, Collection UserC_04" for "editaccess_collections"
     And I select "GroupD" from "accesslist[0][searchtype]"
     And I click on "Save"
-    # Submit pages and collections to the "GroupD" and "GroupA"
+    # Submit portfolios to the "GroupD" and "GroupA"
     And I choose "Groups" in "Engage" from main menu
     And I click on "GroupD"
     And I scroll to the base of id "group_view_submission_form_4_options_container"
@@ -342,13 +342,13 @@ These list must take into account the sort option chosen in the block config (Bu
     And I should see "Collection UserC_03" in the "Collections shared with this group" "Groups" property
     And I should see "Collection UserC_04" in the "Collections shared with this group" "Groups" property
     And I log out
-    # Share and submit pages and collections - for course group "GroupC"
+    # Share and submit portfolios - for course group "GroupC"
     # Log in as a normal user
     Given I log in as "UserC" with password "Kupuh1pa!"
     # Verifying log in was successful
     And I should see "Cecilia"
     And I should see "GroupC"
-    # Share pages and collections to the "GroupC"
+    # Share portfolios to the "GroupC"
     # Edit access for Page UserC_09, Page UserC_11, Page UserC_12
     And I choose "Shared by me" in "Share" from main menu
     And I click on "Pages" in the "Share tabs" "Misc" property
@@ -363,7 +363,7 @@ These list must take into account the sort option chosen in the block config (Bu
     And I set the select2 value "Collection UserC_05, Collection UserC_07, Collection UserC_08" for "editaccess_collections"
     And I select "GroupC" from "accesslist[0][searchtype]"
     And I click on "Save"
-    # Submit pages and collections to the "GroupC" and "GroupA"
+    # Submit portfolios to the "GroupC" and "GroupA"
     And I choose "Groups" in "Engage" from main menu
     And I click on "GroupC"
     And I scroll to the base of id "group_view_submission_form_3_options_container"

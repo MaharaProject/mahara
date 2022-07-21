@@ -12,7 +12,7 @@ Scenario: Check default blocks are displayed
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Check the big button navigation
     And I click on "Develop your portfolio"
-    Then I should see "Pages and collections" in the "H1 heading" "Common" property
+    Then I should see "Portfolios" in the "H1 heading" "Common" property
     And I am on homepage
     And I click on "Control your privacy"
     Then I should see "Share" in the "H1 heading" "Common" property

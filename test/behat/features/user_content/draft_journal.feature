@@ -54,7 +54,7 @@ Scenario: Creating a Journal, publishing a draft, using tagged entry block
  And I should not see "mildred"
 
  # Display tagged journals in block
- And I choose "Pages and collections" in "Create" from main menu
+ And I choose "Portfolios" in "Create" from main menu
  And I click on "Edit" in "Page UserA_01" card menu
  When I click on the add block button
  And I click on "Add" in the "Add new block" "Blocks" property

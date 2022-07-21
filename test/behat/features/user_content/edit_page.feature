@@ -12,7 +12,7 @@ Background:
 
 Scenario: Clicking ID's (Bug 1428456)
  Given I log in as "admin" with password "Kupuh1pa!"
- And I choose "Pages and collections" in "Create" from main menu
+ And I choose "Portfolios" in "Create" from main menu
  And I click on "Profile page"
  And I scroll to the base of id "viewh1"
  And I click on "Edit"
@@ -85,7 +85,7 @@ Scenario: Profile and dashboard pages basic settings and skins can't be edited -
  Given I log in as "admin" with password "Kupuh1pa!"
 
  # Profile page
- And I choose "Pages and collections" in "Create" from main menu
+ And I choose "Portfolios" in "Create" from main menu
  And I click on "Profile page"
  And I scroll to the base of id "viewh1"
  And I click on "Edit"

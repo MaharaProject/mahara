@@ -17,7 +17,7 @@ Background:
 
 Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361450)
   Given I log in as "admin" with password "Kupuh1pa!"
-  And I choose "Pages and collections" in "Create" from main menu
+  And I choose "Portfolios" in "Create" from main menu
   And I click on "Copy"
   And I click on "Collection admin_01"
   And I should see "Collection admin_01 by admin"
@@ -25,7 +25,7 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   Then I should not see "Collection admin_01 by admin"
 
   # Add a block to the page
-  When I choose "Pages and collections" in "Create" from main menu
+  When I choose "Portfolios" in "Create" from main menu
   And I click on "Edit" in "Page admin_02" card menu
   When I click on the add block button
   And I click on "Add" in the "Add new block" "Blocks" property
@@ -45,14 +45,14 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   And I should see "Tags: block, page, two"
 
   # Copy a page
-  And I choose "Pages and collections" in "Create" from main menu
+  And I choose "Portfolios" in "Create" from main menu
   And I click on "Copy"
   And I click on "Copy page" in "Page admin_02" row
   And I click on "Save"
   And I should see "Here is a new block."
 
   # Add the page to the collection which has block
-  When I choose "Pages and collections" in "Create" from main menu
+  When I choose "Portfolios" in "Create" from main menu
   And I click on "Manage" in "Collection admin_01" card menu
   And I check "Page admin_02"
   And I click on "Add pages"
@@ -60,7 +60,7 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   And I click on "Next: Edit access"
 
   # Copy a collection directly from its location
-  And I choose "Pages and collections" in "Create" from main menu
+  And I choose "Portfolios" in "Create" from main menu
   And I click on "Collection admin_01"
   And I click on "More options"
   And I click on "Copy"
@@ -69,21 +69,21 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   And I click on "Next: Edit access"
 
   # Copy a collection
-  And I choose "Pages and collections" in "Create" from main menu
+  And I choose "Portfolios" in "Create" from main menu
   And I click on "Copy"
   And I click on "Copy collection" in "Collection admin_01" row
   And I click on "Next: Edit collection pages"
   And I click on "Next: Edit access"
 
   #veryfying if the collection is copied directly from its location
-  And I choose "Pages and collections" in "Create" from main menu
+  And I choose "Portfolios" in "Create" from main menu
   And I click on "Collection admin_01 v.2"
   And I click on "Next page"
   And I click on "Next page"
   Then I should see "Text Block 1"
 
   #Veryfying if the page that has block been copied to collection
-  And I choose "Pages and collections" in "Create" from main menu
+  And I choose "Portfolios" in "Create" from main menu
   And I click on "Collection admin_01 v.3"
   And I click on "Next page"
   And I click on "Next page"

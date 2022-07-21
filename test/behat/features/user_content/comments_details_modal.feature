@@ -14,7 +14,7 @@ Background:
 
 Scenario: Create a block and see comments and details modal and headers update accordingly
     Given I log in as "UserA" with password "Kupuh1pa!"
-    Given I choose "Pages and collections" in "Create" from main menu
+    Given I choose "Portfolios" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     When I click on the add block button
     And I click on "Add" in the "Add new block" "Blocks" property
@@ -70,7 +70,7 @@ Scenario: Create a block and see comments and details modal and headers update a
 
 Scenario: Add a block with multiple artefacts and see the comments and details header change accordingly
     Given I log in as "UserA" with password "Kupuh1pa!"
-    Given I choose "Pages and collections" in "Create" from main menu
+    Given I choose "Portfolios" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     When I click on the add block button
     And I click on "Add" in the "Add new block" "Blocks" property

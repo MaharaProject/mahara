@@ -35,7 +35,7 @@ Scenario: Check share page with friends
  And I log in as "UserB" with password "Kupuh1pa!"
  And I click on "pending friend"
  And I click on "Approve"
- And I choose "Pages and collections" in "Create" from main menu
+ And I choose "Portfolios" in "Create" from main menu
  And I click on "Manage access" in "Page UserB_02" card access menu
  And I select "Friends" from "General" in shared with select2 box
  And I click on "Save"
@@ -52,7 +52,7 @@ Scenario: Check share page with Registered Users
  # Log in as a normal userA
  Given I log in as "UserA" with password "Kupuh1pa!"
  # Edit access for Page 03
- And I choose "Pages and collections" in "Create" from main menu
+ And I choose "Portfolios" in "Create" from main menu
  And I click on "Manage access" in "Page UserA_03" card access menu
  And I select "Registered people" from "General" in shared with select2 box
  And I click on "Save"
@@ -71,14 +71,14 @@ Scenario: Check share page with groups and that copy options works
  # Log in as a normal userA
  Given I log in as "UserA" with password "Kupuh1pa!"
  # Edit access for Page 03
- And I choose "Pages and collections" in "Create" from main menu
+ And I choose "Portfolios" in "Create" from main menu
  And I click on "Manage access" in "Page UserA_03" card access menu
  And I select "GroupA" from "Groups" in shared with select2 box
  And I select "GroupB" from "Groups" in shared with select2 box
  And I expand "Advanced options" node
  # enable copy switch
  And I enable the switch "Allow copying"
- And I should see "Retain view access on copied pages or collections"
+ And I should see "Retain view access on copied portfolios"
  And I click on "Save"
  And I log out
  And I log in as "UserB" with password "Kupuh1pa!"

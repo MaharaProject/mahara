@@ -44,7 +44,7 @@ Background:
      And I click on "Save"
      And I should see "A fabulous new skin"
      #Apply the skin to a page
-     Given I choose "Pages and collections" in "Create" from main menu
+     Given I choose "Portfolios" in "Create" from main menu
      And I click on "Edit" in "Page UserA_01" card menu
      And I click on "Settings" in the "Toolbar buttons" "Nav" property
      And I expand the section "Skin"
@@ -61,7 +61,7 @@ Background:
      And I click on "Yes"
      And I should not see "A fabulous new skin"
      #Check the deleted skin has been removed from the page
-     Given I choose "Pages and collections" in "Create" from main menu
+     Given I choose "Portfolios" in "Create" from main menu
      And I click on "Edit" in "Page UserA_01" card menu
      And I click on "Settings" in the "Toolbar buttons" "Nav" property
      And I expand the section "Skin"
@@ -93,7 +93,7 @@ Scenario: Create a private skin and check its visibility
     And I should see "A fabulous public skin"
     And I should not see "A fabulous private skin"
     And I click on "Add \"A fabulous public skin\" to favourites"
-    Given I choose "Pages and collections" in "Create" from main menu
+    Given I choose "Portfolios" in "Create" from main menu
     And I click on "Edit" in "Page UserB_01" card menu
     And I click on "Settings" in the "Toolbar buttons" "Nav" property
     And I expand the section "Skin"
@@ -126,7 +126,7 @@ Scenario: Check public/private skins on copied pages.
     And I select "This is a private skin" from "designskinform_viewskin_access"
     And I click on "Save"
     # Create a public page with a Public Skin.
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Create" in the "Create" "Views" property
     And I click on "Page" in the dialog
     And I fill in the following:
@@ -144,8 +144,8 @@ Scenario: Check public/private skins on copied pages.
     And I select "Public" from "accesslist[0][searchtype]"
     And I click on "Save"
     # Create a public page with a Private Skin.
-    And I choose "Pages and collections" in "Create" from main menu
-    And I should see "Pages and collections" in the "H1 heading" "Common" property
+    And I choose "Portfolios" in "Create" from main menu
+    And I should see "Portfolios" in the "H1 heading" "Common" property
     And I click on "Create" in the "Create" "Views" property
     And I click on "Page" in the dialog
     And I fill in the following:

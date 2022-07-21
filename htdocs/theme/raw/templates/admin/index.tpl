@@ -166,7 +166,7 @@
             </li>
             <li class="list-group-item">
                 <a href="{$WWWROOT}admin/site/shareviews.php">{str tag=share section=mahara}</a>
-                <small> {str tag=sharesitefilesdesc section=admin}</small>
+                <small> {str tag=sharesitefilesdesc1 section=admin}</small>
             </li>
             {ifconfig key=skins}
             <li class="list-group-item">
@@ -296,7 +296,7 @@
             </li>
             <li class="list-group-item">
                 <a href="{$WWWROOT}view/institutionshare.php">{str tag=share section=mahara}</a>
-                <small>{str tag=shareinstitutionfilesdesc section=admin}</small>
+                <small>{str tag=shareinstitutionfilesdesc1 section=admin}</small>
             </li>
             <li class="list-group-item">
                 <a href="{$WWWROOT}artefact/file/institutionfiles.php">{str tag=Files section=group}</a>

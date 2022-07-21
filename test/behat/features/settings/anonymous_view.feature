@@ -29,7 +29,7 @@ Scenario: Testing that views & collections are collated properly
 
     # Make page anonymous
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Page UserA_01"
     And I click on "Edit"
     And I click on "Settings" in the "Toolbar buttons" "Nav" property

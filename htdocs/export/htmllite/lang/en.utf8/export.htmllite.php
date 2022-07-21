@@ -12,5 +12,5 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'HTML lite files of pages and collections';
+$string['title1'] = 'HTML lite files of portfolios';
 $string['description'] = 'This creates a lightweight zipped file containing HTML files of your portfolios, along with files associated with your portfolio that can be sent to a similarity checker. You cannot import this again.';

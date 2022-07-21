@@ -68,9 +68,9 @@ $string['templateportfoliodescription1'] = 'Set up the default layout for the pa
 
 // my views
 $string['artefacts'] = 'Artefacts';
-$string['groupviews'] = 'Group pages and collections';
+$string['groupviews1'] = 'Group portfolios';
 $string['institutionviews'] = 'Institution pages';
-$string['institutionviewscollections'] = 'Institution pages and collections';
+$string['institutionviewscollections1'] = 'Institution portfolios';
 $string['reallyaddaccesstoemptyview'] = 'Your page contains no blocks. Do you really want to give these people access to the page?';
 $string['viewdeleted'] = 'Page deleted';
 $string['deletethisview'] = 'Delete this page';
@@ -84,12 +84,6 @@ $string['artefactsinthisview'] = 'Artefacts in this page';
 $string['whocanseethisview'] = 'Who can see this page';
 $string['pending'] = 'Portfolio under review';
 $string['panelmenu'] = 'Menu';
-$string['vieworcollection'] = 'page or collection';
-$string['viewsandcollections'] = 'pages and collections';
-$string['nviewsandcollections'] = array(
-    '%s page or collection',
-    '%s pages and collections'
-);
 $string['view'] = 'page';
 $string['views'] = 'pages';
 $string['nviews1'] = array(
@@ -104,7 +98,7 @@ $string['nportfolios'] = array(
     '%s portfolio',
     '%s portfolios'
 );
-$string['Viewscollections'] = 'Pages and collections';
+$string['Viewscollections1'] = 'Portfolios';
 $string['viewsubmittedtogroup1'] = 'This portfolio has been submitted to <a href="%s">%s</a>.';
 $string['viewsubmittedtogroupon1'] = 'This portfolio was submitted to <a href="%s">%s</a> on %s.';
 $string['viewsubmittedtogroupgrade'] = 'This portfolio was submitted to the assignment <a href="%s">"%s"</a> in "%s" on %s.';
@@ -117,8 +111,8 @@ $string['collectionsubmittedtohost'] = 'This collection has been submitted for a
 $string['collectionsubmittedtohoston'] = 'This collection was submitted on %s.';
 $string['submittedpendingrelease'] = 'Pending release after archiving.';
 $string['nobodycanseethisview2'] = 'Only you can see this page.';
-$string['noviews1'] = 'No pages or collections.';
-$string['youhavenoviews1'] = 'You don\'t have any pages or collections.';
+$string['noviews2'] = 'No portfolios';
+$string['youhavenoviews2'] = 'You don\'t have any portfolios.';
 $string['youhaventcreatedanyviewsyet'] = "You have not created any pages yet.";
 $string['youhavenviews'] = array(
     'You have 1 page.',
@@ -127,16 +121,16 @@ $string['youhavenviews'] = array(
 $string['viewsownedbygroup'] = 'Pages owned by this group';
 $string['ownedbygroup'] = 'Owned by this group';
 $string['nogroupviewsyet'] = 'There are no pages in this group yet';
-$string['viewscollectionssharedtogroup'] = 'Pages and collections shared with this group';
+$string['viewscollectionssharedtogroup1'] = 'Portfolios shared with this group';
 $string['viewssharedtogroup'] = 'Pages shared with this group';
 $string['sharedtogroup'] = 'Shared with this group';
 $string['nosharedviewsyet'] = 'There are no pages shared with this group yet';
 $string['viewssharedtogroupbyothers'] = 'Pages shared with this group by others';
 $string['sharedviews'] = 'Shared pages';
 $string['submissionstogroup'] = 'Submissions to this group';
-$string['nosubmittedviewscollectionsyet'] = 'There are no pages or collections submitted to this group yet';
+$string['nosubmittedviewscollectionsyet1'] = 'There are no portfolios submitted to this group yet';
 $string['nosubmissionsfrom'] = 'Members without a submission to the group';
-$string['submittogroup'] = 'Submit a page or collection to this group';
+$string['submittogroup1'] = 'Submit a portfolio to this group';
 $string['yoursubmissions'] = 'You have submitted';
 $string['youhavesubmitted'] = 'You have submitted <a href="%s">%s</a> to this group';
 $string['youhavesubmittedon'] = 'You submitted <a href="%s">%s</a> to this group on %s';
@@ -207,7 +201,7 @@ $string['share'] = 'Share';
 $string['sharedbyme'] = 'Shared by me';
 $string['whosharewith'] = 'Who do you want to share with?';
 $string['accesslist'] = 'Access list';
-$string['defaultaccesslistmessage'] = 'Nobody besides you can view your selected pages / collections. Add people to give them access.';
+$string['defaultaccesslistmessage1'] = 'Nobody besides you can view your selected portfolios. Add people to give them access.';
 $string['sharewithmygroups'] = 'Share with my groups';
 $string['sharewithmyinstitutions'] = 'Share with my institutions';
 $string['sharewithusers'] = 'Share with people';
@@ -254,13 +248,13 @@ $string['deleteviewconfirmbackup1'] = 'Please consider creating a backup of this
 $string['deleteviewconfirmnote3'] = '<strong>Note:</strong> All your files and journal entries that you linked in this page will still be available.<br/>However, any comments placed on this page will be deleted.';
 $string['deleteviewconfirmnote2'] = 'This page is a part of the collection <a href="%s">"%s"</a>.';
 
-$string['editaccesspagedescription6'] = 'You are the only one who can see your pages and collections by default. On this page you decide who can access them besides you.';
+$string['editaccesspagedescription7'] = 'You are the only one who can see your portfolios by default. On this page you decide who can access them besides you.';
 $string['editaccessdescription'] = 'You may set multiple items to have identical settings by choosing them from the checkboxes. Once you are done, scroll down and click "Save" to continue.';
-$string['editaccessgrouppagedescription'] = 'By default, only those group members who can add and edit pages and collections can see group collections and pages. ' . $string['editaccessdescription'];
+$string['editaccessgrouppagedescription1'] = 'By default, only those group members who can add and edit portfolios can see group portfolios. ' . $string['editaccessdescription'];
 $string['editaccessinstitutionpagedescription'] = 'By default, only the administrators of your institution can see your institution collections and pages. ' . $string['editaccessdescription'];
 $string['editaccesssitepagedescription'] = 'By default, only site administrators can see site collections and pages. ' . $string['editaccessdescription'];
 $string['editsecreturlsintable'] = '<strong>Secret URLs</strong> cannot be set on this page as they must be generated individually. To set secret URLs, please return to the <a href="%s">list of collections and pages</a>.';
-$string['editaccessinvalidviewset'] = 'Attempt to edit access on an invalid set of pages and collections.';
+$string['editaccessinvalidviewset1'] = 'Attempt to edit access on an invalid set of portfolios.';
 
 $string['overridingstartstopdate'] = 'Overriding start/stop dates';
 $string['overridingstartstopdatesdescription'] = 'If you want, you can set an overriding start and/or stop date. Other people will not be able to see your page before the start date and after the end date regardless of any other access you have granted.';
@@ -305,9 +299,9 @@ $string['editblockspagedescription'] = '<p>Drag and drop content blocks from the
 $string['displayview'] = 'Display page';
 $string['editthisview'] = 'Edit';
 $string['expandcontract'] = 'Expand / Contract the list of block types';
-$string['returntoviews'] = 'Return to pages and collections';
-$string['returntoinstitutionportfolios'] = 'Return to institution pages and collections';
-$string['returntositeportfolios'] = 'Return to site pages and collections';
+$string['returntoviews1'] = 'Return to portfolios';
+$string['returntoinstitutionportfolios1'] = 'Return to institution portfolios';
+$string['returntositeportfolios1'] = 'Return to site portfolios';
 
 $string['success.addblocktype'] = 'Added block successfully';
 $string['err.addblocktype'] = 'Could not add the block to your page';
@@ -415,10 +409,10 @@ $string['quickedit'] = 'Quick edit';
 // Templates
 $string['Template'] = 'Template';
 $string['allowcopying'] = 'Allow copying';
-$string['retainviewrights1'] = 'Retain view access on copied pages or collections';
-$string['templatedescriptionplural2'] = 'If people have access to your selected pages / collections, they can make their own copies.';
-$string['retainviewrightsdescription2'] = 'Add access for you to view copies of the selected pages / collections that are copied by others. They can revoke this access later on if they wish. Portfolios that are created from a copy of this page or collection will not have this same access.';
-$string['retainviewrightsgroupdescription2'] = 'Add access for members of this group to view copies of the selected pages / collections that are copied by others. They can revoke this access later on if they wish. Portfolios that are created from a copy of this page or collection will not have this same access.';
+$string['retainviewrights2'] = 'Retain view access on copied portfolios';
+$string['templatedescriptionplural3'] = 'If people have access to your selected portfolios, they can make their own copies.';
+$string['retainviewrightsdescription3'] = 'Add access for you to view copies of the selected portfolios that are copied by others. They can revoke this access later on if they wish. Portfolios that are created from a copy of this portfolio will not have this same access.';
+$string['retainviewrightsgroupdescription3'] = 'Add access for members of this group to view copies of the selected portfolios that are copied by others. They can revoke this access later on if they wish. Portfolios that are created from a copy of this portfolio will not have this same access.';
 $string['choosetemplatepageandcollectiondescription'] = '<p>Here you can search through the pages that you are allowed to copy as a starting point for making a new page. You can see a preview of each page by clicking on its name. Once you have found the page you wish to copy, click the corresponding "Copy page" button to make a copy and begin customising it. You may also choose to copy the entire collection that the page belongs to by clicking the corresponding "Copy collection" button.</p>';
 $string['choosetemplategrouppageandcollectiondescription'] = '<p>Here you can search through the pages that this group is allowed to copy as a starting point for making a new page. You can see a preview of each page by clicking on its name. Once you have found the page you wish to copy, click the corresponding "Copy page" button to make a copy and begin customising it. You may also choose to copy the entire collection that the page belongs to by clicking the corresponding "Copy collection" button.</p><p><strong>Note:</strong> Groups cannot currently make copies of journals, journal entries, plans and résumé information.</p>';
 $string['choosetemplateinstitutionpageandcollectiondescription'] = '<p>Here you can search through the pages that this institution is allowed to copy as a starting point for making a new page. You can see a preview of each page by clicking on its name. Once you have found the page you wish to copy, click the corresponding "Copy page" button to make a copy and begin customising it. You may also choose to copy the entire collection that the page belongs to by clicking the corresponding "Copy collection" button.</p><p><strong>Note:</strong> Institutions cannot currently make copies of journals, journal entries, plans and résumé information.</p>';
@@ -433,21 +427,21 @@ $string['copythisportfolio'] = 'Copy this portfolio';
 $string['copyview'] = 'Copy page';
 $string['createemptyview'] = 'Create empty page';
 $string['copyaview'] = 'Copy a page';
-$string['copyvieworcollection'] = 'Copy a page or collection';
-$string['confirmaddtitle'] = 'Create a page or collection';
+$string['copyvieworcollection1'] = 'Copy a portfolio';
+$string['confirmaddtitle1'] = 'Create a portfolio';
 $string['confirmadddesc'] = 'Please choose which you would like to create:';
 $string['confirmcopytitle'] = 'Confirm copying';
 $string['confirmcopydesc'] = 'Please choose which you would like to copy:';
 $string['Untitled'] = 'Untitled';
 $string['copyforexistingmembersprogress'] = 'Copying portfolios for existing group members';
 $string['existinggroupmembercopy'] = 'Copy for existing group members';
-$string['existinggroupmembercopydesc1'] = 'Copy the selected pages / collections to the personal portfolio area of all existing group members. The slide switch resets after saving. Group members will only get a copy once.';
+$string['existinggroupmembercopydesc2'] = 'Copy the selected portfolios to the personal portfolio area of all existing group members. The slide switch resets after saving. Group members will only get a copy once.';
 $string['copyfornewusers'] = 'Copy into new accounts';
-$string['copyfornewusersdescription2'] = 'Whenever a new account is created, automatically make a personal copy of the selected pages / collections in the new account. If you want these people to be able to copy the selected pages / collections later on as well, please allow copying in general.';
+$string['copyfornewusersdescription3'] = 'Whenever a new account is created, automatically make a personal copy of the selected portfolios in the new account. If you want these people to be able to copy the selected portfolios later on as well, please allow copying in general.';
 $string['copyfornewmembers'] = 'Copy for new institution members';
-$string['copyfornewmembersdescription2'] = 'Automatically make a personal copy of the selected pages / collections for all new members of %s. If you want these people to be able to copy the selected pages / collections later on as well, please allow copying in general.';
+$string['copyfornewmembersdescription3'] = 'Automatically make a personal copy of the selected portfolios for all new members of %s. If you want these people to be able to copy the selected portfolios later on as well, please allow copying in general.';
 $string['copyfornewgroups'] = 'Copy for new groups';
-$string['copyfornewgroupsdescription1'] = 'Make a copy of the selected pages / collections in all new groups with these roles:';
+$string['copyfornewgroupsdescription2'] = 'Make a copy of the selected portfolios in all new groups with these roles:';
 $string['owner'] = 'owner';
 $string['Owner'] = 'Owner';
 $string['owners'] = 'owners';

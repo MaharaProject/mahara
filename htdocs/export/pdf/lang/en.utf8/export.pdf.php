@@ -11,7 +11,7 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'PDF files of pages and collections';
+$string['title1'] = 'PDF files of portfolios';
 $string['description'] = 'This creates a zipped file containing PDFs of your portfolios. You cannot import this again, but it is readable in a standard PDF viewer.';
 $string['needspdfconfig'] = 'Requires the config.php setting "usepdfexport" to be true.';
 $string['needschromeheadless'] = 'Experimental export option that utilises Headless Chrome to print PDFs. Install the latest version of the Chrome or Chromium browser on the server to use this plugin.';

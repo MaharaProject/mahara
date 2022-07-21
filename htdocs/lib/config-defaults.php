@@ -851,7 +851,7 @@ $cfg->saml_log_attributes = false;
 
 /**
  * Allow the export option called PDF export
- * This option exports pages and collections as pdf files
+ * This option exports portfolios as pdf files
  *
  * Note: This is an experimental feature requiring the install of a Chrome / Chromium browser on
  * your server to ustilise the print to PDF commandline option - Use with caution.
@@ -1465,7 +1465,7 @@ $cfg->saml_log_attributes = false;
  * Side block settings :: Portfolio search
  *
  * If set to 'true', the 'Search my portfolio' side block is displayed in the
- * 'Pages and collections' and 'Files' areas of the site. However, it has not
+ * 'Portfolios' and 'Files' areas of the site. However, it has not
  * been working for most people for a long time.
  *
  * @var boolean $cfg->showselfsearchsideblock

@@ -2378,7 +2378,7 @@ function admin_nav() {
         'configsite/siteviews' => array(
             'path'   => 'configsite/siteviews',
             'url'    => 'admin/site/views.php',
-            'title'  => get_string('Viewscollections', 'view'),
+            'title'  => get_string('Viewscollections1', 'view'),
             'weight' => 50,
         ),
         'configsite/share' => array(
@@ -2556,7 +2556,7 @@ function admin_nav() {
         'manageinstitutions/institutionviews' => array(
             'path'   => 'manageinstitutions/institutionviews',
             'url'    => 'view/institutionviews.php',
-            'title'  => get_string('Viewscollections', 'view'),
+            'title'  => get_string('Viewscollections1', 'view'),
             'weight' => 60,
         ),
         'manageinstitutions/share' => array(
@@ -2834,7 +2834,7 @@ function institutional_admin_nav() {
         'manageinstitutions/institutionviews' => array(
             'path'   => 'manageinstitutions/institutionviews',
             'url'    => 'view/institutionviews.php',
-            'title'  => get_string('Viewscollections', 'view'),
+            'title'  => get_string('Viewscollections1', 'view'),
             'weight' => 60,
         ),
         'manageinstitutions/share' => array(
@@ -3006,7 +3006,7 @@ function mahara_standard_nav() {
         'create/views' => array(
             'path' => 'create/views',
             'url' => 'view/index.php',
-            'title' => get_string('Viewscollections', 'view'),
+            'title' => get_string('Viewscollections1', 'view'),
             'weight' => 10,
         ),
         'create/tags' => array(

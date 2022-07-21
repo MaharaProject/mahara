@@ -2195,7 +2195,7 @@ function group_get_menu_tabs() {
     $menu['views'] = array(
         'path' => 'groups/views',
         'url' => 'view/groupviews.php?group='.$group->id,
-        'title' => get_string('Viewscollections', 'group'),
+        'title' => get_string('Viewscollections1', 'view'),
         'weight' => 50,
     );
     if (group_role_can_edit_views($group, $role)) {

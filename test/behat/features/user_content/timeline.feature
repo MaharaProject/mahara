@@ -32,7 +32,7 @@ Background:
 
 Scenario: Add blocks and create versions
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     When I click on the add block button
     And I click on "Add" in the "Add new block" "Blocks" property
@@ -62,7 +62,7 @@ Scenario: Add blocks and create versions
 Scenario: Check that plan blocks on timeline are not automatically updated when new tasks are added
     # User saves Page Two to the timeline
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     # Need to visit the edit page to get correct block dimensions
     # for a block added by background step so that when versioned
     # it records the correct block dimensions in view_versioning table
