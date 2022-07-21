@@ -427,13 +427,14 @@ class PluginBlocktypeText extends MaharaCoreBlocktype {
             $regexp[] = '#<img([^>]+)src="' . get_config('wwwroot') . 'artefact/file/download.php\?file=' . $copyobj->oldid . '([^0-9])#';
             $replacetext[] = '<img$1src="' . get_config('wwwroot') . 'artefact/file/download.php?file=' . $copyobj->newid . '$2';
         }
-        $configdata['text'] = preg_replace($regexp, $replacetext, $configdata['text']);
-        $configdata['instructions'] = preg_replace($regexp, $replacetext, $configdata['instructions']);
-
         // Prepare embedded images to reference their new blocks
         require_once('embeddedimage.php');
+        $configdata['text'] = preg_replace($regexp, $replacetext, $configdata['text']);
         $configdata['text'] = EmbeddedImage::prepare_embedded_images($configdata['text'], 'text', $new_blockid);
-        $configdata['instructions'] = EmbeddedImage::prepare_embedded_images($configdata['instructions'], 'instructions', $new_blockid);
+        if (isset($configdata['instructions'])) {
+            $configdata['instructions'] = preg_replace($regexp, $replacetext, $configdata['instructions']);
+            $configdata['instructions'] = EmbeddedImage::prepare_embedded_images($configdata['instructions'], 'instructions', $new_blockid);
+        }
         return $configdata;
     }
 
