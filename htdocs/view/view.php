@@ -921,6 +921,9 @@ if ($titletext !== $title) {
 
 $smarty->assign('userisowner', ($owner && $owner == $USER->get('id')));
 
+$returnto = $view->get_return_to_url_and_title();
+$smarty->assign('url', $returnto['url']);
+$smarty->assign('linktext', $returnto['title']);
 $smarty->assign('viewid', $view->get('id'));
 $smarty->display('view/view.tpl');
 
