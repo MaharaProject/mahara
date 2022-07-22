@@ -4505,6 +4505,7 @@ class View {
             'name' => 'searchviews',
             'checkdirtychange' => false,
             'class' => 'with-heading form-inline',
+            'autofocus' => false,
             'elements' => array(
                 'searchwithin' => array (
                     'type' => 'fieldset',
