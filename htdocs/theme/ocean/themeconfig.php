@@ -19,7 +19,7 @@ $theme->parent      = 'raw';
 
 $theme->themelinkcolor = '#20738F'; // $view_link_normal_color
 $theme->themefocusedlinkcolor = '#3FAFD4'; // $view_link_hover_color
-
+$theme->themeaddressbar = '#20738F';
 
 /* This theme includes all css via sass, so we don't need raw's css. */
 $theme->overrideparentcss = true;

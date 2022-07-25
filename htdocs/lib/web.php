@@ -731,6 +731,7 @@ EOF;
     $smarty->assign('sitelogocustomsmall', $sitelogocustomsmall);
     $smarty->assign('sitelogo4facebook', $THEME->facebook_logo());
     $smarty->assign('sitedescription4facebook', get_string('facebookdescription', 'mahara'));
+    $smarty->assign('addressbarcolour', isset($THEME->themeaddressbar) ? $THEME->themeaddressbar : '#ffffff');
 
     if (defined('TITLE')) {
         $smarty->assign('PAGETITLE', TITLE . ' - ' . $sitename);

@@ -23,6 +23,7 @@ $theme->themeheadingcolor = '#545B5D'; // $view_text_heading_color
 $theme->themetextcolor = '#545B5D'; // $view_text_font_color
 $theme->themelinkcolor = '#1f6c88;'; // $view_link_normal_color
 $theme->themefocusedlinkcolor = '#1d6781'; // $view_link_hover_color
+$theme->themeaddressbar = '#374757';
 
 /**
  * The following themeconfig options are available. If you make new themeconfig

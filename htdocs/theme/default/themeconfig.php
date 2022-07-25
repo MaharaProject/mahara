@@ -18,6 +18,8 @@ $theme->parent      = 'raw';
 /* This theme includes all css via sass, so we don't need raw's css. */
 $theme->overrideparentcss = true;
 
+$theme->themeaddressbar = '#ffffff';
+
 /**
  * The following themeconfig options are available. If you make new themeconfig
  * options please add them here and explain what they do.

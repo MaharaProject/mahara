@@ -16,6 +16,8 @@ $theme->parent      = 'raw';
 /* If we are using normal CSS, this should be false. If we are using SASS, it should be true. */
 $theme->overrideparentcss = false;
 
+$theme->themeaddressbar = '#ffffff';
+
 /* Allow skins to be used on this theme */
 $theme->skins = true;
 

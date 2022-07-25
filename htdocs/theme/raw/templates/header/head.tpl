@@ -8,6 +8,9 @@
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="viewport" id="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=10.0,initial-scale=1.0" />
+    <!-- Chrome, Firefox OS and Opera -->
+    <meta name="theme-color" content="{$addressbarcolour}">
+
     {if $PAGEAUTHOR}<meta name="author" content="{$PAGEAUTHOR}">{/if}
     <title>{$PAGETITLE}</title>
     <script>
