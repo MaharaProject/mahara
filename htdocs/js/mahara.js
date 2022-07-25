@@ -988,15 +988,28 @@ function fetch_graph_data(opts) {
                     }
                 }
             };
-            // Make horizontal bar graphs start from zero
-            if (json.data.graphsafe == 'horizontalBar') {
+            // Make bar graphs start from zero
+            if (json.data.graphsafe == 'bar') {
+                // Set direction
+                let scaleId = "y";
+                if (opts.direction == 'horizontal') {
+                    config.options.indexAxis = "y";
+                    scaleId = "x";
+                }
                 config.options.scales = {
-                    "xAxes": [{
+                    [scaleId]: {
+                        "beginAtZero":true,
                         "ticks": {
-                            "beginAtZero":true
+                            "precision": 0,
                         }
-                    }]
+                    },
                 };
+                config.options.plugins = {
+                    "legend": {
+                        "display":false,
+                    }
+                };
+
             }
             if (json.data.yaxes == '2yaxes') {
                 config.options.scales = {
@@ -1021,8 +1034,6 @@ function fetch_graph_data(opts) {
             }
 
             chartobject = new Chart(canvascontext, config);
-            document.getElementById(opts.id + 'legend').innerHTML = chartobject.generateLegend();
-
             if (json.data.title) {
                 jQuery('#' + opts.id + 'title').text(json.data.title);
             }

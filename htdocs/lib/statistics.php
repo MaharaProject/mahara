@@ -3883,7 +3883,7 @@ function block_type_graph($type = null) {
             $dataarray[$blocktype->title] = $blocktype->blocks;
         }
         ksort($dataarray);
-        $data['graph'] = 'HorizontalBar';
+        $data['graph'] = 'Bar';
         $data['graph_function_name'] = 'block_type_graph';
         $data['title'] = get_string('blockcountsbytype', 'admin');
         $data['labels'] = array_keys($dataarray);
