@@ -90,7 +90,7 @@ else {
  */
 function webservices_add_application_submit(Pieform $form, $values) {
     global $SESSION, $USER, $services;
-    $redirect = get_config('wwwroot').'/webservice/admin/oauthv1sregister.php';
+    $redirect = get_config('wwwroot').'webservice/admin/oauthv1sregister.php';
 
     $dbuser = get_record('usr', 'id', $USER->get('id'));
     if (empty($dbuser)) {
@@ -242,7 +242,7 @@ function webservice_oauth_server_validate(Pieform $form, $values) {
  */
 function webservice_oauth_server_submit(Pieform $form, $values) {
     global $USER, $SESSION;
-    $redirect = get_config('wwwroot').'/webservice/admin/oauthv1sregister.php';
+    $redirect = get_config('wwwroot').'webservice/admin/oauthv1sregister.php';
 
     $store = OAuthStore::instance();
     $dbserver = get_record('oauth_server_registry', 'id', $values['id']);

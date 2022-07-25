@@ -33,7 +33,7 @@ if (param_exists('group')) {
     $title = $group->name . ' - ' . get_string('groupplans', 'artefact.plans');
     $pageheading = $group->name;
     $subsectionheading = $todelete->get('title');
-    $returnurl = get_config('wwwroot') . '/artefact/plans/index.php?group=' . $group->id;
+    $returnurl = get_config('wwwroot') . 'artefact/plans/index.php?group=' . $group->id;
     $redirect = '/artefact/plans/index.php?group=' . $group->id;
 }
 else {
@@ -41,7 +41,7 @@ else {
     $title = get_string('deleteplan','artefact.plans');
     $pageheading = $todelete->get('title');
     $subsectionheading = null;
-    $returnurl = get_config('wwwroot') . '/artefact/plans/index.php';
+    $returnurl = get_config('wwwroot') . 'artefact/plans/index.php';
     $redirect = '/artefact/plans/index.php';
 }
 

@@ -28,7 +28,7 @@
 {foreach from=$JAVASCRIPT item=script}
     <script src="{$script}"></script>
 {/foreach}
-    <script src="{$WWWROOT}/js/select2/select2.full.js?v={$CACHEVERSION}"></script>
+    <script src="{$WWWROOT}js/select2/select2.full.js?v={$CACHEVERSION}"></script>
 {if $INLINEJAVASCRIPT}
     <script>
 {$INLINEJAVASCRIPT|safe}

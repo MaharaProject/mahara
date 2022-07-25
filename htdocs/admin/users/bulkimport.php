@@ -331,7 +331,7 @@ function finish_import() {
         $SESSION->add_error_msg($message, false);
     }
 
-    redirect(get_config('wwwroot') . '/admin/users/bulkimport.php');
+    redirect(get_config('wwwroot') . 'admin/users/bulkimport.php');
 }
 
 $form = pieform($form);

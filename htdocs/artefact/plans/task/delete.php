@@ -28,14 +28,14 @@ if (param_exists('group')) {
     $menuItem = 'engage/index';
     $title = $group->name . ' - ' . get_string('groupplans', 'artefact.plans');
     $pageheading = $group->name;
-    $returnurl = get_config('wwwroot') . '/artefact/plans/plan/view.php?group=' . $group->id . '&id='.$todelete->get('parent');
+    $returnurl = get_config('wwwroot') . 'artefact/plans/plan/view.php?group=' . $group->id . '&id='.$todelete->get('parent');
     $redirect = '/artefact/plans/plan/view.php?group=' . $group->id . '&id='.$todelete->get('parent');
 }
 else {
     $menuItem = 'create/plans';
     $title = get_string('deletetask','artefact.plans');
     $pageheading = $todelete->get('title');
-    $returnurl = get_config('wwwroot') . '/artefact/plans/plan/view.php?id='.$todelete->get('parent');
+    $returnurl = get_config('wwwroot') . 'artefact/plans/plan/view.php?id='.$todelete->get('parent');
     $redirect = '/artefact/plans/plan/view.php?id='.$todelete->get('parent');
 }
 

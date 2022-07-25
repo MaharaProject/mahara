@@ -338,7 +338,7 @@ var FileBrowser = (function($) {
             var origangle = parseInt(self.filedata[id].orientation, 10);
             rotator.find('#rotate_img').prop('title', get_string('rotate' + ((origangle + 90) % 360) + 'img', 'artefact.file'));
             var jstimestamp = Math.round(new Date().getTime()/1000);
-            rotatorimg.prop('src', config.wwwroot + '/artefact/file/download.php?file=' + id + '&maxheight=100&maxwidth=100&ts=' + jstimestamp);
+            rotatorimg.prop('src', config.wwwroot + 'artefact/file/download.php?file=' + id + '&maxheight=100&maxwidth=100&ts=' + jstimestamp);
             rotatorimg.data('angle', origangle);
             rotatorimg.prop('style', '');
             rotator.find('#rotate_img').off();

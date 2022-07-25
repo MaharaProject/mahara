@@ -58,7 +58,7 @@ if ($delete) {
                 'type' => 'submitcancel',
                 'subclass' => array('btn-secondary'),
                 'value' => array(get_string('deleteprofile','artefact.internal'), get_string('cancel')),
-                'goto' => get_config('wwwroot') . '/artefact/internal/index.php?fs=social',
+                'goto' => get_config('wwwroot') . 'artefact/internal/index.php?fs=social',
             ),
         )
     );

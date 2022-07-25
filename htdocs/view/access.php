@@ -605,10 +605,10 @@ function editaccess_submit(Pieform $form, $values) {
         redirect('/view/share.php');
     }
     if ($view->get('group')) {
-        redirect(get_config('wwwroot') . '/group/shareviews.php?group=' . $view->get('group'));
+        redirect(get_config('wwwroot') . 'group/shareviews.php?group=' . $view->get('group'));
     }
     if ($view->get('institution')) {
-        redirect(get_config('wwwroot') . '/view/institutionshare.php?institution=' . $view->get('institution'));
+        redirect(get_config('wwwroot') . 'view/institutionshare.php?institution=' . $view->get('institution'));
     }
 }
 
