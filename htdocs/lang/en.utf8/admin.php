@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage lang
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -1189,7 +1189,7 @@ $string['Supportadmins'] = 'Support administrators';
 $string['noinstitutions'] = 'No institutions';
 $string['noinstitutionsdescription'] = 'If you would like to associate people with an institution, you should create the institution first.';
 $string['noinstitutionreports'] = 'Unable to view institution reports';
-$string['noinstitutionreportsdescription2'] = 'Institution report access needs to be turned on for the site to allow staff or support adminstrators to view their institution reports. A site administrator can turn this setting on in "Institution settings" under <a href="%sadmin/site/options.php">Configure site</a>.';
+$string['noinstitutionreportsdescription2'] = 'Institution report access needs to be turned on for the site to allow staff or support administrators to view their institution reports. A site administrator can turn this setting on in "Institution settings" under <a href="%sadmin/site/options.php">Configure site</a>.';
 $string['noinstitutionstaticpages'] = 'You do not have permission to edit any institution static pages or no institutions have been created yet.';
 $string['noinstitutionstaticpagesadmin'] = 'If you are a site administrator, please edit the default static pages in <a href="%s">Configure site</a>.';
 
@@ -1435,7 +1435,7 @@ $string['cli_close_site_info'] = 'This command-line PHP script allows you to clo
 $string['cli_close_site_siteclosed'] = 'Site closed for maintenance.';
 $string['cli_close_site_siteopen'] = 'Site open.';
 
-// Languange update script
+// Language update script
 $string['cli_backupdir_notwritable'] = 'The language backup directory "%s" is not writable.';
 $string['cli_langpack'] = 'List by language code, e.g. "de,pt_BR,fr".';
 $string['cli_langpack_backup'] = 'Optional: Back up the language directory before updating.';

@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -17,7 +17,7 @@ if (defined('CLI') && !is_cli()) {
 
 $CFG = new stdClass();
 $CFG->docroot = dirname(__FILE__) . DIRECTORY_SEPARATOR;
-//array containing site options from database that are overrided by $CFG
+//array containing site options from database that are overridden by $CFG
 $OVERRIDDEN = array();
 
 $CFG->libroot = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR;
@@ -58,7 +58,7 @@ if (isset($CFG->behat_dataroot)) {
     }
 }
 
-// When running behat tests or behat util CLI commnands,
+// When running behat tests or behat util CLI commands,
 // switch the $CFG->X for $CFG->behat_X.
 if (defined('BEHAT_UTIL') || defined('BEHAT_TEST')) {
     if (empty($CFG->behat_wwwroot) || empty($CFG->behat_dataroot) || empty($CFG->behat_dbprefix)) {

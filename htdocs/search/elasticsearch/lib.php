@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage search-elasticsearch
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -1178,7 +1178,7 @@ class PluginSearchElasticsearch extends PluginSearch {
 
        $clientBuilder = ClientBuilder::create();
 
-       // php versions < 5.6.6 dont have JSON_PRESERVE_ZERO_FRACTION defined
+       // php versions < 5.6.6 don't have JSON_PRESERVE_ZERO_FRACTION defined
        if (version_compare(phpversion(), '5.6.6', '<') || !defined('JSON_PRESERVE_ZERO_FRACTION')) {
            $clientBuilder->setHosts($clientopts['hosts'])->setConnectionParams(['client' => ['curl' => $clientopts['curlopts']]])->allowBadJSONSerialization();
        }
@@ -1764,7 +1764,7 @@ class ElasticsearchFilterAcl
  * The currently active types are stored in the "search->elasticsearch->types" config variable.
  *
  * This isn't quite a fully fleshed-out Mahara plugin type, although it is an expandable area.
- * One noteable limitation is that under the current implementation, the type name must match
+ * One notable limitation is that under the current implementation, the type name must match
  * up exactly with a Mahara table. Though since all the operations are read-only, you could
  * work around that with a view.
  */
@@ -1964,7 +1964,7 @@ class ElasticsearchPseudotype_all
      * @param unknown $options
      * @param unknown $mainfacetterm
      * @param unknown $USER
-     * @return multitype:number boolean unknown Ambigous <boolean, NULL> Ambigous <boolean, unknown> multitype:multitype:string number   Ambigous <string, unknown> |multitype:multitype:
+     * @return multitype:number boolean unknown Ambiguous <boolean, NULL> Ambiguous <boolean, unknown> multitype:multitype:string number  Ambiguous <string, unknown> |multitype:multitype:
      */
     public static function search($query_string, $limit, $offset, $options, $mainfacetterm, $USER) {
 
@@ -2441,7 +2441,7 @@ class ElasticsearchIndexing {
 
     /**
      *   Check if access changed between the last time the function was called (view_access table) and
-     *   add items to the queue. Or pass in an array of views to work wih (useful when all view_access rules
+     *   add items to the queue. Or pass in an array of views to work with (useful when all view_access rules
      *   deleted for view)
      */
     public static function add_to_queue_access($last_run, $timestamp, $views = array()) {

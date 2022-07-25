@@ -3,7 +3,7 @@
 ARG BASE_UBUNTU=ubuntu:bionic
 FROM ${BASE_UBUNTU}
 
-# enviroment variable as non interactive
+# environment variable as non interactive
 ARG DEBIAN_FRONTEND=noninteractive
 
 # update packages

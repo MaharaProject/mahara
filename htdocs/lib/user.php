@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -1966,7 +1966,7 @@ function can_send_message($from, $to) {
         && !get_config('friendsnotallowed')) {
         $cansend = true;
     }
-    // Can send message if recipient 'allows' recieving messages and the 'isolatedinstitutions' is not set
+    // Can send message if recipient 'allows' receiving messages and the 'isolatedinstitutions' is not set
     if ($messagepref == 'allow' && !is_isolated()) {
         $cansend = true;
     }

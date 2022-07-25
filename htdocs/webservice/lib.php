@@ -4,7 +4,7 @@
  *
  * @package    mahara
  * @subpackage auth-webservice
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -388,7 +388,7 @@ function webservice_function_info($function, $strictness=MUST_EXIST, $component 
     $function->parameters_method = $function->methodname . '_parameters';
     $function->returns_method    = $function->methodname . '_returns';
 
-    // make sure the implementaion class is ok
+    // make sure the implementation class is ok
     if (!method_exists($function->classname, $function->methodname)) {
         if ($mustexist) {
             throw new WebserviceCodingException(get_string('missingimplofmeth', 'auth.webservice', $function->classname . '::' . $function->methodname));
@@ -799,7 +799,7 @@ class external_api {
         $function->returns_method    = $function->methodname . '_returns';
         $function->deprecated_method = $function->methodname . '_is_deprecated';
 
-        // Make sure the implementaion class is ok.
+        // Make sure the implementation class is ok.
         if (!method_exists($function->classname, $function->methodname)) {
             throw new MaharaException('Missing implementation method of ' . $function->classname . '::' . $function->methodname);
         }
@@ -916,7 +916,7 @@ abstract class external_description {
     public $default;
 
     /**
-     * Contructor
+     * Constructor
      * @param string $desc
      * @param bool $required
      * @param mixed $default
@@ -929,7 +929,7 @@ abstract class external_description {
 }
 
 /**
- * Scalar alue description class
+ * Scalar value description class
  */
 class external_value extends external_description {
     /** @property mixed $type value type PARAM_XX */
@@ -1081,7 +1081,7 @@ abstract class webservice_server implements webservice_server_interface {
 
     protected $oauth_token_details = null;
     /**
-     * Contructor
+     * Constructor
      * @param integer $authmethod authentication method one of WEBSERVICE_AUTHMETHOD_*
      */
     public function __construct($authmethod) {
@@ -1477,7 +1477,7 @@ abstract class webservice_base_server extends webservice_server {
         // find all needed function info and make sure user may actually execute the function
         $this->load_function_info();
 
-        // finally, execute the function - any errors are catched by the default exception handler
+        // finally, execute the function - any errors are caught by the default exception handler
         $this->execute();
 
         $time_end = microtime(true);
@@ -1560,7 +1560,7 @@ abstract class webservice_base_server extends webservice_server {
     /**
      * Fetches the function description from database,
      * verifies user is allowed to use this function and
-     * loads all paremeters and return descriptions.
+     * loads all parameters and return descriptions.
      * @return void
      */
     protected function load_function_info() {

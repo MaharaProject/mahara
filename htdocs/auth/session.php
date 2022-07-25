@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -194,7 +194,7 @@ class Session {
     }
 
     /**
-     * Singelton function keeps us from generating multiple instances of this
+     * Singleton function keeps us from generating multiple instances of this
      * class
      *
      * @return object   The class instance

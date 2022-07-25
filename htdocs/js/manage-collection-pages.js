@@ -3,7 +3,7 @@
 *
 * @package    mahara
 * @subpackage core
-* @author     Catalyst IT Ltd
+* @author     Catalyst IT
 * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
 * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
 *
@@ -30,7 +30,7 @@ jQuery(function($) {
                         if ($('#addviews .checkbox').children().length <= 1) {
                             // Remove addview button
                             $('#addviews').remove();
-                            // Disply no page to add message
+                            // Display no page to add message
                             // And hide bulk select pages buttons
                             $('.select-pages').addClass('d-none');
                             $('#nopagetoadd').removeClass('d-none');

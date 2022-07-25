@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage artefact-file
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  */
@@ -350,7 +350,7 @@ var FileBrowser = (function($) {
                 rotatorimg.data('angle', angle);
                 jQuery('#' + self.id + '_edit_orientation').val(angle % 360);
                 jQuery(this).prop('title', get_string('rotate' + ((angle + 90) % 360) + 'img', 'artefact.file'));
-                jQuery(this).trigger('mouseout').trigger('mouseover'); // to allow the next tooltip to show without needing to move mose away from button
+                jQuery(this).trigger('mouseout').trigger('mouseover'); // to allow the next tooltip to show without needing to move mouse away from button
                 self.clear_create_folder_messages();
             });
         }

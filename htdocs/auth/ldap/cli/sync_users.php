@@ -4,7 +4,7 @@
  * @package    mahara
  * @subpackage auth-ldap
  * @author     Patrick Pollet <pp@patrickpollet.net>
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  * @copyright  (C) 2011 INSA de Lyon France
@@ -48,7 +48,7 @@
  * For the synchronisation of group membership , this script MUST be run before
  * the mahara_sync_groups script
  *
- * This script is strongly inspired of synching Moodle's users with LDAP
+ * This script is strongly inspired of syncing Moodle's users with LDAP
  */
 
 
@@ -182,7 +182,3 @@ catch (Exception $e) {
 
 $USER->logout(); // important
 $cli->cli_exit('---------- ended at ' . date('r', time()) . ' ----------', true);
-
-
-
-

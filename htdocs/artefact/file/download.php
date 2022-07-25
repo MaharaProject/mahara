@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage artefact-file
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -194,7 +194,7 @@ serve_file($path, $title, $file->get('filetype'), $options);
  */
 function check_is_embedded_image_visible($fileid, $includeresourcetypes = null, $excluderesourcetypes = null) {
     $isvisible = false;
-    // Check for resource types a file may be embeded in.
+    // Check for resource types a file may be embedded in.
     $resourcetypes = array(
         'comment', 'annotation', 'annotationfeedback', 'assessment', 'peerinstruction', 'blog', 'textbox', 'editnote', 'text', 'introtext', 'wallpost', 'staticpages'
     );

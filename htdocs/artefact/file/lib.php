@@ -4,7 +4,7 @@
  *
  * @package    mahara
  * @subpackage artefact-internal
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -1119,7 +1119,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
         // Commit to the artefact table.
         parent::commit();
 
-        // Reset dirtyness for the time being.
+        // Reset dirtiness for the time being.
         $this->dirty = true;
 
         $data = (object)array(
@@ -1149,7 +1149,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
     }
 
     protected function save_content_hash() {
-        // We set generateifpossible = false because if we dont have a hash, then the file must be local or missing.
+        // We set generateifpossible = false because if we don't have a hash, then the file must be local or missing.
         // This also avoids calling ensure_local for images, which would call this infinitely.
         $this->contenthash = self::generate_content_hash($this->get_local_path(array(), false));
 
@@ -2496,7 +2496,7 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         // Commit to the artefact table.
         parent::commit();
 
-        // Reset dirtyness for the time being.
+        // Reset dirtiness for the time being.
         $this->dirty = true;
 
         $data = (object)array(
@@ -2951,7 +2951,7 @@ class ArtefactTypeProfileIcon extends ArtefactTypeImage {
             }
             else {
                 // If we can't find the profile icon by id (deleted off server) then show the one
-                // for nonexistant user, defaults to no_userphoto
+                // for nonexistent user, defaults to no_userphoto
                 self::download_thumbnail_for_user(-1);
             }
         }

@@ -2,7 +2,7 @@
 /**
  * @package    mahara
  * @subpackage test/behat
- * @author     Son Nguyen, Catalyst IT Ltd
+ * @author     Son Nguyen, Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  * @copyright  portions from Moodle Behat, 2013 David Monllaó
@@ -101,7 +101,7 @@ class BehatConfigManager {
             $features = array_merge($features, array_values($featurespaths));
         }
 
-        // Behat config file specifing the main context class,
+        // Behat config file specifying the main context class,
         // the required Behat extensions and Mahara test wwwroot.
         $contents = self::get_config_file_contents($suites, $gherkin);
 

@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage auth-webservice
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -14,7 +14,7 @@
  *
  * @package   webservice
  * @copyright 2009 Moodle Pty Ltd (http://moodle.com)
- * @copyright  Copyright (C) 2011 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * @copyright  Copyright (C) 2011 Catalyst IT (http://www.catalyst.net.nz)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Piers Harding
  */
@@ -37,7 +37,7 @@ class webservice_rest_server extends webservice_base_server {
     protected $oauth_server = null;
 
     /**
-     * Contructor
+     * Constructor
      */
     public function __construct($authmethod) {
         parent::__construct($authmethod);
@@ -385,7 +385,7 @@ class webservice_rest_test_client implements webservice_test_client_interface {
 }
 
 /**
- * Recursive function formating an array in POST parameter
+ * Recursive function formatting an array in POST parameter
  * @param array $arraydata - the array that we are going to format and add into &$data array
  * @param string $currentdata - a row of the final postdata array at instant T
  *                when finish, it's assign to $data under this format: name[keyname][][]...[]='value'

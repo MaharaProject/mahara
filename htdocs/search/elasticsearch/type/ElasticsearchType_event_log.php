@@ -161,7 +161,7 @@ class ElasticsearchType_event_log extends ElasticsearchType {
      * @param unknown $limit
      * @param unknown $offset
      * @param unknown $USER
-     * @return multitype:number boolean unknown Ambigous <boolean, NULL> Ambigous <boolean, unknown> multitype:multitype:string number   Ambigous <string, unknown> |multitype:multitype:
+     * @return multitype:number boolean unknown Ambiguous <boolean, NULL> Ambiguous <boolean, unknown> multitype:multitype:string number   Ambiguous <string, unknown> |multitype:multitype:
      */
     public static function search($options, $limit, $offset, $USER) {
 

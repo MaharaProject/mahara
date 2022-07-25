@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage xmlrpc
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -130,7 +130,7 @@ class Dispatcher {
         $this->params  = xmlrpc_decode_request($this->payload, $this->method, 'UTF-8');
 
         // The method name is not allowed to have a dot, except for a single dot
-        // which preceeds the php extension. It can have slashes but it cannot
+        // which precedes the php extension. It can have slashes but it cannot
         // begin with a slash. We specifically don't want .. to be possible.
         if (0 == preg_match("@^[A-Za-z0-9]+/[A-Za-z0-9/_-]+(\.php/)?[A-Za-z0-9_-]+$@",$this->method)) {
             throw new XmlrpcServerException('The function does not exist', 6010);

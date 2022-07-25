@@ -2,7 +2,7 @@
 ARG BASE_IMAGE=mahara-base:jammy
 FROM ${BASE_IMAGE}
 
-# enviroment variable as non interactive
+# environment variable as non interactive
 ARG DEBIAN_FRONTEND=noninteractive
 
 # update packages

@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage admin
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -701,7 +701,7 @@ function uploadcsv_submit(Pieform $form, $values) {
     }
     db_commit();
 
-    // Reenable email
+    // Re-enable email
     set_config('sendemail', $cfgsendemail);
 
     if ($values['emailusers']) {

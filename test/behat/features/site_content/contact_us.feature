@@ -8,8 +8,8 @@ Scenario: Checking that admin user can view messages in their mail sent from Con
  Given I click on "Contact us"
  And I fill in "Name" with "Dean"
  And I fill in "Email" with "deans@example.org"
- And I fill in "Subject" with "Whats wrong"
- And I fill in "Message" with "hello world"
+ And I fill in "Subject" with "What's wrong"
+ And I fill in "Message" with "Hello world"
  # to avoid 5-second spam trap on contact.php
  And I wait "5" seconds
  When I click on "Send message"

@@ -33,7 +33,7 @@
     - If artefact_annotation.artefact and artefact.view are populated -> this annotation and its
       feedback are related to this linked artefact when on this view.
     - artefact_annotation.artefact is populated -> the linked artefact and its feedback do not
-      relate to any view at the movment.
+      relate to any view at the moment.
     -->
     <TABLE NAME="artefact_annotation">
         <FIELDS>

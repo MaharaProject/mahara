@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage blocktype-recentposts
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -151,7 +151,7 @@ class PluginBlocktypeRecentposts extends MaharaCoreBlocktype {
             $smarty->assign('canviewblog', $USER->can_view_artefact($blog));
 
             if ($editing) {
-                // Get id and title of configued blogs
+                // Get id and title of configured blogs
                 $recentpostconfigdata = $instance->get('configdata');
                 $wherestm = ' WHERE id IN (' . join(',', array_fill(0, count($recentpostconfigdata['artefactids']), '?')) . ')';
 

@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage auth-webservice
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -15,7 +15,7 @@
  * @package    auth
  * @subpackage webservice
  * @copyright  2009 Moodle Pty Ltd (http://moodle.com)
- * @copyright  Copyright (C) 2011 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * @copyright  Copyright (C) 2011 Catalyst IT (http://www.catalyst.net.nz)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author     Piers Harding
  */

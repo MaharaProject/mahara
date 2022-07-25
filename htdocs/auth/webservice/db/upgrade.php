@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -627,7 +627,7 @@ function xmldb_auth_webservice_upgrade($oldversion=0) {
         }
     }
 
-    // sweep for webservice updates everytime
+    // sweep for webservice updates every time
     $status = external_reload_webservices();
 
     return $status;

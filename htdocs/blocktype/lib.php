@@ -4,7 +4,7 @@
  *
  * @package    mahara
  * @subpackage blocktype
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -29,13 +29,13 @@ interface IPluginBlocktype {
 
     /**
      * Should be an array of blocktype categories that this block should be included in,
-     * for determining how it shows up in the page editor's pallette of blocks.
+     * for determining how it shows up in the page editor's palette of blocks.
      * See the function get_blocktype_categories() in lib/upgrade.php for the full list.
      *
      * A block can belong to multiple categories.
      *
      * The special category "shortcut" will make the blocktype show up on the top of the
-     * block pallette instead of in a category.
+     * block palette instead of in a category.
      *
      * Blocktypes can have a sortorder in each category, that determines how they are
      * ordered in the category. To give a sortorder, put the category as the array key,
@@ -381,7 +381,7 @@ EOF;
     }
 
     /**
-     * Display the cofiguration details about a block within a popup modal
+     * Display the configuration details about a block within a popup modal
      *
      * @param BlockInstance $instance
      */
@@ -1768,7 +1768,7 @@ class BlockInstance {
                 $content = call_static_method($classname, 'render_instance', $this, false, $versioning);
             }
             catch (NotFoundException $e) {
-                //Ignore not found error when fetching old verions of view
+                // Ignore not found error when fetching old versions of view
                 if (!$versioning) {
                     // Whoops - where did the image go? There is possibly a bug
                     // somewhere else that meant that this blockinstance wasn't

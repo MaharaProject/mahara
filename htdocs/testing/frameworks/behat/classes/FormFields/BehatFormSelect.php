@@ -2,7 +2,7 @@
 /**
  * @package    mahara
  * @subpackage test/behat
- * @author     Son Nguyen, Catalyst IT Ltd
+ * @author     Son Nguyen, Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  * @copyright  portions from Moodle Behat, 2013 David Monllaó
@@ -109,7 +109,7 @@ class BehatFormSelect extends BehatFormField {
             // Var $options only contains 1 option.
             $optionxpath = $this->get_option_xpath(end($options), $selectxpath);
 
-            // Using the driver direcly because Element methods are messy when dealing
+            // Using the driver directly because Element methods are messy when dealing
             // with elements inside containers.
             if ($optionnodes = $this->session->getDriver()->find($optionxpath)) {
 

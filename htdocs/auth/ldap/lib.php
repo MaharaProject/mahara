@@ -296,7 +296,7 @@ class AuthLdap extends Auth {
     }
 
     /**
-     * retuns dn of username
+     * returns dn of username
      *
      * Search specified contexts for username and return user dn
      * like: cn=username,ou=suborg,o=org
@@ -785,7 +785,7 @@ class AuthLdap extends Auth {
                 // case when user's DN is NOT xx=maharausername,ou=xxxx,dc=yyyy
                 // quite common with AD where DN is cn=user fullname,ou=xxxx
                 // we must do another LDAP search to retrieve Mahara username from LDAP
-                // since we call ldap_get_users, we do not support groups whithin group
+                // since we call ldap_get_users, we do not support groups within group
                 // (usually added as cn=groupxxxx,ou=....)
 
                 $filter = $dn_tmp2[0] . '=' . $this->filter_addslashes($dn_tmp2[1]);
@@ -822,7 +822,7 @@ class AuthLdap extends Auth {
     }
 
     /**
-     * We treate Active Directory groups slightly differently because it returns
+     * We treat Active Directory groups slightly differently because it returns
      * a non-standard response if there are more 1000 members or more.
      *
      * @param string $group
@@ -842,8 +842,8 @@ class AuthLdap extends Auth {
 
     /**
      * returns an array of usernames from al LDAP directory
-     * DO NOT USE ANYMORE for synching users Not scalable
-     * used for synching Mahara's groups with some LDAP attribute
+     * DO NOT USE ANYMORE for syncing users Not scalable
+     * used for syncing Mahara's groups with some LDAP attribute
      * searching patameters are defined in configuration
      * @param string $extrafilter  if present returns only users having some values in some LDAP attribute
      * @return array  of strings
@@ -1052,7 +1052,7 @@ class AuthLdap extends Auth {
             }
 
             // this API function returns all attributes as an array
-            // wether they are single or multiple
+            // whether they are single or multiple
             $users = $this->ldap_get_entries($ldapconnection, $ldap_result);
 
             // Add found DISTINCT values to list
@@ -1090,7 +1090,7 @@ class AuthLdap extends Auth {
 
 
     /**
-     * Attemp to synchronize Users in Mahara with Users in the LDAP server
+     * Attempt to synchronize Users in Mahara with Users in the LDAP server
      *
      * @param boolean $dryrun dummy execution. Do not perform any database operations
      * @return boolean

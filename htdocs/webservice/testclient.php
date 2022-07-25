@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage auth-webservice
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -328,7 +328,7 @@ function testclient_parameters_desc($fdesc, $name, $type='desc') {
  * Return indented REST param description
  * @param object $paramdescription
  * @param string $paramstring
- * @return string the html to diplay
+ * @return string the html to display
  */
 function testclient_parameters($paramdescription, $paramstring) {
     $brakeline = '|';
@@ -511,7 +511,7 @@ function testclient_submit(Pieform $form, $values) {
                              'inputs' => $inputs);
         } catch (Exception $e) {
             $results = "exception: " . $e->getMessage();
-            # split the string up by sentances and error code for easier reading
+            # split the string up by sentences and error code for easier reading
             $results = preg_replace('/(\.|\|)/', "\n", $results);
         }
 

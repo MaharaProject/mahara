@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -511,7 +511,7 @@ function editaccess_submit(Pieform $form, $values) {
     if ($group) {
         $viewconfig['existinggroupmembercopy'] = !empty($values['existinggroupmembercopy']) ? $values['existinggroupmembercopy'] : 0;
 
-        // Add funtionality here which copies the page into existing group members pages.
+        // Add functionality here which copies the page into existing group members pages.
         if ($viewconfig['existinggroupmembercopy']) {
             $groupmembers = group_get_member_ids($group, array('member'));
             $key = 0;

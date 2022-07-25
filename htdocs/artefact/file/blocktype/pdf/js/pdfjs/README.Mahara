@@ -11,7 +11,7 @@ viewing PDF file
 **Have Node.JS installed.**
 
 1. Check what version of node you are using `node -e 'console.log(process.versions)'`
-2. Install the lastest stable if the version is not new enough - say 12+
+2. Install the latest stable if the version is not new enough - say 12+
 
     ```bash
     sudo npm cache clean -f

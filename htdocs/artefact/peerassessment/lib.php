@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage artefact-peer-assessment
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -1055,7 +1055,7 @@ class ActivityTypeArtefactPeerassessmentAssessmentfeedback extends ActivityTypeP
         }
 
         if (empty($this->users)) {
-            // no one to notify - possibe if group 'feedbacknotify' is set to 0
+            // no one to notify - possible if group 'feedbacknotify' is set to 0
             return;
         }
 

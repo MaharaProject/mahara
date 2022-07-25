@@ -194,11 +194,11 @@ function execute_sql($command, array $values=null, $use_trigger=true) {
  *
  * @param string $table The table to check.
  * @param string $field1 the first field to check (optional).
- * @param string $value1 the value field1 must have (requred if field1 is given, else optional).
+ * @param string $value1 the value field1 must have (required if field1 is given, else optional).
  * @param string $field2 the second field to check (optional).
- * @param string $value2 the value field2 must have (requred if field2 is given, else optional).
+ * @param string $value2 the value field2 must have (required if field2 is given, else optional).
  * @param string $field3 the third field to check (optional).
- * @param string $value3 the value field3 must have (requred if field3 is given, else optional).
+ * @param string $value3 the value field3 must have (required if field3 is given, else optional).
  * @return bool true if a matching record exists, else false.
  * @throws SQLException
  */
@@ -250,11 +250,11 @@ function record_exists_sql($sql, array $values=null) {
  *
  * @param string $table The table to query.
  * @param string $field1 the first field to check (optional).
- * @param string $value1 the value field1 must have (requred if field1 is given, else optional).
+ * @param string $value1 the value field1 must have (required if field1 is given, else optional).
  * @param string $field2 the second field to check (optional).
- * @param string $value2 the value field2 must have (requred if field2 is given, else optional).
+ * @param string $value2 the value field2 must have (required if field2 is given, else optional).
  * @param string $field3 the third field to check (optional).
- * @param string $value3 the value field3 must have (requred if field3 is given, else optional).
+ * @param string $value3 the value field3 must have (required if field3 is given, else optional).
  * @return int The count of records returned from the specified criteria.
  * @throws SQLException
  */
@@ -287,7 +287,7 @@ function count_records_select($table, $select='', array $values=null, $countitem
  * Given a query that counts rows, return that count. (In fact,
  * given any query, return the first field of the first record
  * returned. However, this method should only be used for the
- * intended purpose.) If an error occurrs, 0 is returned.
+ * intended purpose.) If an error occurs, 0 is returned.
  *
  * @uses $db
  * @param string $sql The SQL string you wish to be executed.
@@ -319,7 +319,7 @@ function count_records_sql($sql, array $values=null) {
  * @param int $strictness IGNORE_MULTIPLE means no special action if multiple records found
  *                        WARN_MULTIPLE means log a warning message if multiple records found
  *                        ERROR_MULTIPLE means we will throw an exception if multiple records found.
- * @return mixed a fieldset object containing the first mathcing record, or false if none found.
+ * @return mixed a fieldset object containing the first matching record, or false if none found.
  * @throws SQLException
  */
 function get_record($table, $field1, $value1, $field2=null, $value2=null, $field3=null, $value3=null, $fields='*', $strictness=WARN_MULTIPLE) {
@@ -411,7 +411,7 @@ function get_record_select($table, $select='', array $values=null, $fields='*', 
  *
  * Selects records from the table $table.
  *
- * If specified, only records where the field $field has value $value are retured.
+ * If specified, only records where the field $field has value $value are returned.
  *
  * If specified, the results will be sorted as specified by $sort. This
  * is added to the SQL as "ORDER BY $sort". Example values of $sort
@@ -429,7 +429,7 @@ function get_record_select($table, $select='', array $values=null, $fields='*', 
  *
  * The return value is an ADODB RecordSet object
  * @link http://phplens.com/adodb/reference.functions.adorecordset.html
- * if the query succeeds. If an error occurrs, an exception is thrown.
+ * if the query succeeds. If an error occurs, an exception is thrown.
  *
  * @param string $table the table to query.
  * @param string $field a field to check (optional).
@@ -627,7 +627,7 @@ function recordset_to_assoc(ADORecordSet $rs) {
  *
  * @param string $table the table to query.
  * @param string $field a field to check (optional).
- * @param string $value the value the field must have (requred if field1 is given, else optional).
+ * @param string $value the value the field must have (required if field1 is given, else optional).
  * @param string $sort an order to sort the results in (optional, a valid SQL ORDER BY parameter).
  * @param string $fields a comma separated list of fields to return (optional, by default all fields are returned).
  * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
@@ -651,7 +651,7 @@ function get_records_assoc($table, $field='', $value='', $sort='', $fields='*', 
  *
  * @param string $table the table to query.
  * @param string $field a field to check (optional).
- * @param string $value the value the field must have (requred if field1 is given, else optional).
+ * @param string $value the value the field must have (required if field1 is given, else optional).
  * @param string $sort an order to sort the results in (optional, a valid SQL ORDER BY parameter).
  * @param string $fields a comma separated list of fields to return (optional, by default all fields are returned).
  * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
@@ -785,7 +785,7 @@ function recordset_to_menu(ADORecordSet $rs) {
  *
  * @param string $table the table to query.
  * @param string $field a field to check (optional).
- * @param string $value the value the field must have (requred if field1 is given, else optional).
+ * @param string $value the value the field must have (required if field1 is given, else optional).
  * @param string $sort an order to sort the results in (optional, a valid SQL ORDER BY parameter).
  * @param string $fields a comma separated list of fields to return (optional, by default all fields are returned).
  * @return mixed an associative array, or false if no records were found or an error occurred.
@@ -839,11 +839,11 @@ function get_records_sql_menu($sql, array $values=null) {
  * @param string $table the table to query.
  * @param string $field the field to return the value of.
  * @param string $field1 the first field to check (optional).
- * @param string $value1 the value field1 must have (requred if field1 is given, else optional).
+ * @param string $value1 the value field1 must have (required if field1 is given, else optional).
  * @param string $field2 the second field to check (optional).
- * @param string $value2 the value field2 must have (requred if field2 is given, else optional).
+ * @param string $value2 the value field2 must have (required if field2 is given, else optional).
  * @param string $field3 the third field to check (optional).
- * @param string $value3 the value field3 must have (requred if field3 is given, else optional).
+ * @param string $value3 the value field3 must have (required if field3 is given, else optional).
  * @return mixed the specified value
  * @throws SQLException
  */
@@ -882,11 +882,11 @@ function get_field_sql($sql, array $values=null) {
  * @param string $table the table to query.
  * @param string $field the field to return the value of.
  * @param string $field1 the first field to check (optional).
- * @param string $value1 the value field1 must have (requred if field1 is given, else optional).
+ * @param string $value1 the value field1 must have (required if field1 is given, else optional).
  * @param string $field2 the second field to check (optional).
- * @param string $value2 the value field2 must have (requred if field2 is given, else optional).
+ * @param string $value2 the value field2 must have (required if field2 is given, else optional).
  * @param string $field3 the third field to check (optional).
- * @param string $value3 the value field3 must have (requred if field3 is given, else optional).
+ * @param string $value3 the value field3 must have (required if field3 is given, else optional).
  * @return mixed the specified value
  * @throws SQLException
  */
@@ -936,11 +936,11 @@ function get_column_sql($sql, array $values=null) {
  * @param string $newfield the field to set.
  * @param string $newvalue the value to set the field to.
  * @param string $field1 the first field to check (optional).
- * @param string $value1 the value field1 must have (requred if field1 is given, else optional).
+ * @param string $value1 the value field1 must have (required if field1 is given, else optional).
  * @param string $field2 the second field to check (optional).
- * @param string $value2 the value field2 must have (requred if field2 is given, else optional).
+ * @param string $value2 the value field2 must have (required if field2 is given, else optional).
  * @param string $field3 the third field to check (optional).
- * @param string $value3 the value field3 must have (requred if field3 is given, else optional).
+ * @param string $value3 the value field3 must have (required if field3 is given, else optional).
  * @return ADORecordSet An ADODB RecordSet object with the results from the SQL call or false.
  * @throws SQLException
  */
@@ -956,7 +956,7 @@ function set_field($table, $newfield, $newvalue, $field1=null, $value1=null, $fi
 function set_field_select($table, $newfield, $newvalue, $select, array $values) {
     global $db;
 
-    // @todo Catalyst IT Ltd
+    // @todo Catalyst IT
     if (!empty($select) && !preg_match('/^\s*where/i', $select)) {
         $select = ' WHERE ' . $select;
     }
@@ -1016,11 +1016,11 @@ function set_field_select($table, $newfield, $newvalue, $select, array $values) 
  * @uses $db
  * @param string $table the table to delete from.
  * @param string $field1 the first field to check (optional).
- * @param string $value1 the value field1 must have (requred if field1 is given, else optional).
+ * @param string $value1 the value field1 must have (required if field1 is given, else optional).
  * @param string $field2 the second field to check (optional).
- * @param string $value2 the value field2 must have (requred if field2 is given, else optional).
+ * @param string $value2 the value field2 must have (required if field2 is given, else optional).
  * @param string $field3 the third field to check (optional).
- * @param string $value3 the value field3 must have (requred if field3 is given, else optional).
+ * @param string $value3 the value field3 must have (required if field3 is given, else optional).
  * @return ADORecordSet An ADODB RecordSet object with the results from the SQL call or false.
  * @throws SQLException
  */
@@ -1563,11 +1563,11 @@ function update_record($table, $dataobject, $where=null, $primarykey=false, $ret
  * except that you need only specify as many arguments (zero to three) as you need.
  *
  * @param string $field1 the first field to check (optional).
- * @param string $value1 the value field1 must have (requred if field1 is given, else optional).
+ * @param string $value1 the value field1 must have (required if field1 is given, else optional).
  * @param string $field2 the second field to check (optional).
- * @param string $value2 the value field2 must have (requred if field2 is given, else optional).
+ * @param string $value2 the value field2 must have (required if field2 is given, else optional).
  * @param string $field3 the third field to check (optional).
- * @param string $value3 the value field3 must have (requred if field3 is given, else optional).
+ * @param string $value3 the value field3 must have (required if field3 is given, else optional).
  */
 function where_clause($field1='', $value1='', $field2='', $value2='', $field3='', $value3='') {
     if ($field1) {
@@ -1586,7 +1586,7 @@ function where_clause($field1='', $value1='', $field2='', $value2='', $field3=''
 
 /**
  * Prepares a SQL WHERE clause to select records where the given fields match some values.
- * Uses ? as placeholders for prepared statments
+ * Uses ? as placeholders for prepared statements
  *
  * @param string $field1 the first field to check (optional).
  * @param string $field2 the second field to check (optional).
@@ -1747,7 +1747,7 @@ function db_format_tsfield($field, $as = null) {
 
 /**
  * This function, called from setup.php includes all the configuration
- * needed to properly work agains any DB. It setups connection encoding
+ * needed to properly work against any DB. It setups connection encoding
  * and some other variables.
  */
 function configure_dbconnection() {

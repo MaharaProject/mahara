@@ -7,7 +7,7 @@
  * Name:     loadquota<br>
  * Date:     June 22, 2006<br>
  * Purpose:  Set quota related variables for the quota template
- * @author   Catalyst IT Ltd
+ * @author   Catalyst IT
  * @version  1.0
  * @return Nothing
  */

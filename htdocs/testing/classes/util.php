@@ -2,7 +2,7 @@
 /**
  * @package    mahara
  * @subpackage test/core
- * @author     Son Nguyen, Catalyst IT Ltd
+ * @author     Son Nguyen, Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  * @copyright  portions from Moodle 2012, Petr Skoda {@link http://skodak.org}
@@ -483,9 +483,9 @@ abstract class TestingUtil {
         $unmodifiedorempties = self::guess_unmodified_empty_tables();
 
         db_begin();
-        // Temporary drop current foreign key contraints
+        // Temporary drop current foreign key constraints
         $foreignkeys = self::get_foreignkeys($tables);
-        // Drop foreign key contraints
+        // Drop foreign key constraints
         if (is_mysql()) {
             foreach ($foreignkeys as $key) {
                 execute_sql('ALTER TABLE ' . db_quote_identifier($key['table']) . ' DROP FOREIGN KEY ' . db_quote_identifier($key['constraintname']));
@@ -518,7 +518,7 @@ abstract class TestingUtil {
                 }
             }
         }
-        // Re-add foreign key contraints
+        // Re-add foreign key constraints
         foreach ($foreignkeys as $key) {
             execute_sql('ALTER TABLE ' . db_quote_identifier($key['table']) . ' ADD CONSTRAINT '
                             . db_quote_identifier($key['constraintname']) .' FOREIGN KEY '

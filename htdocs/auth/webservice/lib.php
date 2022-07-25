@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -184,7 +184,7 @@ class PluginAuthWebservice extends PluginAuth {
 
     public static function postinst($prevversion) {
         if ($prevversion == 0) {
-        // force the upgrade to get the intial services loaded
+        // force the upgrade to get the initial services loaded
             external_reload_webservices();
             // Install a cron job to clean webservices logs
             if (!get_record('cron', 'callfunction', 'webservice_clean_webservice_logs')) {

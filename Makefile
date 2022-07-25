@@ -340,7 +340,7 @@ docker-bash-root:
 	$(info Connected as the root user)
 	docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml run web /bin/bash
 
-# Brings up a new development instance, that assumes the presense of shared
+# Brings up a new development instance that assumes the presence of shared
 # mailhog and nginx containers.
 dev-up:
 	docker-compose -f docker/docker-compose.yaml -f docker/docker-compose.dev.yaml up -d

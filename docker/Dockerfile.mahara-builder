@@ -9,7 +9,7 @@ FROM ${BASE_IMAGE}
 ARG IMAGE_UID=1000
 ARG IMAGE_GID=1000
 
-# Set the enviroment variable as non interactive
+# Set the environment variable as non interactive
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Setup the builder user

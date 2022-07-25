@@ -1,5 +1,5 @@
-#This compose file is present due to an issue in the docker compose relating to port mapping.
-#This file can be safely removed if docker-compose allows port overrides, rather than apend only modifications.
+#This compose file is present due to an issue in docker compose relating to port mapping.
+#This file can be safely removed if docker-compose allows port overrides rather than append only modifications.
 version: '3.5'
 services:
   mahara:

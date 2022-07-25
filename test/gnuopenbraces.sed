@@ -8,7 +8,7 @@
 #     ...
 # Note:
 # If there is nothing after the {
-# a line will be deleted, ie no
+# a line will be deleted, i.e. no
 # blank line
 # Note:
 # This requires that the line before
@@ -33,7 +33,7 @@ N
 # \5 = code after brace
 
     s~\(.*)\)\(\s*\(//.*\)\?\)\n\(\s*\){\s*\(.*\)$~\1 {\2\n\4    \5~
-# If there was no statment after the {
+# If there was no statement after the {
 # on the next line, then remove it
     s/\n\s*$//
 }

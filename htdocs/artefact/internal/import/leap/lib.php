@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage artefact-internal-import-leap
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -519,7 +519,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
                 self::create_artefact($importer, 'lastname', trim($lastname));
             }
             else {
-                // Blatant assumtion that the <name> is a first name
+                // Blatant assumption that the <name> is a first name
                 self::create_artefact($importer, 'firstname', trim($name));
             }
 

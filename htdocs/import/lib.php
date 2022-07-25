@@ -4,7 +4,7 @@
  *
  * @package    mahara
  * @subpackage import
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -41,7 +41,7 @@ abstract class PluginImport extends Plugin implements IPluginImport {
     const DECISION_APPEND  = 4;    // append the content of existing artefacts with imported entries'
 
     /**
-     * A list of dislay decisions
+     * A list of display decisions
      */
     public $displaydecisions = array();
 
@@ -582,7 +582,7 @@ abstract class ImporterTransport {
         }
         $this->prepare_tempdir();
         if ($this->expectedsha1 &&  sha1_file($this->importfile) != $this->expectedsha1) {
-            throw new ImportException($this->importer, 'sha1 of recieved importfile didn\'t match expected sha1');
+            throw new ImportException($this->importer, 'sha1 of received importfile didn\'t match expected sha1');
         }
 
         $todir = $this->tempdir . 'extract/';
@@ -611,7 +611,7 @@ abstract class ImporterTransport {
             $archive->close();
         }
         else {
-            throw new ImportException($this, 'Failed to unzip the file recieved from the transport object');
+            throw new ImportException($this, 'Failed to unzip the file received from the transport object');
         }
         $this->extracted = true;
     }

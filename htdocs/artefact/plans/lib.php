@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage artefact-plans
- * @author     Catalyst IT Ltd, Alexander Del Ponte
+ * @author     Catalyst IT, Alexander Del Ponte
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -1043,7 +1043,7 @@ class ArtefactTypeTask extends ArtefactType {
                         $deletedViews = 0;
                         foreach ($outcomeCollection->get_viewids() as $collectionViewId) {
                             $collectionView = new \View($collectionViewId);
-                            // To check if the view is submitted should not be neccessary, only to be absolutely sure,
+                            // To check if the view is submitted should not be necessary, only to be absolutely sure,
                             // that the view really can be deleted
                             if (PlansTools::viewIsAutomaticallyDeletable($collectionView)) {
                                 PlansTools::deleteViewAndAssignedArtefacts($collectionView);

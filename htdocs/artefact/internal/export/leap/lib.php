@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage artefact-internal-export-leap
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -65,7 +65,7 @@ class LeapExportElementInternal extends LeapExportElement {
             $data = array_merge(array(
                 'value'          => $value,
                 'artefacttype'   => $a->get('artefacttype'),
-                'artefactplugin' => 'internal', // include this incase something else is injecting
+                'artefactplugin' => 'internal', // include this in case something else is injecting
             ), $data);
             if (array_key_exists('spacial', $data)) {
                 $spacialdata[] = (object)$data;

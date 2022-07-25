@@ -931,7 +931,7 @@ function set_view_title_and_description(Pieform $form, $values) {
                                 // Need to add an image gallery block
                                 $bt = 'gallery';
                                 $configdata = array('artefactids' => $av['ids'],
-                                                    'user' => $view->get('owner'), // normally 'user' is for external gallery but we set it to page owner for interal gallery
+                                                    'user' => $view->get('owner'), // normally 'user' is for external gallery but we set it to page owner for internal gallery
                                                     'select' => '1', // to select images by ids
                                                     'style' => '1',  // to display the images as slideshow
                                                     'showdescription' => false,

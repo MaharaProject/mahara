@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage blocktype-plans
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -145,7 +145,7 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
                     array_push($alltasks, $tasks);
                 }
                 catch (ArtefactNotFoundException $e) {
-                    // do nothing, the plan doesnt exists anymore
+                    // do nothing, the plan doesn't exist anymore
                 }
                 $smarty->assign('plans', $plans);
                 $smarty->assign('alltasks', $alltasks);

@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -138,7 +138,7 @@ if (!$no_inst) {
     $joinsql .= " JOIN {usr_institution} ui ON ui.usr = u.id";
 }
 
-// Inclue accounts not in an institution when no institution params have been given
+// Include accounts not in an institution when no institution params have been given
 if ($no_inst && $num_inst_params == 0) {
     $joinsql .= " LEFT JOIN {usr_institution} ui ON ui.usr = u.id";
 }

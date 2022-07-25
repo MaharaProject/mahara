@@ -5,7 +5,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  * @copyright  (C) portions from Moodle, (C) Martin Dougiamas http://dougiamas.com
@@ -304,7 +304,7 @@ $manual_link_map = array(
     "view|profile" => "portfolio/pages.html#profile-page",
     "webservices|apps" => "administration/web_services.html#application-connections",
     "webservices|config" => "administration/web_services.html#configuration",
-    "webservices|conections" => "administration/web_services.html#connection-manager",
+    "webservices|connections" => "administration/web_services.html#connection-manager",
     "webservices|oauthconfig" => "administration/web_services.html#registration-of-external-apps",
     "webservices|logs" => "administration/web_services.html#web-services-logs",
     "webservices|testclient" => "administration/web_services.html#web-services-test-client",

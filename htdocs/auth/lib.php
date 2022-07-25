@@ -4,7 +4,7 @@
  *
  * @package    mahara
  * @subpackage auth
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -2129,7 +2129,7 @@ class AuthFactory {
      * Take an instanceid and create an auth object for that instance.
      *
      * @param  int      $id     The id of the auth instance
-     * @return Auth            An intialised auth object or false, if the
+     * @return Auth            An initialised auth object or false, if the
      *                          instance doesn't exist (Should never happen)
      */
     public static function create($id) {

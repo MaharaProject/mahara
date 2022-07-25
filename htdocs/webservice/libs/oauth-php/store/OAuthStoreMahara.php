@@ -2,7 +2,7 @@
 
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2011 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * Copyright (C) 2011 Catalyst IT (http://www.catalyst.net.nz)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
  * OAuth v1 Data Store
  *
  * @package   webservice
- * @copyright  Copyright (C) 2011 Catalyst IT Ltd (http://www.catalyst.net.nz)
+ * @copyright  Copyright (C) 2011 Catalyst IT (http://www.catalyst.net.nz)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author    Piers Harding
  */

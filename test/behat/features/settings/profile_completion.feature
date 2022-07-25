@@ -1,6 +1,6 @@
 @javascript @core
 Feature: Profile completion functionality
-    Site admin sets up profile completion and determins what fields are required
+    Site admin sets up profile completion and determines what fields are required
     so that the profile completion block will display on dashboard indicating what needs to be completed
 
 Background:

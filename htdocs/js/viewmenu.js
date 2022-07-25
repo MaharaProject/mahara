@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -119,7 +119,7 @@ function addFeedbackSuccess(form, data) {
 function objectionSuccess(form, data) {
     jQuery('#objection_form_message').val('');
     formSuccess(form, data);
-    // close the form when the form is submited
+    // close the form when the form is submitted
     // Using bootstrap modal
     if (jQuery('#report-form').length) {
         jQuery('#report-form').modal('hide');
@@ -133,7 +133,7 @@ function objectionSuccess(form, data) {
 function reviewSuccess(form, data) {
     jQuery('#review_form_message').val('');
     formSuccess(form, data);
-    // close the form when the form is submited
+    // close the form when the form is submitted
     // Using bootstrap modal
     if (jQuery('#review-form').length) {
         jQuery('#review-form').modal('hide');

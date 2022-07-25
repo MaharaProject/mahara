@@ -888,7 +888,7 @@ class PlansTools {
                 $groupId = $rootGroupTask->get('group');
             }
             catch (\Exception $e) {
-                // Try Catch only to be sure that the code ist continued
+                // Try Catch only to be sure that the code continues
             }
         }
         else if ($task->is_grouptask()) {

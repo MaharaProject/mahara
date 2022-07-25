@@ -6,7 +6,7 @@
 * @author     Chirp Internet: http://www.chirp.com.au (original source)
 * @author     http://www.the-art-of-web.com/php/feed-reader/
 * @author     Anis uddin Ahmad (PHP Universal Feed Parser http://www.ajaxray.com) <admin@ajaxray.com>
-* @author     Son Nguyen (Catalyst IT Ltd) <son.nguyen@catalyst.net.nz>
+* @author     Son Nguyen (Catalyst IT) <son.nguyen@catalyst.net.nz>
 * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
 * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
 *

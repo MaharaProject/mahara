@@ -11,12 +11,12 @@ Changes:
 
 * HTTP Headers should really be case insensitive -
 OAuthRequest.php:
-        // fix tollerance of header capitalisation
+        // fix tolerance of header capitalisation
         if (isset($this->headers['authorization'])) {
             $this->headers['Authorization'] = $this->headers['authorization'];
         }
 
-* Enable overide of storage mechanism for test suite -
+* Enable override of storage mechanism for test suite -
 OAuthStore.php:
     public static function instance ( $store = 'MySQL', $options = array(), $override = false)
     {

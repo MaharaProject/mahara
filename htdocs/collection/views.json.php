@@ -4,7 +4,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -48,7 +48,7 @@ if (!empty($direction)) {
     $diff = array_diff($direction_array['row'], $viewids);
     if (!empty($diff)) {
 
-        // If the collection has been set to be auto copy and it doesnt have
+        // If the collection has been set to be auto copy and it doesn't have
         // any views yet, make sure the new views are shared with the
         // institution.
         $institution = $collection->get('institution');

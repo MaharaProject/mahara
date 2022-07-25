@@ -4,7 +4,7 @@ The new Search Monitor Type takes into account that search is itself modular and
 
 ## HOWTO
 
-To enable your search plugin to be monitored you just need to impliment the following methods within it.
+To enable your search plugin to be monitored, implement the following methods within it.
 
 ### monitor_support()
 The mere presence of this method lets the Search Monitor know monitoring is available.

@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage artefact
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -2191,7 +2191,7 @@ function artefact_get_progressbar_items($onlythese = false) {
         }
     });
 
-    // An opportunity for users to override this sort order (and maybe accomodate 3rd party plugins)
+    // An opportunity for users to override this sort order (and maybe accommodate 3rd party plugins)
     if (function_exists('local_progressbar_sortorder')) {
         $options = local_progressbar_sortorder($options);
     }

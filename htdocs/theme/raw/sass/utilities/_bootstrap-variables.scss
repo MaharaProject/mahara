@@ -11,7 +11,7 @@
 @use "sass:list";
 
 @import "../lib/bootstrap5/functions"; // Import the bootstrap functions here since they are required
-@import "theme-variables"; // TODO: Figure out why importing this in style.scss isnt enough
+@import "theme-variables"; // TODO: Figure out why importing this in style.scss isn't enough
 
 // Variables
 //
@@ -1084,7 +1084,7 @@ $carousel-control-prev-icon-bg:       str-replace(url("data:image/svg+xml;charse
 $carousel-control-next-icon-bg:       str-replace(url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='#{$carousel-control-color}' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E"), "#", "%23") !default;
 
 $carousel-transition-duration:        .6s !default;
-$carousel-transition:                 transform $carousel-transition-duration ease !default; // Define transform transition first if using multiple transitons (e.g., `transform 2s ease, opacity .5s ease-out`)
+$carousel-transition:                 transform $carousel-transition-duration ease !default; // Define transform transition first if using multiple transitions (e.g., `transform 2s ease, opacity .5s ease-out`)
 
 
 // Spinners

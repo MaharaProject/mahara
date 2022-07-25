@@ -1,7 +1,7 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2011 Catalyst IT Ltd and others; see:
+ * Copyright (C) 2006-2011 Catalyst IT and others; see:
  *                         http://wiki.mahara.org/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,7 +22,7 @@
  * @author     Discendum Oy
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  * @copyright  (C) 2012 Discedum Oy http://discendum.com
- * @copyright  (C) 2011 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2011 Catalyst IT http://catalyst.net.nz
  *
  */
 

@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -868,7 +868,7 @@ class Framework {
                     return $id;
                 }
                 catch (SQLException $e) {
-                    // An error occured like an existing annotation block exist for this view/standard option
+                    // An error occurred like an existing annotation block exist for this view/standard option
                     return false;
                 }
             }
@@ -883,7 +883,7 @@ class Framework {
                 return $id;
             }
             catch (SQLException $e) {
-                // An error occured like an existing annotation block exist for this view/standard option
+                // An error occurred like an existing annotation block exist for this view/standard option
                 return false;
             }
         }

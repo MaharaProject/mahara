@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage lang
- * @author     Hugh Davenport <hugh@catalyst.net.nz>, Catalyst IT Ltd
+ * @author     Hugh Davenport <hugh@catalyst.net.nz>, Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -203,7 +203,7 @@ $string['plugin_module_framework_version'] = 'Module "SmartEvidence" version';
 $string['plugin_module_lti_version'] = 'Module "LTI" version';
 $string['plugin_module_mobileapi_version'] = 'Module "Mobile API" version';
 $string['plugin_module_monitor_version'] = 'Module "Monitor" version';
-$string['plugin_module_multirecipientnotification_version'] = 'Module "Multi recipient notifcation" version';
+$string['plugin_module_multirecipientnotification_version'] = 'Module "Multi recipient notification" version';
 $string['plugin_module_submissions_version'] = 'Module "Submissions" version';
 $string['release'] = 'Release';
 $string['sitename'] = 'Site name';

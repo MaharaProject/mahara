@@ -3,13 +3,13 @@
  *
  * @package    mahara
  * @subpackage artefact-annotation
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
  */
 /**
- * Developement Notes:
+ * Development notes:
  * We are creating this as an artefact to prepare for future changes:
  * 1. It can 'stand-alone' without a link to a view or an artefact.
  * 2. It can be linked to a particular artefact that is already on a view.
@@ -447,7 +447,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         }
 
         // Get the block instance that contains this artefact
-        // so we can add to the view any artefacts containted in the feedback text
+        // so we can add to the view any artefacts contained in the feedback text
         // as well as the feedback itself.
         $sql = "SELECT bi.*
                 FROM {block_instance} bi
@@ -829,7 +829,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
             }
             else if (($candelete || $item->isauthor) && !$is_export_preview &&
                      (!$isadminfeedback || ($isadminfeedback && ($data->owner === $item->author)))) {
-                // If the auther was admin/staff and not the owner of the annotation,
+                // If the author was admin/staff and not the owner of the annotation,
                 // the feedback can't be deleted.
                 $check = get_record_sql('SELECT v.* FROM {view} v WHERE v.id = ?', array($data->view), ERROR_MULTIPLE);
                 if ($check->submittedstatus == View::UNSUBMITTED ||
@@ -1009,7 +1009,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
                 'class' => 'btn-secondary'
             );
             $form['elements']['submit'] = $submit;
-            // Dont use the 'Processing...' bit on the submit button
+            // Don't use the 'Processing...' bit on the submit button
             $form['presubmitcallback'] = '';
             // Remove the 'assessment' option as we want that independent of submitting feedback here
             unset($form['elements']['assessment']);
@@ -2034,7 +2034,7 @@ class ActivityTypeArtefactAnnotationAnnotationfeedback extends ActivityTypePlugi
         }
 
         if (empty($this->users)) {
-            // no one to notify - possibe if group 'feedbacknotify' is set to 0
+            // no one to notify - possible if group 'feedbacknotify' is set to 0
             return;
         }
 

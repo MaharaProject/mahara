@@ -2,7 +2,7 @@
 /**
  * @package    mahara
  * @subpackage test/behat
- * @author     Son Nguyen, Catalyst IT Ltd
+ * @author     Son Nguyen, Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  * @copyright  portions from Moodle Behat, 2013 David Monllaó
@@ -112,7 +112,7 @@ class BehatFormField {
      * Guesses the element type we are dealing with in case is not a text-based element.
      *
      * This class is the generic field type, BehatFieldManager::get_FormFields()
-     * should be able to find the appropiate class for the field type, but
+     * should be able to find the appropriate class for the field type, but
      * in cases like mahara form group elements we can not find the type of
      * the field through the DOM so we also need to take care of the
      * different field types from here. If we need to deal with more complex

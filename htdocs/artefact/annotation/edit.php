@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage artefact-annotation
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -127,13 +127,13 @@ function edit_annotation_feedback_submit(Pieform $form, $values) {
         // we allow annotations in group views.
         // 1. If approvecomments on this view is switched on and
         //    the author of the feedback wants to make it public and
-        //    the author of the feeback can't edit the group view and
-        //    the auther of the feedback has changed the public setting,
+        //    the author of the feedback can't edit the group view and
+        //    the author of the feedback has changed the public setting,
         // the owner of the view needs to approve the feedback before it's made public.
         // 2. If approvecomments on this view is switched off and
         //    the access (for the author of the feedback) of the view forces private comments and
-        //    the author of the feeback can't edit the view and
-        //    the auther of the feedback has changed the public setting,
+        //    the author of the feedback can't edit the view and
+        //    the author of the feedback has changed the public setting,
         // the owner of the view needs to approve the feedback before it's made public.
 
         // The author of the feedback wants to make the feedback public.
@@ -146,13 +146,13 @@ function edit_annotation_feedback_submit(Pieform $form, $values) {
              && $values['ispublic'] != $oldispublic) {
         // 1. If approvecomments on this view is switched on and
         //    the author of the feedback would like to make this public and
-        //    the author of the feeback is not the owner of the view and
-        //    the auther of the feedback has changed the public setting,
+        //    the author of the feedback is not the owner of the view and
+        //    the author of the feedback has changed the public setting,
         // the owner of the view needs to approve the feedback before it's made public.
         // 2. If approvecomments on this view is switched off and
         //    the access (for the author of the feedback) of the view forces private feedback and
-        //    the author of the feeback is not the owner of the view and
-        //    the auther of the feedback has changed the public setting,
+        //    the author of the feedback is not the owner of the view and
+        //    the author of the feedback has changed the public setting,
         // the owner of the view needs to approve the feedback before it's made public.
 
         // The author of the feedback wants to make the feedback public.

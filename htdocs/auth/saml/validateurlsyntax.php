@@ -23,21 +23,21 @@ Usage:
                 S - https:// (SSL). Allows "+?-", defaults to "S?"
                 E - mailto: (email). Allows "+?-", defaults to "E-"
                 F - ftp:// Allows "+?-", defaults to "F-"
-                    Dependant on scheme being enabled
+                    Dependent on scheme being enabled
             u - User section. Allows "+?-", defaults to "u?"
                 P - Password in user section. Allows "+?-", defaults to "P?"
-                    Dependant on user section being enabled
+                    Dependent on user section being enabled
             a - Address (ip or domain). Allows "+?-", defaults to "a+"
                 I - Ip address. Allows "+?-", defaults to "I?"
                     If I+, then domains are disabled
                     If I-, then domains are required
-                    Dependant on address being enabled
+                    Dependent on address being enabled
             p - Port number. Allows "+?-", defaults to "p?"
             f - File path. Allows "+?-", defaults to "f?"
             q - Query section. Allows "+?-", defaults to "q?"
             r - Fragment (anchor). Allows "+?-", defaults to "r?"
 
-    Paste the funtion code, or include_once() this template at the top of the page
+    Paste the function code, or include_once() this template at the top of the page
     you wish to use this function.
 
 
@@ -273,7 +273,7 @@ function validateUrlSyntax( $urladdr, $options="" ){
     $domain_tertiary   = '(' . $alphanum . '(([a-zA-Z0-9-]{0,62})' . $alphanum . ')?\.)*';
 
 /* MDL-9295 - take out domain_secondary here and below, so that URLs like http://localhost/ and lan addresses like http://host/ are accepted.
-                       // Second Level Domain - Required - First and last characters must be Alpha-numeric. Hyphens are allowed inside.
+                       // Second Level Domain - Required - First and last characters must be Alphanumeric. Hyphens are allowed inside.
     $domain_secondary  = '(' . $alphanum . '(([a-zA-Z0-9-]{0,62})' . $alphanum . ')?\.)';
 */
 

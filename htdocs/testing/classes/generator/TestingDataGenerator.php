@@ -2,7 +2,7 @@
 /**
  * @package    mahara
  * @subpackage test/generator
- * @author     Son Nguyen, Catalyst IT Ltd
+ * @author     Son Nguyen, Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  * @copyright  portions from Moodle 2012, Petr Skoda {@link http://skodak.org}
@@ -1481,7 +1481,7 @@ EOD;
     /**
      * generate configdata for the blocktype: profileinformation
      *
-     * As well as going thorugh the general fields in the data column of the table,
+     * As well as going through the general fields in the data column of the table,
      * an ArtefactTypeProfileIcon is created as there are none created in bulk.
      *
      * @param array $sortedfields holding each chunk of data between the ; in the behat data column
@@ -2923,7 +2923,7 @@ EOD;
         if (in_array($artefacttype,  $goalsandskills)) {
             $classname = generate_artefact_class_name($artefacttype);
 
-            // if there exists multiple entires of interest in the table for same user,
+            // if multiple entries of interest exist in the table for same user,
             // merge with the pre-existing artefact content
             $artefactid = get_field('artefact','id','artefacttype',$artefacttype,'owner',$userid);
             $goalskill = null;

@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  */
@@ -162,7 +162,7 @@ function get_line_graph_json($data, $colours = null, $cron = false) {
 
 /**
  * Returns an array of rgb colours to use in the graph
- * We use rgb colours so to allow the chartjs to use alpha transperency
+ * We use rgb colours so to allow the chartjs to use alpha transparency
  *
  * @param   array  $data  Array of information to graph
  *                        Includes: 'colours': custom colours passed in via the call to the graph function, eg view_type_graph()
@@ -176,8 +176,8 @@ function get_graph_colours($data, $colours = null) {
     $defaultcolours = array('187,35,39','59,140,46','61,132,203','227,171,0','0,74,136','139,62,138','220,109,10','29,183,197','116,116,116','62,35,110');
 
     // We try to set colours in this order:
-    // passed in by user overides
-    // passed in by function overides
+    // passed in by user overrides
+    // passed in by function overrides
     // defaults
     if (is_array($colours)) {
         if (!empty($data['colours']) && is_array($data['colours'])) {

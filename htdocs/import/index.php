@@ -1,7 +1,7 @@
 <?php
 /**
  * Mahara: Electronic portfolio, weblog, resume builder and social networking
- * Copyright (C) 2006-2013 Catalyst IT Ltd and others; see:
+ * Copyright (C) 2006-2013 Catalyst IT and others; see:
  *                         https://wiki.mahara.org/wiki/Contributors
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,9 +19,9 @@
  *
  * @package    mahara
  * @subpackage import
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
- * @copyright  (C) 2006-2013 Catalyst IT Ltd http://catalyst.net.nz
+ * @copyright  (C) 2006-2013 Catalyst IT http://catalyst.net.nz
  *
  */
 

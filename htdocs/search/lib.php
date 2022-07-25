@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage search
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -150,7 +150,7 @@ abstract class PluginSearch extends Plugin implements IPluginSearch {
     }
 
     /**
-     * This function gets called everytime the site options are saved. It is used to
+     * This function gets called every time the site options are saved. It is used to
      * detect whether the search plugin can connect to any servers it requires.
      * Defaults to true.
      */

@@ -2,7 +2,7 @@
  *
  * @package    mahara
  * @subpackage behat
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  * @copyright  (C) portions from Moodle, (C) Martin Dougiamas http://dougiamas.com
@@ -60,7 +60,7 @@ jQuery(function() {
     });
 
     /**
-     * Remove boostrap modal animation
+     * Remove bootstrap modal animation
      */
     jQuery('.modal').removeClass('fade');
 
@@ -75,7 +75,7 @@ jQuery(function() {
     });
 
     /**
-     * Disable all jQuery animations e.g. fadeIn/Out(), toogle(), animation()
+     * Disable all jQuery animations e.g. fadeIn/Out(), toggle(), animation()
      */
     jQuery.fx.off = true;
 

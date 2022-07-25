@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage auth-webservice
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -253,7 +253,7 @@ function wsdoc_xmlrpc($paramname, $paramdescription) {
  * Create indented XML-RPC  param description
  * @param object $paramdescription
  * @param string $indentation composed by space only
- * @return string the html to diplay
+ * @return string the html to display
  */
 function wsdoc_xmlrpc_param_description_html($paramdescription, $indentation = "") {
     $indentation = $indentation . "    ";
@@ -351,7 +351,7 @@ EOF;
  * Return indented REST param description
  * @param object $paramdescription  The structure information
  * @param string $paramstring       The key to display
- * @return string the html to diplay
+ * @return string the html to display
  */
 function wsdoc_rest_param_description_html($paramdescription, $paramstring) {
     $brakeline = <<<EOF
@@ -398,7 +398,7 @@ EOF;
  * It is indented in order to be displayed into <pre> tag
  * @param object $returndescription
  * @param string $indentation composed by space only
- * @return string the html to diplay
+ * @return string the html to display
  */
 function wsdoc_description_in_indented_xml_format($returndescription, $indentation = "") {
     $indentation = $indentation . "    ";

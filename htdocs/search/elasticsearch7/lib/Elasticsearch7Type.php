@@ -1,4 +1,14 @@
 <?php
+
+/**
+ *
+ * @package    mahara
+ * @subpackage search-elasticsearch
+ * @author     Catalyst IT
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ *
+ */
 /**
  * Represents one of the "types" that Elasticsearch 7 can search against.
  *
@@ -9,7 +19,7 @@
  * config variable.
  *
  * This isn't quite a fully fleshed-out Mahara plugin type, although it is an
- * expandable area. One noteable limitation is that under the current
+ * expandable area. One notable limitation is that under the current
  * implementation, the type name must match up exactly with a Mahara table.
  * Though since all the operations are read-only, you could work around that
  * with a view.

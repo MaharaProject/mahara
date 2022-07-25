@@ -1,5 +1,15 @@
 <?php
 
+/**
+ *
+ * @package    mahara
+ * @subpackage search-elasticsearch
+ * @author     Catalyst IT
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ *
+ */
+
 require_once(dirname(__FILE__) . '/Elasticsearch7FilterAcl.php');
 
 /**
@@ -19,7 +29,7 @@ class Elasticsearch7Pseudotype_all
      * @param string $query_string The user submitted search terms.
      * @param int $limit How many results we are returning.
      * @param int $offset Where we start from.
-     * @param array<string,mixed> $options Addtional arbitary options for the search.
+     * @param array<string,mixed> $options Additional arbitrary options for the search.
      * @param string $mainfacetterm The main facet we are filtering on.
      * @param object $USER The user we are searching as.
      * @return array<string,mixed> The results array.

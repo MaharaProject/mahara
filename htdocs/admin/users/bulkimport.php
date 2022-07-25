@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage admin
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -233,7 +233,7 @@ function import_next_user($filename, $username, $authinstance) {
     }
     catch (EmailException $e) {
         // Suppress any emails (e.g. new institution membership) sent out
-        // during user creation, becuase the user doesn't have an email
+        // during user creation, because the user doesn't have an email
         // address until we've imported them from the Leap2A file.
         log_debug("Failed sending email during user import");
     }

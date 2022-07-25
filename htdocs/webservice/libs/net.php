@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage auth-webservice
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -52,7 +52,7 @@ function address_in_subnet($addr, $subnetstr) {
             list($ip, $mask) = explode('/', $subnet);
             $mask = trim($mask);
             if (!is_number($mask)) {
-                // incorect mask number, eh?
+                // incorrect mask number, eh?
                 continue;
             }
             // normalise
@@ -326,7 +326,7 @@ function cleanremoteaddr($addr, $compress=false) {
         }
 
         if ($count < 3 or $count > 8) {
-            // severly malformed
+            // severely malformed
             return null;
         }
 

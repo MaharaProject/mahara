@@ -4,7 +4,7 @@
  * @source: git.mahara.org
  *
  * @licstart
- * Copyright (C) 2020  Catalyst IT Ltd
+ * Copyright (C) 2020  Catalyst IT
  *
  * The JavaScript code in this page is free software: you can
  * redistribute it and/or modify it under the terms of the GNU

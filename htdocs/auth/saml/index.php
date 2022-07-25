@@ -193,7 +193,7 @@ catch (AuthInstanceException $e) {
 
 // if we can login with SAML - then let them go
 if ($can_login) {
-    // they are logged in, so they dont need to be here
+    // they are logged in, so they don't need to be here
     if ($SESSION->get('wantsurl')) {
         $wantsurl = $SESSION->get('wantsurl');
         $SESSION->set('wantsurl', null);
@@ -238,7 +238,7 @@ $remoteuser = $saml_attributes[$user_attribute][0];
 // them to log in local/manual
 if (!$is_loggedin) {
     // cannot match user account - so offer them the login-link/register page
-    // if we can't login locally, and cant login via SAML then we should offer to register - but this should probably appear on the local login page anyway
+    // if we can't login locally, and can't login via SAML then we should offer to register - but this should probably appear on the local login page anyway
     auth_saml_login_screen($remoteuser);
 }
 else {
@@ -679,7 +679,7 @@ function login_test_all_user_authinstance($username, $password) {
                 if ($authinstance->suspended) {
                     continue;
                 }
-                // we havea winner
+                // we have a winner
                 return true;
             }
         }

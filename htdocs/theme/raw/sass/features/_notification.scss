@@ -1,4 +1,4 @@
-// Fix the compose button positionning in the inbox/sent notifications pages.
+// Fix the compose button positioning in the inbox/sent notifications pages.
 .notifications + #messages + h1 {
     border-bottom-width: 0;
     @include media-breakpoint-up(md) {

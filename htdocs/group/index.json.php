@@ -6,7 +6,7 @@
  *
  * @package    mahara
  * @subpackage core
- * @author     Catalyst IT Ltd
+ * @author     Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -52,7 +52,7 @@ if ($searchmode == 'mygroups') {
 else {
     if (is_isolated()) {
         if ($USER->get('admin') || $USER->get('staff')) {
-             // show all groups because admin or staff (isolation owerwrite)
+             // show all groups because admin or staff (isolation overwrite)
             $groups = search_group($query, $groupsperpage, $offset, $type, $groupcategory);
         }
         else {
