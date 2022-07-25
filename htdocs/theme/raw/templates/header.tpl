@@ -5,7 +5,7 @@
 {include file="header/head.tpl"}
 <body data-bs-usethemedjs="true" class="no-js {if $ADMIN || $INSTITUTIONALADMIN || $STAFF || $INSTITUTIONALSTAFF || $INSTITUTIONALSUPPORTADMIN}admin{/if} {if $loggedout}loggedout{/if} {if $pagename}{$pagename}{/if} {$presentation|default:'window'}">
     <div class="skiplink btn-group btn-group-top">
-        <a class="visually-hidden visually-hidden-focusable btn btn-secondary" {if $headertype=='page'}href="#header-target-main"{else}href="#header-main"{/if}>{str tag=skipmenu}</a>
+        <a class="visually-hidden-focusable btn btn-secondary" {if $headertype=='page'}href="#header-target-main"{else}href="#header-main"{/if}>{str tag=skipmenu}</a>
     </div>
 
     {if $USERMASQUERADING || !$PRODUCTIONMODE || $SITECLOSED || $SITETOP}
