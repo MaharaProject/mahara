@@ -323,12 +323,19 @@ var FileBrowser = (function($) {
         });
 
         jQuery('#' + self.id + '_edit_heading').html(self.filedata[id].artefacttype == 'folder' ? get_string('editfolder') : get_string('editfile'));
-        var descriptionrow = jQuery('#' + self.id + '_edit_description').closest('tr');
+        var editfilerow = jQuery('#' + self.id + '_edit_heading').closest('tr');
         if (self.filedata[id].artefacttype == 'profileicon') {
-            descriptionrow.addClass('d-none');
+            editfilerow.addClass('d-none');
         }
         else {
-            descriptionrow.removeClass('d-none');
+            editfilerow.removeClass('d-none');
+            let descriptionrowlabel = jQuery('#' + self.id + '_edit_description').prev('label');
+            if (self.filedata[id].artefacttype == 'image') {
+                descriptionrowlabel.text(get_string('caption', 'artefact.image'));
+            }
+            else {
+                descriptionrowlabel.text(get_string('description', 'mahara'));
+            }
         }
         if (self.filedata[id].artefacttype == 'image' || self.filedata[id].artefacttype == 'profileicon') {
             var rotator = jQuery('#' + self.id + '_rotator');
@@ -359,6 +366,63 @@ var FileBrowser = (function($) {
         }
         jQuery('#' + self.id + '_edit_title').val(self.filedata[id].title);
         jQuery('#' + self.id + '_edit_description').val(self.filedata[id].description == null ? '' : self.filedata[id].description);
+        jQuery('#' + self.id + '_edit_alttext').val(self.filedata[id].alttext == null ? '' : self.filedata[id].alttext);
+
+        // Display options for image file descriptions and alt text
+        if (self.filedata[id].artefacttype == 'image') {
+            jQuery('#' + self.id + '_edit_isdecorative').closest('.form-group').removeClass('d-none');
+            if (self.filedata[id].isdecorative) {
+                // We hide the alttext, altiscaption, and desctiption fields if image is decorative only
+                jQuery('#' + self.id + '_edit_alttext').closest('.form-group').addClass('d-none');
+                jQuery('#' + self.id + '_edit_altiscaption').closest('.form-group').addClass('d-none');
+                jQuery('#' + self.id + '_edit_description').closest('.form-group').addClass('d-none');
+            }
+            else {
+                jQuery('#' + self.id + '_edit_alttext').closest('.form-group').removeClass('d-none');
+                jQuery('#' + self.id + '_edit_altiscaption').closest('.form-group').removeClass('d-none');
+                if (self.filedata[id].altiscaption) {
+                    // We hide the description field if image has alttext as caption
+                    jQuery('#' + self.id + '_edit_description').closest('.form-group').addClass('d-none');
+                }
+                else {
+                    jQuery('#' + self.id + '_edit_description').closest('.form-group').removeClass('d-none');
+                }
+            }
+
+            // When we click on the decorative switch
+            jQuery('#' + self.id + '_edit_isdecorative').on("click", function() {
+                if (this.checked) {
+                    jQuery('#' + self.id + '_edit_alttext').closest('.form-group').addClass("d-none");
+                    jQuery('#' + self.id + '_edit_description').closest('.form-group').addClass("d-none");
+                    jQuery('#' + self.id + '_edit_altiscaption').closest('.form-group').addClass("d-none");
+                }
+                else {
+                    jQuery('#' + self.id + '_edit_alttext').closest('.form-group').removeClass("d-none");
+                    jQuery('#' + self.id + '_edit_altiscaption').closest('.form-group').removeClass("d-none");
+                    if (!self.filedata[id].altiscaption) {
+                        jQuery('#' + self.id + '_edit_description').closest('.form-group').removeClass("d-none");
+                    }
+                }
+            })
+
+            // When we click on the alt is caption switch
+            jQuery('#' + self.id + '_edit_altiscaption').on("click", function() {
+                if (this.checked) {
+                    jQuery('#' + self.id + '_edit_description').closest('.form-group').addClass("d-none");
+                }
+                else {
+                    jQuery('#' + self.id + '_edit_description').closest('.form-group').removeClass("d-none");
+                }
+            })
+        }
+        else {
+            jQuery('#' + self.id + '_edit_isdecorative').closest('.form-group').addClass('d-none');
+            jQuery('#' + self.id + '_edit_alttext').closest('.form-group').addClass('d-none');
+            jQuery('#' + self.id + '_edit_altiscaption').closest('.form-group').addClass('d-none');
+            jQuery('#' + self.id + '_edit_description').closest('.form-group').removeClass("d-none");
+        }
+
+        // For dealing with license field if present
         if (jQuery('#' + self.id + '_edit_license').length) {
             if (self.filedata[id].license == null) {
                 jQuery('#' + self.id + '_edit_license').val('');
@@ -378,7 +442,10 @@ var FileBrowser = (function($) {
             jQuery('#' + self.id + '_edit_licensorurl').val(self.filedata[id].licensorurl == null ? '' : self.filedata[id].licensorurl);
             pieform_select_other(jQuery('#' + self.id + '_edit_license')[0]);
         }
+
         jQuery('#' + self.id + '_edit_allowcomments').prop('checked', self.filedata[id].allowcomments);
+        jQuery('#' + self.id + '_edit_isdecorative').prop('checked', self.filedata[id].isdecorative);
+        jQuery('#' + self.id + '_edit_altiscaption').prop('checked', self.filedata[id].altiscaption);
 
         jQuery('#' + self.id + '_edit_tags').prop('selectedIndex', -1);
         self.tag_select2_clear(self.id + '_edit_tags');
@@ -898,6 +965,15 @@ var FileBrowser = (function($) {
         }
         if (self.filedata[id].licensorurl) {
             self.selecteddata[id].licensorurl = self.filedata[id].licensorurl;
+        }
+        if (self.filedata[id].altiscaption) {
+            self.selecteddata[id].altiscaption = self.filedata[id].altiscaption;
+        }
+        if (self.filedata[id].alttext) {
+            self.selecteddata[id].alttext = self.filedata[id].alttext;
+        }
+        if (self.filedata[id].isdecorative) {
+            self.selecteddata[id].isdecorative = self.filedata[id].isdecorative;
         }
         // Check if the file to add was already in the selected list
         var existed = false;

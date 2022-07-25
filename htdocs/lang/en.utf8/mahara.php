@@ -1351,6 +1351,7 @@ $string['constrain'] = 'Constrain';
 $string['vspace'] = 'Vertical space';
 $string['hspace'] = 'Horizontal space';
 $string['border'] = 'Border width';
+$string['showcaption'] = 'Show caption';
 $string['alignment'] = 'Alignment';
 
 //Select2 strings

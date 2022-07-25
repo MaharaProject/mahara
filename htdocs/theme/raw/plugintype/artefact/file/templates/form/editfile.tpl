@@ -21,6 +21,49 @@
                 <input type="text" class="text" name="{$prefix}_edit_title" id="{$prefix}_edit_title" value="{$fileinfo->title}" size="40" />
             </div>
             {if $fileinfo->artefacttype != 'profileicon'}
+            <div class="form-group switchbox">
+                <label for="{$prefix}_edit_isdecorative">
+                    {str tag=isdecorative section=pieforms}
+                </label>
+                <div class="form-switch">
+                    <div class="switch"{if $switchwidth} style="width: {$switchwidth}"{/if}>
+                        <input class="switchbox" type="checkbox" name="{$prefix}_edit_isdecorative" id="{$prefix}_edit_isdecorative" {if $fileinfo->isdecorative}checked {/if} />
+                        <label class="switch-label" tabindex="1" for="{$prefix}_edit_isdecorative">
+                            <span class="switch-inner" role="presentation" aria-hidden="true"></span>
+                            <span class="switch-indicator" role="presentation" aria-hidden="true"></span>
+                            <span class="state-label on" role="presentation" aria-hidden="true" tabindex="-1">{str tag=switchbox.yes section=pieforms}</span>
+                            <span class="state-label off" role="presentation" aria-hidden="true" tabindex="-1">{str tag=switchbox.no section=pieforms}</span>
+                        </label>
+                    </div>
+                </div>
+                <span>{contextualhelp plugintype='artefact' pluginname='file' section='isdecorative'}</span>
+            </div>
+                <script>Switchbox.computeWidth("{$prefix}_edit_isdecorative");</script>
+
+            <div class="form-group">
+                <label for="{$prefix}_edit_alttext">{str tag=alttext section=pieforms}</label>
+                <input type="text" class="text" name="{$prefix}_edit_alttext" id="{$prefix}_edit_alttext" value="{$fileinfo->alttext}" size="40" />
+                <span>{contextualhelp plugintype='artefact' pluginname='file' section='alttext'}</span>
+            </div>
+            <div class="form-group switchbox">
+                <label for="{$prefix}_edit_altiscaption">
+                {str tag=altiscaption section=pieforms}
+                </label>
+                <div class="form-switch">
+                    <div class="switch"{if $switchwidth} style="width: {$switchwidth}"{/if}>
+                        <input class="switchbox" type="checkbox" name="{$prefix}_edit_altiscaption" id="{$prefix}_edit_altiscaption" {if $fileinfo->altiscaption}checked {/if} />
+                        <label class="switch-label" tabindex="1" for="{$prefix}_edit_altiscaption">
+                            <span class="switch-inner" role="presentation" aria-hidden="true"></span>
+                            <span class="switch-indicator" role="presentation" aria-hidden="true"></span>
+                            <span class="state-label on" role="presentation" aria-hidden="true" tabindex="-1">{str tag=switchbox.yes section=pieforms}</span>
+                            <span class="state-label off" role="presentation" aria-hidden="true" tabindex="-1">{str tag=switchbox.no section=pieforms}</span>
+                        </label>
+                    </div>
+                </div>
+                <span>{contextualhelp plugintype='artefact' pluginname='file' section='altiscaption'}</span>
+            </div>
+            <script>Switchbox.computeWidth("{$prefix}_edit_altiscaption");</script>
+
             <div class="form-group">
                 <label for="{$prefix}_edit_description">{str tag=description}</label>
                 <input type="text" class="text" name="{$prefix}_edit_description" id="{$prefix}_edit_description" value="{$fileinfo->description}" size="40" />

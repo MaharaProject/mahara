@@ -117,6 +117,7 @@ function pieform_element_filebrowser(Pieform $form, $element) {
         foreach ($selected as $k => $v) {
             $v->time = '&time=' . time();
         }
+
         $smarty->assign('selectedlist', $selected);
         $selectedliststr = json_encode($selected);
     }
@@ -399,7 +400,6 @@ function pieform_element_filebrowser_build_filelist($form, $element, $folder, $h
     }
 
     $smarty->assign('folderparams', $params);
-
     return array(
         'data' => $filedata,
         'html' => $smarty->fetch('artefact:file:form/filelist.tpl'),
@@ -643,7 +643,11 @@ function pieform_element_filebrowser_doupdate(Pieform $form, $element) {
             'folder'      => $element['folder'],
             'allowcomments' => param_boolean($prefix . '_edit_allowcomments'),
             'orientation'  => param_variable($prefix . '_edit_orientation'),
+            'isdecorative' => param_boolean($prefix . '_edit_isdecorative'),
+            'alttext'      => param_variable($prefix . '_edit_alttext'),
+            'altiscaption' => param_boolean($prefix . '_edit_altiscaption')
         );
+
         if (get_config('licensemetadata')) {
             $data = array_merge($data, array(
                 'license'     => license_coalesce(null,
@@ -1267,6 +1271,9 @@ function pieform_element_filebrowser_update(Pieform $form, $element, $data) {
     $artefact->set('title', trim($data['title']));
     $artefact->set('description', $data['description']);
     $artefact->set('allowcomments', (int) $data['allowcomments']);
+    $artefact->set('isdecorative', (int) $data['isdecorative']);
+    $artefact->set('alttext', trim($data['alttext']));
+    $artefact->set('altiscaption', (int) $data['altiscaption']);
     if (property_exists($artefact, 'orientation')) {
         $orientation = is_mysql() ? (string) $data['orientation'] : (int) $data['orientation'];
         $artefact->set('orientation', $orientation);

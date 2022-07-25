@@ -32,6 +32,16 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
             imgElm = editor.selection.getNode();
         jQuery('body').addClass('modal-open');
         var selected = null;
+
+        if (imgElm.nodeName == 'FIGCAPTION') {
+            // we need to find the image associated with it
+            imgElm = $(imgElm).parent().find('img')[0];
+        }
+        if (imgElm.nodeName == 'FIGURE') {
+            // we need to find the image inside it
+            imgElm = $(imgElm).find('img')[0];
+        }
+
         if (imgElm.nodeName == 'IMG' && !imgElm.getAttribute('data-mce-object') && !imgElm.getAttribute('data-mce-placeholder')) {
             // existing values
             var urlquerystr = dom.getAttrib(imgElm, 'src').match(/\?.+/);
@@ -64,9 +74,11 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
             data.align = (floatalign.length) ? floatalign : vertalign;
             data.align = (data.align.length) ? data.align : 'none';
             data.style = editor.dom.serializeStyle(editor.dom.parseStyle(editor.dom.getAttrib(imgElm, 'style')));
+            data.showcaption = hasCaption(imgElm);
         } else {
-            data.width = data.height = data.hspace = data.vspace = data.border = data.align = data.style = '';
+            data.width = data.height = data.hspace = data.vspace = data.border = data.align = data.style = data.showcaption = '';
         }
+
         // are we in a view, somewhere in a group, etc? (forum topic, forum or group page, blog, blog post, etc.?)
         // this determines selected tab for file browser
         // TODO find a better way than scraping the page like this
@@ -125,6 +137,7 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
             jQuery(formname + '_hspace').val(data.hspace);
             jQuery(formname + '_vspace').val(data.vspace);
             jQuery(formname + '_border').val(data.border);
+            jQuery(formname + '_showcaption').prop('checked', data.showcaption);
             if (selected) {
                 jQuery(formname + '_artefactfieldset_container').find('.collapse-indicator').before('<span class="text-small text-midtone file-name"> - ' + getSelectedObject().title + '</span>');
             }
@@ -278,9 +291,22 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
                     data.style = null;
                 }
 
+                var description = null;
+
                 var selected = getSelectedObject();
                 if (selected) {
-                    data.alt = selected.description ? selected.description : selected.title;
+                    if (!selected.isdecorative) {
+                        description = selected.description;
+                        if (selected.alttext) {
+                            data.alt = selected.alttext;
+                        }
+                        else if (selected.description) {
+                            data.alt = selected.description;
+                        }
+                    }
+                    else {
+                        data.alt = '';
+                    }
                 }
 
                 data = {
@@ -288,7 +314,8 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
                     alt: data.alt,
                     width: data.width,
                     height: data.height,
-                    style: data.style
+                    style: data.style,
+                    showcaption: data.showcaption && !selected.isdecorative
                 };
 
                 editor.undoManager.transact(function() {
@@ -306,8 +333,22 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
                         editor.selection.setContent(dom.createHTML('img', data));
                         imgElm = dom.get('__mcenew');
                         dom.setAttrib(imgElm, 'id', null);
+                        if (data.showcaption) {
+                            wrapInFigure(imgElm, description);
+                        }
                     } else {
                         dom.setAttribs(imgElm, data);
+                        if (data.showcaption) {
+                            if (hasCaption(imgElm)) {
+                                removeFigure(imgElm);
+                            }
+                            wrapInFigure(imgElm, description);
+                        }
+                        else {
+                            if (hasCaption(imgElm)) {
+                                removeFigure(imgElm);
+                            }
+                        }
                     }
 
                     waitLoad(imgElm);
@@ -318,6 +359,27 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
                 removeImageBrowser();
             }
         } // end onSubmitForm
+
+        function hasCaption(image) {
+            return image.parentNode !== null && image.parentNode.nodeName === 'FIGURE';
+        }
+
+        function wrapInFigure(image, description) {
+            var caption = description;
+            if (caption) {
+                var figureElm = dom.create('figure', { class: 'figure image' });
+                dom.insertAfter(figureElm, image);
+                figureElm.appendChild(image);
+                figureElm.appendChild(dom.create('figcaption', { contentEditable: 'true', class: 'figure-caption' }, caption));
+                figureElm.contentEditable = 'false';
+            }
+        }
+
+        function removeFigure(image) {
+            var figureElm = image.parentNode;
+            dom.insertAfter(image, figureElm);
+            dom.remove(figureElm);
+        }
 
         function removeImageBrowser() {
             setTimeout(function() {
@@ -333,13 +395,13 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
         function getFormVals() {
             data = {
                     src: jQuery(formname + '_url').val(),
-                    alt: jQuery(formname + '_alt').val(),
                     width: jQuery(formname + '_width').val(),
                     style: jQuery(formname + '_style').val(),
                     hspace: jQuery(formname + '_hspace').val(),
                     vspace: jQuery(formname + '_vspace').val(),
                     border: jQuery(formname + '_border').val(),
                     align: jQuery(formname + '_align').val(),
+                    showcaption: jQuery(formname + '_showcaption').prop("checked"),
                 };
             return data;
         }
@@ -441,6 +503,32 @@ tinymce.PluginManager.add('imagebrowser', function(editor) {
             win.find(formname +'_style').val(dom.serializeStyle(dom.parseStyle(dom.serializeStyle(css))));
         }
     } // end of loadImageBrowser
+
+    var hasImageClass = function (node) {
+        var className = node.attr('class');
+        return className && /\bimage\b/.test(className);
+    };
+
+    var toggleContentEditableState = function (state) {
+        return function (nodes) {
+            var i = nodes.length;
+            var toggleContentEditable = function (node) {
+                node.attr('contenteditable', state ? 'true' : null);
+            };
+            while (i--) {
+                var node = nodes[i];
+                if (hasImageClass(node)) {
+                    node.attr('contenteditable', state ? 'false' : null);
+                    tinymce.util.Tools.resolve('tinymce.util.Tools').each(node.getAll('figcaption'), toggleContentEditable);
+                }
+            }
+        };
+    };
+
+    editor.on('PreInit', function() {
+        editor.parser.addNodeFilter('figure', toggleContentEditableState(true));
+        editor.serializer.addNodeFilter('figure', toggleContentEditableState(false));
+    });
 
     editor.ui.registry.addButton('imagebrowser', {
         icon: 'image',

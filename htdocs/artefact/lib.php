@@ -285,6 +285,9 @@ abstract class ArtefactType implements IArtefactType {
     protected $author;
     protected $authorname;
     protected $allowcomments = 0;
+    protected $isdecorative = 0;
+    protected $alttext;
+    protected $altiscaption = 1;
     protected $approvecomments = 0;
     protected $rolepermissions;
     protected $mtimemanuallyset;
@@ -1989,6 +1992,14 @@ function artefact_get_references_in_html($html) {
 function artefact_get_records_by_id($ids) {
     if (!empty($ids)) {
         if ($records = get_records_select_assoc('artefact', 'id IN (' . join(',', array_map('intval', $ids)) . ')')) {
+            foreach ($records as $record) {
+                if ($record->artefacttype == 'image') {
+                    $image = get_record('artefact_file_image', 'artefact', $record->id);
+                    $record->isdecorative = $image->isdecorative;
+                    $record->altiscaption = $image->altiscaption;
+                    $record->alttext = $image->alttext;
+                }
+            }
             return $records;
         }
     }

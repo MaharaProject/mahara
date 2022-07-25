@@ -1,14 +1,24 @@
 <div id="thumbnails{$instanceid}" class="card-body thumbnails js-masonry">
     {foreach from=$images item=image}
-        <div {if $image.squaredimensions}style="width:{$image.squaredimensions}px;height:{$image.squaredimensions}px;"{/if} class="thumb">
-            <a {if $image.fancybox}class="gallery-popup" data-bs-target="#gallerymodal" data-toggle="modal" data-link="{$image.link}" data-caption="{$image.description}"{/if} title="{$image.title}">
-                <img src="{$image.source}" alt="{$image.title}" title="{$image.title}" width="{$width}" height="{$width}"/>
-            </a>
-        {if $showdescription && $image.description}
-        <p class="text-small title">
-            {$image.description|truncate:60|clean_html|safe}
-        </p>
-        {/if}
+        <div {if $image.squaredimensions}style="width:{$image.squaredimensions}px;"{/if} class="thumb">
+            {if $showdescription && ($image.description || $image.altiscaption) && !$image.isdecorative}
+                <a {if $image.fancybox}class="gallery-popup" data-bs-target="#gallerymodal" data-bs-toggle="modal" data-bs-link="{$image.link}" data-bs-caption="{$image.bootstrapcaption}" data-bs-title="{$image.title}"{/if} aria-describedby="{$image.id}">
+                    <figure class="figure">
+                    <img class="figure-img" style="height:{$image.squaredimensions}px;" src="{$image.source}" id="{$image.id}" alt="{if !$image.altiscaption && !$image.isdecorative}{$image.alttext}{/if}" width="{$width}" height="{$width}"/>
+                        <figcaption class="figure-caption">
+                        {if $image.altiscaption}
+                            {$image.alttext|truncate:60|clean_html|safe}
+                        {else}
+                            {$image.description|truncate:60|clean_html|safe}
+                        {/if}
+                        </figcaption>
+                     </figure>
+                </a>
+            {else}
+                <a {if $image.fancybox}class="gallery-popup" data-bs-target="#gallerymodal" data-bs-toggle="modal" data-bs-link="{$image.link}" data-bs-caption="" data-bs-title="{$image.title}"{/if} aria-describedby="{$image.id}">
+                    <img  style="height:{$image.squaredimensions}px;" src="{$image.source}" id="{$image.id}" alt="{if !$image.isdecorative}{$image.alttext}{/if}" width="{$width}" height="{$width}"/>
+                </a>
+            {/if}
         </div>
     {/foreach}
 </div>
@@ -46,10 +56,10 @@ jQuery(function($) {literal}{{/literal}
         $(this).on('click', function(e) {
             e.preventDefault();
             let btn = e.target.closest('a');
-            let modalimg = $('<img>', {literal}{{/literal}'src':$(btn).data('link'){literal}}{/literal});
+            let modalimg = $('<img>', {literal}{{/literal}'src':$(btn).data('bs-link'),'alt':$(btn).find('img').prop('alt'){literal}}{/literal});
             $('#gallerymodal').find('.modal-image').html(modalimg);
-            $('#gallerymodal').find('.modal-caption').text($(btn).data('caption'));
-            $('#gallerymodal').find('.modal-header-title').text($(btn).prop('title'));
+            $('#gallerymodal').find('.modal-caption').text($(btn).data('bs-caption'));
+            $('#gallerymodal').find('.modal-header-title').text($(btn).data('bs-title'));
         });
     });
 {literal}}{/literal});

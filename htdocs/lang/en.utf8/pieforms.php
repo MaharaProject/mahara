@@ -105,3 +105,7 @@ $string['switchbox.no'] = 'No';
 
 $string['requiredfields'] = "Fields marked by '%s' are required.";
 $string['oneoffields'] = "Fields marked by '%s' require one of them to be filled in.";
+
+$string['isdecorative'] = 'Decorative image';
+$string['alttext'] = 'Alt text';
+$string['altiscaption'] = 'Use alt text as image caption';

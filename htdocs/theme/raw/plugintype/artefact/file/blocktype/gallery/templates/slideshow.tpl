@@ -5,14 +5,21 @@
             {foreach from=$images item=image key=k name=images}
 
             <div class="{if $dwoo.foreach.images.first}carousel-item active{else}carousel-item{/if}">
-                <img src="{$image.source}" alt="{$image.title}" title="{$image.title}" class="mx-auto d-block">
 
-                {if $showdescription && $image.title}
-                <div class="carousel-caption" id="description_{$instanceid}_{$k}">
-                    {$image.title|clean_html|safe}
-                </div>
+                {if $showdescription && !$image.isdecorative}
+                    <img src="{$image.source}" alt="{if !$image.altiscaption}{$image.alttext}{/if}" class="mx-auto d-block" role="slide">
+                    <div class="carousel-caption" id="description_{$instanceid}_{$k}">
+                    {if $image.altiscaption}
+                        {$image.alttext|clean_html|safe}
+                    {else}
+                        {$image.description|clean_html|safe}
+                    {/if}
+                    </div>
+                {else}
+                    <img src="{$image.source}" alt="{if !$image.isdecorative}{$image.alttext}{/if}" class="mx-auto d-block" role="slide">
                 {/if}
             </div>
+
             {/foreach}
         </div>
 

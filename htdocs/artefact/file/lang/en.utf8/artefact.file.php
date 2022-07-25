@@ -401,3 +401,4 @@ $string['rotate90img'] = 'Rotate image 90 degrees clockwise from original positi
 $string['rotate180img'] = 'Rotate image 180 degrees clockwise from original position';
 $string['rotate270img'] = 'Rotate image 270 degrees clockwise from original position';
 $string['rotate0img'] = 'Rotate image to the original position';
+$string['caption'] = 'Caption';

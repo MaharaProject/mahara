@@ -539,5 +539,44 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
         set_config_plugin('blocktype', 'internalmedia', 'enabledtypes', serialize($options));
     }
 
+    if ($oldversion < 2022072500) {
+        log_debug("Add 'isdecorative', 'alttext' and 'altiscaption' columns to the 'artefact_file_image' table");
+        $table = new XMLDBTable('artefact_file_image');
+        $field = new XMLDBField('isdecorative');
+        if (!field_exists($table, $field)) {
+            $field->setAttributes(XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+            add_field($table, $field);
+        }
+        $field = new XMLDBField('alttext');
+        if (!field_exists($table, $field)) {
+            $field->setAttributes(XMLDB_TYPE_TEXT);
+            add_field($table, $field);
+        }
+        $field = new XMLDBField('altiscaption');
+        if (!field_exists($table, $field)) {
+            $field->setAttributes(XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+            add_field($table, $field);
+        }
+        // Now lets set the current description text for images as the alttext and set 'altiscaption' to be true
+        log_debug("Set 'alttext' for the existing images");
+        if ($records = get_records_sql_array("SELECT id, description FROM {artefact}
+                                              WHERE artefacttype = 'image'
+                                              AND description IS NOT NULL
+                                              AND description != ''")) {
+            $count = 0;
+            $limit = 200;
+            $total = count($records);
+            foreach ($records as $record) {
+                execute_sql("UPDATE {artefact_file_image} SET altiscaption = 1, alttext = ? WHERE artefact = ?", array($record->description, $record->id));
+                $count++;
+                if (($count % $limit) == 0 || $count == $total) {
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
+            }
+        }
+
+    }
+
     return $status;
 }

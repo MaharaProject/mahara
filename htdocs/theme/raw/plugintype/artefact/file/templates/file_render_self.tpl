@@ -5,7 +5,7 @@
 <div class="flexbox">
     <div class="filedata-icon modal-segment-heading">
         <a href="{$downloadpath}">
-            <img src="{$downloadpath}&maxwidth=400&maxheight=180" alt="">
+            <img src="{$downloadpath}&maxwidth=400&maxheight=180" alt="{$alttext|clean_html|safe}">
         </a>
     </div>
 {/if}
@@ -16,8 +16,14 @@
     </tr>
     {if $description}
     <tr>
-        <th>{str tag=Description section=artefact.file}:</th>
+        <th>{if $artefacttype == 'image'}{str tag=caption section=artefact.file}{else}{str tag=Description section=artefact.file}{/if}:</th>
         <td>{$description|clean_html|safe}</td>
+    </tr>
+    {/if}
+    {if $alttext}
+    <tr>
+        <th>{str tag=alttext section=pieforms}:</th>
+        <td>{$alttext|clean_html|safe}</td>
     </tr>
     {/if}
     {if $tags}

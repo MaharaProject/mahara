@@ -178,6 +178,7 @@ class PluginArtefactFile extends PluginArtefact {
                     'remove',
                     'cancel',
                     'defaulthint',
+                    'description',
                 ),
                 'artefact.file' => array(
                     'confirmdeletefile',
@@ -209,6 +210,7 @@ class PluginArtefactFile extends PluginArtefact {
                     'rotate90img',
                     'rotate180img',
                     'rotate270img',
+                    'caption',
                 ),
             ),
         );
@@ -552,7 +554,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         global $USER;
         $select = '
             SELECT
-                a.id, a.artefacttype, a.mtime, f.size, fi.orientation, a.title, a.description, a.license, a.licensor, a.licensorurl, a.locked, a.allowcomments, u.profileicon AS defaultprofileicon, a.author,
+                a.id, a.artefacttype, a.mtime, f.size, fi.orientation, fi.isdecorative, fi.alttext, fi.altiscaption, a.title, a.description, a.license, a.licensor, a.licensorurl, a.locked, a.allowcomments, u.profileicon AS defaultprofileicon, a.author,
                 COUNT(DISTINCT c.id) AS childcount, COUNT (DISTINCT aa.artefact) AS attachcount, COUNT(DISTINCT va.view) AS viewcount, COUNT(DISTINCT s.id) AS skincount,
                 COUNT(DISTINCT api.id) AS profileiconcount, COUNT(DISTINCT fpa.id) AS postcount';
         $from = '
@@ -584,7 +586,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         $groupby = '
             GROUP BY
                 a.id, a.artefacttype, a.mtime, f.size, a.title, a.description, a.license, a.licensor, a.licensorurl, a.locked, a.allowcomments,
-                u.profileicon, fi.orientation';
+                u.profileicon, fi.orientation, fi.isdecorative, fi.alttext, fi.altiscaption';
 
         $phvals = array();
 
@@ -659,6 +661,8 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                 $item->mtime = format_date(strtotime($item->mtime), 'strfdaymonthyearshort');
                 $item->tags = array();
                 $item->allowcomments = (bool) $item->allowcomments;
+                $item->isdecorative = (bool) $item->isdecorative;
+                $item->altiscaption = (bool) $item->altiscaption;
                 $item->icon = call_static_method(generate_artefact_class_name($item->artefacttype), 'get_icon', array('id' => $item->id));
                 if ($item->size) { // Doing this here now for non-js users
                     $item->size = ArtefactTypeFile::short_size($item->size, true);
@@ -1465,7 +1469,7 @@ class ArtefactTypeFile extends ArtefactTypeFileBase {
             $smarty->assign('license', false);
         }
 
-        foreach (array('title', 'description', 'artefacttype', 'owner', 'tags') as $field) {
+        foreach (array('title', 'description', 'alttext', 'artefacttype', 'owner', 'tags') as $field) {
             $smarty->assign($field, $this->get($field));
         }
 
@@ -2475,6 +2479,24 @@ class ArtefactTypeImage extends ArtefactTypeFile {
     protected $height;
     protected $orientation;
 
+    /**
+     * Is the image decorative only
+     * @var boolean
+     */
+    protected $isdecorative;
+
+    /**
+     * Alt text provided to screen readers
+     * @var string
+     */
+    protected $alttext;
+
+    /**
+     * Use the alt text for the image as the caption also
+     * @var boolean
+     */
+    protected $altiscaption;
+
     public function __construct($id = 0, $data = null) {
         parent::__construct($id, $data);
 
@@ -2512,7 +2534,10 @@ class ArtefactTypeImage extends ArtefactTypeFile {
             'artefact'      => $this->get('id'),
             'width'         => $this->get('width'),
             'height'        => $this->get('height'),
-            'orientation'   => $this->get('orientation')
+            'orientation'   => $this->get('orientation'),
+            'isdecorative'  => $this->get('isdecorative'),
+            'alttext'       => $this->get('alttext'),
+            'altiscaption'  => $this->get('altiscaption')
         );
 
         if ($new) {

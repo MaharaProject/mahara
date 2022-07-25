@@ -178,6 +178,10 @@ class ImageBrowser {
                             'maxlength' => 2
                     )
                 ),
+                'showcaption' => array (
+                    'type' => 'checkbox',
+                    'title' => get_string ( 'showcaption' ),
+                ),
                 'align' => array (
                     'defaultvalue' => 'none',
                     'type' => 'select',
