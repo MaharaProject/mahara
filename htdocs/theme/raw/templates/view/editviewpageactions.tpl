@@ -40,7 +40,7 @@ data-url="{$WWWROOT}{if $collectionurl}{$collectionurl}{else}view/view.php?id={$
     {/if}
 
     <button class="btn btn-secondary editviews returntolocation" data-url="{$url}" title="{$title}">
-        <span class="icon icon-step-backward icon-lg" aria-hidden="true" role="presentation"></span>
+        <span class="icon icon-layer-group icon-lg" aria-hidden="true" role="presentation"></span>
         <span class="btn-title visually-hidden">{$title}</span>
     </button>
     </div>
