@@ -1,4 +1,13 @@
 <?php
+/**
+ * Custom form for Pieforms.
+ *
+ * @see htdocs/lib/pieforms/pieform.php:814
+ * @see htdocs/admin/users/add.php:146
+ */
+
+
+// @phpstan-ignore-next-line - Always set in pieform.php
 echo $form_tag;
 ?>
 
@@ -14,7 +23,9 @@ echo $form_tag;
                 <?php $fullname_format = get_string('fullname_format', 'langconfig'); ?>
                 <?php foreach (($fullname_format == 'lastname_firstname') ? array('lastname', 'firstname', 'email') : array('firstname', 'lastname', 'email') as $field) { ?>
                 <div class="form-group">
+                    <?php /* @phpstan-ignore-next-line - Always set in pieform.php */ ?>
                     <label><?php echo $elements[$field]['labelhtml']; ?></label>
+                    <?php /* @phpstan-ignore-next-line - Always set in pieform.php */ ?>
                     <?php echo $elements[$field]['html']; ?>
                     <?php if (isset($elements[$field]['error'])) { ?>
                         <p class="text-danger"><?php echo $elements[$field]['error']; ?></p>
@@ -30,6 +41,7 @@ echo $form_tag;
                 <div class="choice">
                     <input type="radio" name="createmethod" class="ic"<?php if (param_exists('createmethod') && param_alphanum('createmethod') == 'leap2a') { ?> checked="checked"<?php } ?> id="uploadleap" value="leap2a"> <label for="uploadleap"><?php echo get_string('uploadleap2afile', 'admin'); ?></label> <?php echo get_help_icon('core', 'admin', 'adduser', 'leap2afile'); ?>
                 </div>
+                <?php /* @phpstan-ignore-next-line - Always set in pieform.php */ ?>
                 <?php echo $elements['leap2afile']['html']; ?>
                 <?php if (isset($elements['leap2afile']['error'])) { ?>
                     <div class="errmsg"><?php echo $elements['leap2afile']['error']; ?></div>
@@ -70,6 +82,7 @@ echo $form_tag;
                     <?php echo get_string('accountoptionsdesc', 'account'); ?>
                 </button>
                 <div class="form-group">
+                    <?php /* @phpstan-ignore-next-line - Always set in pieform.php */ ?>
                     <?php echo $elements['submit']['html']; ?>
                 </div>
                 <div class="metadata form-group html">
@@ -111,12 +124,17 @@ echo $form_tag;
                         'elements' => $fieldset_elements,
                     );
 
+                    // @phpstan-ignore-next-line - Always set in pieform.php
                     $this->include_plugin('renderer', $this->data['renderer']);
+                    // @phpstan-ignore-next-line - Always set in pieform.php
                     $this->include_plugin('element', 'fieldset');
+                    // @phpstan-ignore-next-line - Always set in pieform.php
                     $this->build_element_html($accountoptions_fieldset);
 
+                    // @phpstan-ignore-next-line - Always set in pieform.php
                     echo pieform_render_element($this, $accountoptions_fieldset);
 
+                    // @phpstan-ignore-next-line - Always set in pieform.php
                     echo $hidden_elements;
 
                     ?>
