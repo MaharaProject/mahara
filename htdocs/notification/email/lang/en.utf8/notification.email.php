@@ -14,9 +14,7 @@ defined('INTERNAL') || die();
 $string['name'] = 'Email';
 $string['emailsubject'] = '%s';
 $string['emailheader'] = 'You have been sent a notification from %s. Message follows:';
-$string['emailfooter'] = 'You are receiving this message because you are an administrator for the institution of which this person is a member.
-
-This is an auto-generated notification from %s. To update your notification preferences, visit %s';
+$string['emailfooter'] = 'This is an auto-generated notification from %s. To update your notification preferences, visit %s';
 $string['referurl'] = 'See %s';
 $string['unsubscribe'] = 'To unsubscribe go to %s';
 $string['unsubscribetitle'] = 'Unsubscribe';
