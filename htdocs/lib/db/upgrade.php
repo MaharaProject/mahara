@@ -506,9 +506,18 @@ function xmldb_core_upgrade($oldversion=0) {
 
     if ($oldversion < 2021042200) {
         log_debug('Add new activity type for sending view access revocation notifications');
-        execute_sql("INSERT INTO {activity_type}
-         (name, admin, delay, allownonemethod, defaultmethod)
-         VALUES('viewaccessrevoke', 0, 0, 0, 'email') ");
+        ensure_record_exists(
+            'activity_type',
+            (object) array('name' => 'viewaccessrevoke'),
+            (object) array(
+                'name' => 'viewaccessrevoke',
+                'admin' => 0,
+                'delay' => 0,
+                'allownonemethod' => 0,
+                'defaultmethod' => 'email'
+            )
+        );
+
     }
 
     if ($oldversion < 2021042201) {
