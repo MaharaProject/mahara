@@ -12,6 +12,7 @@
 defined('INTERNAL') || die();
 
 $string['parentlanguage'] = '';
+// strftime() formats for date conversion
 $string['pieform_calendar_dateformat'] = '%%Y/%%m/%%d';
 $string['pieform_calendar_timeformat'] = '%%H:%%M';
 $string['strftimedate'] = '%%e %%B %%Y';
@@ -40,6 +41,9 @@ $string['strfdaymonthyearshort'] = '%%d/%%m/%%Y';
 $string['strfdateofbirth'] = '%%Y/%%m/%%d';
 $string['strftimew3cdatetime'] = '%%Y-%%m-%%dT%%H:%%M:%%S%%z';
 $string['strftimew3cdate'] = '%%Y-%%m-%%d';
+// DateTime formats for date conversion
+$string['datetimeclassdaydatetime'] = 'l, j F Y, H:i';
+
 $string['thislanguage'] = 'English';
 $string['locales'] = 'en_US.utf8,en_GB.utf8,en,english-us,english-uk,english';
 $string['fullname_format'] = 'firstname_lastname';

@@ -792,7 +792,7 @@ class ArtefactTypeProfile extends ArtefactType {
         return $form;
     }
 
-    public function save_config_options(Pieform $form, $values) {
+    public static function save_config_options(Pieform $form, $values) {
         $mandatory = array_merge(array_keys(self::get_always_mandatory_fields()), $values['mandatory']);
         set_config_plugin('artefact', 'internal', 'profilemandatory', join(',', $mandatory));
         $searchable = array_merge(array_keys(self::get_always_searchable_fields()), $values['searchable']);

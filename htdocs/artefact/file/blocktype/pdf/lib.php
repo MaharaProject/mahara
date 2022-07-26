@@ -233,6 +233,7 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
             // set the blocktype to have quickedit mode
             set_field('blocktype_installed', 'quickedit', 1, 'name', 'pdf');
         }
+        return true;
     }
 
     public static function instance_quickedit_form(BlockInstance $instance) {
