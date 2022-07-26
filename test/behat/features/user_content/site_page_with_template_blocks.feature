@@ -44,7 +44,7 @@ Scenario: Check templates not editable then create and use the Page template wit
 
     # Add a text block into the site default portfolio page and create a new portfolio page (Bug 1488255)
     When I choose "Pages and collections" in "Configure site" from administration menu
-    And I click on "Add" in the ".btn-top-right" "css_element"
+    And I click on "Create" in the "Create" "Views" property
     And I click on "Page" in the dialog
     And I set the field "Page title" to "Site page with block templates"
     And I click on "Save"

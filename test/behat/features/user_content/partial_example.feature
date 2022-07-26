@@ -15,7 +15,7 @@ Scenario: Meta test testing Behat's functionality (Bug #1387836)
     And I click on "Save profile"
     And I choose "Pages and collections" in "Create" from main menu
     # Creating a page
-    And I click on "Add" in the ".btn-top-right" "css_element"
+    And I click on "Create" in the "Create" "Views" property
     And I click on "Page" in the dialog
     And I fill in "Page title" with "test page name 1"
     And I click on "Save"
@@ -23,7 +23,7 @@ Scenario: Meta test testing Behat's functionality (Bug #1387836)
     And I should see "Page saved successfully"
     # Creating a collection
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Add" in the ".btn-top-right" "css_element"
+    And I click on "Create" in the "Create" "Views" property
     And I click on "Collection" in the dialog
     And I fill in "Collection name" with "test collection name"
     And the "Page navigation bar" checkbox should be checked

@@ -32,7 +32,7 @@ I can create a new page from the site default portfolio page
     And I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
     And I should see "Pages and collections"
-    And I click on "Add"
+    And I click on "Create" in the "Create" "Views" property
     And I click on "Page" in the dialog
     And I should see "Settings"
     And I click on "Edit"

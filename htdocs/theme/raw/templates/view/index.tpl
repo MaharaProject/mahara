@@ -3,7 +3,7 @@
     <div class="btn-top-right btn-group btn-group-top {if $GROUP} pagetabs{/if}">
         <button id="addview-button" class="btn btn-secondary" type="button" data-bs-target="{$WWWROOT}view/editlayout.php?new=1{$urlparamsstr}" >
             <span class="icon icon-plus left" role="presentation" aria-hidden="true" ></span>
-            {str section=mahara tag=add}
+            {str section=mahara tag=Create}
         </button>
         <button id="copyview-button" class="btn btn-secondary" type="button" data-url="{$WWWROOT}view/choosetemplate.php?searchcollection=1{$urlparamsstr}">
             <span class="icon icon-regular icon-copy left" role="presentation" aria-hidden="true"></span>

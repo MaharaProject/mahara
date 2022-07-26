@@ -127,8 +127,7 @@ Scenario: Check public/private skins on copied pages.
     And I click on "Save"
     # Create a public page with a Public Skin.
     And I choose "Pages and collections" in "Create" from main menu
-    And I scroll to the base of id "addview-button"
-    And I click on "Add"
+    And I click on "Create" in the "Create" "Views" property
     And I click on "Page" in the dialog
     And I fill in the following:
     | Page title       | Public page with a skin that is public |
@@ -146,9 +145,8 @@ Scenario: Check public/private skins on copied pages.
     And I click on "Save"
     # Create a public page with a Private Skin.
     And I choose "Pages and collections" in "Create" from main menu
-    And I scroll to the base of id "addview-button"
     And I should see "Pages and collections" in the "H1 heading" "Common" property
-    And I click on "Add"
+    And I click on "Create" in the "Create" "Views" property
     And I click on "Page" in the dialog
     And I fill in the following:
     | Page title       | Public page with a skin that is private |

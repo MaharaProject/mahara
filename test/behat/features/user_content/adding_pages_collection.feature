@@ -23,7 +23,7 @@ Scenario: Creating a collection AND adding pages
     # Create Test collection
     # This is the test for manually creating a collection
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Add"
+    And I click on "Create" in the "Create" "Views" property
     And I click on "Collection" in the dialog
     And I fill in the following:
         | Collection name | Test Collection |
@@ -60,7 +60,7 @@ Scenario: Creating a collection AND adding pages
     And I select "Registered people" from "accesslist[0][searchtype]"
     And I click on "Save"
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Add"
+    And I click on "Create" in the "Create" "Views" property
     And I click on "Page" in the dialog
     And I set the following fields to these values:
     | Page title | New page |

@@ -83,7 +83,7 @@ Scenario: Mahara member can use Institution tags in their content
 Scenario: Inst admin can use Institution tags when creating Institution pages
     Given I log in as "UserB" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Institutions" from administration menu
-    And I click on "Add" in the "Add" "Institutions" property
+    And I click on "Create" in the "Create" "Views" property
     And I click on "Page" in the dialog
     And I fill in the following:
     | Page title | Test view |

@@ -52,7 +52,7 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
     # Creating a collection AND adding pages
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Pages and collections" in "Create" from main menu
-    And I click on "Add"
+    And I click on "Create" in the "Create" "Views" property
     When I click on "Collection" in the dialog
     And I fill in the following:
     | Collection name | SmartEvidence Collection 1 |
