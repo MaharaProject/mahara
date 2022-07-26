@@ -191,6 +191,11 @@ class AuthSaml extends Auth {
 
         $create = false;
         $update = false;
+        $hasaffiliations = (
+            !empty($this->config['idaffiliations']) &&
+            !empty($this->config['emailaffiliations']) &&
+            !empty($this->config['roleaffiliations'])
+        );
         // Check if a user needs a certain role to be allowed to login
         if (!empty($roleprefix)) {
             $roleallowed = false;
@@ -461,47 +466,49 @@ class AuthSaml extends Auth {
             $user->lastlogin          = time();
         }
 
-        $oldaffiliations = get_records_sql_assoc("SELECT institution, staff, admin FROM {usr_institution} WHERE usr = ? AND institution != ?", array($user->id, $institutionname));
-        if (!empty($affiliations)) {
-            $primaryemail = '';
-            $maxrolevalue = 0;
-            foreach ($affiliations as $affiliation => $affiliationroles) {
-                list ($aff_user, $aff_usr_is_siteadmin, $aff_usr_is_sitestaff, $aff_userroles, $aff_institutionrole) = $this->saml_map_roles($user, $affiliationroles['roles'], $affiliation, $roletypes);
-                $this->saml_set_basic_role($aff_user, $affiliation, $affiliationroles['roles'], $aff_institutionrole, $roletypes);
-                // remove from old affiliations as we've dealt with this one now
-                if (!empty($affiliationroles['email']) && $create) {
-                    set_profile_field($user->id, 'email', $affiliationroles['email'], true);
-                    $currentrolevalue = $this->get_max_role_value($affiliationroles['roles'], $roletypes);
-                    if ($currentrolevalue > $maxrolevalue) {
-                        $primaryemail = $affiliationroles['email'];
-                        $maxrolevalue = $currentrolevalue;
+        if ($hasaffiliations) {
+            $oldaffiliations = get_records_sql_assoc("SELECT institution, staff, admin FROM {usr_institution} WHERE usr = ? AND institution != ?", array($user->id, $institutionname));
+            if (!empty($affiliations)) {
+                $primaryemail = '';
+                $maxrolevalue = 0;
+                foreach ($affiliations as $affiliation => $affiliationroles) {
+                    list ($aff_user, $aff_usr_is_siteadmin, $aff_usr_is_sitestaff, $aff_userroles, $aff_institutionrole) = $this->saml_map_roles($user, $affiliationroles['roles'], $affiliation, $roletypes);
+                    $this->saml_set_basic_role($aff_user, $affiliation, $affiliationroles['roles'], $aff_institutionrole, $roletypes);
+                    // remove from old affiliations as we've dealt with this one now
+                    if (!empty($affiliationroles['email']) && $create) {
+                        set_profile_field($user->id, 'email', $affiliationroles['email'], true);
+                        $currentrolevalue = $this->get_max_role_value($affiliationroles['roles'], $roletypes);
+                        if ($currentrolevalue > $maxrolevalue) {
+                            $primaryemail = $affiliationroles['email'];
+                            $maxrolevalue = $currentrolevalue;
+                        }
                     }
+                    else if (!empty($affiliationroles['email']) && !$create) {
+                        if (!get_field('artefact_internal_profile_email', 'artefact', 'email', $affiliationroles['email'], 'owner', $user->id)) {
+                            $newemail = new ArtefactTypeEmail(0, null, TRUE);
+                            $newemail->set('owner', $user->id);
+                            $newemail->set('title', $affiliationroles['email']);
+                            $newemail->commit();
+                        }
+                        if ($currentprincipalemail === $affiliationroles['email']) {
+                            // our principal email was an affiliated one so we want to mark
+                            // as principal again instead of the one passed in on 'email' variable
+                            set_user_primary_email($user->id, $affiliationroles['email']);
+                        }
+                    }
+                    unset($oldaffiliations[$affiliation]);
                 }
-                else if (!empty($affiliationroles['email']) && !$create) {
-                    if (!get_field('artefact_internal_profile_email', 'artefact', 'email', $affiliationroles['email'], 'owner', $user->id)) {
-                        $newemail = new ArtefactTypeEmail(0, null, TRUE);
-                        $newemail->set('owner', $user->id);
-                        $newemail->set('title', $affiliationroles['email']);
-                        $newemail->commit();
-                    }
-                    if ($currentprincipalemail === $affiliationroles['email']) {
-                        // our principal email was an affiliated one so we want to mark
-                        // as principal again instead of the one passed in on 'email' variable
-                        set_user_primary_email($user->id, $affiliationroles['email']);
-                    }
+                if (!empty($primaryemail)) {
+                    set_user_primary_email($user->id, $primaryemail);
+                    $user->email = $primaryemail;
                 }
-                unset($oldaffiliations[$affiliation]);
             }
-            if (!empty($primaryemail)) {
-                set_user_primary_email($user->id, $primaryemail);
-                $user->email = $primaryemail;
-            }
-        }
-        if (!empty($oldaffiliations)) {
-            foreach ($oldaffiliations as $oldaffid => $oldaffiliation) {
-                // Not affiliated with this institution anymore so need to remove them
-                $oldinstitution = new Institution($oldaffid);
-                $oldinstitution->removeMember($user->id);
+            if (!empty($oldaffiliations)) {
+                foreach ($oldaffiliations as $oldaffid => $oldaffiliation) {
+                    // Not affiliated with this institution anymore so need to remove them
+                    $oldinstitution = new Institution($oldaffid);
+                    $oldinstitution->removeMember($user->id);
+                }
             }
         }
 
