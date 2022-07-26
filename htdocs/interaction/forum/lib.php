@@ -12,18 +12,23 @@
 
 require_once('activity.php');
 
-// Constants for objectionable content reporting events.
-define('REPORT_OBJECTIONABLE', 1);
-define('MAKE_NOT_OBJECTIONABLE', 2);
-define('DELETE_OBJECTIONABLE_POST', 3);
-define('DELETE_OBJECTIONABLE_TOPIC', 4);
-define('POST_NEEDS_APPROVAL', 5);
-define('POST_REJECTED', 6);
-
 /**
  * Plugin Interaction Forum class
  */
 class PluginInteractionForum extends PluginInteraction {
+
+    // Constants for objectionable content reporting events.
+    const REPORT_OBJECTIONABLE = 1;
+    const MAKE_NOT_OBJECTIONABLE = 2;
+    const DELETE_OBJECTIONABLE_POST = 3;
+    const DELETE_OBJECTIONABLE_TOPIC = 4;
+    const POST_NEEDS_APPROVAL = 5;
+    const POST_REJECTED = 6;
+
+    // constants for forum membership types
+    const INTERACTION_FORUM_ADMIN = 1;
+    const INTERACTION_FORUM_MOD = 2;
+    const INTERACTION_FORUM_MEMBER = 4;
 
     /**
      * Get the config form
@@ -1424,7 +1429,7 @@ class ActivityTypeInteractionForumReportPost extends ActivityTypePlugin {
             'section' => 'interaction.forum'
         ));
 
-        if ($this->event === REPORT_OBJECTIONABLE) {
+        if ($this->event === PluginInteractionForum::REPORT_OBJECTIONABLE) {
             $this->overridemessagecontents = true;
             $this->strings->subject = (object) array(
                 'key'     => 'objectionablecontentpost',
@@ -1432,7 +1437,7 @@ class ActivityTypeInteractionForumReportPost extends ActivityTypePlugin {
                 'args'    => array($post->topicsubject, display_default_name($this->reporter)),
             );
         }
-        else if ($this->event === MAKE_NOT_OBJECTIONABLE) {
+        else if ($this->event === PluginInteractionForum::MAKE_NOT_OBJECTIONABLE) {
             $this->strings = (object) array(
                 'subject' => (object) array(
                     'key' => 'postnotobjectionablesubject',
@@ -1446,7 +1451,7 @@ class ActivityTypeInteractionForumReportPost extends ActivityTypePlugin {
                 ),
             );
         }
-        else if ($this->event === DELETE_OBJECTIONABLE_POST) {
+        else if ($this->event === PluginInteractionForum::DELETE_OBJECTIONABLE_POST) {
             $this->url = '';
             $this->strings = (object) array(
                 'subject' => (object) array(
@@ -1461,7 +1466,7 @@ class ActivityTypeInteractionForumReportPost extends ActivityTypePlugin {
                 ),
             );
         }
-        else if ($this->event === DELETE_OBJECTIONABLE_TOPIC) {
+        else if ($this->event === PluginInteractionForum::DELETE_OBJECTIONABLE_TOPIC) {
             $this->url = '';
             $this->strings = (object) array(
                 'subject' => (object) array(
@@ -1546,7 +1551,7 @@ class ActivityTypeInteractionForumPostmoderation extends ActivityTypePlugin {
 
         $this->url = 'interaction/forum/view.php?id=' . $this->forumid;
 
-        if ($this->event === POST_REJECTED) {
+        if ($this->event === PluginInteractionForum::POST_REJECTED) {
           // only notify the author of the post
             $this->users = activity_get_users($this->get_id(), array($this->poster));
             $this->temp = new stdClass();
@@ -1569,7 +1574,7 @@ class ActivityTypeInteractionForumPostmoderation extends ActivityTypePlugin {
                 ),
             );
         }
-        else if ($this->event === POST_NEEDS_APPROVAL) {
+        else if ($this->event === PluginInteractionForum::POST_NEEDS_APPROVAL) {
 
             $groupid = get_field('interaction_instance', 'group', 'id', $this->forumid);
 
@@ -1608,7 +1613,7 @@ class ActivityTypeInteractionForumPostmoderation extends ActivityTypePlugin {
 
     public function get_emailmessage($user) {
 
-        if ($this->event === POST_REJECTED) {
+        if ($this->event === PluginInteractionForum::POST_REJECTED) {
             $rejecterurl = profile_url($this->temp->rejecter);
             $rejectedtime = strftime(get_string_from_language($user->lang, 'strftimedaydatetime'), $this->temp->rejectedtime);
             $postedtime = strftime(get_string_from_language($user->lang, 'strftimedaydatetime'), $this->postedtime);
@@ -1619,7 +1624,7 @@ class ActivityTypeInteractionForumPostmoderation extends ActivityTypePlugin {
                 $postedtime, get_config('wwwroot') . $this->url, $rejecterurl
             );
         }
-        else if ($this->event === POST_NEEDS_APPROVAL) {
+        else if ($this->event === PluginInteractionForum::POST_NEEDS_APPROVAL) {
             $postedtime = strftime(get_string_from_language($user->lang, 'strftimedaydatetime'), $this->postedtime);
             $return = get_string_from_language(
                 $user->lang, 'postneedapprovaltext', 'interaction.forum',
@@ -1634,7 +1639,7 @@ class ActivityTypeInteractionForumPostmoderation extends ActivityTypePlugin {
     }
 
     public function get_htmlmessage($user) {
-      if ($this->event === POST_REJECTED) {
+      if ($this->event === PluginInteractionForum::POST_REJECTED) {
             $rejectername = hsc(display_default_name($this->temp->rejecter));
             $rejecterurl = profile_url($this->temp->rejecter);
             $rejectedtime = strftime(get_string_from_language($user->lang, 'strftimedaydatetime'), $this->temp->rejectedtime);
@@ -1646,7 +1651,7 @@ class ActivityTypeInteractionForumPostmoderation extends ActivityTypePlugin {
                 $postedtime, get_config('wwwroot') . $this->url, $rejecterurl, $rejectername
             );
         }
-        else if ($this->event === POST_NEEDS_APPROVAL) {
+        else if ($this->event === PluginInteractionForum::POST_NEEDS_APPROVAL) {
             $postedtime = strftime(get_string_from_language($user->lang, 'strftimedaydatetime'), $this->postedtime);
             $return = get_string_from_language(
                 $user->lang, 'postneedapprovalhtml', 'interaction.forum',
@@ -1675,11 +1680,6 @@ class ActivityTypeInteractionForumPostmoderation extends ActivityTypePlugin {
     }
 }
 
-// constants for forum membership types
-define('INTERACTION_FORUM_ADMIN', 1);
-define('INTERACTION_FORUM_MOD', 2);
-define('INTERACTION_FORUM_MEMBER', 4);
-
 /**
  * Can a user access a given forum?
  *
@@ -1704,7 +1704,7 @@ function user_can_access_forum($forumid, $userid=null) {
     // Allow site admins accessing the forum directly if it has objectionable content.
     $instance = new InteractionForumInstance($forumid);
     if ($instance->has_objectionable() && $forumuser->get('admin')) {
-        return $membership | INTERACTION_FORUM_ADMIN | INTERACTION_FORUM_MOD;
+        return $membership | PluginInteractionForum::INTERACTION_FORUM_ADMIN | PluginInteractionForum::INTERACTION_FORUM_MOD;
     }
 
     $groupid = get_field('interaction_instance', '"group"', 'id', $forumid);
@@ -1713,12 +1713,12 @@ function user_can_access_forum($forumid, $userid=null) {
     if (!$groupmembership) {
         return $membership;
     }
-    $membership = $membership | INTERACTION_FORUM_MEMBER;
+    $membership = $membership | PluginInteractionForum::INTERACTION_FORUM_MEMBER;
     if ($groupmembership == 'admin') {
-        $membership = $membership | INTERACTION_FORUM_ADMIN | INTERACTION_FORUM_MOD;
+        $membership = $membership | PluginInteractionForum::INTERACTION_FORUM_ADMIN | PluginInteractionForum::INTERACTION_FORUM_MOD;
     }
     if (record_exists('interaction_forum_moderator', 'forum', $forumid, 'user', $forumuser->get('id'))) {
-        $membership = $membership | INTERACTION_FORUM_MOD;
+        $membership = $membership | PluginInteractionForum::INTERACTION_FORUM_MOD;
     }
     return $membership;
 }

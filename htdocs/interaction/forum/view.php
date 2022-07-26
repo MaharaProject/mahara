@@ -52,8 +52,8 @@ if (!$forum) {
 define('GROUP', $forum->groupid);
 
 $membership = user_can_access_forum((int)$forumid);
-$admin = (bool)($membership & INTERACTION_FORUM_ADMIN);
-$moderator = (bool)($membership & INTERACTION_FORUM_MOD);
+$admin = (bool)($membership & PluginInteractionForum::INTERACTION_FORUM_ADMIN);
+$moderator = (bool)($membership & PluginInteractionForum::INTERACTION_FORUM_MOD);
 $group = get_group_by_id($forum->groupid, true);
 $publicgroup = $group->public;
 if (!$membership && !$publicgroup) {

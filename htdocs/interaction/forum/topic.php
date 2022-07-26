@@ -51,7 +51,7 @@ $ineditwindow = group_within_edit_window($group);
 $feedlink = get_config('wwwroot') . 'interaction/forum/atom.php?type=t&id=' . $topic->id;
 
 $membership = user_can_access_forum((int)$topic->forumid);
-$moderator = $ineditwindow && (bool)($membership & INTERACTION_FORUM_MOD);
+$moderator = $ineditwindow && (bool)($membership & PluginInteractionForum::INTERACTION_FORUM_MOD);
 
 $forumconfig = get_records_assoc('interaction_forum_instance_config', 'forum', $topic->forumid, '', 'field,value');
 $indentmode = isset($forumconfig['indentmode']) ? $forumconfig['indentmode']->value : 'full_indent';
@@ -466,7 +466,7 @@ function postnotobjectionable_submit(Pieform $form, $values) {
     $data->message    = '';
     $data->reporter   = $USER->get('id');
     $data->ctime      = time();
-    $data->event      = MAKE_NOT_OBJECTIONABLE;
+    $data->event      = PluginInteractionForum::MAKE_NOT_OBJECTIONABLE;
     activity_occurred('reportpost', $data, 'interaction', 'forum');
 
     db_commit();
