@@ -4727,7 +4727,7 @@ class View {
      * @param integer  $viewid      Only return a particular view (find by view id)
      * @param integer  $excludeowner Only return views not owned by this owner id
      * @param boolean  $groupbycollection Return one record for each collection, and one record for each view that's not in a collection
-     * @return array
+     * @return object
      */
     public static function view_search($query=null, $ownerquery=null, $ownedby=null, $copyableby=null, $limit=null, $offset=0,
                                        $extra=true, $sort=null, $types=null, $collection=false, $accesstypes=null, $tag=null,

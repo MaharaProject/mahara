@@ -21,6 +21,9 @@ $setlimit = param_boolean('setlimit', false);
 $groupid = param_integer('group', null);
 $institution = param_alphanum('institution', null);
 $orderby = param_alphanum('orderby', null);
+// Default to not being able to edit.
+$can_edit = false;
+$role = '';
 
 if (!empty($groupid)) {
     define('PUBLIC', 1);

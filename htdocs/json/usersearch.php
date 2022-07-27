@@ -17,6 +17,8 @@ require_once('searchlib.php');
 
 safe_require('search', 'internal');
 
+$query = '';
+
 try {
     $query = param_variable('query');
 }

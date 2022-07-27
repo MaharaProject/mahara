@@ -26,15 +26,20 @@ $limit  = param_integer('limit', 10);
 $offset = param_integer('offset', 0);
 $sort   = param_alpha('sort', 'name');
 $type   = param_alpha('type', null);
+$owner  = null;
+
+// Did we get an ID?
+if (!$viewid) {
+    $errorstr = get_string('missingparamid', 'error');
+    json_reply(true, $errorstr);
+}
 
 // Check view id to see if we are allowed access the view and the view is owned by a user
-if ($viewid) {
-    $view = new View($viewid);
-    $owner = $view->get('owner');
-    if (!can_view_view($view) || !$owner) {
-        $errorstr = get_string('accessdenied', 'error');
-        json_reply(true, $errorstr);
-    }
+$view = new View($viewid);
+$owner = $view->get('owner');
+if (!can_view_view($view) || !$owner) {
+    $errorstr = get_string('accessdenied', 'error');
+    json_reply(true, $errorstr);
 }
 
 // Now we have a valid view lets get the user id
