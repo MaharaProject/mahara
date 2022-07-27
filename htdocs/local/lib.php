@@ -60,5 +60,9 @@ function local_get_collection_author($collectionid) {
     else if ($registerstatus == PCNZ_REGISTEREDINACTIVE) {
         $apcinfo = get_string('registerinactive', 'view');
     }
+    // If this is an old collection show the old apc status / date
+    if ($oldapcinfo = get_field('collection_template', 'registrationstatus', 'collection', $collection->get('id'))) {
+        $apcinfo = $oldapcinfo;
+    }
     return $apcinfo;
 }
