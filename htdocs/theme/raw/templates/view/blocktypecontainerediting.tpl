@@ -19,14 +19,14 @@
                 </a>
                 {/if}
                 {if $configurable && !$configure}
-                <button class="configurebutton btn btn-inverse btn-sm" name="action_configureblockinstance_id_{$id}" alt="{$strconfigtitletext}" data-id="{$id}">
-                    <span class="icon icon-pencil-alt icon-lg" role="presentation" aria-hidden="true" title="{$strconfigtitletexttooltip}"></span>
+                <button class="configurebutton btn btn-inverse btn-sm" name="action_configureblockinstance_id_{$id}" alt="{$strconfigtitletext}" data-id="{$id}" title="{$strconfigtitletexttooltip}">
+                    <span class="icon icon-pencil-alt icon-lg" role="presentation" aria-hidden="true"></span>
                     <span class="visually-hidden">{$strconfigtitletext}</span>
                 </button>
                 {/if}
                 {if !$lockblocks}
-                <button class="deletebutton btn btn-inverse btn-sm" name="action_removeblockinstance_id_{$id}" alt="{$strremovetitletext}" data-id="{$id}">
-                    <span class="icon icon-trash-alt text-danger icon-lg" role="presentation" aria-hidden="true" title="{$strremovetitletexttooltip}"></span>
+                <button class="deletebutton btn btn-inverse btn-sm" name="action_removeblockinstance_id_{$id}" alt="{$strremovetitletext}" data-id="{$id}" title="{$strremovetitletexttooltip}">
+                    <span class="icon icon-trash-alt text-danger icon-lg" role="presentation" aria-hidden="true"></span>
                     <span class="visually-hidden">{$strremovetitletext}</span>
                 </button>
                 {/if}
