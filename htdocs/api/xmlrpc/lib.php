@@ -11,9 +11,13 @@
 
 defined('INTERNAL') || die();
 
-// Defining the path used by the functions in the Mahara Assign Submission plugin for Moodle.
-// (Note: As a current workaround, the path is to a related "local" plugin.)
-define('MNET_MDL_ASSIGN_SUBMISSION_MAHARA_PATH', 'local/mahara/mnetlib.php/');
+class Mahara_MNET_Moodle {
+    /**
+     * Defines the path used by functions in the Mahara Assign Submission plugin for Moodle.
+     * (Note: As a current workaround, the path is to a related "local" plugin.)
+     */
+    const MNET_MDL_ASSIGN_SUBMISSION_MAHARA_PATH = 'local/mahara/mnetlib.php/';
+}
 
 function xmlrpc_exception (Exception $e) {
     if (($e instanceof XmlrpcServerException) && get_class($e) == 'XmlrpcServerException') {

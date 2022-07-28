@@ -565,6 +565,7 @@ function get_string_location($identifier, $section, $variables, $replacefunc='fo
 
     if ($section == 'mahara' &&
         (in_array($identifier, $langconfigstrs)
+         || strpos($identifier, 'datetimeclass') === 0
          || strpos($identifier, 'strftime') === 0
          || strpos($identifier, 'strfday')  === 0)) {
         $section = 'langconfig';

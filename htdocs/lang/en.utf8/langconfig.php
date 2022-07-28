@@ -42,6 +42,8 @@ $string['strfdateofbirth'] = '%%Y/%%m/%%d';
 $string['strftimew3cdatetime'] = '%%Y-%%m-%%dT%%H:%%M:%%S%%z';
 $string['strftimew3cdate'] = '%%Y-%%m-%%d';
 // DateTime formats for date conversion
+// The strftime() function is being removed from PHP 9.
+$string['datetimeclassdaydate'] = 'l, d F Y';
 $string['datetimeclassdaydatetime'] = 'l, j F Y, H:i';
 
 $string['thislanguage'] = 'English';

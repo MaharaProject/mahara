@@ -2122,7 +2122,7 @@ class ActivityTypeArtefactCommentFeedback extends ActivityTypePlugin {
         $body = $comment->get('description');
         $d = new \DateTime();
         $d->setTimestamp($comment->get('ctime'));
-        $posttime = $d->format(get_string('datetimeclassdaydatetime', 'langconfig'));
+        $posttime = $d->format(get_string('datetimeclassdaydatetime'));
 
         // Internal
         $this->message = strip_tags(str_shorten_html($body, 200, true));
