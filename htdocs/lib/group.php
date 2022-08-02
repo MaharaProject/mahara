@@ -292,6 +292,12 @@ function group_role_can_access_archives($group, $role) {
  * @return boolean
  */
 function group_user_can_assess_submitted_views($groupid, $userid) {
+    global $USER;
+    if (!$USER->is_logged_in()) {
+        // When viewing a public group when logged out we don't want to show submissions page
+        return false;
+    }
+
     $groupid = group_param_groupid($groupid);
     $userid  = group_param_userid($userid);
 
