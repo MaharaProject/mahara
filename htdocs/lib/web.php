@@ -4612,6 +4612,7 @@ function build_showmore_pagination($params) {
         $output .= '    <button id="' . $params['databutton'] . '" class="btn btn-secondary"';
         $output .= ' data-orderby="' . $params['orderby'] . '"';
         $output .= ' data-offset="' . ((int) $params['offset'] + (int) $params['limit']) . '"';
+        $output .= ' data-closure="' . (!empty($params['closure']) ? $params['closure'] : 'div') . '"';
         $output .= ' data-jsonscript="' . $params['jsonscript'] . '"';
         if (!empty($params['extra']) && is_array($params['extra'])) {
             foreach ($params['extra'] as $key => $value) {
