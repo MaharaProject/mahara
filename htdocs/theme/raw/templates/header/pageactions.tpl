@@ -132,6 +132,13 @@
                   </a>
                 </li>
             {/if}
+            {if $LOGGEDIN}
+                <li class="dropdown-item">
+                    <a href="{$url}">
+                        <span class="icon icon-layer-group left" aria-hidden="true" role="presentation"></span><span class="link-text">{$linktext}</span>
+                    </a>
+                </li>
+            {/if}
         </ul>
     </div>
 </div>
