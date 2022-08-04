@@ -12,7 +12,7 @@ Feature: Site admin includes special blocks for the "Profile" site template and 
     --- a. My friends block
     --- b. My Groups block
     Given I log in as "admin" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Configure site" from administration menu
+    And I choose "Portfolios" in "Configure site" from administration menu
     # Confirm 4 default templates are displayed
     Then I should see "Dashboard template"
     And I should see "Group homepage template"
@@ -37,7 +37,7 @@ Feature: Site admin includes special blocks for the "Profile" site template and 
     And I click on "Save"
 
     # Site admin Site admin set up "Profile template" to include the following:
-    Given I click on "Return to site pages and collections"
+    Given I click on "Return to site portfolios"
     And I click on "Edit" in "Profile template" card menu
     # Verify that only one block of a certin type can be added to a template page  (ie only 1 Wall block)
     When I click on the add block button

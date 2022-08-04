@@ -3,7 +3,7 @@
     <h2 class="card-header">{str tag=deleteaccount1}</h2>
     <div class="card-body">
         {if $requiresapproval}
-            <p>{str tag=sendnotificationdescription section=account}</p>
+            <p>{str tag=sendnotificationdescription1 section=account}</p>
         {else}
             <p>{str tag=deleteaccountdescription section=account}</p>
         {/if}

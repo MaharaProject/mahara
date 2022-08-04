@@ -38,7 +38,7 @@ Scenario: Testing functions for user search page (Bug 1431569)
 
  # Grant access to specific person
     When I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Manage access" in "Page UserA_01" card access menu
     And I select "Person" from "accesslist[0][searchtype]"
     And I select "Bob User" from select2 nested search box in row number "1"
@@ -67,7 +67,7 @@ Scenario: Testing functions for user search page (Bug 1431569)
 
  # Remove access
     When I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Manage access" in "Page UserA_01" card access menu
     And I click on "Remove"
     And I click on "Save"
@@ -85,7 +85,7 @@ Scenario: Testing functions for user search page (Bug 1431569)
 
  # Grant access to registered people
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Manage access" in "Page UserA_01" card access menu
     And I select "Registered people" from "accesslist[0][searchtype]"
     And I click on "Save"

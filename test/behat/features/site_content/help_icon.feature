@@ -25,7 +25,7 @@ Background:
 Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   When I log in as "UserA" with password "Kupuh1pa!"
   # Test pages and collections help
-  And I choose "Pages and collections" in "Create" from main menu
+  And I choose "Portfolios" in "Create" from main menu
   And I click on "Help"
   And I should see "A page contains a selection of artefacts"
   And I should see "A collection is a set of pages that are linked to one another and have the same access permissions."
@@ -41,7 +41,7 @@ Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   # Tags
   Then I should see "You can add tags to artefacts, pages and collections you create."
   # Collections
-  Given I choose "Pages and collections" in "Create" from main menu
+  Given I choose "Portfolios" in "Create" from main menu
   And I click on "Create" in the "Create" "Views" property
   And I click on "Collection"
   # Edit collection settings
@@ -57,7 +57,7 @@ Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   # Shared by me
   And I choose "Shared by me" in "Share" from main menu
   And I click on "Help"
-  Then I should see "When you have created portfolio pages and collections, you may wish to share them with others, e.g. to receive feedback on your work in form of comments."
+  Then I should see "When you have created portfolios, you may wish to share them with others, e.g. to receive feedback on your work in form of comments."
   # Shared with me
   And I choose "Shared with me" in "Share" from main menu
   And I click on "Help"
@@ -90,7 +90,7 @@ Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
 Scenario: Showing correct external manual help file for mahara page
   #Test by going to pages and collections help for user / institution / site / group
   When I log in as "admin" with password "Kupuh1pa!"
-  And I choose "Pages and collections" in "Create" from main menu
+  And I choose "Portfolios" in "Create" from main menu
   And I click on "Help" in the "Footer" "Footer" property
   And I wait "1" seconds
   And I switch to the new window
@@ -98,14 +98,14 @@ Scenario: Showing correct external manual help file for mahara page
   And I should see "4.1.1. Overview page" in "h2" on the screen
   And I switch to the main window
   When I am on homepage
-  And I choose "Pages and collections" in "Institutions" from administration menu
+  And I choose "Portfolios" in "Institutions" from administration menu
   And I click on "Help" in the "Footer" "Footer" property
   And I switch to the new window
   And I scroll to the center of id "institution-pages"
   And I should see "11.6.13. Institution pages and collections" in "h2" on the screen
   And I switch to the main window
   When I am on homepage
-  And I choose "Pages and collections" in "Configure site" from administration menu
+  And I choose "Portfolios" in "Configure site" from administration menu
   And I click on "Help" in the "Footer" "Footer" property
   And I switch to the new window
   And I scroll to the center of id "site-pages-and-collections"
@@ -113,7 +113,7 @@ Scenario: Showing correct external manual help file for mahara page
   And I switch to the main window
   When I am on homepage
   And I click on "GroupA"
-  And I click on "Pages and collections" in the "Navigation" "Groups" property
+  And I click on "Portfolios" in the "Navigation" "Groups" property
   And I click on "Help" in the "Footer" "Footer" property
   And I switch to the new window
   And I scroll to the center of id "pages-and-collections"

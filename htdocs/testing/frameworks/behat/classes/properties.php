@@ -244,12 +244,12 @@ define('PROFILE', array(
     'Import Email address' => '#profilefield-contact #profile-contact:nth-of-type(1)',
 ));
 
-//VIEWS is Pages and Collections, just shorter to write
+//VIEWS is Portfolios, just shorter to write
 define('VIEWS', array(
     'Create' => '#main-column-container div.btn-group-top',
-    'Pages and Collections boxes' => '.grouppageswrap',
+    'Portfolios boxes' => '.grouppageswrap',
     'Collections text-box' => '.select2-selection__rendered',
-    'Return to pages and collections button' => '#view-return-controls .btn-secondary:nth-of-type(2)',
+    'Return to portfolios button' => '#view-return-controls .btn-secondary:nth-of-type(2)',
     //button group followed by individual buttons
     'Vertical button group' => '.btn-group-vertical',
     'Settings button' => '.editlayout',

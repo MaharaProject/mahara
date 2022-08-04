@@ -70,7 +70,7 @@ Scenario: Testing file search function
     And I click on "Save changes"
 
 # Share page
-    When I choose "Pages and collections" in "Create" from main menu
+    When I choose "Portfolios" in "Create" from main menu
     And I click on "Manage access" in "Proud Mary" card access menu
     And I select "Person" from "accesslist[0][searchtype]"
     And I select "Tony Soprano" from select2 nested search box in row number "1"

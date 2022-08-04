@@ -1139,7 +1139,7 @@ function auth_xmlrpc_mnet_view_access($mnetviewid, $mnetcollid) {
         log_debug($e->getMessage());
     }
 
-    // Now send them to the page/collection's real URL. If they were just granted access via Mnet, they'll see the page.
+    // Now send them to the portfolio's real URL. If they were just granted access via Mnet, they'll see the page.
     // If not, maybe they'll see the page anyway if the user has specifically granted them access.
     if ($iscollection) {
         $goto = $coll->get_url(true);

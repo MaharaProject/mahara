@@ -42,7 +42,7 @@ Scenario: Testing edited data appears in search
     And I should see "Page UserA_01"
     And I log out
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     And I click on "Settings" in the "Toolbar buttons" "Nav" property
     And I set the following fields to these values:

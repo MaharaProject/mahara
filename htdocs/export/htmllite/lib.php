@@ -77,7 +77,7 @@ class PluginExportHtmlLite extends PluginExportHtml {
      * @return string
      */
     public static function get_title() {
-        return get_string('title', 'export.htmllite');
+        return get_string('title1', 'export.htmllite');
     }
 
     /**

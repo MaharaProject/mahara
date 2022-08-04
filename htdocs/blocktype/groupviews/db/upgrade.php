@@ -20,7 +20,7 @@ function xmldb_blocktype_groupviews_upgrade($oldversion=0) {
         $records = get_records_sql_array($sql, array());
 
         if ($records) {
-            log_debug("Processing 'Group portfolios' blocks so they continue to display full list of pages/collections");
+            log_debug("Processing 'Group portfolios' blocks so they continue to display full list of portfolios");
             $count = 0;
             $limit = 500;
             $total = count($records);
@@ -62,7 +62,7 @@ function xmldb_blocktype_groupviews_upgrade($oldversion=0) {
         $defaultgrouppage = get_record_sql($sql, array());
 
         if ($defaultgrouppage) {
-            log_debug("Processing default 'Group page' block to set the right shared pages/collections configurations");
+            log_debug("Processing default 'Group page' block to set the right shared portfolio configurations");
 
             $configdata = unserialize($defaultgrouppage->configdata);
             $configdata['showsharedviews'] = 1;

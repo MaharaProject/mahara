@@ -50,7 +50,7 @@ Scenario: Mahara member can use Institution tags in their content
     And I fill in select2 input "editpost_tags" with "One tag" and select "Institution One: One tag"
     And I click on "Save entry"
 
-    Given I choose "Pages and collections" in "Create" from main menu
+    Given I choose "Portfolios" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     And I click on "Settings" in the "Toolbar buttons" "Nav" property
     And I fill in select2 input "settings_tags" with "One tag" and select "Institution One: One tag (1)"
@@ -74,7 +74,7 @@ Scenario: Mahara member can use Institution tags in their content
     And I fill in select2 input "files_filebrowser_edit_tags" with "Image" and select "Image"
     And I click on "Save changes"
 
-    Given I choose "Pages and collections" in "Create" from main menu
+    Given I choose "Portfolios" in "Create" from main menu
     And I click on "Tags" in the "Tags block" "Blocks" property
     And I click on "Edit tags"
     Then I should see "Test" in the "My tags list" "Tags" property
@@ -82,7 +82,7 @@ Scenario: Mahara member can use Institution tags in their content
 
 Scenario: Inst admin can use Institution tags when creating Institution pages
     Given I log in as "UserB" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Institutions" from administration menu
+    And I choose "Portfolios" in "Institutions" from administration menu
     And I click on "Create" in the "Create" "Views" property
     And I click on "Page" in the dialog
     And I fill in the following:

@@ -22,7 +22,7 @@ Background:
      | celeste | user | Spacefood | Spacefood is kind of gross if you don't cook it right | Mars journal | Mars,food |  0 |
 
     Given I log in as "celeste" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Edit" in "Celeste's Page" card menu
     When I click on the add block button
     And I click on "Add" in the "Add new block" "Blocks" property
@@ -45,7 +45,7 @@ Scenario: Add Journal block to the page
     | Entry * | The contents of this entry ABCD123 |
     And I click on "Save entry"
     Then I should see "Journal entry saved"
-    When I choose "Pages and collections" in "Create" from main menu
+    When I choose "Portfolios" in "Create" from main menu
     And I click on "Celeste's Page" card menu
     And I click on "Edit" in "Celeste's Page" card menu
     Then I should see "Journal entry Added from Block"

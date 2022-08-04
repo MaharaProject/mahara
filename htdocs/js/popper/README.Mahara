@@ -7,7 +7,7 @@ Version: 2.10.2
 A library used to position poppers in web applications.
 
 This is used for the edit/delete dropdown box on the
-page/collection card on view/index.php.
+portfolio card on view/index.php.
 
 It's a requirement of Bootstrap 5 dropdowns and tooltips
 

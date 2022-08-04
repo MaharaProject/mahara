@@ -26,7 +26,7 @@ Scenario: As a user leaving a public comment on a group page (Bug 1509129)
     And I set the following fields to these values:
     | Comment notifications | None |
     And I click on "Save group"
-    When I click on "Pages and collections" in the "Arrow-bar nav" "Nav" property
+    When I click on "Portfolios" in the "Arrow-bar nav" "Nav" property
     And I click on "Page GroupA_01"
     And I click on "Add comment"
     And I fill in "Adding a comment to this field. Student = Awesome!" in editor "Comment"
@@ -39,7 +39,7 @@ Scenario: As a user leaving a public comment on a group page (Bug 1509129)
     And I log in as "UserB" with password "Kupuh1pa!"
     # Needs to navigate to see the comment and check it can be seen publicly
     When I click on "GroupA" in the "My groups box" "Groups" property
-    When I click on "Pages and collections" in the "Navigation" "Groups" property
+    When I click on "Portfolios" in the "Navigation" "Groups" property
     And I click the card "Page GroupA_01"
     And I click on "Comments"
     Then I should see "Adding a comment to this field. Student = Awesome!" in the "Comment text" "Comment" property
@@ -50,7 +50,7 @@ Scenario: Adding a comment on a group page (Bug 1426983) and verifying the notif
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Groups" in "Engage" from main menu
     And I click on "GroupA" in the "My groups box" "Groups" property
-    And I click on "Pages and collections" in the "Navigation" "Groups" property
+    And I click on "Portfolios" in the "Navigation" "Groups" property
     And I click on "Page GroupA_01"
     And I click on "Add comment"
     And I fill in "Testing comment notifications" in editor "Comment"

@@ -24,7 +24,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
     }
 
     public static function get_description() {
-        return get_string('description1', 'blocktype.groupviews');
+        return get_string('description2', 'blocktype.groupviews');
     }
 
     public static function single_only() {
@@ -156,7 +156,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
                 'id'         => 'allsubmitted_pagination',
                 'datatable'  => 'allsubmissionlist',
                 'jsonscript' => 'blocktype/groupviews/allsubmissions.json.php',
-                'resultcounttext' => get_string('nviewsandcollections', 'view', $allsubmitted['count']),
+                'resultcounttext' => get_string('nportfolios', 'view', $allsubmitted['count']),
             );
             self::render_items($allsubmitted, 'blocktype:groupviews:allsubmissions.tpl', $configdata, $pagination);
             $dwoo->assign('allsubmitted', $allsubmitted);
@@ -195,8 +195,8 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
         return array(
             'showgroupviews' => array(
                 'type' => 'select',
-                'description' => get_string('displaygroupviewsdesc1', 'blocktype.groupviews'),
-                'title' => get_string('displaygroupviews1', 'blocktype.groupviews'),
+                'description' => get_string('displaygroupviewsdesc2', 'blocktype.groupviews'),
+                'title' => get_string('displaygroupviews2', 'blocktype.groupviews'),
                 'options' => array(
                     1 => get_string('yes'),
                     0 => get_string('no'),
@@ -205,7 +205,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
             ),
             'sortgroupviewsby' => array(
                 'type' => 'select',
-                'title' => get_string('sortgroupviewstitle1', 'blocktype.groupviews'),
+                'title' => get_string('sortgroupviewstitle2', 'blocktype.groupviews'),
                 'options' => array(
                     PluginBlocktypeGroupViews::SORTBY_TITLE => get_string('sortviewsbyalphabetical', 'blocktype.groupviews'),
                     PluginBlocktypeGroupViews::SORTBY_LASTUPDATE => get_string('sortviewsbylastupdate', 'blocktype.groupviews'),
@@ -236,7 +236,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
             ),
             'sortsharedviewsby' => array(
                 'type' => 'select',
-                'title' => get_string('sortsharedviewstitle', 'blocktype.groupviews'),
+                'title' => get_string('sortsharedviewstitle1', 'blocktype.groupviews'),
                 'options' => array(
                     PluginBlocktypeGroupViews::SORTBY_TITLE => get_string('sortviewsbyalphabetical', 'blocktype.groupviews'),
                     PluginBlocktypeGroupViews::SORTBY_LASTUPDATE => get_string('sortviewsbylastupdate', 'blocktype.groupviews'),
@@ -245,8 +245,8 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
             ),
             'showsubmitted' => array(
                 'type' => 'select',
-                'title' => get_string('displaysubmissions', 'blocktype.groupviews'),
-                'description' => get_string('displaysubmissionsdesc', 'blocktype.groupviews'),
+                'title' => get_string('displaysubmissions1', 'blocktype.groupviews'),
+                'description' => get_string('displaysubmissionsdesc1', 'blocktype.groupviews'),
                 'options' => array(
                     1 => get_string('yes'),
                     0 => get_string('no'),
@@ -255,7 +255,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
             ),
             'sortsubmittedby' => array(
                 'type' => 'select',
-                'title' => get_string('sortsubmittedtitle', 'blocktype.groupviews'),
+                'title' => get_string('sortsubmittedtitle1', 'blocktype.groupviews'),
                 'options' => array(
                     PluginBlocktypeGroupViews::SORTBY_TITLE => get_string('sortviewsbyalphabetical', 'blocktype.groupviews'),
                     PluginBlocktypeGroupViews::SORTBY_TIMESUBMITTED => get_string('sortviewsbytimesubmitted', 'blocktype.groupviews'),
@@ -265,7 +265,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
             'count' => array(
                 'type' => 'text',
                 'title' => get_string('itemstoshow', 'blocktype.groupviews'),
-                'description'  => get_string('itemstoshowdesc', 'blocktype.groupviews'),
+                'description'  => get_string('itemstoshowdesc1', 'blocktype.groupviews'),
                 'defaultvalue' => isset($configdata['count']) ? $configdata['count'] : 5,
                 'size'         => 3,
                 'rules'        => array('integer' => true, 'minvalue' => 1, 'maxvalue' => 100),
@@ -431,7 +431,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
     }
 
     /**
-     * Return list of regular group members that have not submitted any pages/collections to the group
+     * Return list of regular group members that have not submitted any portfolios to the group
      *
      * @param integer $groupid The group to check
      *

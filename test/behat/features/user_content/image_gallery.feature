@@ -23,7 +23,7 @@ Scenario:
   And I reload the page
   And I should see "1.5M" in the "Folder1" row
   # Creating folder 1
-  Given I choose "Pages and collections" in "Create" from main menu
+  Given I choose "Portfolios" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
   When I click on the add block button
   And I click on "Add" in the "Add new block" "Blocks" property

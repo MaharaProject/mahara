@@ -64,14 +64,14 @@ Background:
    And I fill in select2 input "edittask_tags" with "blue" and select "blue"
    And I click on "Save task"
    # Adding a tag to page 1
-   And I choose "Pages and collections" in "Create" from main menu
+   And I choose "Portfolios" in "Create" from main menu
    And I click on "Edit" in "Page UserA_01" card menu
    And I click on "Settings" in the "Toolbar buttons" "Nav" property
    And I fill in select2 input "settings_tags" with "blue" and select "blue"
    And I fill in select2 input "settings_tags" with "My tag" and select "My tag"
    And I click on "Save"
    # Adding a tag to page 2
-   And I choose "Pages and collections" in "Create" from main menu
+   And I choose "Portfolios" in "Create" from main menu
    And I click on "Edit" in "Page UserA_02" card menu
    And I click on "Settings" in the "Toolbar buttons" "Nav" property
    And I fill in select2 input "settings_tags" with "#orange" and select "#orange"
@@ -112,7 +112,7 @@ Background:
    And I fill in select2 input "instconf_tags" with "ègreen" and select "ègreen"
    And I fill in select2 input "instconf_tags" with "My tag" and select "My tag"
    And I click on "Save"
-   And I choose "Pages and collections" in "Create" from main menu
+   And I choose "Portfolios" in "Create" from main menu
    Then I click on "Tags" in the "Tags block" "Blocks" property
    # Verifying tags are saved
    And I should see "blue" in the "Search results for all tags" "Tags" property
@@ -141,7 +141,7 @@ Background:
    Then I should not see "#orange"
 
    # Create Portfolio page via tags = blue
-   Given I choose "Pages and collections" in "Create" from main menu
+   Given I choose "Portfolios" in "Create" from main menu
    And I click on "Create" in the "Create" "Views" property
    And I click on "Page" in the dialog
    And I fill in the following:

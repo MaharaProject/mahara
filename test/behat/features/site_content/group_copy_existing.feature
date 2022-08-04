@@ -55,14 +55,14 @@ Scenario: Group admin pushes a Group page and collection to existing group membe
     And I log out
     # Group members (UserB) should have their Portfolios updated
     Given I log in as "UserB" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     # verify a group member has their Portfolio updated with the Group pages
     Then I should see "Page GroupA_01"
     And I should see "Collection GroupA_01"
     And I log out
     # Non group members (UserC) should not have their Protfolios updated
     Given I log in as "UserC" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     # verify a group member has their Pportfolio updated with the Group pages
     Then I should not see "Page GroupA_01"
     And I should not see "Collection GroupA_01"

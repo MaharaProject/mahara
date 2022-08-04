@@ -111,7 +111,7 @@ Scenario: Newly created person can get a copy of the journal (Bug 1472467)
     And I click on "Save entry"
     And I should see "Journal entry saved"
     And I should see "Spongebob"
-    And I choose "Pages and collections" in "Configure site" from administration menu
+    And I choose "Portfolios" in "Configure site" from administration menu
     And I click on "Edit" in "Page mahara_01" card menu
     # Adding journal block to the page
     When I click on the add block button
@@ -142,7 +142,7 @@ Scenario: Newly created person can get a copy of the journal (Bug 1472467)
     And I click on "Log in as this person"
     And I click on "log in anyway"
     # Checking I can see the page ...
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     Then I should see "Page mahara_01"
     # ... and the journal
     And I choose "Journals" in "Create" from main menu

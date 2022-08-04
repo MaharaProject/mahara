@@ -51,7 +51,7 @@ if ($USER->is_logged_in()) {
 }
 else {
     $rawdata = new stdClass();
-    // when logged out we restrict the tags to the page/collection being viewed
+    // when logged out we restrict the tags to the portfolio being viewed
     // Check to see if it is part of a collection
     if ($view->get('collection')) {
         $rawdata->ids = array();

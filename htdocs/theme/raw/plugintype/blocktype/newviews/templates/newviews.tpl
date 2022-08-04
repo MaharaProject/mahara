@@ -49,6 +49,6 @@
 </div>
 {else}
 <div class="card-body">
-    <p class="lead text-small">{str tag=noviews1 section=view}</p>
+    <p class="lead text-small">{str tag=noviews2 section=view}</p>
 </div>
 {/if}

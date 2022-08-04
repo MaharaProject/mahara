@@ -40,10 +40,10 @@ if (!empty($groupid)) {
 }
 else {
     $owner = $USER->get('id');
-    define('TITLE', get_string('copyvieworcollection', 'view'));
+    define('TITLE', get_string('copyvieworcollection1', 'view'));
 }
 
-$subtitle = get_string('copyvieworcollection', 'view');
+$subtitle = get_string('copyvieworcollection1', 'view');
 
 $views = new stdClass();
 $views->query      = trim(param_variable('viewquery', ''));

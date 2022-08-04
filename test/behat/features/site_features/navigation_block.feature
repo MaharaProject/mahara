@@ -23,7 +23,7 @@ Background:
 
 Scenario:
   Given I log in as "UserA" with password "Kupuh1pa!"
-  And I choose "Pages and collections" in "Create" from main menu
+  And I choose "Portfolios" in "Create" from main menu
   And I click on "Collection UserA_01"
   And I click on "Edit"
   When I click on the add block button

@@ -5023,7 +5023,7 @@ function smartevidence_stats_table($limit, $offset, $extra, $institution, $urlli
     foreach ($data as $item) {
         $item->userurl = profile_url($item->userid);
         if ($item->views < 1) {
-            $item->title = get_string('noviews1', 'view');
+            $item->title = get_string('noviews2', 'view');
         }
         $item->access = get_records_sql_array("
             SELECT *, 0 AS secreturls
@@ -5367,7 +5367,7 @@ function accesslist_stats_table($limit, $offset, $extra, $institution, $urllink)
     foreach ($data as $item) {
         $item->userurl = profile_url($item->userid);
         if ($item->views < 1) {
-            $item->title = get_string('noviews1', 'view');
+            $item->title = get_string('noviews2', 'view');
         }
         $item->access = get_records_sql_array("
             SELECT *, 0 AS secreturls

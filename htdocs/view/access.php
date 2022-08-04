@@ -193,7 +193,7 @@ $form['elements']['more'] = array(
         'template' => array(
             'type'         => 'switchbox',
             'title'        => get_string('allowcopying', 'view'),
-            'description'  => get_string('templatedescriptionplural2', 'view'),
+            'description'  => get_string('templatedescriptionplural3', 'view'),
             'defaultvalue' => $view->get('template'),
         ),
     ),
@@ -204,7 +204,7 @@ if ($group && in_array( $USER->get('id'), $admintutorids, true )) {
     $form['elements']['more']['elements'] = array_merge($form['elements']['more']['elements'], array('existinggroupmembercopy' => array(
             'type'         => 'switchbox',
             'title'        => get_string('existinggroupmembercopy', 'view'),
-            'description'  => get_string('existinggroupmembercopydesc1', 'view'),
+            'description'  => get_string('existinggroupmembercopydesc2', 'view'),
             'defaultvalue' => 0,
     )));
 }
@@ -228,7 +228,7 @@ if ($institution) {
         $form['elements']['more']['elements']['copynewuser'] = array(
             'type'         => 'switchbox',
             'title'        => get_string('copyfornewusers', 'view'),
-            'description'  => get_string('copyfornewusersdescription2', 'view'),
+            'description'  => get_string('copyfornewusersdescription3', 'view'),
             'defaultvalue' => $view->get('copynewuser'),
         );
         $form['elements']['more']['elements']['copyfornewgroups'] = array(
@@ -237,7 +237,7 @@ if ($institution) {
         );
         $form['elements']['more']['elements']['copyfornewgroupsdescription1'] = array(
             'type'         => 'html',
-            'value'        => '<div class="description">' . get_string('copyfornewgroupsdescription1', 'view') . '</div>',
+            'value'        => '<div class="description">' . get_string('copyfornewgroupsdescription2', 'view') . '</div>',
         );
         $createfor = $view->get_autocreate_grouptypes();
         foreach (group_get_grouptype_options() as $grouptype => $grouptypedesc) {
@@ -255,15 +255,15 @@ if ($institution) {
         $form['elements']['more']['elements']['copynewuser'] = array(
             'type'         => 'switchbox',
             'title'        => get_string('copyfornewmembers', 'view'),
-            'description'  => get_string('copyfornewmembersdescription2', 'view', $instname),
+            'description'  => get_string('copyfornewmembersdescription3', 'view', $instname),
             'defaultvalue' => $view->get('copynewuser'),
         );
     }
 } else {
     $form['elements']['more']['elements']['retainview'] = array(
         'type'         => 'switchbox',
-        'title'        => get_string('retainviewrights1', 'view'),
-        'description'  => $group ? get_string('retainviewrightsgroupdescription2', 'view') : get_string('retainviewrightsdescription2', 'view'),
+        'title'        => get_string('retainviewrights2', 'view'),
+        'description'  => $group ? get_string('retainviewrightsgroupdescription3', 'view') : get_string('retainviewrightsdescription3', 'view'),
         'defaultvalue' => $view->get('template') && $view->get('retainview'),
     );
     $js .= <<< EOF
@@ -551,7 +551,7 @@ function editaccess_submit(Pieform $form, $values) {
     if (isset($values['collections'])) {
         foreach ($values['collections'] as $cid) {
             if (!isset($collections[$cid])) {
-                throw new UserException(get_string('editaccessinvalidviewset', 'view'));
+                throw new UserException(get_string('editaccessinvalidviewset1', 'view'));
             }
             $collection = new Collection($cid);
             if ($cpid = $collection->has_progresscompletion()) {
@@ -564,7 +564,7 @@ function editaccess_submit(Pieform $form, $values) {
     if (isset($values['views'])) {
         foreach ($values['views'] as $viewid) {
             if (!isset($views[$viewid])) {
-                throw new UserException(get_string('editaccessinvalidviewset', 'view'));
+                throw new UserException(get_string('editaccessinvalidviewset1', 'view'));
             }
             $toupdate[] = $viewid;
         }

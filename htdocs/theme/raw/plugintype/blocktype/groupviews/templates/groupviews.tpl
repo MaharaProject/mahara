@@ -110,7 +110,7 @@
         {/if}
     {else}
         <div class="list-group list-group-top-border grouppages">
-            <div class="list-group-item flush">{str tag=nosubmittedviewscollectionsyet section=view}</span>
+            <div class="list-group-item flush">{str tag=nosubmittedviewscollectionsyet1 section=view}</span>
         </div>
     {/if}
 {/if}
@@ -139,7 +139,7 @@
 {if $mysubmitted || $group_view_submission_form}
     <h3 class="title">
         {if $group_view_submission_form}
-            {str tag="submittogroup" section="view"}:
+            {str tag="submittogroup1" section="view"}:
         {else}
             {str tag="yoursubmissions" section="view"}:
         {/if}

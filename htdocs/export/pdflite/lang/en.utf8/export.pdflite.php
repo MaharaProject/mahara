@@ -11,7 +11,7 @@
 
 defined('INTERNAL') || die();
 
-$string['title'] = 'PDF lite files of pages and collections';
+$string['title1'] = 'PDF lite files of portfolios';
 $string['description'] = 'This creates a lightweight zipped file containing PDFs of your portfolios, along with files associated with your portfolio that can be sent to a similarity checker. You cannot import this again, but it is readable in a standard PDF viewer.';
 $string['needsinstalledpdfexport'] = 'It requires the "PDF" export plugin to be installed.';
 $string['needsactivepdfexport'] = 'It requires the "PDF" export plugin to be enabled.';

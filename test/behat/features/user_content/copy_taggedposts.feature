@@ -26,7 +26,7 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
  Scenario: Create blogs
   Given I log in as "UserA" with password "Kupuh1pa!"
   # Add a taggedblogs block to a page
-  And I choose "Pages and collections" in "Create" from main menu
+  And I choose "Portfolios" in "Create" from main menu
   And I click on "Edit" in "Page UserA_01" card menu
   When I click on the add block button
   And I click on "Add" in the "Add new block" "Blocks" property
@@ -44,7 +44,7 @@ Feature: Mahara users can allow their tagged blogs tags to be copied
   And I click on "Save"
 
   # Copy the page as same user
-  And I choose "Pages and collections" in "Create" from main menu
+  And I choose "Portfolios" in "Create" from main menu
   And I click on "Page UserA_01"
   And I click on "More options"
   And I click on "Copy"

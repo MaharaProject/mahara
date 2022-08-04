@@ -24,9 +24,9 @@
                     {if $GROUP}
                         {str tag="noviewstosee" section="group"}
                     {elseif $institution}
-                        {str tag="noviews1" section="view"}
+                        {str tag="noviews2" section="view"}
                     {else}
-                        {str tag="youhavenoviews1" section="view"}
+                        {str tag="youhavenoviews2" section="view"}
                     {/if}
                 </div>
             {/if}
@@ -40,7 +40,7 @@
                     <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
                     <h1 class="modal-title">
                         <span class="icon icon-plus"></span>
-                        {str tag=confirmaddtitle section=view}
+                        {str tag=confirmaddtitle1 section=view}
                     </h1>
                 </div>
                 <div class="modal-body">

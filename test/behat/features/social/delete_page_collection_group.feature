@@ -31,14 +31,14 @@ Scenario: When a collection is shared and a page is deleted from the collection 
     And I should see "Angela" in the page
     And I should see "GroupA" in the page
     # Share page to the group
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Collection UserA_01"
     And I click on "Edit"
     And I click on "Share" in the "Toolbar buttons" "Nav" property
     And I select "GroupA" from "accesslist[0][searchtype]"
     And I click on "Save"
     # Delete a page from the collection
-    Then I choose "Pages and collections" in "Create" from main menu
+    Then I choose "Portfolios" in "Create" from main menu
     And I click on "Manage" in "Collection UserA_01" card menu
     And I click on "Remove" in "Page UserA_01" row
     And I go to homepage

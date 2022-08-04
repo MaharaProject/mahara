@@ -66,7 +66,7 @@ class PluginExportPdf extends PluginExportHtml {
     }
 
     public static function get_title() {
-        return get_string('title', 'export.pdf');
+        return get_string('title1', 'export.pdf');
     }
 
     public static function get_description() {

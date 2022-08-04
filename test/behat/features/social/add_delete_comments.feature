@@ -63,7 +63,7 @@ Scenario: Add comments block to page
     And I enable the switch "Make comment public"
     And I click on "Comment" in the "Comment button" "Comment" property
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     And I wait "1" seconds
     # Add a comments block so that comments will now be at the top of the page

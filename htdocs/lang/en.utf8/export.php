@@ -82,7 +82,7 @@ $string['requeue'] = 'Re-queue';
 
 // Export queue errors
 $string['unabletogenerateexport'] = 'Insufficient information';
-$string['unabletoexportportfoliousingoptionsadmin'] = 'The item is not a page or collection object';
+$string['unabletoexportportfoliousingoptionsadmin1'] = 'The item is not a portfolio object';
 $string['exportzipfileerror'] = 'Generating the ZIP file failed: %s';
 $string['submissiondirnotwritable'] = 'Cannot write to submission archive directory: %s';
 $string['exportarchivesavefailed'] = 'Cannot save export archive information to database';

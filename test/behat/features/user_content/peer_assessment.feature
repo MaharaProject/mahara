@@ -62,7 +62,7 @@ Background:
     And I click on "Save"
     Then I should see "This block's content is displayed aligned to the right hand side. The block is best placed at top right of the page."
     And I wait "1" seconds
-    And I click on "Return to pages and collections"
+    And I click on "Return to portfolios"
     And I go to portfolio page "Page UserA_01"
     And I click on "Edit"
     # Author adds sign off block
@@ -73,7 +73,7 @@ Background:
     And I click on "Save"
     Then I should see "This block's content is displayed aligned to the right hand side. The block is best placed at top right of the page."
     And I wait "1" seconds
-    And I click on "Return to pages and collections"
+    And I click on "Return to portfolios"
     # Add peer assessment and signoff blocks to Page Page UserA_03
     Given I go to portfolio page "Page UserA_03"
     And I click on "Edit"
@@ -85,7 +85,7 @@ Background:
     And I click on "Save"
     Then I should see "This block's content is displayed aligned to the right hand side. The block is best placed at top right of the page."
     And I wait "1" seconds
-    And I click on "Return to pages and collections"
+    And I click on "Return to portfolios"
     # share the page with people and give a role
     When I choose "Shared by me" in "Share" from main menu
     And I click on "Pages" in the "Share tabs" "Misc" property

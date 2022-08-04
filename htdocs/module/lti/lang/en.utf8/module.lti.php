@@ -55,7 +55,7 @@ $string['usernameexists2'] = 'Username "%s" is not valid.';
 $string['saveandrelease'] = 'Save and allow submissions';
 $string['submitportfolio'] = 'Submit a portfolio for assessment';
 $string['submitto'] = 'Submit this portfolio for assessment to %s, %s';
-$string['submitintro'] = 'Select the page or collection that you want to submit to this activity. If you do not yet have a portfolio, <strong><a href="%sview/index.php" target="_blank">create one</a></strong>. Once you are done, reload the activity from the LMS.';
+$string['submitintro1'] = 'Select the portfolio that you want to submit to this activity. If you do not yet have a portfolio, <strong><a href="%sview/index.php" target="_blank">create one</a></strong>. Once you are done, reload the activity from the LMS.';
 $string['timegraded'] = 'Time graded';
 $string['timesubmitted'] = 'Time submitted';
 $string['usernameexists1'] = 'Username "%s" already exists.';

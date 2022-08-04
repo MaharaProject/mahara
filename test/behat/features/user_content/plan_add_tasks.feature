@@ -19,7 +19,7 @@ Scenario: Create a plan -> add plan block to page -> create new task from block 
     And I fill in select2 input "addplan_tags" with "test" and select "test"
     And I click on "Save plan"
     #  add plan block to page
-    Given I choose "Pages and collections" in "Create" from main menu
+    Given I choose "Portfolios" in "Create" from main menu
     And I click on "Edit" in "Page admin_01" card menu
     When I click on the add block button
     And I click on "Add" in the "Add new block" "Blocks" property
@@ -130,7 +130,7 @@ Scenario: Creating a plan with 11 tasks (Bug #1503036)
     When I click on "Next page"
     Then I should see "Alien invasion"
     # Add the plan to a page
-    When I choose "Pages and collections" in "Create" from main menu
+    When I choose "Portfolios" in "Create" from main menu
     And I click on "Edit" in "Page admin_01" card menu
     When I click on the add block button
     And I click on "Add" in the "Add new block" "Blocks" property

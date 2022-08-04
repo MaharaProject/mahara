@@ -12,7 +12,7 @@
 defined('INTERNAL') || die();
 
 $string['title2'] = 'Portfolios shared with me';
-$string['description2'] = 'List the most recently updated pages and collections that you have access to on the site';
+$string['description3'] = 'List the most recently updated portfolios that you have access to on the site';
 $string['viewstoshow1'] = 'Maximum number of results to show';
 $string['viewstoshowdescription'] = 'Between 1 and 100';
 $string['defaulttitledescription'] = 'A default title will be generated if you leave the title field blank.';

@@ -1,6 +1,6 @@
 <?php
 /**
- * Manage the archiving of submitted pages/collections from groups.
+ * Manage the archiving of submitted portfolios from groups.
  *
  * @package    mahara
  * @subpackage admin

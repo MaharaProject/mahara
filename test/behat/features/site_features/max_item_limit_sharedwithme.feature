@@ -70,7 +70,7 @@ Background:
 
 Scenario: Making sure that the max items per page drop down limits to correct amount of pages (Bug 1409369)
   Given I log in as "UserA" with password "Kupuh1pa!"
-  And I choose "Pages and collections" in "Create" from main menu
+  And I choose "Portfolios" in "Create" from main menu
   And I select "atoz" from "orderby"
   And I click on "Search" in the "#searchviews_submit_container" "css_element"
   And I choose "Shared by me" in "Share" from main menu

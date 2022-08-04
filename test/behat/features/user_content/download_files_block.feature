@@ -15,7 +15,7 @@ Background:
 
 Scenario: Add Files to download block
     Given I log in as "UserA" with password "Kupuh1pa!"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     When I click on the add block button
     And I click on "Add" in the "Add new block" "Blocks" property
@@ -47,7 +47,7 @@ Scenario: Add Files to download block
     When I reload the page
     Then I should not see "mahara_about.pdf"
     # Check to see if changes were updated on Portfolio page
-    When I choose "Pages and collections" in "Create" from main menu
+    When I choose "Portfolios" in "Create" from main menu
     And I click on "Page UserA_01"
     Then I should see "renamed.pdf"
     Then I should not see "mahara_about.pdf"

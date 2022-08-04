@@ -118,7 +118,7 @@ Scenario: Editing Education and Employment info
     And I click on "Delete \"Code Ninja: Xero\"" delete button
 
     # When entire resume is displayed on Profile page, it should include employment address (Bug 1529750)
-    Given I choose "Pages and collections" in "Create" from main menu
+    Given I choose "Portfolios" in "Create" from main menu
     And I click on "Edit" in "Profile page" card menu
     When I click on the add block button
     And I click on "Add" in the "Add new block" "Blocks" property
@@ -284,7 +284,7 @@ Scenario: Adding interests
     | Interest | running, swimming, skydiving, clarinet |
     And I click on "Save"
     And I should see "Saved successfully"
-    And I choose "Pages and collections" in "Create" from main menu
+    And I choose "Portfolios" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
     When I click on the add block button
     And I click on "Add" in the "Add new block" "Blocks" property
