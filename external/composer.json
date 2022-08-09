@@ -15,7 +15,6 @@
         "cweagans/composer-patches": "^1.7"
     },
     "require-dev": {
-        "phan/phan": "^5.3",
         "phpstan/phpstan": "^1.6"
     },
     "autoload": {
