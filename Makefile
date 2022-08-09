@@ -66,7 +66,7 @@ ifeq (, $(shell which gulp))
 	$(error ERROR: Can't find the "gulp" executable. Try doing "sudo npm install -g gulp")
 endif
 ifndef nvmsh
-	$(error ERROR: Can't find the "nvm" executable at path ${HOME}/.nvm/nvm.sh - either install or make path executable)
+	$(error ERROR: Can't find the "nvm" executable at path ${HOME}/.nvm/nvm.sh - see https://wiki.mahara.org/wiki/Developer_Area/Developer_Environment for install instructions)
 endif
 
 ifndef npmsetup
