@@ -776,7 +776,7 @@ function meter_update(data) {
             jQuery('#meter_fill').animate({width: 0}); // remove bar filled before hiding
         }
         else {
-            jQuery('#meter_fill').animate({width: jQuery('#meter_wrap').width()}); // show bar filled before hiding
+            jQuery('#meter_fill').animate({width: jQuery('#meter_wrap').width()}, 'fast'); // show bar filled before hiding
         }
         jQuery('#meter_overlay').hide();
 

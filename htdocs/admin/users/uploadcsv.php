@@ -157,6 +157,10 @@ if (!($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutiona
     );
 }
 
+$steps_done = 0;
+// Total number of steps if no updateusers / emailusers set
+$steps_total = 2;
+
 /**
  * The CSV file is parsed here so validation errors can be returned to the
  * user. The data from a successful parsing is stored in the <var>$CVSDATA</var>
@@ -166,20 +170,21 @@ if (!($USER->get('admin') || get_config_plugin('artefact', 'file', 'institutiona
  * @param array    $values The values submitted
  */
 function uploadcsv_validate(Pieform $form, $values) {
-    global $CSVDATA, $ALLOWEDKEYS, $FORMAT, $USER, $INSTITUTIONNAME, $UPDATES;
+    global $CSVDATA, $ALLOWEDKEYS, $FORMAT, $USER, $INSTITUTIONNAME, $UPDATES, $steps_done, $steps_total;
 
     // Don't even start attempting to parse if there are previous errors
     if ($form->has_errors()) {
         return;
     }
 
-    $steps_done = 0;
-    $steps_total = 4;
-
+    // We work out here how many progress steps in total there will be based on form settings.
+    // There is an updateusers step within this validate() section that has a progress loop.
     if ($values['updateusers']) {
         $steps_total += 1;
     }
 
+    // There is an emailusers step in the submit() section that has two progress loops
+    // but combined they total the number of rows in CSV so we count it as one step.
     if ($values['emailusers']) {
         $steps_total += 1;
     }
@@ -266,7 +271,7 @@ function uploadcsv_validate(Pieform $form, $values) {
         $i = ($csvusers->get('headerExists')) ? ($key + 2) : ($key + 1);
 
         if (!($key % $steps_total)) {
-            set_progress_info('uploaduserscsv', $key, $num_lines * $steps_total, get_string('validating', 'admin'));
+            set_progress_info('uploaduserscsv', $key + ($num_lines * $steps_done), $num_lines * $steps_total, get_string('validating', 'admin'));
         }
 
         // Trim non-breaking spaces -- they get left in place by File_CSV
@@ -392,7 +397,7 @@ function uploadcsv_validate(Pieform $form, $values) {
             }
         }
     }
-
+    $steps_done ++;
     // If the admin is trying to overwrite existing users, identified by username,
     // this second pass performs some additional checks
 
@@ -402,7 +407,7 @@ function uploadcsv_validate(Pieform $form, $values) {
 
         foreach ($usernames as $lowerusername => $data) {
             if (!($key % $steps_total)) {
-                set_progress_info('uploaduserscsv', $num_lines + $key, $num_lines * $steps_total, get_string('checkingupdates', 'admin'));
+                set_progress_info('uploaduserscsv', $key + ($num_lines * $steps_done), $num_lines * $steps_total, get_string('checkingupdates', 'admin'));
             }
             $key++;
 
@@ -474,6 +479,7 @@ function uploadcsv_validate(Pieform $form, $values) {
                 }
             }
         }
+        $steps_done ++;
     }
 
     if ($errors = $csverrors->process()) {
@@ -490,7 +496,7 @@ function uploadcsv_validate(Pieform $form, $values) {
  * password on next login also.
  */
 function uploadcsv_submit(Pieform $form, $values) {
-    global $USER, $SESSION, $CSVDATA, $FORMAT, $UPDATES;
+    global $USER, $SESSION, $CSVDATA, $FORMAT, $UPDATES, $steps_done, $steps_total;
 
     $formatkeylookup = array_flip($FORMAT);
 
@@ -534,23 +540,13 @@ function uploadcsv_submit(Pieform $form, $values) {
     }
 
     $key = 0;
-    $steps_total = 4;
 
-    if ($values['updateusers']) {
-        $steps_total += 1;
-    }
-
-    if ($values['emailusers']) {
-        $steps_total += 1;
-    }
-
-    $steps_done = 2;
     $num_lines = sizeof($CSVDATA);
 
     foreach ($CSVDATA as $record) {
         if (!($key % $steps_total)) {
             // This part has three times the weight of the other two steps.
-            set_progress_info('uploaduserscsv', $num_lines * $steps_done + $key * 3, $num_lines * $steps_total, get_string('committingchanges', 'admin'));
+            set_progress_info('uploaduserscsv', $key + ($num_lines * $steps_done), $num_lines * $steps_total, get_string('committingchanges', 'admin'));
         }
         $key++;
 
@@ -699,6 +695,7 @@ function uploadcsv_submit(Pieform $form, $values) {
         }
         set_time_limit(10);
     }
+    $steps_done ++;
     db_commit();
 
     // Re-enable email
@@ -707,7 +704,6 @@ function uploadcsv_submit(Pieform $form, $values) {
     if ($values['emailusers']) {
 
         $usersemailed = 0;
-        $steps_done = $steps_total - 1;
 
         // Keep track of the users who we couldn't email.
         $failedusers = [];
@@ -720,7 +716,7 @@ function uploadcsv_submit(Pieform $form, $values) {
 
             foreach ($addedusers as $user) {
                 if (!($usersemailed % $steps_total)) {
-                    set_progress_info('uploaduserscsv', $num_lines * $steps_done + $usersemailed, $num_lines * $steps_total, get_string('uploadcsvemailingnewusers', 'admin'));
+                    set_progress_info('uploaduserscsv', $usersemailed + ($num_lines * $steps_done), $num_lines * $steps_total, get_string('uploadcsvemailingnewusers', 'admin'));
                 }
                 $usersemailed++;
 
@@ -748,7 +744,7 @@ function uploadcsv_submit(Pieform $form, $values) {
 
             foreach ($updatedusers as $user) {
                 if (!($usersemailed % $steps_total)) {
-                    set_progress_info('uploaduserscsv', $num_lines * $steps_done + $usersemailed, $num_lines * $steps_total, get_string('uploadcsvemailingupdatedusers', 'admin'));
+                    set_progress_info('uploaduserscsv', $usersemailed + ($num_lines * $steps_done), $num_lines * $steps_total, get_string('uploadcsvemailingupdatedusers', 'admin'));
                 }
                 $usersemailed++;
 
@@ -830,7 +826,7 @@ function uploadcsv_submit(Pieform $form, $values) {
                 }
             }
         }
-
+        $steps_done ++;
         if ($failedusers) {
             $message = get_string('uploadcsvsomeuserscouldnotbeemailed', 'admin') . "\n<ul>\n";
             foreach ($failedusers as $user) {
