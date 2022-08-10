@@ -956,7 +956,7 @@ function set_field($table, $newfield, $newvalue, $field1=null, $value1=null, $fi
 function set_field_select($table, $newfield, $newvalue, $select, array $values) {
     global $db;
 
-    // @todo Catalyst IT
+    // @todo Catalyst IT Limited
     if (!empty($select) && !preg_match('/^\s*where/i', $select)) {
         $select = ' WHERE ' . $select;
     }

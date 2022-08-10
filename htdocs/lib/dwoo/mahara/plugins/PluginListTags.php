@@ -9,13 +9,15 @@
 /**
  * Smarty {list_tags} function plugin
  *
- * Type:     function<br>
- * Name:     str<br>
- * Date:     June 22, 2006<br>
- * Purpose:  Render a list of tags
- * @author   Richard Mansfield <richard.mansfield@catalyst.net.nz>
- * @author   Penny Leach <penny@mjollnir.org>
- * @version  1.0
+ * Type:       function<br>
+ * Name:       str<br>
+ * Date:       June 22, 2006<br>
+ * Purpose:    Render a list of tags
+ * @author     Richard Mansfield <richard.mansfield@catalyst.net.nz>
+ * @author     Penny Leach <penny@mjollnir.org>
+ * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
+ * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
+ * @version    1.0
  * @param array
  * @param Smarty
  * @return Internationalized string

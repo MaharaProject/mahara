@@ -142,7 +142,7 @@ Mahara has been translated into many languages. You can download [language packs
 ------------------
 # COPYRIGHT NOTICE
 
-Copyright (C) 2006-2022 Catalyst IT and others
+Copyright (C) 2006-2022 Catalyst IT Limited and others
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

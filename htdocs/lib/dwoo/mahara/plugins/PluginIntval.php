@@ -7,7 +7,7 @@
  * Name:     str<br>
  * Date:     June 22, 2006<br>
  * Purpose:  Fetch internationalized strings
- * @author   Catalyst IT
+ * @author   Catalyst IT Limited
  * @version  1.0
  * @return Internationalized string
  */

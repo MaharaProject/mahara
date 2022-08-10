@@ -4,7 +4,7 @@
  * Copyright 2013, Daniel Thies
  * Released under LGPL License.
  *
- * Updated for Tinymce 5, Catalyst IT
+ * Updated for Tinymce 5, Catalyst IT Limited
  * LGPL 2019
  */
 

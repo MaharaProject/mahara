@@ -2,6 +2,7 @@ Creative Commons Blocktype for Mahara
 (For copyright information on Mahara, please see the README file distributed with this software.)
 
 Author: Francois Marier <francois@catalyst.net.nz>
+Author: Catalyst IT Limited
 
 This block allows Mahara account holders to indicate that a view is released under the terms of a particular Creative Commons 3.0 or 4.0 license.
 
