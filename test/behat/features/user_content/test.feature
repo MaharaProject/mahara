@@ -183,8 +183,8 @@ Background:
     | Image PNG            | image          | Page One A    | no         | attachment=Image2.png |
     | Files to download    | filedownload   | Page One A    | auto       | attachments=mahara_about.pdf |
     | Files to download    | filedownload   | Page One A    | no         | attachments=mahara_about.pdf,Image2.png |
-    | External Feed - News | externalfeed   | Page One A    | No         | source=http://stuff.co.nz/rss;count=5 |
-    | External Feed - Food | externalfeed   | Page One A    | no         | source=http://www.thekitchenmaid.com/feed;count=3;tags=cat,a,lyst |
+    | External Feed - News | externalfeed   | Page One A    | No         | source=https://stuff.co.nz/rss;count=5 |
+    | External Feed - Food | externalfeed   | Page One A    | no         | source=https://www.bonappetit.com/feed/rss |
     | External Feed - Tech | externalfeed   | Page One A    | no         | source=feeds.feedburner.com/geekzone;count=3;tags=cat,a,lyst |
     | Social Media         | socialprofile  | Page One A    | no         | sns=instagram,twitter,facebook,tumblr,pinterest,mysocialmedia |
 

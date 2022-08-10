@@ -5,7 +5,7 @@
  *
  * @package    webservice
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3 or later
  * @author     Piers Harding
  * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
  */

@@ -4,7 +4,7 @@
  * @package    mahara
  * @subpackage artefact-blog-import-leap
  * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
  */
@@ -399,7 +399,7 @@ class LeapImportBlog extends LeapImportArtefactPlugin {
 
     /**
      * Attaches a file to a blogpost entry that was just linked directly, rather than having a Leap2a entry
-     * See http://wiki.leapspecs.org/2A/files
+     * See https://web.archive.org/web/20120706042659/http://www.leapspecs.org/2A/files
      *
      * @param SimpleXMLElement $blogpostentry
      * @param SimpleXMLElement $blogpostlink

@@ -4,7 +4,7 @@
  * @package    mahara
  * @subpackage core
  * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
  */
@@ -270,7 +270,7 @@ $cfg->bounceprefix    = 'AAA-';
 //$cfg->imappass    = '';
 /**
  * @global string $cfg->imapflags Any flags to pass to imap_open, can have multiple
- * See http://www.php.net/manual/en/function.imap-open.php
+ * See https://www.php.net/manual/en/function.imap-open.php
  */
 //$cfg->imapflags   = '';
 /**

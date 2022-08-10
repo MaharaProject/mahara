@@ -5,7 +5,7 @@
  * @package    mahara
  * @subpackage import-leap
  * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
  */
@@ -16,7 +16,7 @@ defined('INTERNAL') || die();
  * Implements import of Leap2A files
  *
  * For more documentation, please see:
- * http://wiki.mahara.org/index.php?title=Developer_Area/Import%2F%2FExport/LEAP_Import
+ * https://wiki.mahara.org/index.php?title=Developer_Area/Import%2F%2FExport/LEAP_Import
  */
 class PluginImportLeap extends PluginImport {
 
@@ -187,15 +187,15 @@ class PluginImportLeap extends PluginImport {
 
     const NS_ATOM       = 'http://www.w3.org/2005/Atom';
     const NS_RDF        = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
-    const NS_LEAP_200903       = 'http://wiki.cetis.ac.uk/2009-03/LEAP2A_predicates#';
-    const NS_LEAPTYPE_200903   = 'http://wiki.cetis.ac.uk/2009-03/LEAP2A_types#';
-    const NS_CATEGORIES_200903 = 'http://wiki.cetis.ac.uk/2009-03/LEAP2A_categories/';
-    const NS_LEAP              = 'http://terms.leapspecs.org/';
-    const NS_CATEGORIES        = 'http://wiki.leapspecs.org/2A/categories/';
+    const NS_LEAP_200903       = 'https://web.archive.org/web/20091222055424/http://wiki.cetis.ac.uk/2009-03/LEAP2A_predicates';
+    const NS_LEAPTYPE_200903   = 'https://web.archive.org/web/20111028065024/http://wiki.cetis.ac.uk/2009-03/Leap2A_types';
+    const NS_CATEGORIES_200903 = 'https://web.archive.org/web/20111027183853/http://wiki.cetis.ac.uk/2009-03/Leap2A_categories';
+    const NS_LEAP              = 'https://web.archive.org/web/20100503000634/http://terms.leapspecs.org';
+    const NS_CATEGORIES        = 'https://web.archive.org/web/20120819100914/http://wiki.leapspecs.org:80/2A/categories';
     // NOTE: Even though this URL is no longer valid, it must not change because it is used as an identifier
     // in existing XML files.
     // (Correct current URL is https://wiki.mahara.org/wiki/Developer_Area/Import//Export/LEAP_Extensions# )
-    const NS_MAHARA     = 'http://wiki.mahara.org/Developer_Area/Import%2F%2FExport/LEAP_Extensions#';
+    const NS_MAHARA     = 'https://wiki.mahara.org/wiki/Developer_Area/Import//Export/LEAP_Extensions';
 
     const XHTML_DIV       = '<div xmlns="http://www.w3.org/1999/xhtml">';
     const XHTML_DIV_EMPTY = '<div xmlns="http://www.w3.org/1999/xhtml"/>';
@@ -597,8 +597,8 @@ class PluginImportLeap extends PluginImport {
             // update to LEAP2A 2010-07. Exports between the update and this
             // bugfix will contain a wrong namespace. This workaround will
             // allow those exports to still import properly. (bug #673434)
-            if (isset($this->namespaces['http://wiki.leapspecs.org/2A/categories'])) {
-                $this->leap2acategories = 'http://wiki.leapspecs.org/2A/categories';
+            if (isset($this->namespaces['https://web.archive.org/web/20120819100914/http://wiki.leapspecs.org:80/2A/categories'])) {
+                $this->leap2acategories = 'https://web.archive.org/web/20120819100914/http://wiki.leapspecs.org:80/2A/categories';
             } else {
                 $this->leap2acategories = self::NS_CATEGORIES;
             }
@@ -612,7 +612,7 @@ class PluginImportLeap extends PluginImport {
     /**
      * Ensure the document is valid
      *
-     * @todo http://wiki.mahara.org/Developer_Area/Import%2f%2fExport/Import%3a_Implementation_Plan#beginning
+     * @todo https://wiki.mahara.org/wiki/Developer_Area/Import//Export/Import:_Implementation_Plan#beginning
      * @todo Do a bunch of checks that will ensure the feed is valid, and thus allow future code to make assumptions that the feed is valid
      * @todo Things to check:
      *     - All content src="X": make sure the src actually exists
@@ -643,7 +643,7 @@ class PluginImportLeap extends PluginImport {
      * Entries will be passed to artefacts one at a time, examining the entry and return a list of strategies that could
      * apply to the entry, Higher scores mean that the artefact plugin thinks the strategy will work better for the entry.
      *
-     * @see http://wiki.mahara.org/Developer_Area/Import%2f%2fExport/Import%3a_Implementation_Plan#first_pass_-_get_scores_from_plugins_for_each_entry
+     * @see https://wiki.mahara.org/wiki/Developer_Area/Import//Export/Import:_Implementation_Plan#first_pass_-_get_scores_from_plugins_for_each_entry
      * @throws SystemException imported object class does not have Leap2A importation options
      */
     private function create_strategy_listing() {
@@ -750,7 +750,7 @@ class PluginImportLeap extends PluginImport {
      * The best mapping is decided by sorting the strategy listing by score and
      * importing all entries on a first-met, first used basis. The algorithm is
      * described at:
-     * http://wiki.mahara.org/Developer_Area/Import%2f%2fExport/Import%3a_Implementation_Plan#non-interactive_import
+     * https://wiki.mahara.org/wiki/Developer_Area/Import//Export/Import:_Implementation_Plan#non-interactive_import
      */
     private function strategy_listing_to_load_mapping() {
         $this->trace("----------------------------------\nstrategy_listing_to_load_mapping()");
@@ -2309,7 +2309,7 @@ class PluginImportLeap extends PluginImport {
      *
      * @return string
      *
-     * Spec reference: http://wiki.leapspecs.org/2A/literals#myrole
+     * Spec reference: https://web.archive.org/web/20120724135538/http://www.leapspecs.org/2A/literals
      */
     public static function get_leap_myrole(SimpleXMLElement $entry, $namespaces, $ns) {
         $myrole = $entry->xpath($namespaces[$ns].':myrole');
@@ -2405,7 +2405,7 @@ class PluginImportLeap extends PluginImport {
 
     /**
      * Attaches a file to a blogpost entry that was just linked directly, rather than having a Leap2a entry
-     * See http://wiki.leapspecs.org/2A/files
+     * See https://web.archive.org/web/20120706042659/http://www.leapspecs.org/2A/files
      *
      * @param SimpleXMLElement $entry
      * @param SimpleXMLElement $link

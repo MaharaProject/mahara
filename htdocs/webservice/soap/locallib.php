@@ -4,7 +4,7 @@
  * @package    mahara
  * @subpackage auth-webservice
  * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
  */
@@ -13,8 +13,9 @@
  * SOAP web service implementation classes and methods.
  *
  * @package   webservice
- * @copyright 2001-3001 Moodle Pty Ltd (http://moodle.com)
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright 2009 Moodle Pty Ltd (http://moodle.com)
+ * @copyright For copyright information on Mahara, please see the README file distributed with this software.
+ * @license   https://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3 or later
  * @author     Piers Harding
  */
 
@@ -595,7 +596,7 @@ EOD;
  *
  * @package    webservice_soap
  * @copyright  2009 Petr Skodak
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3 or later
  * @since Moodle 2.0
  */
 class webservice_soap_test_client implements webservice_test_client_interface {

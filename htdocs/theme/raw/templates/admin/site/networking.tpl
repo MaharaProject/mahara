@@ -6,7 +6,7 @@
         <div class="alert alert-warning">{str section=admin tag=networkingextensionsmissing}
             <ul>
             {foreach from=$missingextensions item=extension}
-                <li><a href="http://www.php.net/{$extension}">{$extension}</a></li>
+                <li><a href="https://www.php.net/{$extension}">{$extension}</a></li>
             {/foreach}
             </ul>
         </div>

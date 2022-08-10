@@ -39,7 +39,7 @@ Scenario: Editing admin profile page (Bug: 1426983)
     And I click on "Social media"
     And I click on "New social media account"
     And I fill in the following:
-    | Enter URL | http://github.com/MaharaProject |
+    | Enter URL | https://git.mahara.org/mahara/mahara |
     | Your URL or username | https://twitter.com/MaharaProject |
     And I click on "Save"
     # Verifying the settings held, navitgating to dashboard page to check
