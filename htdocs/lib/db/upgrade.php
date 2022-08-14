@@ -885,5 +885,12 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2022061500) {
+        if (get_config('eventloglevel') === 'masq') {
+            set_config('eventloglevel', 'masquerade');
+            log_warn(get_string('updateeventlogconfigoption', 'admin'), true, false);
+        }
+    }
+
     return $status;
 }
