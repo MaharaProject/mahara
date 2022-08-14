@@ -652,3 +652,13 @@ div.toolbarhtml {
 .form-inline .form-group.description {
     padding-left: $spacing-sm;
 }
+
+.plugin-active {
+    color: $progresscompletion-verified-color;
+}
+.plugin-inactive {
+    color: $progresscompletion-notverified-color;
+}
+#register_whatsent_container .fieldset-body {
+    padding-top: 0;
+}

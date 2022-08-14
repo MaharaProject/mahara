@@ -82,7 +82,7 @@
                 {/if}
             {str tag=registeryoursitesummary section=admin args=$WWWROOT}
             {if $firstregistered}
-                <p>{str tag=siteisregisteredsince section=admin args=$firstregistered}</p>
+                <p>{str tag=siteisregisteredsince1 section=admin args=$firstregistered}</p>
             {/if}
             {if $sendweeklyupdates}
                 <p>{str tag=sendingweeklyupdates1 section=admin}</p>
