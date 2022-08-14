@@ -328,6 +328,15 @@ class AuthInternal extends Auth {
  */
 class PluginAuthInternal extends PluginAuth {
 
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('title', 'auth.internal');
+    }
+
     public static function has_config() {
         return false;
     }

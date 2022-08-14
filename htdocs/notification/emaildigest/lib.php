@@ -15,6 +15,15 @@ require_once(get_config('docroot') . 'notification/lib.php');
 
 class PluginNotificationEmaildigest extends PluginNotification {
 
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('name', 'notification.emaildigest');
+    }
+
     public static function notify_user($user, $data) {
         $toinsert = new stdClass();
         $toinsert->type = $data->type;

@@ -24,6 +24,16 @@ class PluginModuleMultirecipientnotification extends PluginModule {
      * in the inbox or outbox view
      */
     const MAX_USERNAME_IN_LIST_LENGTH = 30;
+
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('pluginname', 'module.multirecipientnotification');
+    }
+
     /**
      * Is the plugin activated or not?
      *

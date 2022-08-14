@@ -24,6 +24,15 @@ class PluginModuleLti extends PluginModule {
         'parentauth'        => null,
     );
 
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('maharalti', 'module.lti');
+    }
+
     public static function postinst($fromversion) {
         if ($fromversion < 2018100100) {
             // Add indexes to the lit_assessment table on install

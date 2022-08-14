@@ -59,6 +59,15 @@ class PluginSearchElasticsearch extends PluginSearch {
     const queue_status_sent_individually = 2;
 
     /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return 'Elasticsearch';
+    }
+
+    /**
      * Does this search plugin provide enhanced event log reports?
      * @return bool
      */

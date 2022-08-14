@@ -50,7 +50,8 @@ foreach (array_keys($plugins) as $plugin) {
                     'deprecated' => call_static_method($classname, 'is_deprecated'),
                     'name' => call_static_method($classname, 'get_plugin_display_name'),
                     'dependencies' => call_static_method($classname, 'has_plugin_dependencies'),
-                    'enableable' => call_static_method($classname, 'is_usable')
+                    'enableable' => call_static_method($classname, 'is_usable'),
+                    'version' => $i->version
                 );
                 if (
                     ($i->active && $plugins[$plugin]['installed'][$key]['disableable'])
@@ -63,22 +64,33 @@ foreach (array_keys($plugins) as $plugin) {
                     safe_require('artefact', $key);
                     if ($types = call_static_method(generate_class_name('artefact', $i->name), 'get_artefact_types')) {
                         foreach ($types as $t) {
+                            $hasconfigbuttons = 0;
+                            $hasconfigbuttonscollapsed = 0;
                             $classname = generate_artefact_class_name($t);
                             if ($collapseto = call_static_method($classname, 'collapse_config')) {
                                 $plugins[$plugin]['installed'][$key]['types'][$collapseto]['config'] = true;
+                                $hasconfigbuttonscollapsed = 1;
                             }
                             else {
-                                $plugins[$plugin]['installed'][$key]['types'][$t]['config'] =
-                                    call_static_method($classname, 'has_config');
+                                $hasconfig = call_static_method($classname, 'has_config');
+                                $plugins[$plugin]['installed'][$key]['types'][$t]['config'] = $hasconfig;
+                                if ($hasconfig) {
+                                    $hasconfigbuttons ++;
+                                }
                             }
                             if ($collapseto = call_static_method($classname, 'collapse_config_info')) {
                                 $plugins[$plugin]['installed'][$key]['types'][$collapseto]['info'] = true;
+                                $hasconfigbuttonscollapsed = 1;
                             }
                             else {
-                                $plugins[$plugin]['installed'][$key]['types'][$t]['info'] =
-                                    call_static_method($classname, 'has_config_info');
+                                $hasinfo = call_static_method($classname, 'has_config_info');
+                                $plugins[$plugin]['installed'][$key]['types'][$t]['info'] = $hasinfo;
+                                if ($hasinfo) {
+                                    $hasconfigbuttons ++;
+                                }
                             }
                         }
+                        $plugins[$plugin]['installed'][$key]['typeswithconfig'] = $hasconfigbuttons + $hasconfigbuttonscollapsed;
                     }
                 }
                 else {
@@ -218,10 +230,15 @@ var installplugin = (function($) {
 JAVASCRIPT;
 
 $plugins['blocktype']['configure'] = true;
+$plugintypes = array();
+foreach ($plugins as $plugin => $info) {
+    $plugintypes[$plugin] = get_string('plugin' . $plugin, 'admin');
+}
 $smarty = smarty();
 setpageicon($smarty, 'icon-plug');
 
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('plugins', $plugins);
+$smarty->assign('plugintypes', $plugintypes);
 $smarty->assign('installlink', 'installplugin');
 $smarty->display('admin/extensions/plugins.tpl');
