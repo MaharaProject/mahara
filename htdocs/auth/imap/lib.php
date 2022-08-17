@@ -123,6 +123,15 @@ class PluginAuthImap extends PluginAuth {
 
     private static $default_config = array('host'=>'', 'port'=>'143', 'protocol'=>'/imap', 'domainname'=>'', 'changepasswordurl'=>'', 'weautocreateusers'=>'', 'active' => 1);
 
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('title', 'auth.imap');
+    }
+
     public static function has_config() {
         return false;
     }

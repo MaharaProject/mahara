@@ -1378,9 +1378,9 @@ function activate_plugin_form($plugintype, $plugin) {
                 'type'  => 'button',
                 'usebuttontag' => true,
                 'class' => 'btn-secondary',
-                'title' => ($plugin->active ? get_string('hide') : get_string('show')) . ' ' . $plugintype . ' ' . (($plugin->displayname) ? $plugin->displayname : $plugin->name),
+                'elementtitle' => ($plugin->active ? get_string('hide') : get_string('show')) . ' ' . $plugintype . ' ' . (($plugin->displayname) ? $plugin->displayname : $plugin->name),
                 'hiddenlabel' => true,
-                'value' => $plugin->active ? get_string('hide') : get_string('show')
+                'value' => $plugin->active ? '<span class="icon icon-eye"><span class="sr-only" aria-hidden="true">' . get_string('hide') . '</span></span>' : '<span class="icon icon-eye-slash"><span class="sr-only" aria-hidden="true">' . get_string('show') . '</span></span>',
             ),
         ),
     ));

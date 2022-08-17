@@ -26,6 +26,15 @@ define('POST_REJECTED', 6);
 class PluginInteractionForum extends PluginInteraction {
 
     /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('pluginname', 'interaction.forum');
+    }
+
+    /**
      * Get the config form
      *
      * @param  mixed $group

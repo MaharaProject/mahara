@@ -18,6 +18,14 @@ require_once(get_config('docroot') . 'search/lib.php');
  */
 class PluginSearchInternal extends PluginSearch {
 
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('pluginname', 'search.internal');
+    }
 
     /**
      * Does this search plugin provide enhanced event log reports?
