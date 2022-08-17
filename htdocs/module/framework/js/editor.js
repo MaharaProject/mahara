@@ -37,7 +37,7 @@ var editor;
 jQuery(function($) {
     // Use bootstrap
     JSONEditor.defaults.options.theme = 'bootstrap4';
-    JSONEditor.defaults.options.iconlib = 'fontawesome4';
+    JSONEditor.defaults.options.iconlib = 'fontawesome5';
     // Hide edit json buttons. @TODO - main one will be needed for #2 wishlist item above
     JSONEditor.defaults.options.disable_edit_json = true;
 
@@ -63,10 +63,6 @@ jQuery(function($) {
     JSONEditor.defaults.languages.en.remove_element_message = get_string('removestandardorelementconfirm');
     JSONEditor.defaults.languages.en.button_delete_row_title_short = get_string('delete','module.framework');
     JSONEditor.defaults.languages.en.button_delete_row_title = get_string('deletespecific','mahara', '{{0}}');
-
-
-    // Enable select2
-    JSONEditor.plugins.select2.enable = true;
 
     var parent_array = [''];
 
@@ -335,7 +331,7 @@ jQuery(function($) {
                                 },
                                 "uid": {
                                     "type": "number",
-                                    "default": null,
+                                    "default": "0",
                                     "options": {
                                         "hidden": true
                                     }
@@ -446,7 +442,7 @@ jQuery(function($) {
                                 },
                                 "uid": {
                                     "type": "number",
-                                    "default": null,
+                                    "default": "0",
                                     "options": {
                                         "hidden": true
                                     }
@@ -458,9 +454,9 @@ jQuery(function($) {
             },
         });
         // Add ids to things so we can call them more easily later.
-        $('div[data-schemaid="standards"] > div > div > button.json-editor-btn-add').attr("id", "add_standard");
-        $('div[data-schemaid="standardelements"] > div > div > button.json-editor-btn-add').attr("id", "add_standardelement");
-        $('div[data-schemaid="standardelements"] > div > div > button.json-editor-btntype-deleteall').attr("id", "deleteall_standardelements");
+        $('div[data-schemaid="standards"] > span > button.json-editor-btn-add').attr("id", "add_standard");
+        $('div[data-schemaid="standardelements"] > span > button.json-editor-btn-add').attr("id", "add_standardelement");
+        $('div[data-schemaid="standardelements"] > span > button.json-editor-btntype-deleteall').attr("id", "deleteall_standardelements");
         // Add ids to all <input>, <select> and <textarea> tags and associate with their <label> for accessibility
         $('#editor_holder :input').each(function() {
             let name = $(this).attr('name');
@@ -581,6 +577,11 @@ jQuery(function($) {
             // @TODO, check functionality
             // Get an array of errors from the validator
             var errors = editor.validate();
+            let isCopy = $('#copy option:selected').val();
+            let isEdit = $('#edit option:selected').val();
+            if (!(isCopy ^ isEdit)) {
+                return;
+            }
             // Not valid
             if (errors.length) {
                 $('#messages').empty().append($('<div>', {'class':'alert alert-danger', 'text':get_string('invalidjsonineditor', 'module.framework')}));
@@ -1098,8 +1099,8 @@ jQuery(function($) {
      * the container is refreshed and the buttons recreated
      */
     function update_delete_standard_button_handlers() {
-        $('[data-schemaid="standard"] > div > div > button.json-editor-btn-delete').off('click');
-        $('[data-schemaid="standard"] > div > div > button.json-editor-btn-delete').on('click', function(e) {
+        $('[data-schemaid="standard"] > span > button.json-editor-btn-delete').off('click');
+        $('[data-schemaid="standard"] > span > button.json-editor-btn-delete').on('click', function(e) {
             e.stopPropagation();
             e.preventDefault();
 
@@ -1236,7 +1237,7 @@ jQuery(function($) {
     function update_delete_button_handler() {
         // Standard element section
         // 'Delete all' button
-        $('div[data-schemaid="standardelements"] > div > div > button.json-editor-btn-delete').eq(1).on('click', function () {
+        $('div[data-schemaid="standardelements"] > span > button.json-editor-btntype-deleteall').on('click', function () {
             update_parent_array();
             eid = 1;
             se_index = 0;
