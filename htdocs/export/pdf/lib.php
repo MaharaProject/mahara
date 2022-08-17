@@ -72,6 +72,11 @@ class PluginExportPdf extends PluginExportHtml {
         return get_string('description', 'export.pdf');
     }
 
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
     public static function get_plugin_display_name() {
         return 'PDF';
     }

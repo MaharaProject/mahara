@@ -35,6 +35,7 @@ $string['groupname'] = '"%s" - "%s"';
 $string['institutiondenied'] = 'Access to "%s" is denied. Please contact your institution administrator.';
 $string['lock'] = 'Keep portfolio locked after grading';
 $string['lockdescription'] = 'Users make changes to their portfolio after it has been graded.';
+$string['maharalti'] = 'LTI 1.1';
 $string['ltiserviceexists'] = 'The LTI service group is registered.';
 $string['nocollections'] = 'You do not have any portfolios that can be submitted for assessment.';
 $string['noticeenabled'] = 'The LTI API is enabled.';

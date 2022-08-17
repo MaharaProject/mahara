@@ -28,6 +28,21 @@ class PluginImportFile extends PluginImport {
         $this->zipfilesha1 = $data['zipfilesha1'];
     }
 
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('pluginname', 'import.file');
+    }
+
+    /**
+     * Validate transported data
+     *
+     * @param  ImporterTransport $transport
+     * @return boolean
+     */
     public static function validate_transported_data(ImporterTransport $transport) {
         return true; // nothing to do , we're just importing files to the file artefact plugin
     }
