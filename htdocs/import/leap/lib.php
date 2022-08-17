@@ -202,6 +202,15 @@ class PluginImportLeap extends PluginImport {
     const STRATEGY_IMPORT_AS_COLLECTION = 2;
 
     /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('pluginname', 'import.leap');
+    }
+
+    /**
      * Add the artefactmapping of an entry given by ID
      * @param string $entryid
      * @param string $artefactid

@@ -59,6 +59,7 @@ Scenario: Editing admin resume page (Bug 1426983)
     | Place of birth | Wellington |
     | Citizenship | NZ |
     | Visa status | Worker |
+    And I scroll to the center of id "personalinformation_gender_container"
     And I set the following fields to these values:
     | Woman | 1 |
     And I fill in the following:

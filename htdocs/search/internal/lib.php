@@ -19,6 +19,15 @@ require_once(get_config('docroot') . 'search/lib.php');
 class PluginSearchInternal extends PluginSearch {
 
     /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('pluginname', 'search.internal');
+    }
+
+    /**
      * This function indicates whether the plugin should take the raw $query string
      * when its group_search_user function is called, or whether it should get the
      * parsed query string.

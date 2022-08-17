@@ -2131,7 +2131,7 @@ function handle_event($event, $data, $ignorefields = array()) {
     $parentuser = $USER->get('parentuser');
     $eventloglevel = get_config('eventloglevel');
     if ($eventloglevel === 'all'
-            or ($parentuser and $eventloglevel === 'masq')) {
+            or ($parentuser and $eventloglevel === 'masquerade')) {
         $logentry = (object) array(
             'usr'      => $USER->get('id'),
             'realusr'  => $parentuser ? $parentuser->id : $USER->get('id'),

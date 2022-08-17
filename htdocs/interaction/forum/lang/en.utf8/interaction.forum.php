@@ -11,6 +11,7 @@
 
 defined('INTERNAL') || die();
 
+$string['pluginname'] = 'Forum';
 $string['addpostsuccess'] = 'Added post successfully';
 $string['addtitle'] = 'Add forum';
 $string['addtopic'] = 'Add topic';
