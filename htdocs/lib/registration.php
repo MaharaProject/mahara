@@ -24,73 +24,49 @@ defined('INTERNAL') || die();
  * Builds the register_site form
  *
  * Provides a table of site data and option to register site with Mahara Project
- * @param  bool  $registered  If the site has been registered
  * @return Pieform The 'registration' form
  * @ingroup Registration
  */
-function register_site($registered = null)  {
-    $strfield = get_string('Field', 'admin');
-    $strvalue = get_string('Value', 'admin');
-    $info = <<<EOF
+function register_site()  {
 
-<table class="table table-striped table-bordered" id="register-table">
-    <thead>
-        <tr>
-            <th>$strfield</th>
-            <th>$strvalue</th>
-        </tr>
-    </thead>
-    <tbody>
-EOF;
     $data = registration_data();
-    // Format each line of data to be sent.
-    foreach($data as $key => $val) {
-        $keystring = hsc($key);
-        if (string_exists($keystring, 'statistics')) {
-            $keystring = get_string($keystring, 'statistics');
-        }
-        $info .= '<tr><th>'. $keystring . '</th><td>' . hsc($val) . "</td></tr>\n";
+    $registered = get_config('registration_sendweeklyupdates');
+    $smarty = smarty_core();
+    $smarty->assign('data', registration_data_category($data));
+    $html = $smarty->fetch('admin/site/registrationdata.tpl');
+    $elements = array();
+    $elements['whatsent'] = array(
+        'type' => 'html',
+        'value'=> $html,
+    );
+    if (get_config('productionmode')) {
+        $elements['registeryesno'] = array(
+            'type' => 'switchbox',
+            'title' => get_string('registerwithmahara1', 'admin'),
+            'description' => get_string('registerwithmaharadescription1', 'admin'),
+            'defaultvalue' => !$registered,
+        );
+        $elements['register'] = array(
+            'type' => 'submit',
+            'class' => 'btn-primary',
+            'value' => get_string('save', 'mahara'),
+        );
     }
-    $info .= '</tbody></table>';
-
+    else {
+        $helplink = get_manual_help_link_array(array('adminhome', 'config', 'productionmode'));
+        $helplink = $helplink['prefix'] . '/' . $helplink['language'] . '/' . $helplink['version'] . '/' . $helplink['suffix'];
+        $elements['whatsentinprodmode'] = array(
+            'type' => 'html',
+            'value'=> get_string('whatsentinprodmode', 'statistics', $helplink),
+        );
+    }
     $form = array(
         'name' => 'register',
         'autofocus' => false,
-        'elements' => array(
-            'whatsent' => array(
-                'type' => 'fieldset',
-                'legend' => get_string('dataincluded', 'admin'),
-                'collapsible'  => true,
-                'collapsed'    => true,
-                'class' => 'last',
-                'elements' => array(
-                    'info' => array(
-                        'type' => 'markup',
-                        'value'=> $info,
-                    ),
-                )
-            ),
-            'registeryesno' => array(
-                'type' => 'switchbox',
-                'title' => get_string('registerwithmahara', 'admin'),
-                'description' => get_string('registerwithmaharadescription', 'admin'),
-                'defaultvalue' => $registered,
-                'disabled' => $registered,
-            ),
-            'sendweeklyupdates' => array(
-                'type'         => 'switchbox',
-                'title'        => get_string('sendweeklyupdates', 'admin'),
-                'description'  => get_string('sendweeklyupdatesdescription', 'admin'),
-                'defaultvalue' => (!$registered || get_config('registration_sendweeklyupdates')),
-                'class'        => 'd-none',
-            ),
-            'register' => array(
-                'type' => 'submitcancel',
-                'subclass' => array('btn-primary'),
-                'value' => array(get_string('save', 'mahara'), get_string('cancel', 'mahara')),
-            ),
-        ),
+        'elements' => $elements,
     );
+    // Now that they have seen the page we assume they have read the page
+    set_config('new_registration_policy', false);
     return pieform($form);
 }
 
@@ -102,96 +78,50 @@ EOF;
 function register_submit(Pieform $form, $values) {
     global $SESSION;
 
-    // If there is a timecode in this field, the site was registered at this time.
-    $registered = get_config('registration_lastsent') && !get_config('new_registration_policy');
-    // Depending on if the site was registered previously and what value was submitted in the 'sendweeklyupdates' field,
-    // there are three options:
-    $registerchanged = (!$registered && $values['registeryesno']);
-    $weeklyupdateschanged =
-            ($registered || $values['registeryesno']) &&
-            (get_config('registration_sendweeklyupdates') != $values['sendweeklyupdates']);
-
-    // 1. cancel (i.e, the user made no changes)
-    if (!$registerchanged  && !$weeklyupdateschanged) {
-        register_cancel_register();
+    if ($values['registeryesno']) {
+        // 'Yes' means we are opting out
+        set_config('new_registration_policy', false);
+        set_config('registration_firstsent', null);
+        set_config('registration_lastsent', null);
+        set_config('registration_sendweeklyupdates', false);
+        $SESSION->add_ok_msg(get_string('registrationoptoutsuccessful', 'admin'));
     }
-    // 2. add/remove weekly updates
-    else if ($registered && $weeklyupdateschanged) {
-        update_weeklyupdates($values);
+    else if (!get_config('registration_sendweeklyupdates')) {
+        // We were opted out but are opting back in
+        list($status, $message) = register_again();
+        $messagetype = 'add_' . $status . '_msg';
+        $SESSION->$messagetype($message);
     }
 
-    // 3. registering, continue
+    redirect('/admin/registersite.php');
+}
+
+/**
+ * Send the registration data and set the registered config state
+ *
+ * @param bool $keepnew Keep the new_registration_policy flag active
+ *                      so that one can read it after logging in.
+ *                      Useful in upgrade step.
+ * @return array  Containing message type and message
+ */
+function register_again($keepnew = false) {
     $result = registration_send_data();
     $data = json_decode($result->data);
 
-    if ($data->status != 1) {
-        log_info($result);
-        $SESSION->add_error_msg(get_string('registrationfailedtrylater', 'admin', $result->info['http_code']));
+    if ($result->info['http_code'] != 200 || $data->status != 1) {
+        return array('error', get_string('registrationfailedtrylater', 'admin', $result->info['http_code'] . ' - ' . $data->error));
     }
     else {
         set_config('registration_lastsent', time());
         if (!get_config('registration_firstsent')) {
             set_config('registration_firstsent', time());
         }
-        set_config('registration_sendweeklyupdates', $values['sendweeklyupdates']);
-        if (get_config('new_registration_policy')) {
+        set_config('registration_sendweeklyupdates', true);
+        if (get_config('new_registration_policy') && !$keepnew) {
             set_config('new_registration_policy', false);
         }
-        $SESSION->add_ok_msg(get_string('registrationsuccessfulthanksforregistering', 'admin'));
-        $info = '
-<h3>' . get_string('datathathavebeensent', 'admin') . '</h3>
-<table class="table table-striped table-bordered" id="register-table">
-    <thead>
-        <tr>
-            <th> ' . get_string('Field', 'admin') . '</th>
-            <th> ' . get_string('Value', 'admin') . '</th>
-        </tr>
-    </thead>
-    <tbody>
-';
-        $datasent = registration_data();
-        foreach($datasent as $key => $val) {
-            $info .= '<tr><th>'. hsc($key) . '</th><td>' . hsc($val) . "</td></tr>\n";
-        }
-        $info .= '</tbody></table>';
-
-        $SESSION->add_ok_msg($info, false);
+        return array('ok', get_string('registrationsuccessfulthanksforregistering', 'admin'));
     }
-    redirect('/admin/index.php');
-}
-
-/**
- * Runs when the 'Weekly updates' switch is changed
- * @param  array  $values of submitted data via pieform
- */
-
-function update_weeklyupdates($values) {
-    global $SESSION;
-
-    set_config('registration_sendweeklyupdates', $values['sendweeklyupdates']);
-    if (get_config('new_registration_policy')) {
-        set_config('new_registration_policy', false);
-    }
-    if ($values['sendweeklyupdates']) {
-        $SESSION->add_ok_msg(get_string('startsendingdata', 'admin'), false);
-    }
-    else {
-        $SESSION->add_ok_msg(get_string('stoppedsendingdata', 'admin'));
-    }
-    redirect('/admin/index.php');
-}
-
-/**
- * Runs when registration form is cancelled
- */
-function register_cancel_register() {
-    global $SESSION;
-
-    if (get_config('new_registration_policy')) {
-        $SESSION->add_ok_msg(get_string('registrationcancelled', 'admin', get_config('wwwroot')), false);
-    }
-
-    redirect('/admin/index.php');
 }
 
 /**
@@ -200,10 +130,30 @@ function register_cancel_register() {
 function registration_send_data() {
     $registrationurl = 'https://mahara.org/api/registration.php';
     $data = registration_data();
+    // unset two options that are only there for display purposes
+    unset($data['numberofartefacts']['active']);
+    unset($data['numberofblocks']['active']);
+    $curldata = array();
+    foreach ($data as $datakey => $datavalue) {
+        if (is_array($datavalue)) {
+            foreach ($datavalue as $subdatakey => $subdatavalue) {
+                if ($subdatakey === 'info') {
+                    $curldata[$datakey] = $subdatavalue;
+                }
+                else {
+                    $curldata[$datakey . '_' . $subdatakey] = $subdatavalue;
+                }
+            }
+        }
+        else {
+            $curldata[$datakey] = $datavalue;
+        }
+    }
+
     $request = array(
         CURLOPT_URL        => $registrationurl,
         CURLOPT_POST       => 1,
-        CURLOPT_POSTFIELDS => $data,
+        CURLOPT_POSTFIELDS => $curldata,
     );
     return mahara_http_request($request);
 }
@@ -228,6 +178,129 @@ function registration_store_data() {
 }
 
 /**
+ * Categorize the registration data
+ */
+function registration_data_category($data) {
+    $categories = array(
+        'site' => array(
+            'sitename' => 'text',
+            'wwwroot' => 'text',
+            'installation_key' => 'text',
+            'release' => 'text',
+            'version' => 'text',
+            'osversion' => 'text',
+            'dbversion' => 'text',
+            'webserver' => 'text',
+            'phpversion' => 'text',
+            'phpsapi' => 'text',
+            'phpmodules' => 'text',
+            'lang' => 'text',
+            'theme' => 'text',
+            'country' => 'text',
+            'timezone' => 'text',
+            'homepageinfo' => 'bool',
+            'homepageredirect' => 'bool',
+            'skins' => 'bool',
+            'licensemetadata' => 'bool',
+            'mathjax' => 'bool',
+            'exporttoqueue' => 'bool',
+            'searchplugin' => 'text',
+            'eventlogging' => 'text',
+            'enablenetworking' => 'bool',
+            'moodlehost' => 'text',
+            'institutionstrictprivacy' => 'bool',
+        ),
+        'institutions_accounts' => array(
+            'usersallowedmultipleinstitutions' => 'bool',
+            'isolatedinstitutions' => 'bool',
+            'institutions' => 'text',
+            'count_usr' => 'text',
+            'siteadmins' => 'text',
+            'sitestaff' => 'text',
+            'institutionadmins' => 'text',
+            'institutionsupportadmins' => 'text',
+            'institutionstaff' => 'text',
+            'groups' => 'text',
+            'friends' => 'text',
+        ),
+        'portfolios' => array(
+            'allowanonymouspages' => 'bool',
+            'allowpublicviews' => 'bool',
+            'allowpublicprofiles' => 'bool',
+            'numberofpages' => 'text',
+            'numberofcollections' => 'text',
+            'numberofsecollections' => 'text',
+            'numberofpccollections' => 'text',
+        ),
+        'artefacts' => array(
+            'numberofartefacts' => 'text',
+            'artefact_type_*' => 'text',
+        ),
+        'blocktypes' => array(
+            'numberofblocks' => 'text',
+            'blocktype_*' => 'text',
+        ),
+    );
+
+    $boolstrings = array(
+        0 => get_string('no'),
+        1 => get_string('yes')
+    );
+    $boolicons = array(
+        0 => '<span class="icon icon-lg icon-times-circle plugin-inactive" title="' . get_string('no') . '">',
+        1 => '<span class="icon icon-lg icon-check-circle plugin-active" title="' . get_string('yes') . '">',
+    );
+    // Now map the data we have to the category structure
+    $newdata = array();
+    foreach ($categories as $k => $sub) {
+        foreach ($sub as $sk => $sv) {
+            $keystring = hsc($sk);
+            if (string_exists($keystring, 'statistics')) {
+                $keystring = get_string($keystring, 'statistics');
+            }
+            $newdata[$k]['data'][$sk]['key'] = $keystring;
+            $newdata[$k]['activecolumn'] = false;
+            if (isset($data[$sk])) {
+                $newdata[$k]['data'][$sk]['value'] = ($sv === 'bool') ? $boolstrings[(bool)$data[$sk]['info']] : hsc($data[$sk]['info']);
+                if (isset($data[$sk]['active'])) {
+                    $newdata[$k]['data'][$sk]['active'] = is_null($data[$sk]['active']) ? '' : $boolicons[(bool)$data[$sk]['active']];
+                }
+            }
+            else if (preg_match('/\_\*$/', $sk)) {
+                $newdata[$k]['activecolumn'] = true;
+                // We have a partial key, one ending in '_*' so want to find all the $data items that start
+                // with the string before the '*'
+                $partial = substr($sk, 0, -1);
+                $partial_array = array_filter($data, function($key) use ($partial) {
+                    return strpos($key, $partial) === 0;
+                }, ARRAY_FILTER_USE_KEY);
+                // Unset the key with '_*'
+                unset($newdata[$k]['data'][$sk]);
+                // Then add all the partials to $newdata
+                foreach ($partial_array as $pk => $pv) {
+                    if (isset($data[$pk])) {
+                        $keystring = hsc($pk);
+                        if (string_exists($keystring, 'statistics')) {
+                            $keystring = get_string($keystring, 'statistics');
+                        }
+                        $newdata[$k]['data'][$pk]['key'] = $keystring;
+                        $newdata[$k]['data'][$pk]['value'] = ($sv === 'bool') ? $boolstrings[(bool)$data[$pk]['info']] : hsc($data[$pk]['info']);
+                        if (isset($data[$pk]['active'])) {
+                            $newdata[$k]['data'][$pk]['active'] = is_null($data[$pk]['active']) ? '' : $boolicons[(bool)$data[$pk]['active']];
+                        }
+                    }
+                }
+            }
+            else {
+                $newdata[$k]['data'][$sk]['value'] = ($sv === 'bool') ? $boolstrings[0] : '';
+            }
+        }
+    }
+
+    return $newdata;
+}
+
+/**
  * Builds the data that will be sent by the "register your site" feature
  */
 function registration_data() {
@@ -235,20 +308,66 @@ function registration_data() {
         'wwwroot',
         'installation_key',
         'sitename',
-        'dbtype',
         'lang',
         'theme',
         'enablenetworking',
         'allowpublicviews',
         'allowpublicprofiles',
         'version',
-        'release') as $key) {
-        $data_to_send[$key] = get_config($key);
+        'release',
+        'country',
+        'timezone',
+        'homepageinfo',
+        'homepageredirect',
+        'skins',
+        'licensemetadata',
+        'mathjax',
+        'exporttoqueue',
+        'searchplugin',
+        'institutionstrictprivacy',
+        'usersallowedmultipleinstitutions',
+        'isolatedinstitutions',
+        'allowanonymouspages') as $key) {
+        $data_to_send[$key]['info'] = get_config($key);
     }
 
+    // Event logging
+    $data_to_send['eventlogging']['info'] = get_config('eventloglevel');
+    if (get_config('eventlogenhancedsearch')) {
+        $data_to_send['eventlogging']['info'] = 'enhanced';
+    }
+
+    // Count records
+    $data_to_send['institutions']['info'] = count_records('institution');
+    $data_to_send['count_usr']['info'] = count_records_sql("SELECT COUNT(*) FROM {usr} WHERE deleted = 0 AND id != 0");
+    $data_to_send['siteadmins']['info'] = count_records('usr', 'admin', 1);
+    $data_to_send['sitestaff']['info'] = count_records('usr', 'staff', 1);
+    $data_to_send['institutionadmins']['info'] = count_records('usr_institution', 'admin', 1);
+    $data_to_send['institutionsupportadmins']['info'] = count_records('usr_institution', 'supportadmin', 1);
+    $data_to_send['institutionstaff']['info'] = count_records('usr_institution', 'staff', 1);
+    $data_to_send['groups']['info'] = count_records_sql("SELECT COUNT(*) FROM {group} WHERE deleted = 0");
+    $data_to_send['friends']['info'] = count_records('usr_friend');
+    $data_to_send['numberofpages']['info'] = count_records_sql("SELECT COUNT(*) FROM {view} WHERE type = 'portfolio'");
+    $data_to_send['numberofcollections']['info'] = count_records('collection');
+    $data_to_send['numberofsecollections']['info'] = count_records_sql("SELECT COUNT(*) FROM {collection} WHERE framework > 0");
+    $data_to_send['numberofpccollections']['info'] = count_records_sql("SELECT COUNT(*) FROM {collection} WHERE progresscompletion = 1");
+    $data_to_send['numberofartefacts'] = array('info' => count_records('artefact'), 'active' => null);
+    $data_to_send['numberofblocks'] = array('info' => count_records('block_instance'), 'active' => null);
+    $data_to_send['moodlehost']['info'] = count_records_select('host', 'deleted = 0');
+
     // System information
-    $data_to_send['phpversion'] = phpversion();
-    $data_to_send['dbversion'] = get_field_sql('SELECT VERSION()');
+    $data_to_send['phpversion']['info'] = phpversion();
+    if (is_mysql()) {
+        $dbversion = get_records_sql_array("SHOW VARIABLES LIKE 'version%'");
+        $dbversionstr = 'MySQL';
+        foreach ($dbversion as $dbk => $dbv) {
+            $dbversionstr .= ' ' . $dbv->Value;
+        }
+        $data_to_send['dbversion']['info'] = $dbversionstr;
+    }
+    else {
+        $data_to_send['dbversion']['info'] = get_field_sql('SELECT VERSION()');
+    }
     $osversion = php_uname('s');
     if ($osversion == 'Linux') {
         $lsbversion = exec('lsb_release -d', $execout, $return_val);
@@ -259,57 +378,35 @@ function registration_data() {
             $osversion = php_uname();
         }
     }
-    $data_to_send['osversion'] = $osversion;
-    $data_to_send['phpsapi'] = php_sapi_name();
+    $data_to_send['osversion']['info'] = $osversion;
+    $data_to_send['phpsapi']['info'] = php_sapi_name();
     if (!empty($_SERVER) && !empty($_SERVER['SERVER_SOFTWARE'])) {
-        $data_to_send['webserver'] = $_SERVER['SERVER_SOFTWARE'];
+        $data_to_send['webserver']['info'] = $_SERVER['SERVER_SOFTWARE'];
     }
     $modules = get_loaded_extensions();
     natcasesort($modules);
-    $data_to_send['phpmodules'] = '; ' . implode('; ', $modules) . ';';
-
-    foreach (array(
-        'usr_friend',
-        'usr_institution',
-        'group_member',
-        'block_instance',
-        'institution',
-        'blocktype_wall_post',
-        'institution') as $key) {
-        $data_to_send['count_' . $key] = count_records($key);
-    }
-
-    foreach (array(
-        'usr',
-        'group',
-        'host') as $key) {
-        $data_to_send['count_' . $key] = count_records_select($key, 'deleted = 0');
-        }
-
-    // Don't include the root user
-    $data_to_send['count_usr']--;
+    $data_to_send['phpmodules']['info'] = implode('; ', $modules);
 
     // Slightly more drilled down information
-    if ($data = get_records_sql_array('SELECT artefacttype, COUNT(*) AS count
-        FROM {artefact}
-        GROUP BY artefacttype', array())) {
+    if ($data = get_records_sql_array('SELECT ait.name, COUNT(a.id) AS count, (SELECT active FROM {artefact_installed} WHERE name = ait.plugin) AS active
+        FROM {artefact_installed_type} ait
+        LEFT JOIN {artefact} a ON a.artefacttype = ait.name
+        GROUP BY ait.name
+        ORDER BY ait.name', array())) {
         foreach ($data as $artefacttypeinfo) {
-            $data_to_send['artefact_type_' . $artefacttypeinfo->artefacttype] = $artefacttypeinfo->count;
+            $data_to_send['artefact_type_' . $artefacttypeinfo->name]['info'] = $artefacttypeinfo->count;
+            $data_to_send['artefact_type_' . $artefacttypeinfo->name]['active'] = $artefacttypeinfo->active;
         }
     }
 
-    if ($data = get_records_sql_array('SELECT type, COUNT(*) AS count
-        FROM {view}
-        GROUP BY type', array())) {
-        foreach ($data as $viewtypeinfo) {
-            $data_to_send['view_type_' . $viewtypeinfo->type] = $viewtypeinfo->count;
-        }
-    }
-
-    // Plugin versions
-    foreach (plugin_types() as $type) {
-        foreach (plugins_installed($type) as $plugin) {
-            $data_to_send['plugin_' . $type . '_' . $plugin->name . '_version'] = $plugin->version;
+    if ($data = get_records_sql_array('SELECT bti.name, COUNT(bi.id) AS count, (SELECT bti2.active FROM {blocktype_installed} bti2 WHERE bti2.name = bti.name) AS active
+        FROM {blocktype_installed} bti
+        LEFT JOIN {block_instance} bi ON bi.blocktype = bti.name
+        GROUP BY bti.name
+        ORDER BY bti.name', array())) {
+        foreach ($data as $blocktypeinfo) {
+            $data_to_send['blocktype_' . $blocktypeinfo->name]['info'] = $blocktypeinfo->count;
+            $data_to_send['blocktype_' . $blocktypeinfo->name]['active'] = $blocktypeinfo->active;
         }
     }
 

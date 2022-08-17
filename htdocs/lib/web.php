@@ -2326,7 +2326,7 @@ function admin_nav() {
         'adminhome/registersite' => array(
             'path'   => 'adminhome/registersite',
             'url'    => 'admin/registersite.php',
-            'title'  => get_string('register'),
+            'title'  => get_string('Registration', 'admin'),
             'weight' => 20,
         ),
         'configsite' => array(
