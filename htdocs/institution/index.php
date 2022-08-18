@@ -46,5 +46,7 @@ $smarty = smarty();
 $smarty->assign('admins', $admins);
 $smarty->assign('staff', $staff);
 $smarty->assign('supportadmin', $supportadmin);
+$smarty->assign('issite', ($inst == 'mahara') ? true : false);
+$smarty->assign('size', ($inst == 'mahara') ? 6 : 4);
 $smarty->assign('PAGEHEADING', get_string('institutioncontacts', 'mahara', TITLE));
 $smarty->display('institution/staffadmin.tpl');

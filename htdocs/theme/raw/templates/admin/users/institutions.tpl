@@ -76,6 +76,7 @@
                 <th>{str tag="Groups" section="admin"}</th>
                 <th>{str tag="Maximumgroups" section="admin"}</th>
                 <th>{str tag="Staff" section="admin"}</th>
+                <th>{str tag="Supportadmins" section="admin"}</th>
                 <th>{str tag="Admins" section="admin"}</th>
                 <th></th>
                 <th><span class="accessible-hidden visually-hidden">{str tag=edit}</span></th>

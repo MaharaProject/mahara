@@ -1022,13 +1022,14 @@ class Institution {
                 ii.suspended,
                 COALESCE(a.members, 0) AS members,
                 COALESCE(a.staff, 0) AS staff,
-                COALESCE(a.admins, 0) AS admins
+                COALESCE(a.admins, 0) AS admins,
+                COALESCE(a.supportadmins, 0) AS supportadmins
             FROM
                 {institution} ii
                 LEFT JOIN
                     (SELECT
                         i.name, i.displayname, i.maxuseraccounts,
-                        COUNT(ui.usr) AS members, SUM(ui.staff) AS staff, SUM(ui.admin) AS admins
+                        COUNT(ui.usr) AS members, SUM(ui.staff) AS staff, SUM(ui.admin) AS admins, SUM(ui.supportadmin) AS supportadmins
                     FROM
                         {institution} i
                         LEFT OUTER JOIN {usr_institution} ui ON (ui.institution = i.name)
@@ -1052,6 +1053,8 @@ class Institution {
             $institutions['mahara']->members = $defaultinst->members;
             $institutions['mahara']->staff   = $defaultinst->staff;
             $institutions['mahara']->admins  = $defaultinst->admins;
+            // Site institution can't have support admins currently
+            $institutions['mahara']->supportadmins  = 0;
             $institutions['mahara']->site = true;
             $institutions['mahara']->maxuseraccounts = 0;
         }
@@ -1224,7 +1227,6 @@ function build_institutions_html($filter, $showdefault, $query, $limit, $offset,
 
     $institutions = Institution::count_members($filter, $showdefault, $query, $limit, $offset, $count);
     require_once($CFG->docroot . '/webservice/lib.php');
-
 
     $smarty = smarty_core();
     $smarty->assign('institutions', $institutions);

@@ -27,6 +27,10 @@
                         {$institution->staff}
                     {if !$institution->site}</a>{/if}</td>
                 <td class="center">
+                    {if !$institution->site}<a href="{$WWWROOT}admin/users/institutionsupportadmins.php?institution={$institution->name}">{/if}
+                        {$institution->supportadmins}
+                    {if !$institution->site}</a>{/if}</td>
+                <td class="center">
                     {if !$institution->site}<a href="{$WWWROOT}admin/users/institutionadmins.php?institution={$institution->name}">{/if}
                         {$institution->admins}
                     {if !$institution->site}</a>{/if}</td>
