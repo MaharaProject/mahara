@@ -266,19 +266,21 @@ h1 + div > .btn-top-left,
     }
 
     .btn-group-vertical .btn {
-        border-radius: $btn-border-radius-sm;
+        border-radius: 0;
 
         &:last-child {
-            border-bottom-right-radius: 0;
+            border-bottom-left-radius: $btn-border-radius-sm;
         }
         &:first-child {
-            border-top-right-radius: 0;
+            border-top-left-radius: $btn-border-radius-sm;
         }
 
         &.dropdown-toggle {
+            border-radius: $btn-border-radius-sm;
             border-bottom-right-radius: 0;
         }
         &.addaction {
+            border-radius: $btn-border-radius-sm;
             border-top-left-radius: 0;
             margin-top: -0.0625rem; // -1px;
         }
