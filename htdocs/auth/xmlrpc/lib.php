@@ -203,7 +203,7 @@ class AuthXmlrpc extends Auth {
 
             //TODO: import institution's per-user-quota?:
             //$user->quota              = $userrecord->quota;
-            $user->authinstance       = empty($this->config['parent']) ? $this->instanceid : $this->parent;
+            $user->authinstance       = empty($this->config['parent']) ? $this->instanceid : $this->config['parent'];
 
             db_begin();
             $user->username           = get_new_username($remoteuser->username, 200);
