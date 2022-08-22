@@ -31,6 +31,7 @@ a.card-footer {
   .has-attachment .show {
       z-index: 1;
       position: relative;
+      box-shadow: $box-shadow;
   }
 }
 

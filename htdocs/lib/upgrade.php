@@ -1380,7 +1380,7 @@ function activate_plugin_form($plugintype, $plugin) {
             'submit'     => array(
                 'type'  => 'button',
                 'usebuttontag' => true,
-                'class' => 'btn-secondary',
+                'class' => 'btn-secondary btn-sm',
                 'elementtitle' => ($plugin->active ? get_string('hide') : get_string('show')) . ' ' . $plugintype . ' ' . (($plugin->displayname) ? $plugin->displayname : $plugin->name),
                 'hiddenlabel' => true,
                 'value' => $plugin->active ? '<span class="icon icon-eye"><span class="visually-hidden" aria-hidden="true">' . get_string('hide') . '</span></span>' : '<span class="icon icon-eye-slash"><span class="visually-hidden" aria-hidden="true">' . get_string('show') . '</span></span>',

@@ -61,10 +61,6 @@ body {
 .viewfooter {
     clear: both;
     margin-top: $spacing-xxl;
-
-    #releaseview_submit_container {
-      margin-left: 1rem;
-    }
 }
 
 // Needed to clear the float when dropzone is visible
@@ -150,12 +146,6 @@ iframe {
 
 .forumfooter {
     margin: $spacing-lg 0;
-}
-
-.dropdown-menu li span.nolink {
-    padding: $spacing-xs $spacing-xl;
-    display: block;
-    white-space: nowrap;
 }
 
 body.presentation-iframe {

@@ -90,3 +90,10 @@ Doris's patch from last upgrade: https://reviews.mahara.org/#/c/11591/9/htdocs/j
   - Replaced removed postBuild function for select editor
   - Adjusted button titles/aria labels
   - Adjusted html for accessibility
+
+For compatibility in styling with core Mahara
+    in src/dist/jsoneditor.js - added the css class 'with-tabs'
+        el.classList.add('card');
+      - el.innerHTML = "<div class='card-header'><ul class='nav nav-tabs card-header-tabs' id='".concat(pName, "'></ul></div><div class='card-body'><div class='tab-content' id='").concat(pName, "'></div></div>");
+      + el.innerHTML = "<div class='card-header with-tabs'><ul class='nav nav-tabs card-header-tabs' id='".concat(pName, "'></ul></div><div class='card-body'><div class='tab-content' id='").concat(pName, "'></div></div>");
+        return el;

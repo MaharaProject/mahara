@@ -28,14 +28,12 @@
                 </span>
                 {elseif $post->canedit}
                 <div class="btn-group postcontrols">
-                    <form name="edit_{$post->id}" action="{$WWWROOT}artefact/blog/post.php" class="form-as-button float-start">
+                    <form name="edit_{$post->id}" action="{$WWWROOT}artefact/blog/post.php" class="form-as-button first float-start">
                         <input type="hidden" name="id" value="{$post->id}">
-                        <div class="first">
-                            <button type="submit" class="submit btn btn-secondary btn-sm" title="{str(tag=edit)|escape:html|safe}">
-                                <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
-                                <span class="visually-hidden">{str tag=editspecific arg1=$post->title |escape:html|safe}</span>
-                            </button>
-                        </div>
+                        <button type="submit" class="submit btn btn-secondary btn-sm" title="{str(tag=edit)|escape:html|safe}">
+                            <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
+                            <span class="visually-hidden">{str tag=editspecific arg1=$post->title |escape:html|safe}</span>
+                        </button>
                     </form>
                     {$post->delete|safe}
                 </div>

@@ -159,7 +159,7 @@ $form = array(
             'type'         => 'fieldset',
             'collapsible'  => true,
             'collapsed'    => false,
-            'class'        => 'sectioned last',
+            'class'        => 'sectioned first last',
             'legend'       => get_string('settings'),
             'elements'     => array(),
         ),

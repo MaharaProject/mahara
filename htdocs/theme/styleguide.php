@@ -45,17 +45,14 @@ $inlinecss = <<<EOT
 
     .copy {
         position: absolute;
-        top: 0;
-        right: 0;
-        font-size: 150%;
-        border-radius: 2px;
-        border-width: 0px;
+        top: -1px;
+        right: -1px;
+        font-size: 125%;
+        border-radius: 0 0 2px 2px;
         box-shadow: none;
         line-height: 1em;
-        background-color: transparent;
-        outline: 1px solid #ccc;
-        padding-top: 5px;
-        padding-bottom: 3px;
+        padding-top: 4px;
+        padding-bottom: 4px;
     }
 
     .nav-tabs {

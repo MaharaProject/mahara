@@ -136,10 +136,16 @@ h3 {
         &.has-attachment {
             .card-header {
                 font-weight: $font-weight-normal;
+                border-radius: $card-inner-border-radius;
                 a {
                     border-width: 0;
                     line-height: 1;
                     text-decoration: none;
+                    border-radius: $card-inner-border-radius $card-inner-border-radius 0 0;
+
+                    &.collapsed {
+                      border-radius: $card-inner-border-radius;
+                    }
 
                     .icon-paperclip,
                     .collapse-indicator {
@@ -183,4 +189,24 @@ h3 {
 .has-attachment .card-header {
     border-bottom: 0;
     font-weight: $font-weight-normal;
+}
+
+// tabs in card-header
+.card-header.with-tabs {
+  padding-bottom: 0;
+  .card-header-tabs {
+    padding: 0;
+    margin: 0 $card-cap-padding-y;
+    border-bottom: 0;
+    &.nav-tabs.nav li {
+      margin-bottom: 0;
+      > a {
+        background-color: $card-bg;
+        border: $card-border-width solid $card-border-color;
+        &.active {
+          border-bottom-color: $card-bg;
+        }
+      }
+    }
+  }
 }

@@ -1,27 +1,27 @@
 {include file="header.tpl"}
 <p class="lead">{$pagedescription}</p>
 
-<div class="collapsible-group" id="accordion">
-{foreach from=$form.elements item=element name=elements}
-    {if $element.type == 'fieldset'}
-    <div class="pseudofieldset card collapsible collapsible-group{if $.foreach.elements.last} last{/if}">
-        <h2 class="pseudolegend card-header has-link">
-        <a class="{if $element.collapsed}collapsed{/if}" href="#{$element.name}_pseudofieldset" data-bs-toggle="collapse" aria-expanded="{if !count($element.elements}}true{else}false{/if}" aria-controls="{$element.name}_pseudofieldset"data-bs-parent="#accordion">
-        {$element.legend}
-         <span class="icon icon-chevron-down right collapse-indicator float-end" role="presentation" aria-hidden="true"></span>
-        </a>
-        </h2>
-        <div class="card-body table-responsive collapse{if !$element.collapsed} show{/if}{if $.foreach.elements.last} no-footer{/if}" id="{$element.name}_pseudofieldset">
-        {foreach from=$element.elements item=item}
-            {$item.value|safe}
-        {/foreach}
+  {foreach from=$form.elements item=element name=elements}
+      {if $element.type == 'fieldset'}
+      <div class="collapsible-group" id="accordion">
+        <div class="pseudofieldset card collapsible collapsible-group{if $.foreach.elements.last} last{/if}">
+            <h2 class="pseudolegend card-header has-link">
+            <a class="{if $element.collapsed}collapsed{/if}" href="#{$element.name}_pseudofieldset" data-bs-toggle="collapse" aria-expanded="{if !count($element.elements}}true{else}false{/if}" aria-controls="{$element.name}_pseudofieldset"data-bs-parent="#accordion">
+            {$element.legend}
+             <span class="icon icon-chevron-down right collapse-indicator float-end" role="presentation" aria-hidden="true"></span>
+            </a>
+            </h2>
+            <div class="card-body table-responsive collapse{if !$element.collapsed} show{/if}{if $.foreach.elements.last} no-footer{/if}" id="{$element.name}_pseudofieldset">
+            {foreach from=$element.elements item=item}
+                {$item.value|safe}
+            {/foreach}
+            </div>
         </div>
-    </div>
-    {else}
-        {$element.value|safe}
-    {/if}
-{/foreach}
-</div>
+      </div>
+      {else}
+          {$element.value|safe}
+      {/if}
+  {/foreach}
 <script>
 jQuery(function() {
     jQuery('.pseudofieldset').each(function(index) {

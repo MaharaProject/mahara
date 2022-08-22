@@ -24,6 +24,10 @@
     .list-group-item & {
         float: left;
         margin-right: $spacing-base;
+
+        a {
+          display: inline-block;
+        }
     }
     img {
         margin: 0;

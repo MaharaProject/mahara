@@ -86,7 +86,7 @@
                 </td>
                 <td class="control-buttons">
                     {if $n->locked}
-                    <span class="dull text-muted">
+                    <span class="dull text-muted text-small">
                         {str tag=Submitted section=view}
                     </span>
                     {else}

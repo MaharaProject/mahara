@@ -666,7 +666,7 @@ if ($institution || $add) {
     );
     $elements['lockedfields'] = array(
         'type' => 'fieldset',
-        'class' => 'last with-formgroup',
+        'class' => 'first last with-formgroup',
         'legend' => get_string('Lockedfields', 'admin'),
         'collapsible' => true,
         'collapsed' => true,

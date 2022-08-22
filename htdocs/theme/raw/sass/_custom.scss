@@ -69,19 +69,27 @@
 // Style label institution selection
 .institutionselector {
     float: right;
-    display: inline-block;
-    margin-top: $spacing-xl;
+    margin-top: 1.25rem; // 20px;
+    @include media-breakpoint-down(lg) {
+      margin-top: 1rem; // 20px;
+    }
+    @include media-breakpoint-down(md) {
+      float: none;
+      margin-top: 0;
+    }
     label {
         font-weight: $font-weight-bold;
         width: auto;
         display: table-cell;
+        vertical-align: middle;
+    }
+    span.pseudolabel {
+        font-weight: $font-weight-bold;
+        width: auto;
     }
     .picker {
         width: auto;
         display: table-cell;
-    }
-    span.pseudolabel {
-        font-weight: $font-weight-bold;
     }
     > form {
         justify-content: flex-end;
@@ -103,7 +111,7 @@
     }
 
     input.checkbox {
-      margin-top: $spacing-sm !important;
+      margin-top: 0.375rem !important; // 6px;
       margin-left: -$spacing-xl;
     }
 }
@@ -134,6 +142,9 @@
     margin: 0 $spacing-base $spacing-base 0;
     img.card {
         margin-bottom: 0;
+    }
+    .skin-content a {
+      display: block;
     }
     .skin-footer {
         text-align:center;
@@ -395,6 +406,11 @@
 #agreetoprivacy .card {
     border: 0;
 
+    legend a {
+      border-top-left-radius: $card-border-radius;
+      border-top-right-radius: $card-border-radius;
+    }
+
     p {
       margin: $spacing-base 0 0 0;
     }
@@ -439,6 +455,7 @@ div.toolbarhtml {
     float: right;
     div {
         text-align: right;
+        margin-bottom: $spacing-sm;
     }
 }
 
@@ -483,6 +500,12 @@ div.toolbarhtml {
     top: $spacing-lg;
     div {
         padding-right: 5px !important;
+    }
+
+    @include media-breakpoint-down(lg) {
+      .form-inline > .form-group {
+        width: auto;
+      }
     }
 }
 
@@ -661,4 +684,30 @@ div.toolbarhtml {
 }
 #register_whatsent_container .fieldset-body {
     padding-top: 0;
+}
+
+// Registration of external apps | web services config
+@include media-breakpoint-down(lg) {
+  #webservices_token_generate .form-group {
+    margin-bottom: $spacing-base;
+    .select + .submit:not(.input-group-append) {
+      margin-left: 0;
+    }
+  }
+}
+#webservices_token_generate_institution_container {
+  @include media-breakpoint-up(lg) {
+    margin-left: $spacing-base;
+    margin-right: $spacing-base;
+  }
+
+  .pseudolabel {
+    display: block;
+    @include media-breakpoint-up(lg) {
+      margin-bottom: 0.4375rem; // 7px;
+    }
+  }
+}
+#maincontainer_register_server_container .table-responsive {
+  margin-bottom: $spacing-xl;
 }

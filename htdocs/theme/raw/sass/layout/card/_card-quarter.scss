@@ -90,17 +90,7 @@
             padding: 0;
             margin: 0;
             min-width: auto;
-            .icon {
-                position: absolute;
-                padding-top: math.div($dropdown-item-padding-y, 2);
-                width: 1.875rem;
-                text-align: left;
-            }
-            .link-text {
-                display: inline-block;
-                padding-left: 2rem;
-                position: relative;
-            }
+
             .seperator {
                 border-bottom: $dropdown-border-width solid $dropdown-border-color;
             }

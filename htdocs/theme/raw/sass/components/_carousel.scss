@@ -13,9 +13,10 @@
 
     // Overriding bootstrap carousel styles
     .carousel-caption {
-        text-align: left;
+        text-align: center;
+        font-size: $font-size-sm;
         position: relative;
-        color: $theme-text-color;
+        color: $theme-text-midtone-color;
         background-color: transparent;
         text-shadow: none;
         left: 0;

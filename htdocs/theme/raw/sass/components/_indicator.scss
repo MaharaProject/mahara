@@ -29,12 +29,19 @@
     }
     .collapsed & {
         color: $collapse-indicator-color;
+
+        // advanced options collapsible collapsed
+        .link-expand-right & {
+            padding-left: $spacing-sm;
+            padding-right: 0;
+        }
     }
-    // advanced options collapsible
+    // advanced options collapsible not collapsed
     .link-expand-right & {
-        padding-left: $spacing-sm;
+        padding-left: 0;
         padding-right: $spacing-sm;
     }
+
     a:hover &,
     a:focus & {
         color: $collapse-indicator-hover-color;
@@ -46,6 +53,21 @@
     &.block-config-modal {
         margin-left: $spacing-sm;
     }
+
+    // just valigning the attachment indicator
+    .card-footer & {
+      margin-top: $spacing-xs;
+    }
+
+    // card-secondary header indicator
+    .card-secondary h2.card-header & {
+      margin-top: 0.625rem; // 10px;
+    }
+}
+
+// just valigning the attachment indicator
+.card.collapsible:not(.card-secondary).has-attachment .card-header a .collapse-indicator {
+  margin-top: $spacing-xs;
 }
 
 tr[data-bs-toggle="collapse"],
@@ -71,6 +93,13 @@ button[data-bs-toggle="collapse"] {
         transform: rotate(0deg);
         transition-duration: 0.3s;
     }
+}
+
+// needs to align to top in the heading in list like resume education/employment
+.list-group-item.flush-collapsible .list-group-item-heading a[data-bs-toggle="collapse"] .collapse-indicator {
+    position: absolute;
+    top: $list-group-item-padding-y;
+    right: 0.125rem; // 2px
 }
 
 // need to be float right for blog post list

@@ -24449,7 +24449,7 @@ var bootstrap4Theme = /*#__PURE__*/function (_AbstractTheme) {
       var pName = typeof propertyName === 'undefined' ? '' : propertyName;
       var el = document.createElement('div');
       el.classList.add('card');
-      el.innerHTML = "<div class='card-header'><ul class='nav nav-tabs card-header-tabs' id='".concat(pName, "'></ul></div><div class='card-body'><div class='tab-content' id='").concat(pName, "'></div></div>");
+      el.innerHTML = "<div class='card-header with-tabs'><ul class='nav nav-tabs card-header-tabs' id='".concat(pName, "'></ul></div><div class='card-body'><div class='tab-content' id='").concat(pName, "'></div></div>");
       return el;
     }
   }, {

@@ -4,59 +4,35 @@
 .btn-group {
     .form-as-button,
     .form-as-button .button.group-item {
-        .btn {
-            border-radius: $btn-border-radius-sm;
+
+        // Prevent double borders when buttons are next to each other
+        // The left radius should be 0 if not first
+        &:not(:first-of-type),
+        &:not(.first) {
+          .btn {
+            margin-left: -$btn-border-width;
+            @include border-start-radius(0);
+
+            // when the class is on the button and not the form
+            &.last {
+              @include border-end-radius($btn-border-radius-sm);
+            }
+          }
         }
 
-        &:last-child,
-        &:not(:first-child) {
-            .btn {
-                border-top-left-radius: 0;
-                border-bottom-left-radius: 0;
-                border-right-width: $btn-border-width;
-                margin-left: -$btn-border-width;
-            }
+        // Reset rounded corners
+        &:not(:last-of-type),
+        &:not(.last) {
+          .btn {
+            @include border-end-radius(0);
+          }
         }
-        &:first-child,
-        &:not(:last-child) {
-            .btn {
-                border-top-right-radius: 0;
-                border-bottom-right-radius: 0;
-            }
-        }
-        &:first-child:last-child,
-        &:only-child {
-            .btn {
-                border-radius: $btn-border-radius-sm;
-            }
-        }
+    }
 
-        ~ .form-as-button {
-            .btn {
-                @include border-start-radius(0);
-            }
-        }
-
-        div:first-child {
-            display: inline-block;
-        }
-        div.first {
-            .btn {
-                display: inline-block;
-            }
-        }
-        div.last {
-            display: inline-block;
-            margin: 0;
-            padding: 0;
-
-            .btn {
-                border-left: 0;
-                display: inline-block;
-                border-top-right-radius: $btn-border-radius-sm;
-                border-bottom-right-radius: $btn-border-radius-sm;
-            }
-        }
+    // submitted text
+    .text-small {
+      padding-top: calc($btn-border-width + $btn-padding-y-sm);
+      padding-bottom: calc($btn-border-width + $btn-padding-y-sm);
     }
 }
 
@@ -68,45 +44,6 @@
 
 .form-as-button.btn-first {
     margin-right: -$btn-border-width;
-}
-
-.btn-group.only-button .btn {
-    border-bottom-right-radius: $btn-border-radius-sm !important;
-    border-right-width: $btn-border-width !important;
-}
-
-.btn-group.only-button-top .btn {
-    border-top-right-radius: $btn-border-radius-sm !important;
-}
-
-// If there are not-button siblings of group button elements
-.btn-group > .no-delete-btn {
-    margin-right: 1.625rem; // 26px;
-}
-
-.btn-group > .btn.btn-group-first {
-    border-top-left-radius: $btn-border-radius-sm !important;
-    border-bottom-left-radius: $btn-border-radius-sm !important;
-}
-.btn-group > .btn-group-first:not(.btn-group-last) {
-    display: inline-block;
-    .btn {
-        border-top-right-radius: 0 !important;
-        border-bottom-right-radius: 0 !important;
-    }
-}
-
-.btn-group > .btn.btn-group-last {
-    border-top-right-radius: $btn-border-radius-sm !important;
-    border-bottom-right-radius: $btn-border-radius-sm !important;
-}
-.btn-group > .btn-group-last:not(.btn-group-first) {
-    display: inline-block;
-    margin-left: -0.25rem; // -4px;
-    .btn {
-        border-top-left-radius: 0 !important;
-        border-bottom-left-radius: 0 !important;
-    }
 }
 
 .btn-group > .btn-group-first.btn-group-last {
@@ -145,31 +82,20 @@ fieldset.btn-group {
     .card-header .btn-group-top {
         margin-top: -$spacing-base - $btn-border-width;
         margin-bottom: 0;
-        a {
-            color: $theme-text-color;
-            border-radius: $btn-border-radius-sm;
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
+    }
+    .list-group-item .btn-group-top {
+      form {
+        .btn {
+          border-bottom-left-radius: $btn-border-radius-sm;
+          border-bottom-right-radius: $btn-border-radius-sm;
         }
+      }
+      .btn + form {
+        .btn {
+          border-bottom-left-radius: 0;
+        }
+      }
     }
-    // can remove this if btn-sm class is added to the button
-    .list-group-item .btn-secondary {
-        font-size: $font-size-sm;
-        padding: $btn-padding-y-sm $btn-padding-x-sm;
-    }
-}
-
-// annotation modal
-.commentlist,
-.feedback.modal {
-    .btn-group-top.comment-item-buttons {
-        margin-top: -0.8125rem; // -13px;
-    }
-}
-
-#menuitemlist .edit .btn-group .btn-secondary {
-    border-top-left-radius: $btn-border-radius-sm;
-    border-bottom-left-radius: $btn-border-radius-sm;
 }
 
 h1 ~ div > .btn-group-top,
@@ -201,7 +127,7 @@ p ~ div > .btn-group-top,
             margin-left: $btn-border-width;
             margin-right: $btn-border-width;
             width: 100%;
-            border-radius: $btn-border-radius-sm;
+            border-radius: $btn-border-radius-sm !important;
             border-right-width: $btn-border-width;
             border-top: $btn-border-width solid $btn-secondary-border;
         }
@@ -211,35 +137,17 @@ p ~ div > .btn-group-top,
         }
     }
 
-    .dropdown-toggle:last-of-type {
-        border-bottom-right-radius: $btn-border-radius-sm;
-    }
-
+    // margins when button groups separate in smaller widths
     @include media-breakpoint-down(lg) {
-        .form-as-button,
-        .form-as-button:last-child,
-        .form-as-button:not(:first-child),
-        .form-as-button:first-child,
-        .form-as-button:not(:last-child),
-        .form-as-button:first-child:last-child,
-        .form-as-button:only-child {
-            .btn {
-                border-radius: $btn-border-radius-sm;
-                margin-left: $btn-border-width;
-                margin-right: $btn-border-width;
-            }
-        }
-
-        .btn,
-        > .btn:not(:last-child),
-        > .btn:not(:last-child):not(.dropdown-toggle),
-        > .btn-group:not(:last-child) > .btn,
-        > .btn:not(:first-child),
-        > .btn-group:not(:first-child) > .btn {
-            border-radius: $btn-border-radius-sm;
-            margin-left: $btn-border-width;
-            margin-right: $btn-border-width;
-        }
+      .form-as-button {
+        float: none !important;
+        margin-right: calc($btn-border-width + $btn-border-width);
+      }
+      &.btn-group > .btn:not(:first-child),
+      &.btn-group .form-as-button:not(.first) .btn {
+        margin-left: $btn-border-width;
+        margin-right: $btn-border-width;
+      }
     }
 }
 
@@ -248,9 +156,7 @@ p ~ div > .btn-group-top,
     z-index: 4;
     @include media-breakpoint-up(md) {
         float: right;
-        .btn {
-            @include border-top-radius(0);
-        }
+
         .btn-group-top {
             margin: 0;
         }
@@ -271,43 +177,33 @@ td.btn-group {
 .card-header {
     .btn-group-top {
         @include clearfix;
-        margin-top: -0.8125rem; // -13px;
+        margin-top: -(calc($list-group-item-padding-x - $btn-border-width - $list-group-border-width)); // -13px;
         text-align: right;
         float: right;
-
-        .btn {
-            border-top: $btn-border-width solid $btn-secondary-border;
-        }
-
-        .form-as-button,
-        .form-as-button .button.group-item {
-            .btn {
-                border-top-left-radius: 0;
-                border-top-right-radius: 0;
-            }
-            &:last-of-type,
-            &:not(:first-of-type),
-            &:first-of-type,
-            &:not(:last-of-type),
-            &:first-of-type:last-of-type,
-            &:only-of-type {
-                .btn {
-                    border-top-left-radius: 0;
-                    border-top-right-radius: 0;
-                }
-            }
-        }
 
         .btn-top-right {
             margin: 0; // negate nested margin
         }
+
+        .btn {
+            @include border-top-radius(0);
+        }
     }
 }
+
+// annotation modal
+.commentlist,
+.feedback.modal {
+    .btn-group-top.comment-item-buttons {
+        margin-top: -(calc($list-group-item-padding-x - $btn-border-width - $list-group-border-width)); // -13px;
+    }
+}
+
 // Edit page configure buttons
 .card-secondary .card-header .blockinstance-controls .btn-group-top {
     position: absolute;
-    top: 0.6875rem; // 11px;
-    right: $spacing-base;
+    top: $card-spacer-y;
+    right: $card-spacer-x;
     margin-top: 0px;
     .btn {
         border-radius: $btn-border-radius-sm;
@@ -329,13 +225,44 @@ td.btn-group {
 // group action buttons on a list-group need to be small but not on group homepage
 .list-group-item .btn-action-list {
     .btn {
-        @include button-size($btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-border-radius-sm);
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
+        padding: $btn-padding-y-sm $btn-padding-x-sm;
+        font-size: $btn-font-size-sm;
     }
 }
 
-// journals delete button need to be pushed back to margin so show missing a border between
-.postcontrols .pieform.form-as-button:not(:last-child) .btn {
-    margin-left: 0;
+// admininister institutions plugin button
+.controls .btn-group .btn.first {
+    border-top-left-radius: $btn-border-radius-sm;
+    border-bottom-left-radius: $btn-border-radius-sm;
+}
+
+// custom edit group description container need border bottom removed as fieldset under
+#editgroup_description_container {
+  border-bottom: 0;
+}
+
+// custom delete annotation button isn't inheriting btn group border radius
+.comment-item.list-group-item .btn-group-top.comment-item-buttons {
+  button.btn {
+    ~ form.delete-comment .btn {
+      border-bottom-left-radius: 0;
+    }
+  }
+  form.delete-comment .btn {
+    border-bottom-left-radius: $btn-border-radius-sm;
+    border-bottom-right-radius: $btn-border-radius-sm;
+  }
+}
+
+// smartevidence buttons inline with heading
+#editor_holder .card-title + button.btn {
+  display: inline-block;
+  position: relative;
+  top: -5px;
+}
+#editor_holder .card-title + button.btn + .btn-group,
+.tab-pane .card-title + .btn-group {
+  display: inline-block;
+  position: relative;
+  top: -6px;
 }

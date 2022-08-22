@@ -39,7 +39,7 @@
                         <form action="" method="post"  class="btn-group float-end">
                           <input type="hidden" name="i" value="{$institution->name}">
                           {if $webserviceconnections}
-                              <a class="btn-secondary btn-sm button btn btn-group-first" href="{$WWWROOT}webservice/admin/connections.php?i={$institution->name}">
+                              <a class="first btn-secondary btn-sm button btn btn-group-first" href="{$WWWROOT}webservice/admin/connections.php?i={$institution->name}">
                                   <span class="icon icon-plug text-default" role="presentation" aria-hidden="true"></span>
                                   <span class="visually-hidden">
                                       {str(tag=connectspecific arg1=$institution->displayname)|escape:html|safe}
@@ -56,7 +56,7 @@
                                  </span>
                              </button>
                          {if $siteadmin && !$institution->members && $institution->name != 'mahara'}
-                            <button type="submit" name="delete" value="1" class="btn-secondary btn-sm button btn btn-group-last" title="{str(tag=deletespecific arg1=$institution->displayname)|escape:html|safe}">
+                            <button type="submit" name="delete" value="1" class="btn-secondary btn-sm button btn btn-group-last last" title="{str(tag=deletespecific arg1=$institution->displayname)|escape:html|safe}">
 
                                 <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
                                 <span class="visually-hidden">

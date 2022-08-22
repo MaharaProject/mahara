@@ -36,6 +36,14 @@
     &.flush {
         padding: $spacing-lg 0 0 0;
     }
+
+    // images caption
+    &.imageblock .detail {
+      margin-top: $spacing-base;
+      text-align: center;
+      font-size: .875rem;
+      color: $theme-text-midtone-color;
+    }
 }
 
 .sidebar {

@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 
 <div class="btn-top-right btn-group btn-group-top">
-    <form method="post" action="{$WWWROOT}admin/site/font/install.php" class="btn-group">
+    <form method="post" action="{$WWWROOT}admin/site/font/install.php" class="btn-group btn-group-first btn-group-last">
         <input class="submit btn btn-secondary" type="submit" value="{str tag=installfont section=skin}">
     </form>
 </div>

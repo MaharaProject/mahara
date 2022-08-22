@@ -61,6 +61,9 @@
             border-bottom-right-radius: 0;
             margin-left: $spacing-lg;
             @include media-breakpoint-up(md) {
+              width: 12rem;
+            }
+            @include media-breakpoint-up(lg) {
                 width: auto;
                 margin-left: 0;
             }

@@ -31,6 +31,23 @@
 .card {
     &.collapsible {
         @include box-shadow(none);
+
+        legend + .fieldset-body,
+        legend + .fieldset-body {
+          border-top-width: 0;
+
+          // exception for instructions
+          &.viewinstructions,
+          .blockinstructions &,
+          .peerinstructions & {
+            border-top-width: $card-border-width;
+
+            > :last-child {
+              margin-bottom: 0;
+            }
+          }
+        }
+
         &.last {
             .card-header {
                 @include border-bottom-radius($card-border-radius);
@@ -105,6 +122,10 @@
             margin-bottom: -$card-border-width; //remove double border
             .jstabs & {
                 border: 0;
+            }
+            :last-child & {
+              border-bottom-left-radius: $card-border-radius;
+              border-bottom-right-radius: $card-border-radius;
             }
         }
         .collapsible-group & {
@@ -268,9 +289,48 @@
         border-width: $card-border-width;
         margin-top: $spacing-base;
     }
+
+    // pseudofieldset
+    &.pseudofieldset:only-of-type .card-header a,
+    &.pseudofieldset:first-of-type .card-header a, {
+      border-top-left-radius: $card-border-radius;
+      border-top-right-radius: $card-border-radius;
+    }
+    &.pseudofieldset:only-of-type .card-body,
+    &.pseudofieldset:last-of-type .card-body {
+      border-bottom-left-radius: $card-border-radius;
+      border-bottom-right-radius: $card-border-radius;
+    }
 }
 
 .collapse > .collapse {
     display: block ; // fix for not being able to put a class just on the wrapper
     visibility: visible;
+}
+
+// custom for Share | Edit access advance options in smaller widths
+@include media-breakpoint-down(lg) {
+  #editaccess_more_container {
+    margin-top: -1rem;
+  }
+}
+
+// custom for collapsible card in a collapsible fieldset on skins
+.skins.collapsible-group .card.collapsible:not(.card-secondary) {
+  .card-header a {
+    border-radius: 0;
+    border-width: $card-border-width solid $card-border-color;
+  }
+  &.first .card-header a {
+    border-top-left-radius: $card-border-radius;
+    border-top-right-radius: $card-border-radius;
+  }
+  &.last .card-header a[aria-expanded="false"] {
+    border-bottom-left-radius: $card-border-radius;
+    border-bottom-right-radius: $card-border-radius;
+  }
+  &.last .card-body {
+    border-bottom-left-radius: $card-border-radius;
+    border-bottom-right-radius: $card-border-radius;
+  }
 }

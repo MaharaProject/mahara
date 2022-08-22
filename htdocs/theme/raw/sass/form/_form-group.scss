@@ -486,6 +486,8 @@
     .help {
         margin-top: $spacing-sm;
         float:right; // can't use absolute because it messes up the pop out
+        z-index: 1;
+        position: relative;
     }
 
     .wysiwyg + .help {

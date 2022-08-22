@@ -1,7 +1,7 @@
 {include file="header.tpl"}
 {foreach from=$sections key=k item=section}
     <div class="card">
-        <div class="last form-group collapsible-group">
+        <div class="first last form-group collapsible-group">
             <fieldset class="pieform-fieldset collapsible">
                 <legend>
                     <a href="#dropdown{$k}" data-bs-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">

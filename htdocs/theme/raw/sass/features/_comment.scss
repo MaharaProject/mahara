@@ -3,6 +3,14 @@
 .comment-item {
     @include clearfix;
 
+    // remove border-radius from last child
+    .card .list-group & {
+      &:last-child {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+    }
+
     .usericon-heading {
         .list-group-item-heading {
             font-size: $font-size-base;
@@ -61,6 +69,7 @@
         .col-md-8,
         .col-md-4 {
             max-width: 100%;
+            width: 100%;
             flex: 0 1 auto;
         }
     }
@@ -133,4 +142,9 @@
 }
 .star-rating a.icon-regular {
     @include fonttype(regular);
+}
+
+// comments in footer need to have list-group top border removed
+.viewfooter .feedbacktable .list-group.list-group-top-border .list-group-item:first-child {
+  border-top-width: 0;
 }

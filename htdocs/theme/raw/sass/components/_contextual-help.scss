@@ -81,11 +81,12 @@ div.help {
         margin-right: -$popover-body-padding-x;
         margin-top: 0;
         font-size: $h6-font-size;
+        font-family: $font-family-base;
         padding: $popover-header-padding-y $popover-header-padding-x !important;
         background-color: $popover-header-bg;
         border-bottom: $popover-border-width solid scale-color($popover-header-bg, $lightness: -5%);
         border-radius: $popover-border-radius $popover-border-radius 0 0;
-        font-weight: $headings-font-weight;
+        font-weight: $font-weight-bold;
         line-height: $headings-line-height;
       }
     }

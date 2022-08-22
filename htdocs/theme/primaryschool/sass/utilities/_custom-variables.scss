@@ -41,24 +41,24 @@ $navbar-default-link-color:                 $white;
 $navbar-default-link-hover-color:           $white;
 $navbar-default-link-bg:                    $theme-primary-color;
 $navbar-default-link-hover-bg:              scale-color($navbar-default-link-bg, $lightness: -10%);
-$navbar-default-active-color:               $gray-700;
-$navbar-default-active-bg:                  #f1f1f1;
+$navbar-default-active-color:               $white;
+$navbar-default-active-bg:                  scale-color($navbar-default-link-bg, $lightness: -20%);
 
 // Navbar menus children
 $navbar-inverse-bg:                         scale-color($navbar-default-link-bg, $lightness: -10%);
 $navbar-inverse-link-color:                 $white;
 $navbar-inverse-link-hover-color:           $white;
 $navbar-inverse-link-hover-bg:              scale-color($navbar-inverse-bg, $lightness: -15%);
-$navbar-inverse-link-active-color:          $white;
-$navbar-inverse-link-active-bg:             scale-color($navbar-default-link-bg, $lightness: -15%);
+$navbar-inverse-link-active-color:          $theme-text-color;
+$navbar-inverse-link-active-bg:             $white;
 
 // Navbar menu children toggles
 $navbar-inverse-toggle-color:               $white;
-$navbar-inverse-toggle-bg:                  $navbar-default-link-bg;
+$navbar-inverse-toggle-bg:                  transparent;
 $navbar-inverse-toggle-hover-color:         $white;
-$navbar-inverse-toggle-hover-bg:            scale-color($navbar-inverse-bg, $lightness: -5%);
+$navbar-inverse-toggle-hover-bg:            transparent;
 $navbar-inverse-toggle-active-color:        $white;
-$navbar-inverse-toggle-active-bg:           scale-color($navbar-default-link-bg, $lightness: -10%);
+$navbar-inverse-toggle-active-bg:           transparent;
 
 //== Tabs
 $nav-tabs-border-color:                     $gray-100;

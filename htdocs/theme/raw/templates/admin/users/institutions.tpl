@@ -37,7 +37,7 @@
 
     <div class="btn-group btn-group-top{if $siteadmin && $countinstitutions == 1} only-button{/if}">
         {if $siteadmin}
-        <form class="form-as-button float-start btn-first" action="" method="post">
+        <form class="first form-as-button float-start btn-first" action="" method="post">
             <button class="submit btn btn-secondary" type="submit" name="add" value="{str tag="addinstitution" section="admin"}" id="admininstitution_add">
                 <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
                 <span class="btn-title">{str tag="addinstitution" section="admin"}</span>
@@ -53,11 +53,17 @@
                 <span class="btn-title visually-hidden">{str tag="edit"}</span>
             </button>
             <div class="dropdown-menu">
-                <li>
-                    <a class="dropdown-item" href="{$WWWROOT}admin/users/institutionusers.php">{str tag="editmembers" section="admin"}</a>
-                    <a class="dropdown-item" href="{$WWWROOT}admin/users/institutionstaff.php">{str tag="editstaff" section="admin"}</a>
-                    <a class="dropdown-item" href="{$WWWROOT}admin/users/institutionsupportadmins.php">{str tag="editsupportadmins" section="admin"}</a>
-                    <a class="dropdown-item" href="{$WWWROOT}admin/users/institutionadmins.php">{str tag="editadmins" section="admin"}</a>
+                <li class="dropdown-item">
+                    <a href="{$WWWROOT}admin/users/institutionusers.php">{str tag="editmembers" section="admin"}</a>
+                </li>
+                <li class="dropdown-item">
+                    <a href="{$WWWROOT}admin/users/institutionstaff.php">{str tag="editstaff" section="admin"}</a>
+                </li>
+                <li class="dropdown-item">
+                    <a href="{$WWWROOT}admin/users/institutionsupportadmins.php">{str tag="editsupportadmins" section="admin"}</a>
+                </li>
+                <li class="dropdown-item">
+                    <a href="{$WWWROOT}admin/users/institutionadmins.php">{str tag="editadmins" section="admin"}</a>
                 </li>
             </div>
         {/if}

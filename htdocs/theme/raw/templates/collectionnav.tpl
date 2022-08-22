@@ -13,28 +13,28 @@
             {/if}
         {/foreach}
 
-        <button class="picker form-control dropdown-toggle"" type="button" id="currentindex" data-currentindex="{$currentindex}" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button class="picker form-control dropdown-toggle" type="button" id="currentindex" data-currentindex="{$currentindex}" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {* page title and page count *}
           {str tag="viewingpage" section="collection"}{$currentindex + 1}/{count($collection)}
         </button>
 
-        <div id="pagelist" class="dropdown-menu" aria-labelledby="collection navigation dropdown">
+        <ul id="pagelist" class="dropdown-menu" aria-labelledby="collection navigation dropdown">
           {foreach from=$collection item=view name=page}
             {if ($viewid && $view->view == $viewid)
             || ($view->progresscompletion && $progresscompletion && !$viewid)
             || ($view->framework && $framework && !$viewid)}
               {$currentindex = $dwoo.foreach.page.index}
-              <li>
-                <a class="dropdown-item active" href="{$view->fullurl}">{$view->title}</a>
+              <li class="dropdown-item">
+                <a class="active" href="{$view->fullurl}">{$view->title}</a>
               </li>
             {else}
-              <li>
-                <a class="dropdown-item" href="{$view->fullurl}" data-index="{$dwoo.foreach.page.index}"
+              <li class="dropdown-item">
+                <a href="{$view->fullurl}" data-index="{$dwoo.foreach.page.index}"
                 data-location="{$view->fullurl}">{$view->title}</a>
               </li>
             {/if}
           {/foreach}
-        </div>
+        </ul>
       </nav>
 
       {if count($collection) > 1}

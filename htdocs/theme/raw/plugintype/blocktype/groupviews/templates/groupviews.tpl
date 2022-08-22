@@ -147,7 +147,7 @@
     <ul id="groupviewlist" class="list-group list-group-top-border grouppages">
         {if $mysubmitted}
             {foreach from=$mysubmitted item=item}
-                <li class="list-group-item">
+                <li class="list-group-item flush">
                     {if $item.submittedtime}
                         <span>{str tag=youhavesubmittedon section=view arg1=$item.url arg2=$item.name arg3=$item.submittedtime|format_date}</span>
                     {else}

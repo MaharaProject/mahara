@@ -5,11 +5,6 @@
 .{$fontclass} {
     font-family: '{$fonttitle|escape_css_string|safe}';
 }
-body {
-    color: #333333;
-    font: 13px/1.333 Arial, "Nimbus Sans L", Helvetica, sans-serif;
-    background: #FFFFFF;
-}
 .superspecimen {
     max-width: 700px;
     padding: 15px;
@@ -51,10 +46,6 @@ body {
     font-family: Arial, "Nimbus Sans L", Helvetica, sans-serif;
     font-size: 11px;
     line-height: 1.25em;
-}
-p {
-    line-height: 1.333em;
-    margin-bottom: 1em;
 }
 .sample {
     overflow: hidden;

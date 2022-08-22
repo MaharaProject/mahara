@@ -44,7 +44,7 @@
                 </button>
                 <div class="dropdown-menu">
                     {foreach from=$results->filtercols key=filtername item=filterdisplay name=filtercols}
-                        <li><a class="dropdown-item" href="{$results->baseurl}{$results->queryprefix}type={$filtername}"{if $results->filter == $filtername} class="selected"{/if}>{$filterdisplay}</a></li>
+                        <li class="dropdown-item"><a href="{$results->baseurl}{$results->queryprefix}type={$filtername}"{if $results->filter == $filtername} class="selected"{/if}>{$filterdisplay}</a></li>
                     {/foreach}
                 </div>
             </div>

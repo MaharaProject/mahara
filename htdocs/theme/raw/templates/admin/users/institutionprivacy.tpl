@@ -18,46 +18,42 @@
     <br>
 {/if}
 <div id="privacy-text" class="tab">
-    <div class="card" id="privacyst">
-        <div class="last form-group collapsible-group">
-            <fieldset class="pieform-fieldset last collapsible">
-                <legend>
-                    <a href="#dropdown-privacyst-{$sitecontent['privacy']->id}" data-bs-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
-                        {str tag="siteprivacy" section="admin"}
-                        <span class="icon icon-chevron-down collapse-indicator right float-end"> </span>
-                    </a>
-                </legend>
-                <div class="fieldset-body collapse" id="dropdown-privacyst-{$sitecontent['privacy']->id}">
-                    {$sitecontent['privacy']->content|safe}
-                    <span class="text-midtone text-small">
-                        {str tag="lastupdated" section="admin"} {$sitecontent['privacy']->ctime|date_format:'%d %B %Y %H:%M %p'}
-                    </span>
-                </div>
-            </fieldset>
-        </div>
+    <div class="card first last form-group collapsible-group" id="privacyst">
+        <fieldset class="pieform-fieldset first last collapsible">
+            <legend>
+                <a href="#dropdown-privacyst-{$sitecontent['privacy']->id}" data-bs-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
+                    {str tag="siteprivacy" section="admin"}
+                    <span class="icon icon-chevron-down collapse-indicator right float-end"> </span>
+                </a>
+            </legend>
+            <div class="fieldset-body collapse" id="dropdown-privacyst-{$sitecontent['privacy']->id}">
+                {$sitecontent['privacy']->content|safe}
+                <span class="text-midtone text-small">
+                    {str tag="lastupdated" section="admin"} {$sitecontent['privacy']->ctime|date_format:'%d %B %Y %H:%M %p'}
+                </span>
+            </div>
+        </fieldset>
     </div>
-    <div class="lead">{str tag="institutionprivacypagedescription" section="admin"}</div>
+    <div class="lead"><br />{str tag="institutionprivacypagedescription" section="admin"}</div>
 </div>
 <div id="termsandconditions-text" class="tab">
-    <div class="card" id="terms">
-        <div class="last form-group collapsible-group">
-            <fieldset class="pieform-fieldset last collapsible">
-                <legend>
-                    <a href="#dropdown-terms-{$sitecontent['termsandconditions']->id}" data-bs-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
-                        {str tag="sitetermsandconditions" section="admin"}
-                        <span class="icon icon-chevron-down collapse-indicator right float-end"> </span>
-                    </a>
-                </legend>
-                <div class="fieldset-body collapse" id="dropdown-terms-{$sitecontent['termsandconditions']->id}">
-                    {$sitecontent['termsandconditions']->content|safe}
-                    <span class="text-midtone text-small">
-                        {str tag="lastupdated" section="admin"} {$sitecontent['termsandconditions']->ctime|date_format:'%d %B %Y %H:%M %p'}
-                    </span>
-                </div>
-            </fieldset>
-        </div>
+    <div class="card first last form-group collapsible-group" id="terms">
+        <fieldset class="pieform-fieldset first last collapsible">
+            <legend>
+                <a href="#dropdown-terms-{$sitecontent['termsandconditions']->id}" data-bs-toggle="collapse" aria-expanded="false" aria-controls="dropdown" class="collapsed">
+                    {str tag="sitetermsandconditions" section="admin"}
+                    <span class="icon icon-chevron-down collapse-indicator right float-end"> </span>
+                </a>
+            </legend>
+            <div class="fieldset-body collapse" id="dropdown-terms-{$sitecontent['termsandconditions']->id}">
+                {$sitecontent['termsandconditions']->content|safe}
+                <span class="text-midtone text-small">
+                    {str tag="lastupdated" section="admin"} {$sitecontent['termsandconditions']->ctime|date_format:'%d %B %Y %H:%M %p'}
+                </span>
+            </div>
+        </fieldset>
     </div>
-    <div class="lead">{str tag="institutiontermspagedescription" section="admin"}</div>
+    <div class="lead"><br />{str tag="institutiontermspagedescription" section="admin"}</div>
 </div>
 {if $versionid !== null && in_array($versionid, $latestVersions)}
     <div class="card">

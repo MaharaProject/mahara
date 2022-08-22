@@ -1,5 +1,5 @@
 .loading-inner {
-    margin: $spacing-lg $spacing-base $spacing-sm 0;
+    margin: 1.125rem $spacing-base 0 $spacing-base; // 18px 10px 0 10px
     color: $navbar-toggle-color;
 }
 .loading-message {

@@ -65,10 +65,10 @@
 
             <input type="hidden" name="{$prefix}_uploadnumber" id="{$prefix}_uploadnumber" value="1"/>
             <input type="hidden" name="MAX_FILE_SIZE" value="{$phpmaxfilesize}" />
-            <div id="{$prefix}_upload_messages"></div>
             <h2 class="card-header">{str tag='uploadfile' section='artefact.file'}</h2>
 
             <div class="row card-body">
+                <div id="{$prefix}_upload_messages"></div>
                 {if $config.uploadagreement || $licenseform}
                 <div class="fileupload-container col-md-6">
                     {if $config.uploadagreement}

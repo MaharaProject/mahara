@@ -73,6 +73,32 @@
     }
 }
 
+// all sidebar list-groups have header and footer so don't need border-radius and border-bottom
+.sidebar {
+  .card .list-group {
+    border-radius: 0;
+    border-bottom: 0;
+    .list-group-item:last-child {
+      border-radius: 0;
+    }
+  }
+  // except the user card
+  .user-card {
+    .card .list-group {
+      .list-group-item:last-child {
+        border-bottom-left-radius: $list-group-border-radius;
+        border-bottom-right-radius: $list-group-border-radius;
+      }
+    }
+  }
+}
+
+// in default cards the last list-group-item need border-radius so the white background doesn't overlap the card border
+.card .list-group .list-group-item:last-child {
+  border-bottom-left-radius: $list-group-border-radius;
+  border-bottom-right-radius: $list-group-border-radius;
+}
+
 // when block has no block title it needs the top border for lists
 .card-secondary .no-heading {
     .list-group {
@@ -97,6 +123,11 @@
     .icon {
       line-height: $headings-line-height;
     }
+
+    .text-tiny {
+        font-family: $font-family-base;
+        margin-top: $spacing-sm;
+    }
 }
 
 .card-secondary .list-group-item-heading {
@@ -105,6 +136,12 @@
     margin-bottom: 0 !important;
     font-size: $font-size-lg; // 18px
     font-weight: $font-weight-normal !important;
+
+    // to make the link look less messy
+    a.collapsible {
+      display: block;
+      margin-right: -$list-group-item-padding-x;
+    }
 }
 
 .list-group-item.draft,
@@ -557,5 +594,16 @@
   .list-group-item:last-child {
     border-bottom-left-radius: $card-inner-border-radius;
     border-bottom-right-radius: $card-inner-border-radius;
+  }
+}
+
+// remove secret url second to last child border-bottom, there's a hidden edit list-group-item under too so need last child too
+.card .list-group.secreturls {
+  .list-group-item:nth-last-child(2),
+  .list-group-item:last-child {
+    border-bottom-left-radius: $card-inner-border-radius;
+    border-bottom-right-radius: $card-inner-border-radius;
+    border-bottom: 0;
+
   }
 }

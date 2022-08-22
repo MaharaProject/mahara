@@ -1,5 +1,5 @@
 {if $instructions}
-<div class="blockinstructions last form-group collapsible-group small-group">
+<div class="blockinstructions first last form-group collapsible-group small-group">
     <fieldset class="pieform-fieldset collapsible collapsible-small">
         <legend>
             <a href="#dropdown_{$blockid}" data-bs-toggle="collapse" aria-expanded="{if $editing}true{else}false{/if}" aria-controls="dropdown" class="{if $editing}show{else}collapsed{/if} linkinstructions">

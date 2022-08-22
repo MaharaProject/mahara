@@ -32,14 +32,13 @@
         &:before {
             @include fonttype(solid);
             content: fa-content($fa-var-caret-down);
-            margin-top: 0.5625rem; // 9px;
+            margin-top: 0.625rem; // 10px;
             position: absolute;
             right: 0%;
             top: 0;
-            z-index: 0;
             height: 1.0625rem; // 17px;
             padding-left: $spacing-base;
-            padding-right: $spacing-base;
+            padding-right: $input-padding-x;
             line-height: 1;
             z-index: 2;
         }
@@ -92,7 +91,7 @@
         &.picker,
         .picker {
             &:before {
-                margin-top: 0.375rem; // 6px;
+                margin-top: 0.5rem; // 8px;
             }
             select.form-control {
                 height: $input-height-sm;
@@ -157,22 +156,38 @@
 .dropdown-menu {
     z-index: 10;
     padding: 0;
-    min-width: 12rem;
+    min-width: 14rem;
     > li {
         padding: 0;
         > a {
             padding: $dropdown-item-padding-y $dropdown-item-padding-x;
             color: $dropdown-link-color;
+            display: block;
 
-            .icon.left {
-                width: 2rem;
-                text-align: center;
-                padding-right: 0;
+            &:hover,
+            &:focus {
+                text-decoration: none;
             }
         }
         &:active > a {
             color: $dropdown-link-active-color;
             background-color: $dropdown-link-active-bg;
+        }
+        > span.nolink {
+            padding: $dropdown-item-padding-y $dropdown-item-padding-x;
+            display: block;
+            white-space: nowrap;
+        }
+
+        &.with-icon a {
+          margin-left: 1.5rem;
+
+          .icon.left {
+              width: 2rem;
+              text-align: center;
+              padding-right: 0;
+              margin-left: -2rem;
+          }
         }
     }
     > .active {
@@ -198,6 +213,7 @@
       padding: $dropdown-item-padding-y $dropdown-item-padding-x;
       color: $dropdown-link-color;
       display: block;
+      text-decoration: none;
 
       &:hover,
       &:focus {
@@ -226,31 +242,6 @@
                     border: 0;
                 }
             }
-        }
-    }
-}
-
-// Pages pageaction btn dropdown-menu
-.pageactions .dropdown-menu {
-    margin: 0;
-    padding: 0;
-
-    > li {
-      padding: 0;
-
-        > a {
-            padding: $dropdown-item-padding-y $dropdown-item-padding-x;
-            display: block;
-
-            &:hover,
-            &:focus {
-                text-decoration: none;
-            }
-        }
-        > span.nolink {
-            padding: $dropdown-item-padding-y $dropdown-item-padding-x;
-            display: block;
-            white-space: nowrap;
         }
     }
 }
@@ -297,4 +288,28 @@
 .select2-container--default .select2-selection--single,
 .select2-container--default .select2-selection--multiple {
     border-radius: $input-border-radius !important;
+}
+
+// dropdown select2
+.select2-container .select2-selection--single .select2-selection__rendered {
+  padding-left: $dropdown-item-padding-x;
+  padding-right: $spacing-xxl;
+}
+.select2-results__option {
+  padding: $dropdown-item-padding-y $dropdown-item-padding-x;
+  color: $dropdown-link-color;
+}
+
+// dropdown select2 with profile img
+.select2-results__option span,
+.search-user-dropdown .select2-results ul li > div.name {
+  line-height: 1.2;
+  vertical-align: middle;
+  display: table-cell;
+  height: 38px;
+}
+
+// configure column dropdown on submissions
+#submissions_wrapper div.dt-button-collection {
+  left: 0 !important;
 }

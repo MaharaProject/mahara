@@ -6180,7 +6180,7 @@ function report_config_form($extra, $institutionelement) {
         if (!empty($headerelements)) {
             $form['elements']['inputgroup'] = array (
                 'type' => 'fieldset',
-                'class' => 'last',
+                'class' => 'first last',
                 'elements' => $headerelements,
                 'legend' => get_string('Columns', 'admin'),
                 'collapsible' => true,

@@ -51,7 +51,7 @@
                         {if $data.name}{$data.name}{else}{$plugin}{/if}
                         <div class="btn-group btn-group-top">
                         {if $data.info}
-                            <button class="btn btn-secondary btn-sm float-start btn-group-item info-item" data-bs-toggle="modal-docked" data-bs-target="#infomodal" type="button"
+                            <button class="first btn btn-secondary btn-sm float-start btn-group-item info-item" data-bs-toggle="modal-docked" data-bs-target="#infomodal" type="button"
                                 title="{str tag='infofor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}" data-plugintype='{$plugintype}' data-pluginname='{$plugin}'>
                                  <span class="icon icon-info" role="presentation" aria-hidden="true"></span>
                                  <span class="accessible-hidden visually-hidden ">{str tag='infofor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span>

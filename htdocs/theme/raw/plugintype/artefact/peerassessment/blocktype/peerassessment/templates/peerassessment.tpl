@@ -47,7 +47,7 @@
                 </div>
                 <div class="modal-body">
                     {if $instructions}
-                    <div class="last form-group collapsible-group small-group peerinstructions">
+                    <div class="first last form-group collapsible-group small-group peerinstructions">
                         <fieldset class="pieform-fieldset collapsible collapsible-small">
                             <legend>
                                 <a href="#peerassessment-{$blockid}-dropdown" data-bs-toggle="collapse" aria-expanded="false" aria-controls="peerassessment-{$blockid}-dropdown" class="collapsed">

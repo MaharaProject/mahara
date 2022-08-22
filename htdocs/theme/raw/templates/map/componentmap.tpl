@@ -1,22 +1,22 @@
 {include file="header.tpl"}
 <span id="top"></span>
 
-<div id="pluginmap_container">
-    <fieldset class="pieform-fieldset collapsible">
+<div id="pluginmap_container" class="pieform">
+  <div class="form-group collapsible-group">
+    <fieldset class="pieform-fieldset collapsible last">
         <legend>
-            <h3 class="form-group collapsible-group">
-                <a href="#third-party" aria-expanded="true" data-bs-toggle="collapse">{str tag=thirdpartyplugins section=admin}<span class="icon icon-chevron-down float-end collapse-indicator" role="presentation"
-                        aria-hidden="true"></span></a></h3>
+            <a href="#third-party" aria-expanded="true" data-bs-toggle="collapse">{str tag=thirdpartyplugins section=admin}<span class="icon icon-chevron-down float-end collapse-indicator" role="presentation"
+                    aria-hidden="true"></span></a>
         </legend>
 
-        <div id="third-party" class="show">
+        <div id="third-party" class="fieldset-body show">
 
             <table class="table table-striped">
                 <thead>
-                    <td>{str tag=Plugin section=admin}</td>
-                    <td>{str tag=Path section=admin}</td>
-                    <td>{str tag=version section=admin}</td>
-                    <td>{str tag=url section=admin}</td>
+                    <th>{str tag=Plugin section=admin}</th>
+                    <th>{str tag=Path section=admin}</th>
+                    <th>{str tag=version section=admin}</th>
+                    <th>{str tag=url section=admin}</th>
                 </thead>
                 {foreach from=$plugins item=item}
                 <tr>
@@ -36,6 +36,7 @@
             <a href="{$WWWROOT}download.php" class="card-footer"><span class="icon icon-table" role="presentation" aria-hidden="true"></span> {str tag=exportthirdpartycsv section=admin}</a>
         </div>
     </fieldset>
+  </div>
 </div>
 
 

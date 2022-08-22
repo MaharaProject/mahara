@@ -5,7 +5,7 @@
 {else}
 <div class="card">
 {/if}
-    <div class="last form-group collapsible-group">
+    <div class="first last form-group collapsible-group">
         <fieldset class="pieform-fieldset last collapsible">
             <legend>
                 <a

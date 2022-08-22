@@ -1279,13 +1279,13 @@ function listAttachments(attachments) {
               jQuery('<tr>').append(
                 jQuery('<td>').append(
                   jQuery(icon),
-                  jQuery('<span>').append(item.title),
-                  jQuery('<span>').append(link)
+                  jQuery('<span class="title">').append(item.title),
+                  jQuery('<span class="download-link">').append(link)
                 )
               )
             );
         }
-        return jQuery('<table>', {'class': 'table'}).append(thead, tbody)[0];
+        return jQuery('<table>', {'class': 'table attachment-table'}).append(thead, tbody)[0];
     }
     else {
         // No attachments

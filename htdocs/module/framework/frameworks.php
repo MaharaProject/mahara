@@ -255,7 +255,7 @@ function management_section() {
                         'name' => 'framework_delete_' . $framework->id,
                         'successcallback' => 'framework_delete_submit',
                         'renderer' => 'div',
-                        'class' => 'btn-group-last',
+                        'class' => 'btn-group-last last form-as-button',
                         'elements' => array(
                             'submit' => array(
                                 'type'         => 'button',
@@ -277,7 +277,7 @@ function management_section() {
                     'name' => 'framework_config_' . $framework->id,
                     'successcallback' => 'framework_config_submit',
                     'renderer' => 'div',
-                    'class' => 'btn-group-first',
+                    'class' => 'btn-group-first first form-as-button',
                     'elements' => array(
                         'submit' => array(
                             'type'         => 'button',
@@ -297,7 +297,7 @@ function management_section() {
                     'name' => 'framework_export_' . $framework->id,
                     'successcallback' => 'framework_export_submit',
                     'renderer' => 'div',
-                    'class' => (empty($framework_collections_count) ? 'btn-group' : 'btn-group-last'),
+                    'class' => (empty($framework_collections_count) ? 'btn-group' : 'btn-group-last last form-as-button'),
                     'elements' => array(
                         'submit' => array(
                             'type'         => 'button',

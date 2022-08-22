@@ -111,7 +111,7 @@
 }
 
 .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show > .btn-primary.dropdown-toggle {
-    color: inherit;
+    color: $btn-primary-color;
     border-color: $btn-primary-border;
     box-shadow: none;
 }
@@ -150,7 +150,7 @@
 .btn-block {
     display: block;
     width: 100%;
-  
+
     // Vertically space out multiple block buttons
     + .btn-block {
       margin-top: $btn-block-spacing-y;
@@ -238,6 +238,7 @@ h1 + div > .btn-top-left,
     }
     // for menus
     .btn-secondary {
+        margin-top: $spacing-sm;
         border-radius: $btn-border-radius-sm;
     }
 }
@@ -415,11 +416,6 @@ h1 + div > .btn-top-left,
 a[type="submit"],
 .card-header a[type="button"] {
     -webkit-appearance: none;
-}
-
-.json-editor-btn-add {
-    border-top-right-radius: $btn-border-radius !important;
-    border-bottom-right-radius: $btn-border-radius !important;
 }
 
 .assessment-item-buttons {

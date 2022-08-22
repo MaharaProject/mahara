@@ -467,11 +467,12 @@ select {
   background-repeat: no-repeat;
   background-position: right .7em top 50%;
   background-size: .5em auto;
-  padding-right: 1.5rem !important; // to allow for arrow
+  padding-right: 2rem !important; // to allow for arrow
 }
 .lrfieldlists select {
     background-image: none;
     padding-right: $input-btn-padding-x !important;
+    min-height: 284px;
 }
 
 //sidebar search

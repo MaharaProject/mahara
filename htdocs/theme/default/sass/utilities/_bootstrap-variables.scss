@@ -27,3 +27,7 @@ $progress-bar-bg:             #bc9f54;
 //== List group
 $list-group-hover-bg:      scale-color($theme-primary-color, $lightness: 90%);
 $list-group-active-color:  scale-color($theme-primary-color, $lightness: 40%);
+
+// Cards
+$card-border-radius:      0;
+$card-inner-border-radius: 0;

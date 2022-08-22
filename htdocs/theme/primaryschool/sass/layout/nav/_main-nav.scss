@@ -22,13 +22,12 @@ $menu-styles: (
   ("manage", $groups-color, scale-color($groups-color, $lightness: -2%), scale-color($groups-color, $lightness: -5%), scale-color($groups-color, $lightness: 50%))
 );
 
-.nav-main .navbar-nav {
+.navbar-main .navbar-nav {
     // Override basic style color specified in Bootstrap variables
     > li {
         > a,
         > button.menu-dropdown-toggle {
             font-weight: $font-weight-bold;
-            color: $white;
             border-color: transparent;
             &:before {
                 @include fonttype(solid);
@@ -36,24 +35,19 @@ $menu-styles: (
                 font-size: 1.1875rem; // 19px;
                 color: $white;
             }
-            &:focus,
-            &:hover {
-                color: $white;
-            }
-        }
-        &.active > a {
-            color: $gray-500;
-            background-color: $white;
-        }
-        .child-nav > li {
-            a {
-                color: $white;
-            }
-            &.active a {
-                color: $white;
-            }
         }
     }
+    .child-nav {
+      .active > a {
+          background-color: $white;
+          &:focus,
+          &:hover {
+              background-color: $white;
+              color: $theme-text-color;
+          }
+      }
+    }
+
     @each $section in $menu-styles {
         > .#{nth($section, 1)} {
             > a,
@@ -78,18 +72,12 @@ $menu-styles: (
 
             &.active > a,
             &.active > button.menu-dropdown-toggle {
-                background-color: $white;
                 &:before {
                     color: #{nth($section, 2)};
                     &:focus,
                     &:hover {
                         background-color: #{nth($section, 3)};
-                        color: $white;
                     }
-                }
-                &:focus,
-                &:hover {
-                    background-color: $white;
                 }
             }
 
@@ -103,7 +91,11 @@ $menu-styles: (
                     }
                 }
                 &.active a {
-                    background-color: #{nth($section, 3)};
+                    background-color: $white;
+                    &:focus,
+                    &:hover {
+                        color: $theme-text-color;
+                    }
                 }
             }
         }

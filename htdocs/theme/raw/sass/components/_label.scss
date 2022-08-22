@@ -24,6 +24,7 @@ a.label.label-default,
 
     &.bg-primary {
         text-decoration: none;
+        color: $component-active-color;
     }
 
     @at-root a#{&} {
@@ -31,7 +32,7 @@ a.label.label-default,
         &:focus {
             text-decoration: none;
         }
-      }
+    }
 }
 
 .field-label-bold {

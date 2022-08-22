@@ -125,7 +125,7 @@ $form = array(
             'legend' => get_string('accountoptionsdesc', 'account'),
             'collapsible' => true,
             'collapsed' => true,
-            'class' => 'last with-formgroup',
+            'class' => 'first last with-formgroup',
             'elements' => $prefs,
         ),
         'progress_meter_token' => array(

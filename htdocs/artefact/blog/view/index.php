@@ -251,5 +251,6 @@ function delete_submit(Pieform $form, $values) {
         'message' => get_string('blogpostdeleted', 'artefact.blog'),
         'goto' => get_config('wwwroot') . 'artefact/blog/view/index.php?id=' . $blogpost->get('parent'),
         'id' => $values['delete'],
+        'class' => 'last',
     ));
 }

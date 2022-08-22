@@ -36,6 +36,9 @@
         margin: 0 auto;
         display: inline-block;
         min-width: 12.5rem; // 200px;
+        .picker {
+          padding-right: 2rem;
+        }
     }
 }
 

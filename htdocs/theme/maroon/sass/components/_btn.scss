@@ -10,7 +10,7 @@ p ~ div > .btn-group-top,
 .nav-tabs +  div.btn-group-top,
 .pageactions .btn-group-vertical {
   .btn-group .btn,
-  .form-as-button,
+  .form-as-button button,
   .btn {
     color: $gray-900;
     background-color: scale-color($theme-secondary-color, $lightness: 65%);

@@ -4,8 +4,10 @@
 <div class="alert alert-warning">{str tag=behatnocoresteps section=admin}</div>
 {/if}
 {if $data}
+<div class="pieform">
     {assign var="prevkey" value=''}
     {foreach from=$data key=k item=v name=data}
+        <div class="form-group collapsible-group">
         {if $prevkey !== $k}
             <fieldset id="fs_{$dwoo.foreach.data.index}" class="pieform-fieldset collapsible {if $dwoo.foreach.data.last} last{/if}">
                 <legend>
@@ -14,7 +16,7 @@
                         <span class="icon icon-chevron-down collapse-indicator right float-end"></span>
                     </a>
                 </legend>
-                <div id="behatfield-{$dwoo.foreach.data.index}" class="fieldset-body collapse list-group">
+                <div id="behatfield-{$dwoo.foreach.data.index}" class="fieldset-body collapse">
         {/if}
         {if $v == 'notused'}
             {str tag="behatstepnotused" section="admin"}
@@ -35,8 +37,9 @@
             </fieldset>
             {$prevkey = $k}
         {/if}
-
+        </div>
     {/foreach}
+</div>
 {else}
     {str tag=nobehatfeaturefiles section=admin}
 {/if}

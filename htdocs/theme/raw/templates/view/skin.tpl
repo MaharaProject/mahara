@@ -75,7 +75,7 @@
     <div class="col-lg-9">
         <div class="collapsible-group skins">
             {if $ispersonalview}
-            <div class="card collapsible collapsible-group first">
+            <div class="card collapsible first">
                 <h4 class="card-header has-link">
                     <a href="#userskins" data-bs-toggle="collapse" aria-expanded="false" aria-controls="#userskins">
                         {str tag=userskins section=skin}
@@ -93,11 +93,12 @@
                             </a>
                         </div>
                     {/foreach}
+                    <span class="clearfix"></span>
                 </div>
             </div>
             {/if}
             {if $favorskins && $ispersonalview}
-            <div class="card collapsible collapsible-group">
+            <div class="card collapsible">
                 <h4 class="card-header has-link">
                     <a href="#favorskins" data-bs-toggle="collapse" aria-expanded="false" aria-controls="#favorskins" class="collapsed">
                         {str tag=favoriteskins section=skin}
@@ -118,7 +119,7 @@
                 </div>
             </div>
             {/if}
-            <div class="card collapsible collapsible-group last">
+            <div class="card collapsible last">
                 <h4 class="card-header has-link">
                     <a href="#siteskins" data-bs-toggle="collapse" aria-expanded="false" aria-controls="#siteskins" class="collapsed">
                         {str tag=siteskins section=skin}

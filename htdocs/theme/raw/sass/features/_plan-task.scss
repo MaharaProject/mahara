@@ -8,7 +8,7 @@
 .list-group .task-item {
     .plan-task-icon {
         vertical-align: top;
-        padding-top: $spacing-xs;
+        padding-top: 0.3125rem; // 5px;
         z-index: 3;
         position: relative;
         cursor: pointer;
@@ -17,8 +17,20 @@
         margin-top: -1.5rem;
         margin-left: 1.5rem; // 24px;
 
+        .list-group-item-heading {
+          max-width: calc(100% - 4.5rem);
+          display: inline-block;
+          margin-right: 0;
+          word-wrap: anywhere;
+          font-family: $font-family-base;
+          font-size: $font-size-lg;
+          font-weight: $font-weight-normal;
+          margin-bottom: 0;
+        }
+
         a {
             text-decoration: none;
+            display: block;
         }
     }
     .plan-task-detail {

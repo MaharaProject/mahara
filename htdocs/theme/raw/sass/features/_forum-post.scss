@@ -45,6 +45,11 @@
 // Report as objectionable forum post
 .reportedaction {
     margin-top: $spacing-base;
+
+    &.text-danger {
+      font-weight: $font-weight-light;
+    }
+
     .form-group.submit {
         padding: 0 0 $spacing-base 0;
     }
@@ -62,6 +67,13 @@
         &:hover {
             background: scale-color($card-bg, $lightness: -1.40%) !important;
         }
+    }
+    .pieform-fieldset.collapsible legend {
+      border-radius: $card-border-radius;
+      button {
+        border-top-left-radius: $card-border-radius;
+        border-top-right-radius: $card-border-radius;
+      }
     }
 }
 

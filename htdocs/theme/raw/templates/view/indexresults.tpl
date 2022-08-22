@@ -77,40 +77,32 @@
                                         <li class="view-details">{str tag="pending" section="view"}</li>
                                       {else}
                                         {foreach from=$view.manageaccess item=manageitem}
-                                        <li class="dropdown-item">
+                                        <li class="dropdown-item with-icon">
                                             {if $manageitem->accesstype == 'managesharing'}
                                             <a class="seperator" href="{$WWWROOT}view/accessurl.php?return=index&id={$view.id}{if $view.collid}&collection={$view.collid}{/if}">
-                                                <span class="icon {if $view.locked}icon-lock{else}icon-unlock{/if} left" role="presentation" aria-hidden="true"></span>
-                                                <span class="link-text">{$manageitem->displayname}</span>
+                                                <span class="icon {if $view.locked}icon-lock{else}icon-unlock{/if} left" role="presentation" aria-hidden="true"></span><span class="link-text">{$manageitem->displayname}</span>
                                                 <span class="visually-hidden">{$manageitem->accessibilityname}</span>
                                             </a>
                                             {/if}
                                         </li>
                                         {/foreach}
                                         {foreach from=$view.accesslist item=accessitem}
-                                        <li class="dropdown-item">
+                                        <li class="dropdown-item with-icon">
                                             <a href="{$WWWROOT}view/accessurl.php?id={$view.id}{if $view.collid}&collection={$view.collid}{/if}">
                                             {if $accessitem->accesstype == 'loggedin'}
-                                                <span class="icon icon-user-plus left" role="presentation" aria-hidden="true"></span>
-                                                <span class="link-text">{str tag="registeredusers" section="view"}</span>
+                                                <span class="icon icon-user-plus left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag="registeredusers" section="view"}</span>
                                             {elseif $accessitem->accesstype == 'public'}
-                                                <span class="icon icon-globe left" role="presentation" aria-hidden="true"></span>
-                                                <span class="link-text">{str tag="public" section="view"}</span>
+                                                <span class="icon icon-globe left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag="public" section="view"}</span>
                                             {elseif $accessitem->accesstype == 'friends'}
-                                                <span class="icon icon-user-plus left" role="presentation" aria-hidden="true"></span>
-                                                <span class="link-text">{str tag="friends" section="view"}</span>
+                                                <span class="icon icon-user-plus left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag="friends" section="view"}</span>
                                             {elseif $accessitem->group}
-                                                <span class="icon icon-people-group left" role="presentation" aria-hidden="true"></span>
-                                                <span class="link-text">{$accessitem->displayname}</span>
+                                                <span class="icon icon-people-group left" role="presentation" aria-hidden="true"></span><span class="link-text">{$accessitem->displayname}</span>
                                             {elseif $accessitem->institution}
-                                                <span class="icon icon-university left" role="presentation" aria-hidden="true"></span>
-                                                <span class="link-text">{$accessitem->displayname}</span>
+                                                <span class="icon icon-university left" role="presentation" aria-hidden="true"></span><span class="link-text">{$accessitem->displayname}</span>
                                             {elseif $accessitem->usr}
-                                                <span class="icon icon-user left" role="presentation" aria-hidden="true"></span>
-                                                <span class="link-text">{$accessitem->displayname}{if $accessitem->role} ({$accessitem->roledisplay}){/if} </span>
+                                                <span class="icon icon-user left" role="presentation" aria-hidden="true"></span><span class="link-text">{$accessitem->displayname}{if $accessitem->role} ({$accessitem->roledisplay}){/if} </span>
                                             {elseif $accessitem->token}
-                                                <span class="icon icon-globe left" role="presentation" aria-hidden="true"></span>
-                                                <span class="link-text">{str tag="token" section="view"}</span>
+                                                <span class="icon icon-globe left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag="token" section="view"}</span>
                                             {/if}
                                             </a>
                                         </li>
@@ -129,36 +121,33 @@
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end" role="menu">
                                 {if $view.collid && !$view.submittedto && !$noedit && !$view.lockedcoll}
-                                    <li class="dropdown-item">
+                                    <li class="dropdown-item with-icon">
                                         <a href="{$WWWROOT}collection/views.php?id={$view.collid}" title="{str tag=manageviews section=collection}">
-                                            <span class="icon icon-list left" role="presentation" aria-hidden="true"></span>
-                                            <span class="link-text">{str tag="manage" section="collection"}</span>
+                                            <span class="icon icon-list left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag="manage" section="collection"}</span>
                                             <span class="visually-hidden">{str(tag=manageviewsspecific section=collection arg1=$view.displaytitle)|escape:html|safe}</span>
                                         </a>
                                     </li>
                                 {/if}
                                 {if !$view.submittedto && !$noedit && (!$view.locked || $editlocked) && !$view.lockedcoll}
-                                    <li class="dropdown-item">
+                                    <li class="dropdown-item with-icon">
                                     {if $view.collid}
                                         <a href="{$WWWROOT}collection/edit.php?id={$view.collid}" title="{str tag=edittitleanddescription section=view}">
                                     {else}
                                         <a href="{$WWWROOT}view/blocks.php?id={$view.id}&{$querystring}" title="{str tag ="editcontentandlayout" section="view"}">
                                     {/if}
-                                            <span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span>
-                                            <span class="link-text">{str tag="edit" section="mahara"}</span>
+                                            <span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag="edit" section="mahara"}</span>
                                             <span class="visually-hidden">{str(tag=editspecific arg1=$view.displaytitle)|escape:html|safe}</span>
                                         </a>
                                     </li>
                                 {/if}
                                 {if !$view.submittedto && $view.removable && !$noedit && (!$view.locked || $editlocked) && !$view.lockedcoll}
-                                    <li class="dropdown-item">
+                                    <li class="dropdown-item with-icon">
                                     {if $view.collid}
                                         <a href="{$WWWROOT}collection/delete.php?id={$view.collid}" title="{str tag=deletecollection section=collection}">
                                     {else}
                                         <a href="{$WWWROOT}view/delete.php?id={$view.id}&{$querystring}" title="{str tag=deletethisview section=view}">
                                     {/if}
-                                             <span class="icon icon-trash-alt text-danger left" role="presentation" aria-hidden="true"></span>
-                                             <span class="link-text">{str tag="delete" section="mahara"}</span>
+                                             <span class="icon icon-trash-alt text-danger left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag="delete" section="mahara"}</span>
                                              <span class="visually-hidden">{str(tag=deletespecific arg1=$view.displaytitle)|escape:html|safe}</span>
                                         </a>
                                     </li>
@@ -216,26 +205,23 @@
                                     {if $view.collid && $view.collviews > 0}
                                     <ul class="dropdown-menu" role="menu">
                                         {if $view.progresscompletion}
-                                        <li class="dropdown-item">
+                                        <li class="dropdown-item with-icon">
                                             <a href="{$view.progresscompletion->fullurl}">
-                                                <span class="icon icon-clipboard-check left" role="presentation" aria-hidden="true"></span>
-                                                <span class="link-text">{$view.progresscompletion->title}</span>
+                                                <span class="icon icon-clipboard-check left" role="presentation" aria-hidden="true"></span><span class="link-text">{$view.progresscompletion->title}</span>
                                             </a>
                                         </li>
                                         {/if}
                                         {if $view.framework}
-                                        <li class="dropdown-item">
+                                        <li class="dropdown-item with-icon">
                                             <a href="{$view.framework->fullurl}">
-                                                <span class="icon icon-clipboard-check left" role="presentation" aria-hidden="true"></span>
-                                                <span class="link-text">{$view.framework->title}</span>
+                                                <span class="icon icon-clipboard-check left" role="presentation" aria-hidden="true"></span><span class="link-text">{$view.framework->title}</span>
                                             </a>
                                         </li>
                                         {/if}
                                         {foreach from=$view.collviews.views item=cview}
-                                        <li class="dropdown-item">
+                                        <li class="dropdown-item with-icon">
                                             <a href="{$cview->fullurl}">
-                                                <span class="icon icon-regular icon-file left" role="presentation" aria-hidden="true"></span>
-                                                <span class="link-text">{$cview->title}</span>
+                                                <span class="icon icon-regular icon-file left" role="presentation" aria-hidden="true"></span><span class="link-text">{$cview->title}</span>
                                             </a>
                                         </li>
                                         {/foreach}

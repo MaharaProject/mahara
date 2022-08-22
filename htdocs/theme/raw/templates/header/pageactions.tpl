@@ -31,7 +31,7 @@
         <ul class="dropdown-menu dropdown-menu-end" role="menu">
 
             {if $copyurl}{strip}
-                <li class="dropdown-item">
+                <li class="dropdown-item with-icon">
                 {if $downloadurl}
                     <a id="downloadview-button" title="{str tag=copythisportfolio section=view}" href="{$downloadurl}">
                 {else}
@@ -43,14 +43,14 @@
             {/strip}{/if}
 
             {if $usercaneditview || $userisowner}
-                <li class="dropdown-item">
+                <li class="dropdown-item with-icon">
                     <a id="" title="{str tag=manageaccess section=view}" href="{$accessurl}">
                         <span class="icon {if $viewlocked}icon-lock{else}icon-unlock{/if} left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=manageaccess section=view}</span>
                     </a>
                 </li>
             {/if}
 
-            <li class="dropdown-item">
+            <li class="dropdown-item with-icon">
                 <a title="{str tag=print section=view}" id="print_link" href="#" onclick="window.print(); return false;">
                     <span class="icon icon-print left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=print section=view}</span>
                     <span class="visually-hidden">{str tag=print section=view}</span>
@@ -60,7 +60,7 @@
             {if $LOGGEDIN}
                 {if !$userisowner}
                     {if !($headertype == "matrix" || $headertype == "progresscompletion")}
-                    <li class="dropdown-item">
+                    <li class="dropdown-item with-icon">
                         <a id="toggle_watchlist_link" class="watchlist" href="">
                         {if $viewbeingwatched}
                             <span class="icon icon-regular icon-eye-slash left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=removefromwatchlist section=view}</span>
@@ -71,7 +71,7 @@
                     </li>
                     {/if}
                     {if !($headertype == "matrix")}
-                    <li class="dropdown-item">
+                    <li class="dropdown-item with-icon">
                         {if !($headertype == "matrix" || $headertype == "progresscompletion")}
                             {if $objector}
                                 <span class="nolink">
@@ -87,28 +87,28 @@
                     {/if}
                 {/if}
                 {if $undoverificationform}
-                    <li class="dropdown-item">
+                    <li class="dropdown-item with-icon">
                         <a id="undoverificationlink" href="#" data-bs-toggle="modal" data-bs-target="#undoverification-form">
                             <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=undoverification section=collection}</span>
                         </a>
                     </li>
                 {/if}
                 {if $revokeaccessform}
-                    <li class="dropdown-item">
+                    <li class="dropdown-item with-icon">
                         <a id="revokeaccesslink" href="#" data-bs-toggle="modal" data-bs-target="#revokemyaccess-form">
                             <span class="icon icon-trash-alt text-danger left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=removeaccess}</span>
                         </a>
                     </li>
                 {/if}
                 {if $userisowner && $objectedpage}
-                <li class="dropdown-item">
+                <li class="dropdown-item with-icon">
                     <a id="review_link" href="#" data-bs-toggle="modal" data-bs-target="#review-form">
                         <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=objectionreview}</span>
                     </a>
                 </li>
                 {/if}
                 {if ($userisowner || $canremove) && !($headertype == "matrix" || $headertype == "progresscompletion")}
-                <li class="dropdown-item">
+                <li class="dropdown-item with-icon">
                     <a href="{$WWWROOT}view/delete.php?id={$viewid}" title="{str tag=deletethisview section=view}">
                         <span class="icon icon-trash-alt text-danger left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=deletethisview section=view}</span>
                         <span class="visually-hidden">{str(tag=deletespecific arg1=$maintitle)|escape:html|safe}</span>
@@ -117,7 +117,7 @@
                 {/if}
             {/if}
             {if $versionurl}
-                <li class="dropdown-item">
+                <li class="dropdown-item with-icon">
                   <a href="{$versionurl}">
                       <span class="icon icon-history left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=timeline section=view}</span>
                       <span class="visually-hidden">{str(tag=timelinespecific section=view arg1=$maintitle)|escape:html|safe}</span>
@@ -125,7 +125,7 @@
                 </li>
             {/if}
             {if $userisowner && !($headertype == "matrix" || $headertype == "progresscompletion") }
-                <li class="dropdown-item">
+                <li class="dropdown-item with-icon">
                   <a href="{$createversionurl}">
                       <span class="icon icon-save left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=savetimeline section=view}</span>
                       <span class="visually-hidden">{str(tag=savetimelinespecific section=view arg1=$maintitle)|escape:html|safe}</span>
@@ -133,7 +133,7 @@
                 </li>
             {/if}
             {if $LOGGEDIN}
-                <li class="dropdown-item">
+                <li class="dropdown-item with-icon">
                     <a href="{$url}">
                         <span class="icon icon-layer-group left" aria-hidden="true" role="presentation"></span><span class="link-text">{$linktext}</span>
                     </a>

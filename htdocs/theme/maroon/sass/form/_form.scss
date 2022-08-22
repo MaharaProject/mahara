@@ -4,7 +4,7 @@ input[type="password"],
 input[type="text"],
 select,
 textarea {
-  height: calc(2.0625rem + 5px);
+  height: calc(2.0625rem + 0.3125rem);
   font-size: 1rem;
 }
 
@@ -14,25 +14,25 @@ textarea {
     select,
     select#editprofileform_profiletype_other,
     select.form-control {
-      height: calc(2.0625rem + 5px);
+      height: calc(2.0625rem + 0.3125rem);
     }
   }
 }
 
 .pieform .input-group .no-label {
-  margin-top: 12px;
+  margin-top: 0.75rem; // 12px;
 }
 
 .pieform .input-group fieldset.input-group .input-group-append {
-  height: calc(2.0625rem + 5px);
+  height: calc(2.0625rem + 0.3125rem);
 }
 
 .dropdown-group .picker {
-  height: calc(2.0625rem + 5px);
+  height: calc(2.0625rem + 0.3125rem);
 }
 
 .dropdown-group .with-dropdown {
-  height: calc(2.0625rem + 5px);
+  height: calc(2.0625rem + 0.3125rem);
 }
 
 .pieform .input-group .pieform-fieldset > .form-group {
@@ -42,7 +42,7 @@ textarea {
   input.text[type="text"],
   select.text,
   textarea.text {
-      height: calc(2.0625rem + 5px);
+      height: calc(2.0625rem + 0.3125rem);
   }
 }
 

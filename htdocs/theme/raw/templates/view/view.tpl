@@ -3,7 +3,7 @@
 
 <input type="hidden" id="viewid" name="id" value="{$viewid}">
 {if $viewinstructions}
-<div id="viewinstructions" class="pageinstructions view-instructions last form-group collapsible-group small-group {if $toolbarhtml}with-toolbar{/if}">
+<div id="viewinstructions" class="pageinstructions view-instructions first last form-group collapsible-group small-group {if $toolbarhtml}with-toolbar{/if}">
     <fieldset  class="pieform-fieldset collapsible collapsible-small">
         <legend>
             <a href="#viewinstructions-dropdown" data-bs-toggle="collapse" aria-expanded="false" aria-controls="viewinstructions-dropdown" class="collapsed">

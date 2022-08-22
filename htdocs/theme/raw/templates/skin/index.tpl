@@ -10,13 +10,13 @@
         <span class="visually-hidden">{str tag="moreoptions"}</span>
     </button>
     <ul class="dropdown-menu dropdown-menu-end" role="menu">
-        <li class="dropdown-item">
+        <li class="dropdown-item with-icon">
             <a href="{$WWWROOT}skin/import.php{if $siteskins}?site=1{/if}" type="submit">
                 <span class="icon icon-upload left" role="presentation" aria-hidden="true"></span>
                 <span class="link-text">{str tag=importskinsmenu section=skin}</span>
             </a>
         </li>
-        <li class="dropdown-item">
+        <li class="dropdown-item with-icon">
             <a href="{$WWWROOT}skin/export.php{if $siteskins}?site=1{/if}" type="submit">
                 <span class="icon icon-download left" role="presentation" aria-hidden="true"></span>
                 <span class="link-text">{str tag=exportskinsmenu section=skin}</span>
