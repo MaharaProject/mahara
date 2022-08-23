@@ -336,7 +336,7 @@ function pagination_showmore(btn) {
         });
         jQuery('#' + btnid).on('keydown', function(e) {
             e.preventDefault();
-            if (e.keyCode == $j.ui.keyCode.SPACE || e.keyCode == $j.ui.keyCode.ENTER) {
+            if (e.keyCode == maharaui.keyCode.SPACE || e.keyCode == maharaui.keyCode.ENTER) {
                 pagination_showmore(jQuery(this));
             }
         });

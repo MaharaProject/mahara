@@ -528,7 +528,7 @@ jQuery(window).on('blocksloaded', {}, function() {
     });
 
     $('#configureblock, #feedback-form').on('keydown', function(e) {
-        if (e.keyCode === $j.ui.keyCode.ESCAPE ) {
+        if (e.keyCode === maharaui.keyCode.ESCAPE ) {
             dock.hide();
         }
     });

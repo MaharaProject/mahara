@@ -4625,7 +4625,7 @@ function build_showmore_pagination($params) {
         $js .= '});' . "\n";
 
         $js .= 'jQuery("#' . $params['databutton'] . '").on("keydown", function(e) {';
-        $js .= '    if (e.keyCode == $j.ui.keyCode.SPACE || e.keyCode == $j.ui.keyCode.ENTER) {';
+        $js .= '    if (e.keyCode == maharaui.keyCode.SPACE || e.keyCode == maharaui.keyCode.ENTER) {';
         $js .= '        e.preventDefault();';
         $js .= '        pagination_showmore(jQuery(this));';
         $js .= '    }';
