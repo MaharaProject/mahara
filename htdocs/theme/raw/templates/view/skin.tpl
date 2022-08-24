@@ -55,7 +55,7 @@
 
                 {if $defaultskin->id != $currentskin}
                 <span class="defaultskin">
-                    <a onClick = "change_skin({$viewid}, 0)" class="btn btn-secondary btn-sm">
+                    <a href="#settings_skin_open" onClick="change_skin({$viewid}, 0)" class="btn btn-secondary btn-sm">
                         <span class="icon icon-ban text-danger left" role="presentation" aria-hidden="true"></span>
                         {$defaultskin->title|safe}
                     </a>
@@ -84,7 +84,7 @@
                 <div id="userskins" class="card-body collapse show">
                     {foreach from=$userskins item=skin}
                         <div class="skin">
-                            <a onClick = "change_skin({$viewid}, {$skin->id})">
+                            <a href="#settings_skin_open" onClick="change_skin({$viewid}, {$skin->id})">
                                 <img src="{$WWWROOT}skin/thumb.php?id={$skin->id}" class="card" width="180" alt="{$skin->title}"/>
                                  <div class="skin-footer text-center text-small">
                                 {$skin->title}
@@ -105,7 +105,7 @@
                 <div id="favorskins" class="card-body collapse">
                     {foreach from=$favorskins item=skin}
                         <div class="skin">
-                            <a onClick = "change_skin({$viewid}, {$skin->id})">
+                            <a href="#settings_skin_open" onClick="change_skin({$viewid}, {$skin->id})">
                                 <img src="{$WWWROOT}skin/thumb.php?id={$skin->id}" class="card" width="180" alt="{$skin->title}"/>
                                  <div class="skin-footer text-center text-small">
                                 {$skin->title}
@@ -126,7 +126,7 @@
                 <div id="siteskins" class="card-body no-footer collapse">
                     {foreach from=$siteskins item=skin}
                         <div class="skin">
-                            <a onClick="change_skin({$viewid}, {$skin->id})">
+                            <a href="#settings_skin_open" onClick="change_skin({$viewid}, {$skin->id})">
                                 <img src="{$WWWROOT}skin/thumb.php?id={$skin->id}" class="card" width="180" alt="{$skin->title}"/>
                                  <div class="skin-footer text-center text-small">
                                 {$skin->title}
