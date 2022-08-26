@@ -1038,6 +1038,13 @@ function group_delete($groupid, $shortname=null, $institution=null, $notifymembe
         $view->release();
     }
 
+    // Delete collections owned by the group
+    require_once(get_config('libroot') . 'collection.php');
+    foreach (get_column('collection', 'id', 'group', $group->id) as $collectionid) {
+        $collection = new Collection($collectionid);
+        $collection->delete();
+    }
+
     // Delete artefacts
     require_once(get_config('docroot') . 'artefact/lib.php');
     ArtefactType::delete_by_artefacttype(get_column('artefact', 'id', 'group', $group->id));
