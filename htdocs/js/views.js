@@ -696,7 +696,7 @@
      * return true if the mousedown is <LEFT BUTTON> or the keydown is <Space> or <Enter>
      */
     function isHit(e) {
-        return (e.which === 1 || e.button === 1 || e.keyCode === $j.ui.keyCode.SPACE || e.keyCode === $j.ui.keyCode.ENTER);
+        return (e.which === 1 || e.button === 1 || e.keyCode === maharaui.keyCode.SPACE || e.keyCode === maharaui.keyCode.ENTER);
     }
     /*
      * Initialises the dialog used to add and move blocks
@@ -704,7 +704,7 @@
     function setupPositionBlockDialog() {
 
         $('#newblock .cancel, #addblock .deletebutton').on('mousedown keydown', function(e) {
-            if (isHit(e) || e.keyCode === $j.ui.keyCode.ESCAPE) {
+            if (isHit(e) || e.keyCode === maharaui.keyCode.ESCAPE) {
                 closePositionBlockDialog(e, {'saved': false});
             }
         });
