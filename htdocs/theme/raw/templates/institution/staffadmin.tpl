@@ -1,14 +1,6 @@
 {include file="header.tpl"}
 <div id="staffadminlistcontainer" class="row">
-    <div class="col-md-6">
-        <div class="card card-secondary">
-            <h2 class="card-header">{str tag=institutionadmins section=admin}</h2>
-            <div class="block">
-                {$admins.tablerows|safe}
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6">
+    <div class="col-md-{$size}">
        <div class="card card-secondary">
             <h2 class="card-header">{str tag=institutionstaff section=admin}</h2>
             <div class="block">
@@ -16,11 +8,21 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6">
+    {if !$issite}
+    <div class="col-md-{$size}">
        <div class="card card-secondary">
             <h2 class="card-header">{str tag=institutionsupportadmin section=admin}</h2>
             <div class="block">
                 {$supportadmin.tablerows|safe}
+            </div>
+        </div>
+    </div>
+    {/if}
+    <div class="col-md-{$size}">
+        <div class="card card-secondary">
+            <h2 class="card-header">{str tag=institutionadmins section=admin}</h2>
+            <div class="block">
+                {$admins.tablerows|safe}
             </div>
         </div>
     </div>
