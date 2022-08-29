@@ -47,6 +47,12 @@ CCEND=$(shell echo "\033[0m")
 
 all: css
 
+nvmsh := $(shell ls -l ${HOME}/.nvm/nvm.sh 2>/dev/null)
+
+define nvm_check
+	. ${HOME}/.nvm/nvm.sh && nvm install
+endef
+
 production = true
 css:
 	$(info Rebuilding CSS on host)
@@ -59,12 +65,17 @@ endif
 ifeq (, $(shell which gulp))
 	$(error ERROR: Can't find the "gulp" executable. Try doing "sudo npm install -g gulp")
 endif
+ifndef nvmsh
+	$(error ERROR: Can't find the "nvm" executable at path ${HOME}/.nvm/nvm.sh - either install or make path executable)
+endif
+
 ifndef npmsetup
-	npm install
+	@echo "System node version: " && node -v;
+	@$(nvm_check) && nvm ls --no-alias
+	@$(nvm_check) && npm install
 endif
 	@echo "Building CSS..."
-	@if gulp css --production $(production) ; then echo "Done!"; else npm install; gulp css --production $(production);  fi
-
+	@if $(nvm_check) && npm rebuild node-sass && gulp css --production $(production) ; then echo "Done!"; else $(nvm_check) && npm rebuild node-sass && npm install; gulp css --production $(production);  fi
 clean-css:
 	find ./htdocs/theme/* -maxdepth 1 -name "style" -type d -exec rm -Rf {} \;
 
