@@ -303,7 +303,7 @@ class PluginExportPdf extends PluginExportHtml {
                     exec('pdfunite ' . implode(' ', $collection) . ' ' . $pdfdirectory . '/' . $collectionid . '_' . $collectionname . '.pdf', $output);
                 }
                 else {
-                    exec('gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=' .  $pdfdirectory . '/' . $collectionid . '_' . $collectionname . '.pdf -dBATCH ' . implode(' ', $collection), $output);
+                    exec('gs -dSAFER -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=' .  $pdfdirectory . '/' . $collectionid . '_' . $collectionname . '.pdf -dBATCH ' . implode(' ', $collection), $output);
                 }
                 // remove the page pdfs that are now in collections
                 foreach ($collection as $c) {
