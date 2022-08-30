@@ -157,7 +157,7 @@
                 <small> {str tag=sitelicensesdesc section=admin}</small>
             </li>
             <li class="list-group-item">
-                <a href="{$WWWROOT}admin/site/views.php">{str tag=Viewscollections section=view}</a>
+                <a href="{$WWWROOT}admin/site/views.php">{str tag=Viewscollections1 section=view}</a>
                 <small> {str tag=siteviewsdesc section=admin}</small>
             </li>
             <li class="list-group-item">
@@ -212,11 +212,11 @@
                 <small>{str tag=exportqueuedesc section=admin}</small>
             </li>
             <li class="list-group-item">
-                <a href="{$WWWROOT}admin/users/add.php">{str tag=adduser section=admin}</a>
+                <a href="{$WWWROOT}admin/users/add.php">{str tag=addaccount section=admin}</a>
                 <small>{str tag=adduserdescription section=admin}</small>
             </li>
             <li class="list-group-item">
-                <a href="{$WWWROOT}admin/users/uploadcsv.php">{str tag=uploadcsv section=admin}</a>
+                <a href="{$WWWROOT}admin/users/uploadcsv.php">{str tag=uploadcsv1 section=admin}</a>
                 <small>{str tag=uploadcsvdesc section=admin}</small>
             </li>
         </ul>
@@ -287,7 +287,7 @@
                 <small>{str tag=profilecompletiondesc section=admin}</small>
             </li>
             <li class="list-group-item">
-                <a href="{$WWWROOT}view/institutionviews.php">{str tag=Viewscollections section=view}</a>
+                <a href="{$WWWROOT}view/institutionviews.php">{str tag=Viewscollections1 section=view}</a>
                 <small>{str tag=institutionviewsdesc section=admin}</small>
             </li>
             <li class="list-group-item">
