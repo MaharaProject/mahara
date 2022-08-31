@@ -6731,15 +6731,31 @@ class View {
     }
 
     /**
-     * Determine whether the current view is of a type which can be themed.
-     * Certain view types do not respect themes when displayed.
-     * Templates do not respect themes as well
+     * Determine whether the current view can have user chosen theme applied
+     *
+     * Needs to have the config 'userscanchooseviewthemes' turned on
+     * and be the right view type / ownership to respect the theme to be displayed
      *
      * @return boolean whether the view type may be themed
      */
     function is_themeable() {
+        if (!get_config('userscanchooseviewthemes')) {
+            return false;
+        }
+        if ($this->institution) {
+            // Institution pages should respect the default theme of their institution
+            return false;
+        }
         $unthemable_types = array('grouphomepage', 'dashboard');
-        return !$this->get('template') && !in_array($this->type, $unthemable_types);
+        if (in_array($this->type, $unthemable_types)) {
+            return false;
+        }
+        if (is_isolated()) {
+            // We don't really want people picking a theme from another institution
+            // if they can't see that institution
+            return false;
+        }
+        return true;
     }
 
     /**

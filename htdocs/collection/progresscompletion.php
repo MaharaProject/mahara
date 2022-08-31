@@ -71,10 +71,9 @@ $(function () {
 EOF;
 }
 
-// Set up theme
-$viewtheme = $view->get('theme');
-if ($viewtheme && $THEME->basename != $viewtheme) {
-    $THEME = new Theme($viewtheme);
+// if the view theme is set in view table as is usable
+if ($view->is_themeable() && $view->get('theme') && $THEME->basename != $view->get('theme')) {
+    $THEME = new Theme($view);
 }
 $headers[] = '<meta name="robots" content="noindex">';
 
@@ -241,6 +240,9 @@ if ($can_edit && !$collection->get('lock')) {
         $smarty->assign('editurl', get_config('wwwroot') . 'view/blocks.php?id=' . $collection->has_progresscompletion());
     }
 }
+$returnto = $viewobj->get_return_to_url_and_title();
+$smarty->assign('url', $returnto['url']);
+$smarty->assign('linktext', $returnto['title']);
 $smarty->display('collection/progresscompletion.tpl');
 
 function undo_verification_form($ids) {
