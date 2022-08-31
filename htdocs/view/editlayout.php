@@ -516,7 +516,7 @@ function get_advanced_elements(): array {
         redirect(get_config('wwwroot') . 'view/blocks.php?id=' . $view->get('id'));
     }
 
-    if (get_config('userscanchooseviewthemes') && $view->is_themeable()) {
+    if ($view->is_themeable()) {
         $elements['theme'] = array(
             'type'          => 'select',
             'title'         => get_string('theme', 'view'),

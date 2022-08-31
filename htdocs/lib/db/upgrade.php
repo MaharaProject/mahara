@@ -878,5 +878,26 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2022032212) {
+        if ($records = get_column_sql("SELECT id FROM {view} WHERE theme IS NOT NULL")) {
+            log_debug('Tidy up user chosen themes for portfolios');
+            require_once(get_config('docroot') . 'lib/view.php');
+            $count = 0;
+            $limit = 100;
+            $total = count($records);
+            foreach ($records as $id) {
+                $view = new View($id);
+                if (!$view->is_themeable()) {
+                    execute_sql("UPDATE {view} SET theme = NULL WHERE id = ?", array($id));
+                }
+                $count++;
+                if (($count % $limit) == 0 || $count == $total) {
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
+            }
+        }
+    }
+
     return $status;
 }
