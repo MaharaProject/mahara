@@ -76,10 +76,12 @@ define('TITLE', $collection->get('name'));
 
 $javascript = array('js/collection-navigation.js', 'js/jquery/jquery-mobile/jquery.mobile.custom.min.js', 'tinymce', 'module/framework/js/matrix.js', 'js/jquery/jquery-ui/js/jquery-ui.min.js');
 
-// Set up theme
-$viewtheme = $view->get('theme');
-if ($viewtheme && $THEME->basename != $viewtheme) {
-    $THEME = new Theme($viewtheme);
+// Get the first non-special page
+$firstview = $views['views'][0];
+$firstview = new View($firstview->id);
+// if the view theme is set in view table as is usable
+if ($firstview->is_themeable() && $firstview->get('theme') && $THEME->basename != $firstview->get('theme')) {
+    $THEME = new Theme($firstview);
 }
 
 $headers = array();
@@ -223,9 +225,7 @@ $smarty->assign('viewlocked', $view->get('locked'));
 $smarty->assign('viewcount', $views['count']);
 $smarty->assign('accessurl', get_config('wwwroot') . 'view/accessurl.php?id=' . $view->get('id') . (!empty($collection) ? '&collection=' . $collection->get('id') : '' ));
 
-// Get the first view from the collection
-$firstview = $views['views'][0];
-$view = new View($firstview->id);
+$view = $firstview;
 $submittedgroup = (int)$view->get('submittedgroup');
 $can_edit = $USER->can_edit_view($view) && !$submittedgroup && !$view->is_submitted();
 $urls = $view->get_special_views_copy_urls();
@@ -249,7 +249,9 @@ else {
     $smarty->assign('author', $view->display_author());
     $smarty->assign('anonymous', FALSE);
 }
-
+$returnto = $view->get_return_to_url_and_title();
+$smarty->assign('url', $returnto['url']);
+$smarty->assign('linktext', $returnto['title']);
 $smarty->display('module:framework:matrix.tpl');
 
 function get_statuses_to_display($frameworkid) {
