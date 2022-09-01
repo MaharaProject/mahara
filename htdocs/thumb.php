@@ -12,6 +12,10 @@
 define('INTERNAL', 1);
 define('PUBLIC', 1);
 define('NOCHECKREQUIREDFIELDS', 1);
+if ($_GET['type'] == 'logobyid') {
+    // Allow site logo show in maintenance mode when logged out
+    define('IGNOREMAINTENANCE', 1);
+}
 require('init.php');
 require_once('file.php');
 require_once('user.php');
