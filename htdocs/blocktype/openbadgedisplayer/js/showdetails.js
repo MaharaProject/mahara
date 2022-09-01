@@ -28,13 +28,28 @@
         }
 
         function urlElement(url) {
+            let urlstr;
             if (!url) {
                 return '-';
             }
-            return jQuery('<a></a>').attr({ href: url, title: url }).text(shorten(url));
+            if (url instanceof Array) {
+                if (url.length === 0) {
+                    return '-';
+                }
+                else {
+                    for (var i = 0; i < url.length; i++) {
+                        urlstr += jQuery('<a></a>').attr({ href: url[i], title: url[i] }).text(shorten(url[i]));
+                    }
+                }
+            }
+            else {
+                urlstr = jQuery('<a></a>').attr({ href: url, title: url }).text(shorten(url));
+            }
+            return urlstr;
         }
 
         function buildBadgeContent(assertion) {
+
             var el = jQuery('.badge-template').clone().removeClass('badge-template');
 
             el.find('img.badge-image').attr('src', assertion.badge.image);

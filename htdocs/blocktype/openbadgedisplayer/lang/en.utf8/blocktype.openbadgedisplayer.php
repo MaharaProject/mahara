@@ -90,3 +90,11 @@ $string['badgrtokenadded'] = "Badgr token added to account";
 $string['badgrtokendeleted'] = "Badgr token deleted";
 $string['badgrtokennotfound'] = "Badgr token not found with supplied credentials";
 $string['nobadgruid2'] = 'Before you can use Badgr, you need to set a token. Please go to "Account menu → Settings → Apps → Badgr" to set it.';
+$string['resetobsoletebadgrtokensubject'] = 'You need to reset your Badgr token.';
+$string['resetobsoletebadgrtokenmessage'] = 'Hi %s,
+
+Your current Badgr token used in %s is obsolete.
+
+This token is used to display your Badgr badges in portfolio pages.
+
+Please go to "Account menu → Settings → Apps → Badgr" to set a new one.';
