@@ -102,14 +102,17 @@ function badgr_token_submit(Pieform $form, $values) {
         // We are in add mode
         $res = mahara_http_request(
             array(
-                CURLOPT_URL        => $sources['badgr'] . 'api-auth/token',
+                CURLOPT_URL        => $sources['badgr'] . 'o/token',
                 CURLOPT_POST       => 1,
                 CURLOPT_POSTFIELDS => 'username=' . $values['badgrusername'] . '&password=' . $values['badgrpassword'],
             )
         );
         $json = json_decode($res->data);
-        if (isset($json->token)) {
-            set_account_preference($USER->get('id'), 'badgr_token', $json->token);
+
+        if (isset($json->access_token)) {
+            set_account_preference($USER->get('id'), 'badgr_token', $json->access_token);
+            set_account_preference($USER->get('id'), 'badgr_token_expiry', time() + $json->expires_in);
+            set_account_preference($USER->get('id'), 'badgr_token_reset', $json->refresh_token);
             $SESSION->add_ok_msg(get_string('badgrtokenadded', 'blocktype.openbadgedisplayer'));
         }
         else {
