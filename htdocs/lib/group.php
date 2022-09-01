@@ -1361,8 +1361,11 @@ function group_update_members($groupid, $members, $lines_done = 0, $num_lines = 
  * @param object $group group
  * @param object $userid  User to invite
  * @param object $userfrom  User sending the invitation
+ * @param string $role The group role
+ * @param bool $delay  Delay sending of message
+ * @param string $reason  The reason for the invite
  */
-function group_invite_user($group, $userid, $userfrom, $role='member', $delay=null) {
+function group_invite_user($group, $userid, $userfrom, $role='member', $delay=null, $reason=null) {
     $user = optional_userobj($userid);
 
     $data = new stdClass();
@@ -1373,10 +1376,18 @@ function group_invite_user($group, $userid, $userfrom, $role='member', $delay=nu
     ensure_record_exists('group_member_invite', $data, $data);
     $lang = get_user_language($user->id);
     require_once('activity.php');
+
+    if ($reason) {
+        $message = get_string_from_language($lang, 'invitetogroupmessagereason', 'group',display_name($user, $user, true), $group->name, $reason, display_name($userfrom, $user, true));
+    }
+    else {
+        $message = get_string_from_language($lang, 'invitetogroupmessage1', 'group',display_name($user, $user, true), $group->name, display_name($userfrom, $user, true));
+    }
+
     $activitydata = array(
         'users'   => array($user->id),
         'subject' => get_string_from_language($lang, 'invitetogroupsubject', 'group'),
-        'message' => get_string_from_language($lang, 'invitetogroupmessage', 'group', display_name($userfrom, $user), $group->name),
+        'message' => $message,
         'url'     => group_homepage_url($group, false),
         'urltext' => $group->name,
     );

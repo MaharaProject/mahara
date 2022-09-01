@@ -23,7 +23,26 @@ $string['groupmemberrequests'] = 'Pending membership requests';
 $string['membershiprequests'] = 'Membership requests';
 $string['sendinvitation'] = 'Send invite';
 $string['invitetogroupsubject'] = 'You were invited to join a group';
-$string['invitetogroupmessage'] = '%s has invited you to join a group, \'%s\'. Click on the link below for more information.';
+$string['invitetogroupmessage1'] = "Hi %s,
+
+I'd like to invite you to join the group '%s'.
+
+Thank you
+%s
+
+Follow the link to accept or decline this invitation.";
+$string['invitetogroupmessagereason'] = "Hi %s,
+
+I'd like to invite you to join the group '%s'.
+
+My reason is:
+
+%s
+
+Thank you
+%s
+
+Follow the link to accept or decline this invitation.";
 $string['inviteuserfailed'] = 'Failed to invite';
 $string['userinvited'] = 'Invite sent';
 $string['addedtogroupsubject'] = 'You were added to a group';
