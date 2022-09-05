@@ -87,7 +87,7 @@ $smarty->display('group/invite.tpl');
  */
 function invitetogroup_submit(Pieform $form, $values) {
     global $SESSION, $USER, $group, $user;
-    group_invite_user($group, $user->id, $USER, isset($values['role']) ? $values['role'] : null);
+    group_invite_user($group, $user->id, $USER, isset($values['role']) ? $values['role'] : null, null, $values['reason']);
     $SESSION->add_ok_msg(get_string('userinvited', 'group'));
     redirect(profile_url($user));
 }
