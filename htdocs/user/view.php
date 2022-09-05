@@ -154,9 +154,8 @@ $inlinejs .= <<<JS
 });
 JS;
 
-// Set up theme
-$viewtheme = $view->get('theme');
-if ($viewtheme && $THEME->basename != $viewtheme) {
+// if the view theme is set in view table as is usable
+if ($view->is_themeable() && $view->get('theme') && $THEME->basename != $view->get('theme')) {
     $THEME = new Theme($view);
 }
 $stylesheets = array();
