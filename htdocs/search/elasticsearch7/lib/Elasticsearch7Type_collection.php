@@ -93,6 +93,9 @@ class Elasticsearch7Type_collection extends Elasticsearch7Type {
         // Add owner info.
         self::add_owner_for_record($record);
 
+        // Add group info.
+        parent::add_group_name_for_record($record);
+
         // Add views in this collection.
         self::add_views_for_record($record);
 

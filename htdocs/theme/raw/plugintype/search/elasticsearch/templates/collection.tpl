@@ -19,7 +19,10 @@
     <div class="row">
         <div class="col-md-7">
             {if $record->createdbyname}
-                <div class="createdby">{str tag=createdby section=search.elasticsearch arg1='<a href="`$record->createdby|profile_url`">`$record->createdbyname`</a>'}</div>
+                <div class="createdby">{str tag=createdby section=search.elasticsearch arg1='<a href="`$record->createdby|profile_url`">$record->createdbyname</a>'}</div>
+            {/if}
+            {if $record->ownedbygroupname}
+                <div class="ownedbygroup">{str tag=ownedbygroup section=search.elasticsearch arg1='<a href="`$record->ownedbygroupurl`">$record->ownedbygroupname</a>'}</div>
             {/if}
             <div class="detail">
                 {if $record->highlight}

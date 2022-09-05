@@ -149,6 +149,7 @@ class ElasticsearchType_view extends ElasticsearchType {
         $record->secfacetterm = self::$secfacetterm;
         return $record;
     }
+
     public static function getRecordDataById($type, $id) {
         $record = parent::getRecordDataById ( $type, $id );
         if (! $record) {
@@ -160,6 +161,12 @@ class ElasticsearchType_view extends ElasticsearchType {
             $record->createdby = get_record ( 'usr', 'id', $record->owner );
             $record->createdbyname = display_name ( $record->createdby );
         }
+        // Owned by group
+        if (intval ( $record->group ) > 0) {
+            $record->ownedbygroupurl = get_config('wwwroot') . 'group/view.php?id=' . $record->group;
+            $record->ownedbygroupname = get_field('group', 'name', 'id', $record->group);
+        }
+
         // Tags
         $tags = get_column ( 'tag', 'tag', 'resourcetype', 'view', 'resourceid', $id );
         if ($tags != false) {

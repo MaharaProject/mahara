@@ -484,4 +484,15 @@ abstract class Elasticsearch7Type {
         return $where;
     }
 
+    /**
+     * Add group name info to the Record.
+     *
+     * @param object $record The Record we are checking.
+     */
+    public static function add_group_name_for_record($record) {
+        if (intval($record->group) > 0) {
+            $record->ownedbygroupurl = get_config('wwwroot') . 'group/view.php?id=' . $record->group;
+            $record->ownedbygroupname = get_field('group', 'name', 'id', $record->group);
+        }
+    }
 }
