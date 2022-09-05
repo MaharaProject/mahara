@@ -15,6 +15,7 @@ mahara-*.tar.gz
 mahara-*.zip
 *.swp
 .patches
+*.patch
 /test/selenium/TestSuite.html
 /test/selenium/results.html
 /test/selenium/*/index.html
