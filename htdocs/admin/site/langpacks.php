@@ -300,6 +300,10 @@ function get_add_lang_form() {
     foreach ($available as $v) {
         $options[$v] = locale_get_display_name($v, $lang);
     }
+    if (isset($options['mi'])) {
+        // We need to get the Te Reo version of the string as it has the macron
+        $options['mi'] = locale_get_display_name('mi', 'mi');
+    }
     asort($options);
     $form = array(
         'name'      => 'add_language',
