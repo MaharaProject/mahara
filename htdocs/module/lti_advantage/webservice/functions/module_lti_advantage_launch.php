@@ -369,7 +369,7 @@ class module_lti_advantage_launch extends external_api {
     public static function launch_advantage($params) {
         global $USER, $SESSION, $WEBSERVICE_INSTITUTION, $WEBSERVICE_OAUTH_SERVERID, $CFG;
 
-        $authinstanceid = get_field('auth_instance', 'id', 'instancename', 'webservice', 'institution', $WEBSERVICE_INSTITUTION);
+        $authinstanceid = get_field('auth_instance', 'id', 'authname', 'webservice', 'institution', $WEBSERVICE_INSTITUTION);
         if (!$authinstanceid) {
             $USER->logout();
             throw new AccessDeniedException(get_string('webserviceauthdisabled', 'module.lti'));
