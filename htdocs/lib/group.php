@@ -3811,3 +3811,20 @@ function build_group_archived_submissions_results($search, $offset, $limit) {
         'sortdir' => $search->sortdir
     ));
 }
+
+/**
+ * Check if a group is associated with an external system
+ *
+ * Currently just for LTI as we make a 'fake' group for assessment
+ * @param object|string $group
+ * @return boolean
+ */
+function group_external_group($group) {
+    if (is_string($group)) {
+        $group = get_record('group', 'id', $group);
+    }
+    if (record_exists('lti_assessment', 'group', $group->id)) {
+        return true;
+    }
+    return false;
+}

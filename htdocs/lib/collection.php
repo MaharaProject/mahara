@@ -1754,7 +1754,7 @@ class Collection {
             );
             View::_db_pendingrelease($viewids);
             safe_require('module', 'submissions');
-            if (PluginModuleSubmissions::is_active() && $this->submittedgroup) {
+            if (PluginModuleSubmissions::is_active() && $this->submittedgroup && !group_external_group($this->submittedgroup)) {
                 PluginModuleSubmissions::pending_release_submission($this, $releaseuser);
             }
             require_once(get_config('docroot') . 'export/lib.php');
@@ -1821,7 +1821,7 @@ class Collection {
             );
             View::_db_release($viewids, $this->owner, $this->submittedgroup);
             safe_require('module', 'submissions');
-            if (PluginModuleSubmissions::is_active() && $this->submittedgroup) {
+            if (PluginModuleSubmissions::is_active() && $this->submittedgroup && !group_external_group($this->submittedgroup)) {
                 PluginModuleSubmissions::release_submission($this, $releaseuser);
             }
             db_commit();
@@ -1958,6 +1958,7 @@ class Collection {
      */
     public function submit($group = null, $submittedhost = null, $owner = null, $sendnotification=true) {
         global $USER;
+        require_once('group.php');
 
         if ($this->is_submitted()) {
             throw new CollectionSubmissionException(get_string('collectionalreadysubmitted', 'view'));
@@ -2011,7 +2012,7 @@ class Collection {
             $this->set('submittedstatus', self::SUBMITTED);
             $this->commit();
             safe_require('module', 'submissions');
-            if (PluginModuleSubmissions::is_active() && $group) {
+            if (PluginModuleSubmissions::is_active() && $group && !group_external_group($group)) {
                 PluginModuleSubmissions::add_submission($this, $group);
             }
             db_commit();

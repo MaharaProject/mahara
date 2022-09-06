@@ -1753,7 +1753,7 @@ class View {
             db_begin();
             self::_db_pendingrelease(array($this->get('id')));
             safe_require('module', 'submissions');
-            if (PluginModuleSubmissions::is_active() && $this->get('submittedgroup')) {
+            if (PluginModuleSubmissions::is_active() && $this->get('submittedgroup') && !group_external_group($this->get('submittedgroup'))) {
                 PluginModuleSubmissions::pending_release_submission($this, $releaseuser);
             }
             require_once(get_config('docroot') . 'export/lib.php');
@@ -1804,7 +1804,7 @@ class View {
             db_begin();
             self::_db_release(array($this->id), $this->get('owner'), $this->get('submittedgroup'));
             safe_require('module', 'submissions');
-            if (PluginModuleSubmissions::is_active() && $this->get('submittedgroup')) {
+            if (PluginModuleSubmissions::is_active() && $this->get('submittedgroup') && !group_external_group($this->get('submittedgroup'))) {
                 PluginModuleSubmissions::release_submission($this, $releaseuser);
             }
             db_commit();
@@ -7203,6 +7203,7 @@ class View {
      */
     public function submit($group = null, $submittedhost = null, $owner = null, $sendnotification=true) {
         global $USER;
+        require_once('group.php');
 
         // One of these is needed.
         if (!$group && !$submittedhost) {
@@ -7235,7 +7236,7 @@ class View {
             db_begin();
             self::_db_submit(array($this->id), $group, $submittedhost, $owner);
             safe_require('module', 'submissions');
-            if (PluginModuleSubmissions::is_active() && $group) {
+            if (PluginModuleSubmissions::is_active() && $group && !group_external_group($group)) {
                 // We have a Group.  Add the Submissions using the Submissions module as well.
                 PluginModuleSubmissions::add_submission($this, $group);
             }
