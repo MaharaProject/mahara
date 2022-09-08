@@ -69,6 +69,8 @@ $favorskins  = Skin::get_favorite_skins();
 $siteskins   = Skin::get_site_skins();
 $defaultskin = Skin::get_default_skin();
 
+$ispersonalview = !($view->get("group") || $view->get("institution"));
+
 $smarty = smarty_core();
 $smarty->assign('saved', $saved);
 $smarty->assign('incompatible', $incompatible);
@@ -83,6 +85,7 @@ $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('viewtype', $view->get('type'));
 $smarty->assign('edittitle', $view->can_edit_title());
 $smarty->assign('issiteview', $issiteview);
+$smarty->assign('ispersonalview', $ispersonalview);
 $html =  $smarty->fetch('view/skin.tpl');
 
 json_reply(false, array(
