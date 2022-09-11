@@ -98,7 +98,7 @@
 // Default zebra-stripe styles (alternating gray and transparent backgrounds)
 
 .table-striped {
-  > tbody > tr:nth-of-type(#{$table-striped-order}) {
+  > tbody > tr:nth-of-type(#{$table-striped-order}):not(.warning) {
     --#{$variable-prefix}table-accent-bg: var(--#{$variable-prefix}table-striped-bg);
     color: var(--#{$variable-prefix}table-striped-color);
   }
