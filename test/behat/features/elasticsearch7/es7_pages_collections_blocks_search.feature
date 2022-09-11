@@ -57,8 +57,8 @@ Background:
     | Image PNG            | image          | Tangaroa    | no         | attachment=Image2.png                                             |
     | Files to download    | filedownload   | Tangaroa    | auto       | attachments=mahara_about.pdf                                      |
     | Files to download    | filedownload   | Tangaroa    | no         | attachments=mahara_about.pdf,Image2.png                           |
-    | External Feed - News | externalfeed   | Tangaroa    | No         | source=http://stuff.co.nz/rss;count=5                             |
-    | External Feed - Food | externalfeed   | Tangaroa    | no         | source=http://www.thekitchenmaid.com/feed;count=3;tags=cat,a,lyst |
+    | External Feed - News | externalfeed   | Tangaroa    | No         | source=https://stuff.co.nz/rss;count=5                            |
+    | External Feed - Food | externalfeed   | Tangaroa    | no         | source=https://www.bonappetit.com/feed/rss                        |
     | External Feed - Tech | externalfeed   | Tangaroa    | no         | source=feeds.feedburner.com/geekzone;count=3;tags=cat,a,lyst      |
     | Social Media         | socialprofile  | Tangaroa    | no         | sns=instagram,twitter,facebook,tumblr,pinterest,mysocialmedia     |
 

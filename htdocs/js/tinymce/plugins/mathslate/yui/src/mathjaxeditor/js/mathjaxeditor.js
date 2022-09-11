@@ -12,7 +12,7 @@
  *
  * @package    tinymce_mathslate
  * @copyright  2013-2014 Daniel Thies  <dthies@ccal.edu>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL v3 or later
  */
 M.tinymce_mathslate = M.tinymce_mathslate || {};
 var NS = M && M.tinymce_mathslate || {};

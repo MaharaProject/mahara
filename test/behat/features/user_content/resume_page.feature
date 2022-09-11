@@ -301,7 +301,7 @@ Scenario: Adding license info
     When I choose "Résumé" in "Create" from main menu
     And I click on "License"
     And I fill in the following:
-    | License | http://creativecommons.org/licenses/by/4.0/ |
+    | License | https://creativecommons.org/licenses/by/4.0/ |
     And I click on "Advanced licensing"
     And I fill in the following:
     | Licensor| test1 |

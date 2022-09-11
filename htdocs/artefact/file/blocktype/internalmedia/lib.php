@@ -5,7 +5,7 @@
  * @package    mahara
  * @subpackage blocktype-internalmedia
  * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
  */
@@ -239,7 +239,7 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
                     $m = $m->description;
                 }
                 // Hack to allow .wmv and .wma files to also use the .asf mimetype as well
-                // See http://en.wikipedia.org/wiki/Advanced_Systems_Format
+                // See https://en.wikipedia.org/wiki/Advanced_Systems_Format
                 if (in_array('wmv', $data)) {
                     $mimetypes['video/x-ms-asf'] = 'wmv';
                 }

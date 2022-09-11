@@ -4,7 +4,7 @@
     xmlns:leap2="http://terms.leapspecs.org/"
     xmlns:categories="http://wiki.leapspecs.org/2A/categories/"
     xmlns:portfolio="{$WWWROOT}export/leap/{$userid}/{$export_time}/"
-    xmlns:mahara="http://wiki.mahara.org/Developer_Area/Import%2F%2FExport/LEAP_Extensions#"
+    xmlns:mahara="https://wiki.mahara.org/wiki/Developer_Area/Import//Export/LEAP_Extensions"
 >
     <leap2:version>http://www.leapspecs.org/2010-07/2A/</leap2:version>
     <id>{$WWWROOT}export/{$userid}/{$export_time}</id>

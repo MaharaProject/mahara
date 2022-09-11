@@ -4,7 +4,7 @@
  * @package    mahara
  * @subpackage core
  * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
  */
@@ -923,6 +923,14 @@ function xmldb_core_upgrade($oldversion=0) {
                 }
             }
         }
+    }
+
+    if ($oldversion < 2022090900) {
+        log_debug('Update the license URLS to be https');
+        execute_sql("UPDATE {artefact_license} SET name = REPLACE(name, 'http://creativecommons.org/', 'https://creativecommons.org/')");
+        execute_sql("UPDATE {artefact_license} SET name = REPLACE(name, 'https://www.gnu.org/', 'https://www.gnu.org/')");
+        execute_sql("UPDATE {artefact} SET license = REPLACE(license, 'http://creativecommons.org/', 'https://creativecommons.org/')");
+        execute_sql("UPDATE {artefact} SET license = REPLACE(license, 'https://www.gnu.org/', 'https://www.gnu.org/')");
     }
 
     return $status;

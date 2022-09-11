@@ -844,7 +844,7 @@
    */
   // The Facebook app's UIWebView identifies as both an iPhone and iPad, so
   // to identify iPhones, we need to exclude iPads.
-  // http://artsy.github.io/blog/2012/10/18/the-perils-of-ios-user-agent-sniffing/
+  // https://artsy.github.io/blog/2012/10/18/the-perils-of-ios-user-agent-sniffing
 
   var IS_IPHONE = /iPhone/i.test(USER_AGENT) && !IS_IPAD;
   /**
@@ -5969,8 +5969,8 @@
   };
 
   var keycode = createCommonjsModule(function (module, exports) {
-    // Source: http://jsfiddle.net/vWx8V/
-    // http://stackoverflow.com/questions/5603195/full-list-of-javascript-keycodes
+    // Source: https://jsfiddle.net/vWx8V
+    // https://stackoverflow.com/questions/5603195/what-are-the-javascript-keycodes
 
     /**
      * Conenience method returns corresponding value for given keyName or keyCode.
@@ -9012,7 +9012,7 @@
    * you may not use this file except in compliance with the License.
    * You may obtain a copy of the License at
    *
-   *   http://www.apache.org/licenses/LICENSE-2.0
+   *   https://www.apache.org/licenses/LICENSE-2.0
    *
    * Unless required by applicable law or agreed to in writing, software
    * distributed under the License is distributed on an "AS IS" BASIS,

@@ -2,8 +2,9 @@
 /**
  * @package    mahara
  * @subpackage test/core
- * @author     Son Nguyen, Catalyst IT Limited
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @author     Son Nguyen
+ * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
+ * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  * @copyright  portions from Moodle 2012, Petr Skoda {@link http://skodak.org}
  *

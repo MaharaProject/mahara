@@ -4,7 +4,7 @@
  * @package    mahara
  * @subpackage core
  * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  * @copyright  (C) 2012 Catalyst IT Limited Australia Pty Ltd http://catalyst-au.net
  */
@@ -350,49 +350,49 @@ function install_licenses_default() {
     }
 
     $license = new stdClass();
-    $license->name = 'http://creativecommons.org/licenses/by-sa/4.0/';
+    $license->name = 'https://creativecommons.org/licenses/by-sa/4.0/';
     $license->displayname = get_string('licensedisplaynamebysa', 'install');
     $license->shortname = get_string('licenseshortnamebysa', 'install');
     $license->icon = 'license:by-sa.png';
     insert_record('artefact_license', $license);
 
     $license = new stdClass();
-    $license->name = 'http://creativecommons.org/licenses/by/4.0/';
+    $license->name = 'https://creativecommons.org/licenses/by/4.0/';
     $license->displayname = get_string('licensedisplaynameby', 'install');
     $license->shortname = get_string('licenseshortnameby', 'install');
     $license->icon = 'license:by.png';
     insert_record('artefact_license', $license);
 
     $license = new stdClass();
-    $license->name = 'http://creativecommons.org/licenses/by-nd/4.0/';
+    $license->name = 'https://creativecommons.org/licenses/by-nd/4.0/';
     $license->displayname = get_string('licensedisplaynamebynd', 'install');
     $license->shortname = get_string('licenseshortnamebynd', 'install');
     $license->icon = 'license:by-nd.png';
     insert_record('artefact_license', $license);
 
     $license = new stdClass();
-    $license->name = 'http://creativecommons.org/licenses/by-nc-sa/4.0/';
+    $license->name = 'https://creativecommons.org/licenses/by-nc-sa/4.0/';
     $license->displayname = get_string('licensedisplaynamebyncsa', 'install');
     $license->shortname = get_string('licenseshortnamebyncsa', 'install');
     $license->icon = 'license:by-nc-sa.png';
     insert_record('artefact_license', $license);
 
     $license = new stdClass();
-    $license->name = 'http://creativecommons.org/licenses/by-nc/4.0/';
+    $license->name = 'https://creativecommons.org/licenses/by-nc/4.0/';
     $license->displayname = get_string('licensedisplaynamebync', 'install');
     $license->shortname = get_string('licenseshortnamebync', 'install');
     $license->icon = 'license:by-nc.png';
     insert_record('artefact_license', $license);
 
     $license = new stdClass();
-    $license->name = 'http://creativecommons.org/licenses/by-nc-nd/4.0/';
+    $license->name = 'https://creativecommons.org/licenses/by-nc-nd/4.0/';
     $license->displayname = get_string('licensedisplaynamebyncnd', 'install');
     $license->shortname = get_string('licenseshortnamebyncnd', 'install');
     $license->icon = 'license:by-nc-nd.png';
     insert_record('artefact_license', $license);
 
     $license = new stdClass();
-    $license->name = 'http://www.gnu.org/copyleft/fdl.html';
+    $license->name = 'https://www.gnu.org/copyleft/fdl.html';
     $license->displayname = get_string('licensedisplaynamegfdl', 'install');
     $license->shortname = get_string('licenseshortnamegfdl', 'install');
     $license->icon = 'license:gfdl.png';

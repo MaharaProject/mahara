@@ -19,7 +19,7 @@
   * @package    mahara
   * @subpackage module-multirecipientnotification
   * @author     David Ballhausen
-  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
+  * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL
   */
 
 defined('INTERNAL') || die();

@@ -5,7 +5,7 @@
  * @package    mahara
  * @subpackage artefact-file
  * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
  */
@@ -63,7 +63,7 @@ function can_download_artefact($artefact) {
 function zip_filename_from($name) {
     $name = preg_replace('#\s+#', '_', strtolower($name));
     $name = get_string('zipfilenameprefix', 'artefact.file') . '-' . $name;
-    // \pL is used to match any letter in any alphabet (http://php.net/manual/en/regexp.reference.unicode.php)
+    // \pL is used to match any letter in any alphabet (https://www.php.net/manual/en/regexp.reference.unicode.php)
     $name = extension_loaded('mbstring') ? mb_eregi_replace('#[^\pL0-9_\-]+#', '', $name) : preg_replace('#[^\pL0-9_\-]+#', '', $name);
     return $name . '.zip';
 }

@@ -4,7 +4,7 @@
  * @package    mahara
  * @subpackage core
  * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  * @copyright  (C) portions from Moodle, (C) Martin Dougiamas http://dougiamas.com
  */
@@ -5445,7 +5445,7 @@ function num_cpus() {
  */
 function server_busy($threshold = false) {
     // Get current server load information - code from:
-    // http://www.php.net//manual/en/function.sys-getloadavg.php#107243
+    // https://www.php.net//manual/en/function.sys-getloadavg.php#107243
 // For Windows server users you can uncomment the following to try and access server load (experimental - use at own risk)
      if (stristr(PHP_OS, 'win')) {
 //        $wmi = new COM("Winmgmts://");

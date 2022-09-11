@@ -22,7 +22,7 @@ Scenario: Add some externalfeed blocks
     And I click on "Add" in the "Add new block" "Blocks" property
     And I click on blocktype "External feed"
     Then I should see "URL of a valid RSS or ATOM feed"
-    And I fill in "Feed location" with "http://www.apple.com/main/rss/hotnews/hotnews.rss"
+    And I fill in "Feed location" with "https://www.apple.com/main/rss/hotnews/hotnews.rss"
     And I fill in "Items to show" with "2"
     And I enable the switch "Show feed items in full"
     And I click on "Save"

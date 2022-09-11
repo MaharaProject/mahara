@@ -4,7 +4,7 @@
  * @package    mahara
  * @subpackage auth-ldap
  * @author     Howard Miller <howard.miller@udcf.gla.ac.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
+ * @license    https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later
  * @copyright  (C) 2008 Howard Miller <howard.miller@udcf.gla.ac.uk>
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  */

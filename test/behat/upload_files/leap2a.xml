@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"
     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    xmlns:leap2="http://terms.leapspecs.org/"
-    xmlns:categories="http://wiki.leapspecs.org/2A/categories/"
-    xmlns:portfolio="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/export/leap/8/1532482738/"
-    xmlns:mahara="http://wiki.mahara.org/Developer_Area/Import%2F%2FExport/LEAP_Extensions#"
+    xmlns:leap2="https://web.archive.org/web/20100503000634/http://terms.leapspecs.org"
+    xmlns:categories="https://web.archive.org/web/20120819100914/http://wiki.leapspecs.org:80/2A/categories"
+    xmlns:portfolio="http://mahara.site.url/export/leap/8/1532482738/"
+    xmlns:mahara="https://wiki.mahara.org/wiki/Developer_Area/Import//Export/LEAP_Extensions"
 >
     <leap2:version>http://www.leapspecs.org/2010-07/2A/</leap2:version>
-    <id>http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/export/8/1532482738</id>
+    <id>http://mahara.site.url/export/8/1532482738</id>
     <title>Mahara Leap2A Export for Alice User1, 2018/07/25 13:38</title>
     <updated>2018-07-25T13:38:58+12:00</updated>
     <generator uri="https://mahara.org/" version="2008122400">Mahara</generator>
@@ -78,12 +78,12 @@
             <div class="list-group">
         <div id="user_myviewlist" class="list-group">
                 <div class="list-group-item">
-        <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/view/view.php?id=25" class="outer-link">
+        <a href="http://mahara.site.url/view/view.php?id=25" class="outer-link">
             <span class="visually-hidden">Portfolio page Alice 1</span>
         </a>
 
         <h4 class="title list-group-item-heading text-inline">
-            <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/view/view.php?id=25">Portfolio page Alice 1</a>
+            <a href="http://mahara.site.url/view/view.php?id=25">Portfolio page Alice 1</a>
         </h4>
 
         
@@ -153,7 +153,7 @@
     <div class="block" id="user_blockinstance_76_target">
         <div class="friends panel-body">
             <div class="lead text-small text-center">
-            Try <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/user/find.php">searching for new friends</a> to grow your network.
+            Try <a href="http://mahara.site.url/user/find.php">searching for new friends</a> to grow your network.
         </div>
     
 
@@ -193,7 +193,7 @@
     
     
 </div>
-    <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/blocktype/wall/wall.php?id=75" class="detail-link link-blocktype"><span class="icon icon-arrow-circle-right"></span> View whole wall</a>
+    <a href="http://mahara.site.url/blocktype/wall/wall.php?id=75" class="detail-link link-blocktype"><span class="icon icon-arrow-circle-right"></span> View whole wall</a>
 
 
 
@@ -303,12 +303,12 @@
             <div class="list-group">
         <div id="user_myviewlist" class="list-group">
                 <div class="list-group-item">
-        <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/view/view.php?id=25" class="outer-link">
+        <a href="http://mahara.site.url/view/view.php?id=25" class="outer-link">
             <span class="visually-hidden">Portfolio page Alice 1</span>
         </a>
 
         <h4 class="title list-group-item-heading text-inline">
-            <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/view/view.php?id=25">Portfolio page Alice 1</a>
+            <a href="http://mahara.site.url/view/view.php?id=25">Portfolio page Alice 1</a>
         </h4>
 
         
@@ -380,7 +380,7 @@
             
             <div class="collapse" id="user_message_content_institutionmessage_1">
                                     <p class="content-text">You have been invited to join the institution Institution A. You can confirm your membership of this institution on your "Institution settings" page:</p>
-                                        <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/account/institutions.php" class="text-small">
+                                        <a href="http://mahara.site.url/account/institutions.php" class="text-small">
                         Institution membership <span class="icon icon-arrow-right mls icon-sm"></span>
                     </a>
                     
@@ -391,7 +391,7 @@
         
     </div>
     
-    <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/module/multirecipientnotification/inbox.php" class="detail-link link-blocktype"><span class="icon icon-link"></span> Details</a>
+    <a href="http://mahara.site.url/module/multirecipientnotification/inbox.php" class="detail-link link-blocktype"><span class="icon icon-link"></span> Details</a>
             
         
     </div>
@@ -418,7 +418,7 @@
 
 
         
-                            <a href="http://mahara.stevens-lp.dynamic.wgtn.cat-it.co.nz/module/multirecipientnotification/inbox.php" class="detail-link link-blocktype"><span class="icon icon-link"></span> Details</a>
+                            <a href="http://mahara.site.url/module/multirecipientnotification/inbox.php" class="detail-link link-blocktype"><span class="icon icon-link"></span> Details</a>
             
         
     </div>
