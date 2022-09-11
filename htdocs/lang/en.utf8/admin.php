@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage lang
- * @author     Catalyst IT
+ * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -16,7 +16,7 @@ $string['administration'] = 'Administration';
 // Installer
 $string['installation'] = 'Installation';
 $string['release'] = 'version %s (%s)';
-$string['copyright'] = 'Copyright &copy; 2006 onwards, <a href="https://wiki.mahara.org/wiki/Contributors">Catalyst IT and others</a>';
+$string['copyright'] = 'Copyright &copy; 2006 onwards, <a href="https://wiki.mahara.org/wiki/Contributors">Catalyst IT Limited and others</a>';
 $string['installmahara'] = 'Install Mahara';
 $string['component'] = 'Component or plugin';
 $string['componentdeprecated'] = 'Component "%s" deprecated';

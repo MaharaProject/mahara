@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage pieforms
- * @author     Catalyst IT
+ * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
  * @author     Drupal (http://www.drupal.org)
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  * @copyright  2006 Drupal (http://www.drupal.org)

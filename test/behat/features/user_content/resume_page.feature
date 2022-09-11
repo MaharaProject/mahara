@@ -25,7 +25,7 @@ Background:
 
     And the following "employmenthistory" exist:
     | user  | startdate  | enddate     | employer    | employeraddress | jobtitle     | attachment | positiondescription |
-    | UserA | 1 Jan 2009 | 02 Dec 2010 | Catalyst IT | 150 Willis St   | Test Analyst | Image2.png | Software testing can be described as the process which helps to identify the correctness, completeness, security and quality of developed computer software. In a nutshell, testing is finding out how well something works; a good tester will try multiple avenues to break whatever it is they are testing. In computer hardware and software development, testing is used at key checkpoints in the overall process to determine whether objectives are being met. |
+    | UserA | 1 Jan 2009 | 02 Dec 2010 | Catalyst IT Limited | 150 Willis St   | Test Analyst | Image2.png | Software testing can be described as the process which helps to identify the correctness, completeness, security and quality of developed computer software. In a nutshell, testing is finding out how well something works; a good tester will try multiple avenues to break whatever it is they are testing. In computer hardware and software development, testing is used at key checkpoints in the overall process to determine whether objectives are being met. |
 
     And the following "achievements" exist:
     | user  | date       | title                      | attachment | description |
@@ -133,7 +133,7 @@ Scenario: Editing Education and Employment info
     Then I should not see "Code Ninja"
     And I should not see "North American Cultural Studies"
     # Test whether Employment history shows address
-    When I click on "Test Analyst at Catalyst IT"
+    When I click on "Test Analyst at Catalyst IT Limited"
     And I wait "1" seconds
     Then I should see "Address: 150 Willis St"
     # Test whether Education history shows address

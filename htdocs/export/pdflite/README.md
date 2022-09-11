@@ -5,7 +5,7 @@ The PDF lite export format is a proof of concept implementation and thus experim
 This export format allows you to export a stripped down
 portfolio that can then be sent to a similarity / plagiarism checker such as Ouriginal as PDF file. The export only includes file types that the similarity checker accepts. It requires that your learning management system supports these web services calls.
 
-In the case of Moodle (or Tōtara) there is an Ouriginal plugin that [Catalyst IT Europe](https://www.catalyst-eu.net) enhanced to integrate with the HTML Lite web services calls. If you'd like to know more about the changes and when they will be open sourced, please get in touch with Catalyst IT Europe.
+In the case of Moodle (or Tōtara) there is an Ouriginal plugin that [Catalyst IT Limited Europe](https://www.catalyst-eu.net) enhanced to integrate with the HTML Lite web services calls. If you'd like to know more about the changes and when they will be open sourced, please get in touch with Catalyst IT Limited Europe.
 
 If you use a different learning management system, additional changes would be needed as it depends on how the similarity checker integrates with the LMS.
 

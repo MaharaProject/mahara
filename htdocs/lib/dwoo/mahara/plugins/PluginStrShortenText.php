@@ -7,7 +7,7 @@
  * Name:     str_shorten_text<br>
  * Date:     July 10, 2007<br>
  * Purpose:  Fetch the mahara version number if in the admin section
- * @author   Catalyst IT
+ * @author   Catalyst IT Limited
  * @version  1.0
  * @return html to display in the footer.
  */

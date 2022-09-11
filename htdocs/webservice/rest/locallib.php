@@ -3,7 +3,7 @@
  *
  * @package    mahara
  * @subpackage auth-webservice
- * @author     Catalyst IT
+ * @author     Catalyst IT Limited <mahara@catalyst.net.nz>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL version 3 or later
  * @copyright  For copyright information on Mahara, please see the README file distributed with this software.
  *
@@ -13,10 +13,9 @@
  * REST web service implementation classes and methods.
  *
  * @package   webservice
- * @copyright 2009 Moodle Pty Ltd (http://moodle.com)
- * @copyright  Copyright (C) 2011 Catalyst IT (http://www.catalyst.net.nz)
+ * @copyright 2001-3001 Moodle Pty Ltd (http://moodle.com)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author     Piers Harding
+ * @author    Piers Harding
  */
 
 require_once(get_config('docroot') . "webservice/lib.php");

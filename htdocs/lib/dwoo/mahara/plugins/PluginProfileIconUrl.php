@@ -6,7 +6,7 @@
  * Type:     function<br>
  * Date:     June 22, 2006<br>
  * Purpose:  Display a user's profile icon according to mahara rules
- * @author   Catalyst IT
+ * @author   Catalyst IT Limited
  * @version  1.0
  */
 

@@ -217,6 +217,7 @@ This list must take into account the sort option chosen in the block config (Bug
     # Update the shared page "Page UserA_01"
     And I choose "Portfolios" in "Create" from main menu
     And I scroll to the base of id "showmorebtn"
+    And I click on "Show more"
     And I click on "Edit" in "Page UserA_01" card menu
     And I click on "Settings" in the "Toolbar buttons" "Nav" property
     And I set the field "Page description" to "<p>Page 01 (updated)</p>"
