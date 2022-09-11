@@ -103,7 +103,7 @@ class module_lti_launch extends external_api {
         $params = array_combine($keys, func_get_args());
 
         // Get auth instance for institution that issued OAuth key
-        $authinstanceid = get_field('auth_instance', 'id', 'instancename', 'webservice', 'institution', $WEBSERVICE_INSTITUTION);
+        $authinstanceid = get_field('auth_instance', 'id', 'authname', 'webservice', 'institution', $WEBSERVICE_INSTITUTION);
 
         if (!$authinstanceid) {
             $USER->logout();
