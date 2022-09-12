@@ -1246,15 +1246,6 @@ abstract class webservice_server implements webservice_server_interface {
             throw new WebserviceAccessException(get_string('invalidtimedtoken', 'auth.webservice'));
         }
 
-        //assumes that if sid is set then there must be a valid associated session no matter the token type
-        if ($token->sid) {
-            $session = session_get_instance();
-            if (!$session->session_exists($token->sid)) {
-                delete_records('external_tokens', 'sid', $token->sid);
-                throw new WebserviceAccessException(get_string('invalidtokensession', 'auth.webservice'));
-            }
-        }
-
         if ($token->iprestriction and !address_in_subnet(getremoteaddr(), $token->iprestriction)) {
             throw new WebserviceAccessException(get_string('invalidiptoken', 'auth.webservice'));
         }
