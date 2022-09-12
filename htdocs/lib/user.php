@@ -3674,3 +3674,25 @@ function isolatedinstitution_access($userid, $currentuserid = null) {
     }
     return true;
 }
+
+/**
+ * Add a remoteusername to a user
+ *
+ * param string $userid        ID of the person
+ * param string $authinstance  ID of the auth instance
+ * param string $remotename    The remote user name
+ * @return boolean
+ */
+function user_add_remote($userid, $authinstance, $remotename) {
+    return ensure_record_exists('auth_remote_user',
+        (object) array(
+            'authinstance' => $authinstance,
+            'remoteusername' => $remotename
+        ),
+        (object) array(
+            'authinstance' => $authinstance,
+            'remoteusername' => $remotename,
+            'localusr' => $userid
+        )
+    );
+}
