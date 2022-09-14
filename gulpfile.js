@@ -1,24 +1,27 @@
+/**
+ * Gulpfile
+ * Migration from v4 to v5: https://github.com/dlmanning/gulp-sass/tree/master#migrating-to-version-5
+ */
+
 // Include gulp
-var gulp = require('gulp');
+const gulp = require('gulp');
 
 //Polyfill so we don't need >= node 0.12
 require('es6-promise').polyfill();
 
 // Include Our Plugins
-const sass = require('gulp-sass')
-sass.compiler = require('sass')
-const Fiber = require('fibers')
+const sass = require('gulp-sass')(require('sass'));
 
-var path = require('path');
-var cleanCSS = require('gulp-clean-css');
-var autoprefixer = require('gulp-autoprefixer');
-var es = require('event-stream');
-var globule = require('globule');
-var argv = require('yargs').default('production', 'true').argv;
-var gulpif = require('gulp-if');
+const path = require('path');
+const cleanCSS = require('gulp-clean-css');
+const autoprefixer = require('gulp-autoprefixer');
+const es = require('event-stream');
+const globule = require('globule');
+const argv = require('yargs').default('production', 'true').argv;
+const gulpif = require('gulp-if');
 
 // Locate all the themes (they're the directories with a "themeconfig.php" in them)
-var themes = globule.find('htdocs/theme/*/themeconfig.php');
+let themes = globule.find('htdocs/theme/*/themeconfig.php');
 themes = themes.map(function (themepath) {
     themepath = path.join(themepath, '..');
     return themepath;
@@ -26,19 +29,17 @@ themes = themes.map(function (themepath) {
 
 // Turn sass into css
 async function css() {
-    var tasks = themes.map(function (themepath) {
+    const tasks = themes.map(function (themepath) {
 
         console.log("Compiling CSS for " + themepath);
         return gulp.src('sass/**/*.scss', { cwd: themepath })
             .pipe(gulpif(argv.production !== 'false', sass({
                 includePaths: ['./node_modules'],
-                fiber: Fiber
-              }).on('error', sass.logError), sass({
+            }).on('error', sass.logError), sass({
                 style: 'expanded',
                 sourceComments: 'normal'
             }).on('error', sass.logError)))
             .pipe(autoprefixer({
-                browsers: ['last 4 version'],
                 cascade: false
             }))
             .pipe(gulpif(argv.production !== 'false', cleanCSS()))
