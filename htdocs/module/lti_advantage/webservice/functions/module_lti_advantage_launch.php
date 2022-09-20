@@ -77,6 +77,10 @@ class module_lti_advantage_launch extends external_api {
 
     private static function process_resource_launch(array $params, $launch) {
         global $SESSION;
+        if (!isset($params['resource_launch']) || empty($params['resource_launch']['PublicUrl'])) {
+            // No page link
+            redirect();
+        }
         $url = $params['resource_launch']['PublicUrl'];
         $canview = array();
 

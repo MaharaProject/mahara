@@ -49,26 +49,36 @@ if (!array_key_exists('iss', $data)) {
     throw new WebserviceInvalidResponseException($msg);
 }
 $vendor_key = $lti_db->get_vendor_key($data['iss']);
+$product_family_code = !empty($data['https://purl.imsglobal.org/spec/lti/claim/tool_platform']['product_family_code']) ? $data['https://purl.imsglobal.org/spec/lti/claim/tool_platform']['product_family_code'] : false;
 try {
     if ($vendor_key === false) {
         // We could not find an lti_advantage_registration that matched 'iss' in $data.
         $msg = get_string('platformvendorkeynotfound', 'module.lti_advantage', $data['iss']);
         throw new WebserviceInvalidResponseException($msg);
     }
-    if (!key_exists($vendor_key, $data)) {
-        $msg = get_string('platformvendorkeyinvalid', 'module.lti_advantage', implode(', ', array_keys($data)));
+    if ($product_family_code === false) {
+        // We could not find a product_family_code to tell us how to handle the $data.
+        $msg = get_string('productfamilycodenotfound', 'module.lti_advantage');
         throw new WebserviceInvalidResponseException($msg);
     }
-    $userdata = $data[$vendor_key]; // contains user id
-    $params['user_id'] = $userdata['user_id'];
-    $params['ext_user_username'] = $userdata['username'];
 
+    if (file_exists('lib/ProductFamily' . ucfirst($product_family_code) . '.php')) {
+        require_once('lib/ProductFamily' . ucfirst($product_family_code) . '.php');
+    }
+    else {
+        $msg = get_string('productfamilycodeunknown', 'module.lti_advantage', $product_family_code);
+        throw new WebserviceInvalidResponseException($msg);
+    }
+
+    $classname = 'LtiAdvantageProductFamily' . ucfirst($product_family_code);
+    $productfamily = new $classname($data, $vendor_key);
+    $params['user_id'] = $productfamily->get_userdata('userid');
+    $params['ext_user_username'] = $productfamily->get_userdata('username');
     $params['given_name'] = $data['given_name'];
     $params['family_name'] = $data['family_name'];
     $params['email'] = $data['email'];
     $params['iss'] = $data['iss'];
     $params['deployment_id'] = $data['https://purl.imsglobal.org/spec/lti/claim/deployment_id'];
-
     $params['launch_id'] = $launch->get_launch_id();
 
     // get institution
