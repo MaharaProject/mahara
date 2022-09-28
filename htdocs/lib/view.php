@@ -7822,7 +7822,7 @@ class ProgressAction {
                     }
                 }
                 else {
-                    if ($this->view_as == 'owner') {
+                    if ($this->view_as == 'owner' && $view->get('submittedstatus') == View::UNSUBMITTED) {
                         $this->status = self::STATUS_NEEDSACTION;
                         $this->action = self::ACTION_SIGNOFF;
                     }

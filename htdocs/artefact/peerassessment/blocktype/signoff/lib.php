@@ -79,15 +79,20 @@ class PluginBlocktypeSignoff extends MaharaCoreBlocktype {
         else {
             $view = $instance->get_view();
             safe_require('artefact', 'peerassessment');
+            $owneraction = $view->get_progress_action('owner');
+            $manageraction = $view->get_progress_action('manager');
+            $signable = (bool)$owneraction->get_action();
+            $verifiable = (bool)$manageraction->get_action();
+
             $smarty->assign('WWWROOT', get_config('wwwroot'));
             $smarty->assign('view', $view->get('id'));
             // Verify option
             $smarty->assign('showverify', !empty($configdata['verify']));
-            $smarty->assign('verifiable', ArtefactTypePeerassessment::is_verifiable($view));
+            $smarty->assign('verifiable', $verifiable);
             $smarty->assign('verified', ArtefactTypePeerassessment::is_verified($view));
             // Signoff option
             $smarty->assign('showsignoff', !empty($configdata['signoff']));
-            $smarty->assign('signable', ArtefactTypePeerassessment::is_signable($view));
+            $smarty->assign('signable', $signable);
             $smarty->assign('signoff', ArtefactTypePeerassessment::is_signed_off($view));
 
             // We make a couple of dummy forms so we get pieform 'switchbox' markup but we don't want
@@ -96,7 +101,7 @@ class PluginBlocktypeSignoff extends MaharaCoreBlocktype {
                 'type'         => 'switchbox',
                 'title'        => '',
                 'defaultvalue' => ArtefactTypePeerassessment::is_signed_off($view, false),
-                'readonly'     => !ArtefactTypePeerassessment::is_signable($view, false)
+                'readonly'     => !$signable
             );
 
             $form = array('name' => 'dummyform', 'elements' => $element);
