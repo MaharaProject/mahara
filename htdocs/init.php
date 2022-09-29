@@ -532,6 +532,8 @@ if (get_config('externalfilesystem')) {
     }
 }
 
+require('accesscontrol.php');
+
 /*
  * Initializes our performance info early.
  *
