@@ -2179,6 +2179,9 @@ class PluginSearchElasticsearch7 extends PluginSearch {
             }
             else if (isset($server->error)) {
                 $errorstr .= $server->error;
+                if (strpos($server->error, 'SSL certificate problem') !== false) {
+                    $errorstr .= '. ' . get_string('pluginstatusignoresslerror', 'search.elasticsearch7');
+                }
             }
             else {
                 $errorstr .= get_string('errorunknown', 'search.elasticsearch7');
