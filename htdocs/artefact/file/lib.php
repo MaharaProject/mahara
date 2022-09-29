@@ -554,7 +554,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         global $USER;
         $select = '
             SELECT
-                a.id, a.artefacttype, a.mtime, f.size, fi.orientation, fi.isdecorative, fi.alttext, fi.altiscaption, a.title, a.description, a.license, a.licensor, a.licensorurl, a.locked, a.allowcomments, u.profileicon AS defaultprofileicon, a.author,
+                a.id, a.owner, a.group, a.institution, a.artefacttype, a.mtime, f.size, fi.orientation, fi.isdecorative, fi.alttext, fi.altiscaption, a.title, a.description, a.license, a.licensor, a.licensorurl, a.locked, a.allowcomments, u.profileicon AS defaultprofileicon, a.author,
                 COUNT(DISTINCT c.id) AS childcount, COUNT (DISTINCT aa.artefact) AS attachcount, COUNT(DISTINCT va.view) AS viewcount, COUNT(DISTINCT s.id) AS skincount,
                 COUNT(DISTINCT api.id) AS profileiconcount, COUNT(DISTINCT fpa.id) AS postcount';
         $from = '
@@ -663,7 +663,9 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                 $item->allowcomments = (bool) $item->allowcomments;
                 $item->isdecorative = (bool) $item->isdecorative;
                 $item->altiscaption = (bool) $item->altiscaption;
-                $item->icon = call_static_method(generate_artefact_class_name($item->artefacttype), 'get_icon', array('id' => $item->id));
+                $item->icon = call_static_method(generate_artefact_class_name($item->artefacttype), 'get_icon', array('id' => $item->id,
+                                                                                                                      'group' => $item->group,
+                                                                                                                      'institution' => $item->institution));
                 if ($item->size) { // Doing this here now for non-js users
                     $item->size = ArtefactTypeFile::short_size($item->size, true);
                 }
@@ -2563,6 +2565,12 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         }
         if (isset($options['post'])) {
             $url .= '&post=' . $options['post'];
+        }
+        if (isset($options['group'])) {
+            $url .= '&group=' . $options['group'];
+        }
+        if (isset($options['institution'])) {
+            $url .= '&institution=' . $options['institution'];
         }
         if (isset($options['size'])) {
             $url .= '&size=' . $options['size'];
