@@ -48,7 +48,7 @@ else {
     $view = new View($viewid);
 }
 
-if ($USER->has_peer_role_only($view)) {
+if ($USER->has_peer_role_only($view) && !$USER->peers_allowed_content()) {
     json_reply('local', get_string('accessdenied', 'error'));
 }
 

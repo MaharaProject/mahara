@@ -12,6 +12,7 @@
 defined('INTERNAL') || die();
 define('MAXLOGINTRIES', 5);
 require_once(get_config('docroot') . 'lib/user.php');
+// require_once(get_config('libroot') . 'accesscontrol.php');
 $put = array();
 
 
@@ -1121,6 +1122,7 @@ class User {
             $fileispublic = ($a->get('id') == $publicfolderid)
                          || (($a->get('institution') == 'mahara') && (bool)get_field('artefact', 'id', 'id', $a->get('id'), 'parent', $publicfolderid));
             if ($fileispublic) {
+                AccessControl::log('User::can_view_artefact() - TRUE: Artefact is in the public site folder');
                 return true;
             }
         }
@@ -1128,23 +1130,37 @@ class User {
         $parent = $a->get_parent_instance();
         if ($parent) {
             if (!$this->can_view_artefact($parent)) {
+                AccessControl::log('User::can_view_artefact() - FALSE: Artefact is in a folder that the user cannot see');
                 return false;
             }
         }
-        if ($this->get('admin')
-            || ($this->get('id') and $this->get('id') == $a->get('owner'))
-            || ($a->get('institution') and $this->is_institutional_admin($a->get('institution')))
-            || ($a->get('institution') && $this->in_institution($a->get('institution'))
-                && in_array($a->get('artefacttype'), array('blog', 'blogpost')))
-            ) {
+
+        if ($this->get('admin') && $a->get('institution')) {
+            AccessControl::log('User::can_view_artefact() - TRUE: User is admin and artefact institution is set to ' . $a->get('institution'));
             return true;
         }
+        if ($this->get('id') and $this->get('id') == $a->get('owner')) {
+            AccessControl::log('User::can_view_artefact() - TRUE: User is owner of artefact');
+            return true;
+        }
+        if ($a->get('institution') and $this->is_institutional_admin($a->get('institution'))) {
+            AccessControl::log('User::can_view_artefact() - TRUE: User is institutional admin of artefact institution ' . $a->get('institution'));
+            return true;
+        }
+        if ($a->get('institution') && $this->in_institution($a->get('institution'))
+            && in_array($a->get('artefacttype'), array('blog', 'blogpost'))) {
+            AccessControl::log('User::can_view_artefact() - TRUE: User is in institution ' . $a->get('institution') . ' and artefact is a blog or blogpost');
+            return true;
+        }
+
         // public site files
-        else if ($a->get('institution') == 'mahara') {
+        if ($a->get('institution') == 'mahara') {
+            AccessControl::log('User::can_view_artefact() - Institution is mahara');
             $thisparent = $a->get('parent');
             // if we are looking at the public folder or items in it
             if (($a->get('id') == ArtefactTypeFolder::admin_public_folder_id())
                 ||  (!empty($thisparent) && $thisparent == ArtefactTypeFolder::admin_public_folder_id())) {
+                AccessControl::log('User::can_view_artefact() - TRUE: Artefact is in public site folder the admin can see');
                 return true;
             }
             //  Journals
@@ -1152,22 +1168,38 @@ class User {
                 $views = $a->get_views_instances();
                 foreach ($views as $view) {
                     if (can_view_view($view->get('id'))) {
+                        AccessControl::log('User::can_view_artefact() - TRUE: Artefact is a blog and the user can see a view that uses it');
                         return true;
                     }
                 }
             }
         }
         if ($a->get('group')) {
+            AccessControl::log('User::can_view_artefact() - Artefact is in a group');
             if ($USER->get('id') == $a->get('author')) {
                 // uploader of group file should always have access to it
+                AccessControl::log('User::can_view_artefact() - TRUE: User is the author of the artefact');
                 return true;
             }
             // Only group artefacts can have artefact_access_role & artefact_access_usr records
-            return (bool) count_records_sql("SELECT COUNT(*) FROM {artefact_access_role} ar
+            $count = count_records_sql("SELECT COUNT(*) FROM {artefact_access_role} ar
                 INNER JOIN {group_member} g ON ar.role = g.role
-                WHERE ar.artefact = ? AND g.member = ? AND ar.can_view = 1 AND g.group = ?", array($a->get('id'), $this->get('id'), $a->get('group')))
-                || record_exists('artefact_access_usr', 'usr', $this->get('id'), 'artefact', $a->get('id'));
+                WHERE ar.artefact = ? AND g.member = ? AND ar.can_view = 1 AND g.group = ?", array($a->get('id'), $this->get('id'), $a->get('group')));
+            if ((bool) $count) {
+                AccessControl::log('User::can_view_artefact() - TRUE: Artefact has a match on artefact_access_role & group_member');
+                return true;
+            }
+            $exists = record_exists('artefact_access_usr', 'usr', $this->get('id'), 'artefact', $a->get('id'));
+            if ($exists) {
+                AccessControl::log('User::can_view_artefact() - TRUE: Artefact has a match on artefact_access_usr');
+                return true;
+            }
+            else {
+                AccessControl::log('User::can_view_artefact() - FALSE: Artefact has no match on artefact_access_usr');
+                return false;
+            }
         }
+        AccessControl::log('User::can_view_artefact() - FALSE: No match on can_view_artefact()');
         return false;
     }
 

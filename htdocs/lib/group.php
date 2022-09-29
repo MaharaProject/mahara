@@ -2764,6 +2764,9 @@ function group_get_groupinfo_data($group) {
  */
 function group_get_homepage_view($groupid) {
     $v = get_record('view', 'group', $groupid, 'type', 'grouphomepage');
+    if (!$v) {
+        throw new ViewNotFoundException(get_string('groupnotfound', 'group', $groupid));
+    }
     return new View($v->id, (array)$v);
 }
 
