@@ -256,4 +256,25 @@ class PluginBlocktypeFolder extends MaharaCoreBlocktype {
         }
         return $artefacts;
     }
+
+    public static function shows_details_in_modal(BlockInstance $instance) {
+        $configdata = $instance->get('configdata');
+        return isset($configdata['artefactid']);
+    }
+
+    public static function render_details_in_modal(BlockInstance $instance) {
+        $artefactid = param_integer('artefactid', null);
+        if ($artefactid) {
+            // render the folder based on the new artefact id when we want to render a sub folder
+            $configdata = $instance->get('configdata');
+            $configdata['artefactid'] = $artefactid;
+            $instance->set('configdata', $configdata);
+        }
+        $html = self::render_instance($instance);
+        return array(
+           'html' => $html,
+           'artefactid' =>  $instance->get('configdata')['artefactid'],
+           'javascript'=> 'activateModalLinks();',
+        );
+    }
 }

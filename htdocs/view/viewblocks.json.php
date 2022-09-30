@@ -80,9 +80,10 @@ else {
         }
         $title = $block->get('title');
     }
-    if ($artefactid) {
+    if (empty($rendered) && $artefactid) {
         $rendered = $artefact->render_self($options);
     }
+
     if (!empty($rendered['javascript'])) {
         $html = '<script>' . $rendered['javascript'] . '</script>';
     }
