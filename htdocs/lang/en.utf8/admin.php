@@ -1531,6 +1531,32 @@ $string['withselectedcontentdelete'] = 'Delete selected items from the export qu
 $string['withselectedcontentrelease'] = 'Release selected items';
 $string['allothers'] = 'All others';
 
+// Export portfolios
+$string['cli_portfolio_export_info'] = 'This command-line PHP script allows you to export account holder\'s portfolios in HTML or Leap2A format.';
+$string['cli_portfolio_export_filenotfound'] = 'File not found';
+$string['cli_portfolio_export_invalidformat'] = 'Invalid export format';
+$string['cli_portfolio_export_invalidfilter'] = 'Invalid filter key';
+$string['cli_portfolio_export_filepath'] = 'Path to CSV file that contains a list of usernames, e.g. /tmp/accounts_bulkexport.csv';
+$string['cli_portfolio_export_format'] = 'Export format type, e.g. "html" for HTML, "leap" for Leap2A, or "pdf" for PDF format';
+$string['cli_portfolio_export_offset'] = 'Offset to be used when fetching from the database when --filepath is not set.';
+$string['cli_portfolio_export_limit'] = 'Limit for the results when fetching from the database when --filepath is not set.';
+$string['cli_portfolio_export_filterkey'] = 'Valid filter columns: firstname, lastname, email, or username';
+$string['cli_portfolio_export_filtervalue'] = "Filter column value to begin with, e.g. 'Tes' to find Test and Tesla when --filepath is not set.";
+$string['cli_portfolio_export_infolimitfilter'] = 'Exporting portfolios up to %s account(s) based on column "%s" beginning with "%s"';
+$string['cli_portfolio_export_infofilter'] = 'Exporting portfolios for all accounts based on column "%s" beginning with "%s"';
+$string['cli_portfolio_export_infolimit'] = 'Exporting portfolios up to %s account(s)';
+$string['cli_portfolio_export_infoout'] = 'Exporting portfolios for all valid accounts';
+$string['cli_portfolio_export_users'] = 'Dry run: Found %s account(s) and %s portfolios that would be exported in format "%s".';
+$string['cli_portfolio_export_fromcsv'] = 'Selecting accounts from CSV file';
+$string['cli_portfolio_export_nousers'] = 'No accounts found';
+$string['cli_portfolio_export_username'] = 'Export started for username: %s';
+$string['cli_portfolio_export_username_skipped'] = '... skipped: no portfolios to export for %s';
+$string['cli_portfolio_export_userfile_failed'] = 'Failed to export. Reason: %s';
+$string['cli_portfolio_export_zip'] = 'Please wait, creating bundled ZIP file...';
+$string['cli_portfolio_export_zipout'] = 'Exported %s account(s) to %s';
+$string['cli_param_dryrun_export'] = 'Dry run to indicate what will happen. This is set to "true" by default. Set -d=false to actually run the export.';
+$string['cli_time_elapsed'] = 'Time taken: %s';
+
 // Behat variables script
 $string['behatvariables'] = 'Behat steps';
 $string['behatvariablesdesc'] = 'Tool to find available Behat steps quickly';
