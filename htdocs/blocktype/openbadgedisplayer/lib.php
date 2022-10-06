@@ -206,7 +206,7 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlockType {
             $res = mahara_http_request(
                     array(
                         CURLOPT_URL        => $url,
-                        CURLOPT_HTTPHEADER => array('Authorization: Token ' . $uid),
+                        CURLOPT_HTTPHEADER => array('Authorization: Bearer ' . $uid),
                     )
             );
         }
@@ -229,7 +229,7 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlockType {
                     $res2 = mahara_http_request(
                         array(
                             CURLOPT_URL        => $url,
-                            CURLOPT_HTTPHEADER => array('Authorization: Token ' . $uid),
+                            CURLOPT_HTTPHEADER => array('Authorization: Bearer ' . $uid),
                         )
                     );
                     $badge = json_decode($res2->data);
@@ -500,7 +500,7 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlockType {
                     $res = mahara_http_request(
                         array(
                             CURLOPT_URL        => $backpack_url . 'v2/users/self',
-                            CURLOPT_HTTPHEADER => array('Authorization: Token ' . $token),
+                            CURLOPT_HTTPHEADER => array('Authorization: Bearer ' . $token),
                         )
                     );
                     $res = json_decode($res->data);
@@ -595,7 +595,7 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlockType {
         $backpack_url = self::get_backpack_url($host);
         if ($backpack_url == 'https://api.badgr.io/') {
             $res = mahara_http_request(array(CURLOPT_URL => $backpack_url . "v2/backpack/collections",
-                                             CURLOPT_HTTPHEADER => array('Authorization: Token ' . $uid,
+                                             CURLOPT_HTTPHEADER => array('Authorization: Bearer ' . $uid,
                                                                          'accept: application/json')));
         }
         else {
@@ -753,4 +753,52 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlockType {
         }
         return $configdata;
     }
+
+    /**
+     * Cron refresh service for badgr tokens
+-    */
+    public static function get_cron() {
+        $refresh = new stdClass();
+        $refresh->callfunction = 'refresh_badgr_tokens';
+        $refresh->minute = '*/15';
+        return array($refresh);
+    }
+
+    /**
+     * Refresh the badgr token from upstream
+     *
+     * We refresh all the badgr tokens that are about to expire in the next 900 seconds (15 minutes)
+     * rather than all badgr tokens at once to reduce load on curl requests.
+     * We run this function every 15 minutes via cron so if you want to adjust how often it processes
+     * things you need to adjust both this function and the cron timing.
+     */
+    public static function refresh_badgr_tokens() {
+        $sources = PluginBlocktypeOpenbadgedisplayer::get_backpack_source();
+        $intcast = is_postgres() ? '::int' : '';
+        if ($oldtokens = get_records_sql_array("SELECT uap1.*, uap2.value AS refresh_token
+                                                FROM {usr_account_preference} uap1
+                                                LEFT JOIN {usr_account_preference} uap2 ON (uap2.usr = uap1.usr AND uap2.field = ?)
+                                                WHERE uap1.field = ? AND uap1.value" . $intcast . " - ? < 900", array('badgr_token_reset', 'badgr_token_expiry', time()))) {
+            foreach ($oldtokens as $token) {
+                // Update tokens
+                $res = mahara_http_request(
+                    array(
+                        CURLOPT_URL        => $sources['badgr'] . 'o/token',
+                        CURLOPT_POST       => 1,
+                        CURLOPT_POSTFIELDS => 'grant_type=refresh_token&refresh_token=' . $token->refresh_token,
+                    )
+                );
+                $json = json_decode($res->data);
+                if (isset($json->access_token)) {
+                    set_account_preference($token->usr, 'badgr_token', $json->access_token);
+                    set_account_preference($token->usr, 'badgr_token_expiry', time() + $json->expires_in);
+                    set_account_preference($token->usr, 'badgr_token_reset', $json->refresh_token);
+                }
+                else {
+                    log_info($json->error);
+                }
+            }
+        }
+    }
+
 }
