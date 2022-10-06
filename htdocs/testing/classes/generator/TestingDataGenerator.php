@@ -2791,7 +2791,7 @@ EOD;
         // create artefact
         $classname = generate_artefact_class_name('coverletter');
         require_once('embeddedimage.php');
-        $coverletter = EmbeddedImage::prepare_embedded_images('<p>'.$record['content'].'</p>', 'resumecoverletter', $userid );
+        $coverletter = EmbeddedImage::prepare_embedded_images('<p>'.$record['content'].'</p>', 'coverletter', $userid );
 
         $coverletterartefact = new $classname(0, array(
             'owner' => $userid,
@@ -2979,7 +2979,7 @@ EOD;
         $userid = $this->get_user_id($record['user']);
         $classname = generate_artefact_class_name('interest');
         require_once('embeddedimage.php');
-        $interests .= EmbeddedImage::prepare_embedded_images('<p><strong>'.$record['interest'].'&nbsp;</strong>'.$record['description'].'</p>', 'resumeinterest', $userid);
+        $interests .= EmbeddedImage::prepare_embedded_images('<p><strong>'.$record['interest'].'&nbsp;</strong>'.$record['description'].'</p>', 'interest', $userid);
 
         $artefact = new $classname(0, array(
             'owner' => $userid,
