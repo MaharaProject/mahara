@@ -32,9 +32,10 @@ class EmbeddedImage {
      * @param int $resourceid The resourcetype ID, e.g. the block instance using the resource (artefact)
      * @param int $groupid The id of the group the resource is in if applicable
      * @param int $userid The user trying to embed the image (current user if null)
-     * @return string The updated $fieldvalue
+     * @param int $checkonly Check if the fieldvalue needs to embed images only
+     * @return string|boolean The updated $fieldvalue
      */
-    public static function prepare_embedded_images($fieldvalue, $resourcetype, $resourceid, $groupid = NULL, $userid = NULL) {
+    public static function prepare_embedded_images($fieldvalue, $resourcetype, $resourceid, $groupid = NULL, $userid = NULL, $checkonly = false) {
 
         if (empty($fieldvalue) || empty($resourcetype) || empty($resourceid)) {
             return $fieldvalue;
@@ -70,9 +71,15 @@ class EmbeddedImage {
             $query = '//img[starts-with(@src,"' . $srcstart . '")]';
             $images = $xpath->query($query);
             if (!$images->length) {
-                self::remove_embedded_images($resourcetype, $resourceid);
-                return $fieldvalue;
+                if ($checkonly) {
+                    return false;
+                }
+                else {
+                    self::remove_embedded_images($resourcetype, $resourceid);
+                    return $fieldvalue;
+                }
             }
+            $hasimage = false;
             foreach ($images as $image) {
                 // is this user allowed to publish this image?
                 $imgsrc = $image->getAttribute('src');
@@ -94,6 +101,7 @@ class EmbeddedImage {
                             continue;
                         }
                         else {
+                            $hasimage = true;
                             $publicimages[] = $imgid;
                             $imgispublic = get_field('artefact_file_embedded', 'id', 'fileid', $imgid, 'resourcetype', $resourcetype, 'resourceid', $resourceid);
                             // add to embedded_images table for public access, specifiying context
@@ -144,6 +152,9 @@ class EmbeddedImage {
                 }
                 $image->parentNode->replaceChild($imgnode, $image);
             }
+            if ($checkonly) {
+                return $hasimage;
+            }
             self::remove_embedded_images($resourcetype, $resourceid, $publicimages);
 
             // we only want the fragments inside the body tag created by new DOMDocument
@@ -157,6 +168,31 @@ class EmbeddedImage {
             $fieldvalue = substr($dummydom->saveHTML($dummydom->getElementsByTagName('div')->item(0)), strlen('<div>'), -strlen('</div>'));
             return $fieldvalue;
         }
+    }
+
+    /**
+     * Check to see if the markup contains an embedded image.
+     *
+     * This is useful if we just want to know if the markup contains an embedded image without
+     * executing the delete embedded images part of the prepare_embedded_images() function.
+     * Needed when checking other parts of a composite resume artefact when we need to find out if
+     * any of the artefact's items has an embedded image (not just the particular artefact item we
+     * are currently saving).
+     *
+     * @param string $fieldvalue The HTML source of the text body added to the TinyMCE text editor
+     * @param string $resourcetype The type of resource which the TinyMCE editor is used in
+     * @param int $resourceid The resourcetype ID, e.g. the block instance using the resource (artefact)
+     * @param int $compositeid The id of the composite
+     * @param int $userid The user trying to embed the image (current user if null)
+     * @return boolean An embedded image exists
+     */
+    public static function has_embedded_image($fieldvalue, $resourcetype, $resourceid, $userid = NULL) {
+
+        if (empty($fieldvalue) || empty($resourcetype) || empty($resourceid)) {
+            // not enough info
+            return false;
+        }
+        return self::prepare_embedded_images($fieldvalue, $resourcetype, $resourceid, NULL, $userid, true);
     }
 
     /**
