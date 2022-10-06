@@ -3738,6 +3738,7 @@ function artefact_in_view($artefact, $view) {
                 ON v.skin = s.id
             WHERE v.id = ? AND ? in (s.bodybgimg, s.headingbgimg)
     ";
+
     $params = array_merge($params, array($view, $artefact->get('id')));
 
     return record_exists_sql($sql, $params);
