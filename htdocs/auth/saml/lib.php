@@ -222,7 +222,7 @@ class AuthSaml extends Auth {
             foreach ($idaffiliations as $idaffiliation) {
                 if ($roleaffiliationdelimiter) {
                     list($myid, $myaffiliation) = explode($roleaffiliationdelimiter, $idaffiliation);
-                    $mymap = $this->get_affiliation_map($myaffiliation);
+                    $mymap = $this->get_affiliation_from_map($myaffiliation);
                     if ($mymap) {
                         $affiliations[$mymap]['id'] = $idaffiliation;
                         if ($isremote) {
@@ -237,7 +237,7 @@ class AuthSaml extends Auth {
             foreach ($emailaffiliations as $emailaffiliation) {
                 if ($roleaffiliationdelimiter) {
                     list($myrole, $myaffiliation) = explode($roleaffiliationdelimiter, $emailaffiliation);
-                    $mymap = $this->get_affiliation_map($myaffiliation);
+                    $mymap = $this->get_affiliation_from_map($myaffiliation, true);
                     if ($mymap) {
                         $affiliations[$mymap]['email'] = $emailaffiliation;
                     }
@@ -250,7 +250,7 @@ class AuthSaml extends Auth {
             foreach ($roleaffiliations as $roleaffiliation) {
                 if ($roleaffiliationdelimiter) {
                     list($myrole, $myaffiliation) = explode($roleaffiliationdelimiter, $roleaffiliation);
-                    $mymap = $this->get_affiliation_map($myaffiliation);
+                    $mymap = $this->get_affiliation_from_map($myaffiliation);
                     if ($mymap) {
                         $affiliations[$mymap]['roles'][] = $myrole;
                     }
@@ -713,12 +713,13 @@ class AuthSaml extends Auth {
      *
      * @see local/lib/AuthSamlLocal.api.php
      * @param string $external The institution name
+     * @param string $partial  Only partial match on the last part of the external institution name.
      * @return string The Mahara institution name or an empty string if no match
      */
-    private function get_affiliation_map($external) {
+    private function get_affiliation_from_map($external, $partial=false) {
         if (class_exists('AuthSamlLocal')) {
             // @phpstan-ignore-next-line For local modifications.
-            return AuthSamlLocal::get_affiliation_map($external);
+            return AuthSamlLocal::get_affiliation_from_map($external, $partial);
         }
         return '';
     }
