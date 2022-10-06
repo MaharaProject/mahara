@@ -462,7 +462,7 @@ function profileform_submit(Pieform $form, $values) {
         else {
             if (!isset($profilefields[$element]) || $values[$element] != $profilefields[$element]) {
                 if ($element == 'introduction') {
-                    $newintroduction = EmbeddedImage::prepare_embedded_images($values[$element], 'profileintrotext', $USER->get('id'));
+                    $newintroduction = EmbeddedImage::prepare_embedded_images($values[$element], 'introduction', $USER->get('id'));
                     $values[$element] = $newintroduction;
                 }
                 $classname = generate_artefact_class_name($element);
@@ -480,6 +480,19 @@ function profileform_submit(Pieform $form, $values) {
     }
     catch (Exception $e) {
         profileform_reply($form, PIEFORM_ERR, get_string('profilefailedsaved','artefact.internal'));
+    }
+    // Check if we need to update any blocks to get the correct embedded images
+    if ($blocks = get_column_sql("SELECT DISTINCT va.block
+                                  FROM {view_artefact} va
+                                  JOIN {block_instance} bi ON bi.id = va.block
+                                  JOIN {view} v ON v.id = va.view
+                                  WHERE bi.blocktype IN ('profileinfo')
+                                  AND v.owner = ?", array($USER->get('id')))) {
+        foreach ($blocks as $blockid) {
+            $bi = new BlockInstance($blockid);
+            $bi->set('dirty', true);
+            $bi->commit();
+        }
     }
 
     handle_event('updateuser', $USER->get('id'));
