@@ -134,7 +134,7 @@ else {
                 $imagevisible = false;
 
                 // Check for resume elements in pages
-                $resumelements = array('resumecoverletter','resumeinterest','personalgoal','academicgoal','careergoal','personalskill','academicskill','workskill','profileintrotext');
+                $resumelements = array('coverletter','interest','personalgoal','academicgoal','careergoal','personalskill','academicskill','workskill','profileintrotext');
                 foreach ($resumelements as $element) {
                     $resourceid = param_integer($element, null);
                     if ($resourceid && $file instanceof ArtefactTypeImage) {
