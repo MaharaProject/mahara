@@ -88,7 +88,7 @@ function xmldb_blocktype_openbadgedisplayer_upgrade($oldversion = 0) {
                     activity_occurred('maharamessage', array(
                         'users'   => array($record->usr),
                         'subject' => get_string_from_language($lang, 'resetobsoletebadgrtokensubject', 'blocktype.openbadgedisplayer'),
-                        'message' => get_string_from_language($lang, 'resetobsoletebadgrtokenmessage', 'blocktype.openbadgedisplayer', display_name($user, null, true), $sitename),
+                        'message' => get_string_from_language($lang, 'resetobsoletebadgrtokenmessage1', 'blocktype.openbadgedisplayer', display_name($user, null, true), $sitename),
                         'url'     => get_config('wwwroot') . 'blocktype/openbadgedisplayer/badgrtoken.php',
                     ));
                     delete_records('usr_account_preference', 'field', 'badgr_token');
