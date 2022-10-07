@@ -942,20 +942,20 @@ class PluginSearchElasticsearch extends PluginSearch {
             else {
                 $item = new $ES_class($dbrecord);
                 $deleteitem = $item->getisDeleted();
+                if (!$deleteitem) {
+                    // We have an item, it is not deleted, add it for bulk indexing.
+                    $documents[$record->type][$record->id] = array(
+                        'index' => PluginSearchElasticsearch::get_write_indexname(),
+                        'type'  => $record->type,
+                        'id'    => $record->itemid,
+                        'body'  => $item->getMapping(),
+                    );
+                }
             }
 
             // Mark item for bulk deletion from index
             if ($deleteitem == true) {
                 $deletions[$record->type][$record->id] = $record->itemid;
-            }
-            // Add item for bulk index
-            else {
-                $documents[$record->type][$record->id] = array(
-                    'index' => PluginSearchElasticsearch::get_write_indexname(),
-                    'type'  => $record->type,
-                    'id'    => $record->itemid,
-                    'body'  => $item->getMapping(),
-                );
             }
         }
         return array(
@@ -1175,25 +1175,28 @@ class PluginSearchElasticsearch extends PluginSearch {
    }
 
    /**
-    * Creates an \Elastica\Client object, filling in the host and
-    * port with the values from the elasticsearch plugin's admin screen.
-    * If you wanted to make other changes to how we connect to elasticsearch,
-    * this would be a good place to do it.
+    * Creates an \Elasticsearch\Client object
     *
-    * @return \Elastica\Client
+    * Fills in the host and port with the values from the elasticsearch
+    * plugin's admin screen. If you wanted to make other changes to how we
+    * connect to elasticsearch, this would be a good place to do it.
+    *
+    * @param string $type The type of client to create. Either 'read' or 'write'.
+    *
+    * @return \Elasticsearch\Client
     */
    public static function make_client($type='read') {
        $clientopts = self::get_client_config($type);
 
        $clientBuilder = ClientBuilder::create();
+       $clientBuilder
+           ->setHosts($clientopts['hosts'])
+           ->setConnectionParams([
+            'client' => [
+                'curl' => $clientopts['curlopts']
+            ]
+        ]);
 
-       // php versions < 5.6.6 don't have JSON_PRESERVE_ZERO_FRACTION defined
-       if (version_compare(phpversion(), '5.6.6', '<') || !defined('JSON_PRESERVE_ZERO_FRACTION')) {
-           $clientBuilder->setHosts($clientopts['hosts'])->setConnectionParams(['client' => ['curl' => $clientopts['curlopts']]])->allowBadJSONSerialization();
-       }
-       else {
-           $clientBuilder->setHosts($clientopts['hosts'])->setConnectionParams(['client' => ['curl' => $clientopts['curlopts']]]);
-       }
        $client = $clientBuilder->build();
 
        return $client;
@@ -1421,7 +1424,7 @@ class PluginSearchElasticsearch extends PluginSearch {
        if ($aggregates['totalresults'] > 0) {
            ElasticsearchType_event_log::process_aggregations($aggmap, $aggregates['aggregations'], true, array('GroupId', 'EventType', 'ResourceType', 'OwnerType'));
            if (!empty($aggregates['aggregations']['GroupId']['buckets'])) {
-               $groups = array_slice($aggregates['aggregations']['GroupId']['buckets'], $offset, $limit, true);
+               $groups = array_slice($aggregates['aggregations']['GroupId']['buckets'], 0, null, true);
                foreach($groups as $k => $group) {
                    if (isset($aggmap[$group['key'] . $sorttypeaggmap]) && $aggmap[$group['key'] . $sorttypeaggmap] > 0) {
                        $groupids[$k] = $group['key'];
@@ -1441,7 +1444,7 @@ class PluginSearchElasticsearch extends PluginSearch {
      *
      * @return array<int,array> The $aggmap and $aggregates.
      */
-    public static function report_collaboration_stats_table($userids, $start, $end) {
+    public static function report_collaboration_stats_table($usrids, $start, $end) {
         $options = [
             'range' => [
                 'range' => [
@@ -1677,7 +1680,7 @@ class ElasticsearchFilterAcl
                 );
                 $this->params['should'][] = $elasticaFilterInstitutions;
             }
-            else if (empty($user_institutions) && is_isolated()) {
+            else if (is_isolated()) {
                 $elasticaFilterInstitutions = array(
                         'terms' => array(
                                 'access.institutions' => array('mahara'),
@@ -1967,11 +1970,11 @@ class ElasticsearchPseudotype_all
      *       2nd:    - retrieves the results of the first non empty facet term for display in the tab
      *               - retrieves the secondary facet to enable / disable the filter items
      *       3nd:    - retrieves the results with all filters applied
-     * @param unknown $query_string
-     * @param unknown $limit
-     * @param unknown $offset
-     * @param unknown $options
-     * @param unknown $mainfacetterm
+     * @param string $query_string
+     * @param int $limit
+     * @param int $offset
+     * @param array $options
+     * @param string $mainfacetterm
      * @param unknown $USER
      * @return multitype:number boolean unknown Ambiguous <boolean, NULL> Ambiguous <boolean, unknown> multitype:multitype:string number  Ambiguous <string, unknown> |multitype:multitype:
      */
@@ -1982,7 +1985,7 @@ class ElasticsearchPseudotype_all
                 'limit'   => $limit,
                 'offset'  => $offset,
                 'data'    => false,
-                'selected' => (isset($mainfacetterm) && strlen($mainfacetterm)> 0) ? $mainfacetterm : false,
+                'selected' => (strlen($mainfacetterm) > 0) ? $mainfacetterm : false,
                 'totalresults' => 0,
                 'facets'  => array(
                         array('term' => "Text", 'count' => 0, 'display' => "Text"),
@@ -2194,11 +2197,6 @@ class ElasticsearchPseudotype_all
         $results = $client->search($params);
         $result['count'] = $results['hits']['total'];
 
-        function starts_with_upper($str) {
-            $chr = mb_substr ($str, 0, 1, "UTF-8");
-            return mb_strtolower($chr, "UTF-8") != $chr;
-        }
-
         $cleanuphighlight = function($str) {
             $str = strip_tags($str, '<span>');
             if (strpos($str, '<') > strpos($str, '>')) {
@@ -2229,7 +2227,7 @@ class ElasticsearchPseudotype_all
                 if (!empty($tmp['highlight'])) {
                     $highlights = array_map($cleanuphighlight, $tmp['highlight']);
                     $highlight = implode(' ... ', $highlights);
-                    if (substr($highlight, 0, 1) !== '<' && !starts_with_upper(strip_tags($highlight))) {
+                    if (substr($highlight, 0, 1) !== '<' && !self::starts_with_upper(strip_tags($highlight))) {
                         $highlight = '... ' . $highlight;
                     }
                     if (substr($highlight, -1, 1) !== '.' && substr($highlight, -1, 1) !== '>') {
@@ -2250,6 +2248,17 @@ class ElasticsearchPseudotype_all
         $result['data'] = $records;
 
         return $result;
+    }
+
+    /**
+     * Does the string start with an upper case letter?
+     *
+     * @param string $str
+     * @return boolean
+     */
+    public static function starts_with_upper($str) {
+        $chr = mb_substr ($str, 0, 1, "UTF-8");
+        return mb_strtolower($chr, "UTF-8") != $chr;
     }
 
     /**
@@ -2336,7 +2345,7 @@ class ElasticsearchPseudotype_all
      * Return the first entry in $data which has a non-zero count.
      *
      *  @param $data - an array with term, count and display keys.
-     *  @return a facet name.
+     *  @return string a facet name.
      */
     public static function getSelectedFacet($data) {
         foreach ($data as $key => $value) {
@@ -2344,6 +2353,7 @@ class ElasticsearchPseudotype_all
                 return $key;
             }
         }
+        return '';
     }
 
 }

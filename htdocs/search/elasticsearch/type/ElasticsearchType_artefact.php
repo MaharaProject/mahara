@@ -406,6 +406,7 @@ class ElasticsearchType_artefact extends ElasticsearchType {
 
         // Thumb
         if ($record->artefacttype == 'image' || $record->artefacttype == 'profileicon') {
+            $size = '';
             if (isset ( $record->width ) && isset ( $record->height ) && intval ( $record->width ) > 0 && intval ( $record->height ) > 0) {
                 if ($record->width > $record->height) {
                     $size = '30x' . intval ( $record->height * 30 / $record->width );

@@ -731,7 +731,7 @@ function get_records_sql_assoc($sql, array $values = null, $limitfrom = '', $lim
  * @param array $values When using prepared statements, this is the value array.
  * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
  * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
- * @return mixed an array of objects, or false if no records were found.
+ * @return array|false an array of objects, or false if no records were found.
  * @throws SQLException
  */
 function get_records_sql_array($sql, array $values = null, $limitfrom = '', $limitnum = '') {
