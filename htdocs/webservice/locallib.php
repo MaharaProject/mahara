@@ -146,13 +146,6 @@ define('PARAM_STRINGID',    'stringid');
 
 ///// DEPRECATED PARAM TYPES OR ALIASES - DO NOT USE FOR NEW CODE  /////
 /**
- * PARAM_CLEAN - obsoleted, please use a more specific type of parameter.
- * It was one of the first types, that is why it is abused so much ;-)
- * @deprecated since 2.0
- */
-define('PARAM_CLEAN',    'clean');
-
-/**
  * PARAM_INTEGER - deprecated alias for PARAM_INT
  */
 define('PARAM_INTEGER',  'int');
@@ -288,15 +281,6 @@ function clean_param($param, $type) {
         // no cleaning, but strip leading and trailing whitespace.
         case PARAM_RAW_TRIMMED:
             return trim($param);
-
-        // General HTML cleaning, try to use more specific type if possible
-        case PARAM_CLEAN:
-            // this is deprecated!, please use more specific type instead
-            if (is_numeric($param)) {
-                return $param;
-            }
-            // Sweep for scripts, etc
-            return clean_text($param);
 
         // clean html fragment
         case PARAM_CLEANHTML:
@@ -609,7 +593,7 @@ class external_settings {
     /**
      * Clone - private - cannot be cloned
      */
-    private final function __clone() {
+    private function __clone() {
     }
 
     /**

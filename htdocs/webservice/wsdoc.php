@@ -44,12 +44,12 @@ else if ($functionname) {
 if (empty($dbfunction)) {
     define('TITLE', get_string('function', 'auth.webservice') . ': ' . get_string('functionlist', 'auth.webservice'));
     $dbfunctions = get_records_array('external_functions', null, null, 'name');
+    $dbfunctionlist = [];
     foreach ($dbfunctions as $k => $v) {
         $dbfunctionlist[$v->classname][] = $v;
     }
     $smarty = smarty();
     safe_require('auth', 'webservice');
-    PluginAuthWebservice::menu_items($smarty, 'webservice');
     $smarty->assign('functionlist', $dbfunctionlist);
     $smarty->display('auth:webservice:wsdoclist.tpl');
 }
@@ -60,7 +60,6 @@ else {
 
     $smarty = smarty();
     safe_require('auth', 'webservice');
-    PluginAuthWebservice::menu_items($smarty, 'webservice');
     $smarty->assign('function', $dbfunction);
     $smarty->assign('functiondescription', $fdesc->description);
     $smarty->assign('fdesc', $fdesc);
@@ -216,7 +215,6 @@ function wsdoc_detailed_description_html($params, $indentlevel = 0) {
             case PARAM_ALPHANUMEXT:
             case PARAM_BASE64:
             case PARAM_CLEANHTML:
-            case PARAM_CLEAN:
             case PARAM_EMAIL:
             case PARAM_FILE:
             case PARAM_HOST:

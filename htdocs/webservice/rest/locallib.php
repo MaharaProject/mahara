@@ -28,7 +28,7 @@ require_once(get_config('docroot') . 'webservice/libs/oauth-php/OAuthStore.php')
  * REST service server implementation.
  * @author Petr Skoda (skodak)
  */
-class webservice_rest_server extends webservice_base_server {
+class WebserviceRestServer extends WebserviceBaseServer {
 
     /** @property mixed $format results format - xml, atom or json */
     protected $format = 'xml';
@@ -207,13 +207,11 @@ class webservice_rest_server extends webservice_base_server {
     protected function send_response() {
         global $USER;
 
+        $validatedvalues = null;
         //Check that the returned values are valid
         try {
             if ($this->function->returns_desc != null) {
                 $validatedvalues = external_api::clean_returnvalue($this->function->returns_desc, $this->returns);
-            }
-            else {
-                $validatedvalues = null;
             }
         } catch (Exception $ex) {
             $exception = $ex;
@@ -753,24 +751,26 @@ function download_file_content_write_handler($received, $ch, $data) {
  * @return callback
  */
 function ws_partial() {
-    if (!class_exists('ws_partial')) {
-        class ws_partial{
-            var $values = array();
-            var $func;
-
-            function __construct($func, $args) {
-                $this->values = $args;
-                $this->func = $func;
-            }
-
-            function method() {
-                $args = func_get_args();
-                return call_user_func_array($this->func, array_merge($this->values, $args));
-            }
-        }
-    }
     $args = func_get_args();
     $func = array_shift($args);
     $p = new ws_partial($func, $args);
     return array($p, 'method');
+}
+
+/**
+ * Helper class for the ws_partial function
+ */
+class ws_partial{
+    var $values = array();
+    var $func;
+
+    function __construct($func, $args) {
+        $this->values = $args;
+        $this->func = $func;
+    }
+
+    function method() {
+        $args = func_get_args();
+        return call_user_func_array($this->func, array_merge($this->values, $args));
+    }
 }

@@ -18,11 +18,11 @@ $type = param_alphanum('t');
 $authmethod = WEBSERVICE_AUTHMETHOD_PERMANENT_TOKEN;
 
 // run the dispatcher
-$requestmethod = new ReflectionMethod("webservice_rest_server", "parse_request");
+$requestmethod = new ReflectionMethod("WebserviceRestServer", "parse_request");
 $requestmethod->setAccessible(true);
-$authenticatemethod = new ReflectionMethod("webservice_rest_server", "authenticate_user");
+$authenticatemethod = new ReflectionMethod("WebserviceRestServer", "authenticate_user");
 $authenticatemethod->setAccessible(true);
-$server = new webservice_rest_server($authmethod);
+$server = new WebserviceRestServer($authmethod);
 $requestmethod->invoke($server);
 $authenticatemethod->invoke($server);
 

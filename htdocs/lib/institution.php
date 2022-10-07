@@ -1085,7 +1085,7 @@ class Institution {
  * @param bool $allselector              To add an 'all' option to the dropdown where it makes sense, eg in institution statistics page
  * @param bool $withactiveinstitutiontags To only fetch institutions which are configured to define their own tags
  *
- * @return null or array suitable for pieform element
+ * @return null|array An array suitable for pieform element or null
  */
 function get_institution_selector($includedefault = true, $assumesiteadmin=false, $includesitestaff=false, $includeinstitutionstaff=false,
     $allselector=false, $withactiveinstitutiontags=false) {

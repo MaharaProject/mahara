@@ -26,7 +26,7 @@ use webservice_soap\wsdl;
  * SOAP service server implementation.
  * @author Petr Skoda (skodak)
  */
-class webservice_soap_server extends webservice_base_server {
+class WebserviceSoapServer extends WebserviceBaseServer {
 
     /** @var mahara_url The server URL. */
     protected $serverurl;
@@ -453,7 +453,8 @@ EOD;
             $paramanddefault = $param;
             if ($keydesc->required == VALUE_OPTIONAL) {
                 // It does not make sense to declare a parameter VALUE_OPTIONAL. VALUE_OPTIONAL is used only for array/object key.
-                throw new MaharaException('erroroptionalparamarray', 'webservice', '', $name);
+                $msg = get_string('erroroptionalparamarray', 'auth.webservice', $name);
+                throw new MaharaException($msg, 'webservice');
             }
             else if ($keydesc->required == VALUE_DEFAULT) {
                 // Need to generate the default, if there is any.
@@ -485,7 +486,8 @@ EOD;
                     }
                     else {
                         // For the moment we do not support default for other structure types.
-                        throw new MaharaException('errornotemptydefaultparamarray', 'webservice', '', $name);
+                        $msg = get_string('errornotemptydefaultparamarray', 'auth.webservice', $name);
+                        throw new MaharaException($msg, 'webservice');
                     }
                 }
             }

@@ -44,7 +44,7 @@ header('Access-Control-Allow-Credentials: false');
  * TODO: Generalize this into a more generic form, so it can be
  * used for other webservices?
  */
-class mobileapi_profileicon_webservice_server extends webservice_base_server {
+class mobileapi_profileicon_webservice_server extends WebserviceBaseServer {
     public function __construct() {
         //authenticate the user
         parent::__construct(WEBSERVICE_AUTHMETHOD_PERMANENT_TOKEN);

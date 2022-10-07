@@ -82,8 +82,12 @@ class mahara_view_external extends external_api {
     /**
      * Check that a user exists
      *
-     * @param array $user array('id' => .., 'username' => ..)
-     * @return array() of user
+     * Check a user exists by looking up the user by id, userid, username,
+     * email, or remoteuser and return the user object.
+     *
+     * @param array $user A user array to check
+     * @return object The user
+     * @throws WebserviceInvalidParameterException
      */
     private static function checkuser($user) {
         global $WEBSERVICE_INSTITUTION;
@@ -132,22 +136,29 @@ class mahara_view_external extends external_api {
             throw new WebserviceInvalidParameterException(get_string('musthaveid', 'auth.webservice'));
         }
         // now get the user
-        if ($user = get_user($id)) {
-            if ($user->deleted) {
+        if ($return_user = get_user($id)) {
+            if ($return_user->deleted) {
                 throw new WebserviceInvalidParameterException(get_string('invaliduserid', 'auth.webservice', $id));
             }
             // get the remoteuser
-            $user->remoteuser = get_field('auth_remote_user', 'remoteusername', 'authinstance', $user->authinstance, 'localusr', $user->id);
+            $return_user->remoteuser = get_field(
+                'auth_remote_user',
+                'remoteusername',
+                'authinstance',
+                $return_user->authinstance,
+                'localusr',
+                $return_user->id
+            );
             foreach (array('jabberusername', 'introduction', 'country', 'city', 'address',
                            'town', 'homenumber', 'businessnumber', 'mobilenumber', 'faxnumber',
                            'officialwebsite', 'personalwebsite', 'blogaddress', 'aimscreenname',
                            'icqnumber', 'msnnumber', 'yahoochat', 'skypeusername', 'jabberusername',
                            'occupation', 'industry') as $attr) {
-                if ($art = get_record('artefact', 'artefacttype', $attr, 'owner', $user->id)) {
-                    $user->{$attr} = $art->title;
+                if ($art = get_record('artefact', 'artefacttype', $attr, 'owner', $return_user->id)) {
+                    $return_user->{$attr} = $art->title;
                 }
             }
-            return $user;
+            return $return_user;
         }
         else {
             throw new WebserviceInvalidParameterException(get_string('invaliduserid', 'auth.webservice', $id));
@@ -417,6 +428,8 @@ class mahara_view_external extends external_api {
         //TODO: check if there is any performance issue: we do one DB request to retrieve
         //  all user, then for each user the profile_load_data does at least two DB requests
         foreach ($params['views'] as $v) {
+            $url = '';
+            $token = null;
             $user = self::checkuser($v);
             // skip deleted users
             if (!empty($user->deleted)) {
@@ -556,7 +569,7 @@ class mahara_view_external extends external_api {
                 safe_require('artefact', $plugin->name);
                 $classname = generate_class_name('artefact', $plugin->name);
                 if (is_callable($classname . '::view_submit_external_data')) {
-                    $data[$plugin->name] = call_static_method($classname, 'view_submit_external_data', $viewid, $v['iscollection']);
+                    $data[$plugin->name] = $classname::view_submit_external_data($viewid, $v['iscollection']);
                 }
             }
             db_commit();
@@ -660,6 +673,7 @@ class mahara_view_external extends external_api {
                 continue;
             }
             $v['viewoutcomes'] = explode(',', $v['viewoutcomes']);
+            $v_is_collection = (isset($v['iscollection']) && $v['iscollection']);
 
             require_once('view.php');
             $userid = $user->id;
@@ -667,6 +681,7 @@ class mahara_view_external extends external_api {
             db_begin();
             $teacher = new User();
             $teacher->find_by_id($userid);
+            $teacher_id = $teacher ? $teacher->id : 0;
             $external = new stdClass();
             $external->id = $v['externalid'];
             $external->name = $v['externalname'];
@@ -698,7 +713,12 @@ class mahara_view_external extends external_api {
                 safe_require('artefact', $plugin->name);
                 $classname = generate_class_name('artefact', $plugin->name);
                 if (is_callable($classname . '::view_release_external_data')) {
-                    call_static_method($classname, 'view_release_external_data', $v['viewid'], $v['viewoutcomes'], $teacher ? $teacher->id : 0, (isset($v['iscollection']) && $v['iscollection']));
+                    $classname::view_release_external_data(
+                        $v['viewid'],
+                        $v['viewoutcomes'],
+                        $teacher_id,
+                        $v_is_collection
+                    );
                 }
             }
             db_commit();
@@ -811,7 +831,7 @@ class mahara_view_external extends external_api {
             $exporttype = $v['exporttype'];
             safe_require('export', $exporttype);
             $class = generate_class_name('export', $exporttype);
-            if (!call_static_method($class, 'is_active')) {
+            if (!$class::is_active()) {
                 throw new WebserviceInvalidParameterException(get_string('exporttypenotavailable', 'auth.webservice', $exporttype));
             }
             // OK we are now looking good

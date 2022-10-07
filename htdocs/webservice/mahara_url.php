@@ -54,6 +54,11 @@ class mahara_url {
      */
     protected $anchor = null;
     /**
+     * Fragment may be also empty, null means none.
+     * @var string
+     */
+    protected $fragment = '';
+    /**
      * Url parameters as associative array.
      * @var array
      */

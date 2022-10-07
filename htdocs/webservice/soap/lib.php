@@ -97,11 +97,10 @@ class webservice_soap_client_wsse {
     /**
      * Common Soap Client constructor
      *
-     * @param callback $doRequestMethod
      * @param string $wsdl
      * @param array $options
      */
-    function __construct($doRequestCallback, $wsdl, $options) {
+    function __construct($wsdl) {
         require_once(get_config('docroot') . "webservice/mahara_url.php");
         $this->serverurl = new mahara_url($wsdl);
         $this->serverurl = $wsdl;

@@ -270,7 +270,7 @@ function webservice_list_services() {
  * XML-RPC service server implementation.
  * @author Petr Skoda (skodak)
  */
-class webservice_xmlrpc_server extends webservice_base_server {
+class WebserviceXmlrpcServer extends WebserviceBaseServer {
 
     private $payload_signed = false;
     private $payload_encrypted = false;

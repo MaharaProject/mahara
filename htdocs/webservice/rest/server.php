@@ -71,6 +71,6 @@ else {
 }
 
 // run the dispatcher
-$server = new webservice_rest_server($authmethod);
+$server = new WebserviceRestServer($authmethod);
 $server->run();
 die;
