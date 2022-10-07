@@ -18,7 +18,9 @@
     <caption class="visually-hidden">{str tag="tabledesc" section="module.framework"}</caption>
     <tr class="table-pager">
         <th>{str tag="view"}</th>
-        <th class="userrole">{str tag="signoff" section="blocktype.peerassessment/signoff"}</th>
+        <th class="userrole">{str tag="signoff" section="blocktype.peerassessment/signoff"}
+            <div class="progress-help text-small">{str tag=signoffhelp section="blocktype.peerassessment/signoff"}</div>
+        </th>
         {if $showVerification}<th class="userrole">{str tag="verification" section="collection"}</th>{/if}
     </tr>
     {foreach from=$views item=view}
@@ -247,7 +249,7 @@ $(function() {
 
                 if (data.data.signoff_newstate) {
                     icon = $('a.signoff_action[data-view="' + viewid + '"] span');
-                    icon.removeClass('icon-circle action').addClass('icon-check-circle completed');
+                    icon.removeClass('icon-circle action icon-regular').addClass('icon-check-circle completed');
                     icon.attr('title', signedoff_title);
                     cell = $('a.signoff_action[data-view="' + viewid + '"]');
                     cell.removeClass('signoff_action').addClass('unsignoff_action');
@@ -256,7 +258,7 @@ $(function() {
                 else {
                     var resetactions = 1;
                     icon = $('a.unsignoff_action[data-view="' + viewid + '"] span');
-                    icon.removeClass('icon-check-circle completed').addClass('icon-circle action');
+                    icon.removeClass('icon-check-circle completed').addClass('icon-circle action icon-regular');
                     icon.attr('title', needssignedoff_title);
                     cell = $('a.unsignoff_action[data-view="' + viewid + '"]');
                     cell.removeClass('unsignoff_action').addClass('signoff_action');
@@ -332,6 +334,7 @@ $(function() {
      *  -1 if the user removed a sign off
      */
     function update_progress_bar(update) {
+        set_icon_states();
         var percentage_text = $('#quota_fill span')[0].innerHTML;
         var percentage_int = parseInt(percentage_text.replace('%', ''));
         var old_completed_actions = Math.round((totalactions * percentage_int) / 100);
@@ -340,6 +343,25 @@ $(function() {
         $("#quota_fill span")[0].innerHTML = new_percentage + "%";
         $("#quota_fill").width(new_percentage + "%");
     }
+
+    function set_icon_states() {
+        $('table.progresscompletion td .icon.action').off();
+        $('table.progresscompletion td .icon.completed').off();
+
+        $('table.progresscompletion td .icon.action').on('mouseover', function() {
+            $(this).removeClass('icon-circle').addClass('icon-dot-circle');
+        });
+        $('table.progresscompletion td .icon.action').on('mouseout', function() {
+            $(this).removeClass('icon-dot-circle').addClass('icon-circle');
+        });
+        $('table.progresscompletion td .icon.completed').on('mouseover', function() {
+            $(this).removeClass('icon-check-circle').addClass('icon-dot-circle');
+        });
+        $('table.progresscompletion td .icon.completed').on('mouseout', function() {
+            $(this).removeClass('icon-dot-circle').addClass('icon-check-circle');
+        });
+    }
+    set_icon_states();
 });
 </script>
 {include file="footer.tpl"}

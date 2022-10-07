@@ -1,29 +1,36 @@
 <div id="verifyform" class="toolbarhtml">
     {if $showsignoff}
     <div>
-        {str tag=signedoff section=blocktype.peerassessment/signoff}
+        <div class="signoff-title">
+            {str tag=signedoff section=blocktype.peerassessment/signoff}
+        </div>
         {if $signable}
         <a href="#" id="signoff">
-            <span class="icon {if $signoff}icon-check-circle completed {else}icon-circle incomplete{/if} icon-lg"></span>
+            {$signoffbutton|safe}
             <span class="visually-hidden">{str tag=updatesignoff section=blocktype.peerassessment/signoff}</span>
         </a>
+            {if !$signoff}
+            <div class="progress-help text-small">{str tag=signoffhelppage section=blocktype.peerassessment/signoff}</div>
+            {/if}
         {elseif $signoff}
-        <span class="icon icon-check-circle completed icon-lg"></span>
+            {$signoffbutton|safe}
         {else}
         <span class="icon icon-circle dot disabled icon-lg"></span>
         {/if}
     </div>
     {/if}
     {if $showverify}
-    <div>
-        {str tag=verified section=blocktype.peerassessment/signoff}
-        {if $verifiable && $signoff}
+    <div class="clearright">
+        <div class="verified-title">
+            {str tag=verified section=blocktype.peerassessment/signoff}
+        </div>
+        {if $verified}
+            {$verifybutton|safe}
+        {elseif $verifiable && $signoff}
         <a href="#" id="verify">
-            <span class="icon {if $verified}icon-check-circle completed {else}icon-circle incomplete{/if} icon-lg"></span>
+            {$verifybutton|safe}
             <span class="visually-hidden">{str tag=updateverify section=blocktype.peerassessment/signoff}</span>
         </a>
-        {elseif $verified}
-        <span class="icon icon-check-circle completed icon-lg"></span>
         {else}
         <span class="icon icon-circle dot disabled icon-lg"></span>
         {/if}
@@ -129,12 +136,14 @@ $(function() {
         sendjsonrequest('{$WWWROOT}artefact/peerassessment/completion.json.php', { 'view': '{$view}', 'signoff': 1 }, 'POST', function (data) {
             if (data.data) {
                 if (data.data.signoff_newstate) {
-                    $('#signoff span.icon').addClass('icon-check-circle completed').removeClass('icon-circle incomplete');
+                    $('#dummyform_signoff').prop('checked', true);
+                    $('.progress-help').addClass('hidden');
                     $('#signoff-info-icon').removeClass('hidden');
                     signedoff = '1';
                 }
                 else {
-                    $('#signoff span.icon').addClass('icon-circle incomplete').removeClass('icon-check-circle completed');
+                    $('#dummyform_signoff').prop('checked', false);
+                    $('.progress-help').removeClass('hidden');
                     signedoff = '';
                     $('#signoff-info-icon').addClass('hidden');
                 }
@@ -160,7 +169,9 @@ $(function() {
         sendjsonrequest('{$WWWROOT}artefact/peerassessment/completion.json.php', { 'view': '{$view}', 'verify': 1 }, 'POST', function (data) {
             if (data.data) {
                 if (data.data.verify_newstate) {
-                    $('#verify span.icon').addClass('icon-check-circle completed').removeClass('icon-circle incomplete');
+                    $('#dummyform_verify').prop('checked', true);
+                    $('#dummyform_verify').prop('disabled', true);
+                    $('#verify').off('click');
                 }
             }
             $("#verify-confirm-form").modal('hide');

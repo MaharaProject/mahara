@@ -8,9 +8,6 @@ table.progresscompletion {
         &.completed {
           color: $progresscompletion-verified-color;
         }
-        &.action {
-          color: $progresscompletion-notverified-color;
-        }
         &.dot.disabled {
           color: scale-color($gray-300, $lightness: 28%);
           cursor: $cursor-disabled;
