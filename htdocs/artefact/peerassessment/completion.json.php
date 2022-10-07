@@ -42,8 +42,12 @@ $view = new View($viewid);
 $configdata = $bi->get('configdata');
 $showsignoff = !empty($configdata['signoff']) ? true : false;
 $showverify = !empty($configdata['verify']) ? true : false;
-$signable = ArtefactTypePeerassessment::is_signable($view);
-$verifiable = ArtefactTypePeerassessment::is_verifiable($view);
+$owneraction = $view->get_progress_action('owner');
+$manageraction = $view->get_progress_action('manager');
+
+
+$signable = (bool)$owneraction->get_action();
+$verifiable = (bool)$manageraction->get_action();
 
 $data = new stdClass();
 

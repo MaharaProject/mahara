@@ -572,16 +572,6 @@ class ArtefactTypePeerassessment extends ArtefactType {
           return 0;
     }
 
-    public static function is_signable(View $view) {
-        global $USER;
-
-        $signable = false;
-        if ($view->get('owner') && $view->get('submittedstatus') == View::UNSUBMITTED ) {
-            $signable = ($view->get('owner') == $USER->get('id')) ? true : false;
-        }
-        return $signable;
-    }
-
     public static function is_signed_off(View $view) {
         if (!$view->get('owner')) {
             return false;
@@ -602,20 +592,6 @@ class ArtefactTypePeerassessment extends ArtefactType {
             }
         }
         return false;
-    }
-
-    public static function is_verifiable(View $view) {
-        global $USER;
-
-        if (!$view->get('owner')) {
-            return false;
-        }
-        $verifiable = get_field_sql("SELECT va.usr FROM {view_access} va
-                                     JOIN {usr_access_roles} ur ON ur.role = va.role
-                                     WHERE ur.see_block_content = ?
-                                     AND va.view = ? AND va.usr = ?
-                                     LIMIT 1", array(1, $view->get('id'), $USER->get('id')));
-        return (bool)$verifiable;
     }
 
     public static function is_verified(View $view) {
