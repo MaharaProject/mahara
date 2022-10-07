@@ -30,9 +30,15 @@ class PluginExportHtmlLite extends PluginExportHtml {
     */
    protected $scripts = array();
 
+
     /**
-    * {@inheritDoc}
-    */
+     * The array of Collections.
+     */
+    protected $collections = array();
+
+    /**
+     * {@inheritDoc}
+     */
     public function __construct(User $user, $views, $artefacts, $progresscallback=null, $loop=1, $looptotal=1, $exporttime=null) {
         global $THEME;
         parent::__construct($user, $views, $artefacts, $progresscallback, $loop, $looptotal, $exporttime);
@@ -118,6 +124,7 @@ class PluginExportHtmlLite extends PluginExportHtml {
         if ($fromversion == 0) {
             set_field('export_installed', 'active', 0, 'name', 'htmllite');
         }
+        return true;
     }
 
     /**
@@ -207,12 +214,15 @@ class PluginExportHtmlLite extends PluginExportHtml {
             $smarty->assign('viewdescription', $view->get('description'));
             $smarty->assign('nobreadcrumbs', true);
             // Collection menu data
+            $exportingcollections = ($this->viewexportmode == PluginExport::EXPORT_LIST_OF_COLLECTIONS);
+            $exportingviews = ($this->viewexportmode == PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS);
             if (isset($this->viewcollection[$viewid])
-                && ($this->viewexportmode == PluginExport::EXPORT_LIST_OF_COLLECTIONS
-                    || $this->viewexportmode == PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS)) {
+                && ($exportingcollections || $exportingviews)
+                ) {
+                // @phpstan-ignore-next-line
                 $smarty->assign('page_heading', $this->collections[$this->viewcollection[$viewid]]->get('name'));
             }
-            $outputfilter = new HtmlExportOutputFilter($rootpath, $this);
+            $outputfilter = new HtmlExportOutputFilter($this);
             // Include comments
             if ($this->includefeedback) {
                 $commentoptions = ArtefactTypeComment::get_comment_options();

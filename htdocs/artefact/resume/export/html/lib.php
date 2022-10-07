@@ -38,7 +38,7 @@ class HtmlExportResume extends HtmlExportArtefactPlugin {
             'modal' => true,
         );
         require_once(get_config('docroot') . 'export/html/lib.php');
-        $outputfilter = new HtmlExportOutputFilter($rootpath, $this->exporter);
+        $outputfilter = new HtmlExportOutputFilter($this->exporter);
 
         if ($artefacts = get_column_sql("SELECT id
             FROM {artefact}

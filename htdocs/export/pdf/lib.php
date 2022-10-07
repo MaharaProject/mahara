@@ -102,6 +102,7 @@ class PluginExportPdf extends PluginExportHtml {
         if ($fromversion == 0) {
             set_field('export_installed', 'active', 0, 'name', 'pdf');
         }
+        return true;
     }
 
     public static function has_pdf_combiner() {
@@ -218,7 +219,7 @@ class PluginExportPdf extends PluginExportHtml {
                     throw new MaharaException('Need to have a Chrome browser installed to use the headless pdf option');
                 }
             }
-
+            // @phpstan-ignore-next-line
             $browserFactory = new BrowserFactory($browsertype);
             // starts headless chrome
             $browser = $browserFactory->createBrowser(['windowSize' => [960,600],

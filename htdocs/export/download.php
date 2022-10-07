@@ -13,6 +13,10 @@ define('INTERNAL', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('docroot') . 'export/lib.php');
 
+// Declare so static analysis doesn't report 'might not be defined' errors.
+$exporter = null;
+$zipfile = null;
+
 $SESSION->set('exportprogress', false);
 // Download the export file if it's been generated
 $downloadfile = param_variable('file', null);

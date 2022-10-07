@@ -83,6 +83,10 @@ abstract class PluginExport extends Plugin implements IPluginExport {
      */
     const MAX_FILENAME_LENGTH = 80;
 
+    protected $zipfile = [];
+    protected $exportdir = '';
+    protected $messages = [];
+
     public static function get_plugintype_name() {
         return 'export';
     }
@@ -210,6 +214,11 @@ abstract class PluginExport extends Plugin implements IPluginExport {
      * Callback to notify when progress is made
      */
     private $progresscallback = null;
+
+    /**
+     * Collections set up by the constructor
+     */
+    protected $collections = array();
 
     /**
      * Establishes exactly what views and artefacts are to be exported, and
@@ -700,8 +709,7 @@ function export_process_queue($id = false) {
 
         // Bail if we don't have enough data to do an export
         if (!isset($row->exporttype)
-            || !isset($row->what)
-            || !isset($views)) {
+            || !isset($row->what)) {
             $errors[] = get_string('unabletogenerateexport', 'export');
             log_warn(get_string('unabletogenerateexport', 'export'));
             continue;
@@ -747,7 +755,7 @@ function export_process_queue($id = false) {
             $errors[] = get_string('exportfiletoobig', 'mahara');
             log_warn(get_string('exportfiletoobig', 'mahara'));
         }
-
+        $zipfile = null;
         try {
             $zipfile = $exporter->export($createarchive);
         }
@@ -1056,7 +1064,7 @@ class PluginExportAll extends PluginExport {
     protected $exportdir;
     protected $zipfile;
 
-    public function __construct(User $user, $views, $artefacts, $progresscallback=null, $loop=1, $looptotal=1, $exporttime=null) {
+    public function __construct(User $user, $views, $artefacts, $progresscallback=null) {
         safe_require('export', 'html');
         safe_require('export', 'leap');
         $exporttime = time();
