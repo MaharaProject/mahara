@@ -250,6 +250,14 @@ $string['section_artefact'] = 'Artefact content';
 $string['section_interaction'] = 'Forum description';
 $string['section_interactionpost'] = 'Forum content';
 $string['section_block'] = 'Block content';
+$string['section_static_pages'] = 'Static page content';
+$string['section_wall_post'] = 'Wall content';
+$string['section_artefact_resume_certification'] = 'Résumé: Certification content';
+$string['section_artefact_resume_educationhistory'] = 'Résumé: education history';
+$string['section_artefact_resume_book'] = 'Résumé: book content';
+$string['section_verification_comment'] = 'Verification comment';
+$string['section_artefact_resume_membership'] = 'Résumé: membership';
+$string['section_artefact_resume_employmenthistory'] = 'Résumé: employment history';
 $string['potentialfor'] = 'Results for %s';
 
 // sanity check warnings

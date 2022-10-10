@@ -24,10 +24,17 @@ if ($checkurlraw === null) {
     $checkpath = '%/artefact/%';  // basic check to see if any potential wrong URLs
 }
 else {
-    $checkurlraw = $checkurlraw . ((substr($checkurlraw, -1) != '/') ? '/' : '');
-    $checkpath = '%' . $checkurlraw . '%';
+    // Pull the domain from the URL so we don't need to care about the protocol
+    $checkurl = parse_url($checkurlraw);
+    $checkpath = '%' . $checkurl['host'] . '%';
 }
 // Check to see if there are potential embedded URLs to update
+// These queries are of the form:
+//    count: the number of records that match the query
+//    type: the type of records. Use as the string key and a selector when processing
+//    t: the table name the records live in
+//    f: the field the content lives in.
+// @see migrateurls_submit() for processing of the records
 $results = get_records_sql_array("SELECT COUNT(*) AS count, 'section_view_instructions' AS type, 'view' AS t, 'instructions' as f FROM {view}
                                   WHERE instructions LIKE ? AND instructions NOT LIKE ?
                                   UNION
@@ -47,8 +54,40 @@ $results = get_records_sql_array("SELECT COUNT(*) AS count, 'section_view_instru
                                   WHERE description LIKE ? AND description NOT LIKE ?
                                   UNION
                                   SELECT COUNT(*) AS count, 'section_block' AS type, 'block_instance' AS t, 'configdata' AS f FROM {block_instance}
-                                  WHERE configdata LIKE ? AND configdata NOT LIKE ?",
+                                  WHERE configdata LIKE ? AND configdata NOT LIKE ?
+                                  UNION
+                                  SELECT COUNT(*) AS count, 'section_wall_post' AS type, 'blocktype_wall_post' AS t, 'text' AS f FROM {blocktype_wall_post}
+                                  WHERE text LIKE ? AND text NOT LIKE ?
+                                  UNION
+                                  SELECT COUNT(*) AS count, 'section_verification_comment' AS type, 'blocktype_verification_comment' AS t, 'text' AS f FROM {blocktype_verification_comment}
+                                  WHERE text LIKE ? AND text NOT LIKE ?
+                                  UNION
+                                  SELECT COUNT(*) AS count, 'section_artefact_resume_membership' AS type, 'artefact_resume_membership' AS t, 'description' AS f FROM {artefact_resume_membership}
+                                  WHERE description LIKE ? AND description NOT LIKE ?
+                                  UNION
+                                  SELECT COUNT(*) AS count, 'section_artefact_resume_employmenthistory' AS type, 'artefact_resume_employmenthistory' AS t, 'positiondescription' AS f FROM {artefact_resume_employmenthistory}
+                                  WHERE positiondescription LIKE ? AND positiondescription NOT LIKE ?
+                                  UNION
+                                  SELECT COUNT(*) AS count, 'section_artefact_resume_educationhistory' AS type, 'artefact_resume_educationhistory' AS t, 'qualdescription' AS f FROM {artefact_resume_educationhistory}
+                                  WHERE qualdescription LIKE ? AND qualdescription NOT LIKE ?
+                                  UNION
+                                  SELECT COUNT(*) AS count, 'section_artefact_resume_certification' AS type, 'artefact_resume_certification' AS t, 'description' AS f FROM {artefact_resume_certification}
+                                  WHERE description LIKE ? AND description NOT LIKE ?
+                                  UNION
+                                  SELECT COUNT(*) AS count, 'section_artefact_resume_book' AS type, 'artefact_resume_book' AS t, 'description' AS f FROM {artefact_resume_book}
+                                  WHERE description LIKE ? AND description NOT LIKE ?
+                                  UNION
+                                  SELECT COUNT(*) AS count, 'section_static_pages' AS type, 'site_content' AS t, 'content' AS f FROM {site_content}
+                                  WHERE content LIKE ? AND content NOT LIKE ?",
                                  array($checkpath, $sitepath,
+                                       $checkpath, $sitepath,
+                                       $checkpath, $sitepath,
+                                       $checkpath, $sitepath,
+                                       $checkpath, $sitepath,
+                                       $checkpath, $sitepath,
+                                       $checkpath, $sitepath,
+                                       $checkpath, $sitepath,
+                                       $checkpath, $sitepath,
                                        $checkpath, $sitepath,
                                        $checkpath, $sitepath,
                                        $checkpath, $sitepath,
@@ -137,43 +176,69 @@ function migrateurls_submit(Pieform $form, $values) {
     $basiccount = 0;
     $blockcount = 0;
     if (is_array($results)) {
-        $fromurl = $values['fromurl'];
-        $fromurl .= (substr($fromurl, -1) != '/') ? '/' : '';
-        foreach ($results as $result) {
-            // Update the places we need to
-            if ($result->count > 0) {
-                if ($result->type == 'section_block') {
-                    $blockcount = $result->count;
-                    // need to handle special so first find the blocks
-                    $sql = "SELECT id FROM {block_instance} WHERE configdata LIKE ?";
-                    $records = get_records_sql_array($sql, array('%' . $fromurl . '%'));
-                    if ($records) {
-                        $count = 0;
-                        $limit = 1000;
-                        $total = count($records);
-                        require_once(get_config('docroot').'blocktype/lib.php');
-                        foreach ($records as $record) {
-                            $bi = new BlockInstance($record->id);
-                            $configdata = $bi->get('configdata');
-                            foreach ($configdata as $ck => $cv) {
-                                $newvalue = preg_replace("@" . $fromurl . "@", get_config('wwwroot'), $cv);
-                                if ($newvalue != $cv) {
-                                    // we have changed data in the configdata option
-                                    $configdata[$ck] = $newvalue;
-                                    $bi->set('configdata', $configdata);
-                                    $bi->commit();
+        // Parse the URL.
+        $parsedurl = parse_url($values['fromurl']);
+        $fromhost = $parsedurl['host'];
+        $protocols = ['https://', 'http://', '//'];
+        foreach ($protocols as $protocol) {
+            // It is possible to end up with a mixture of 'http://',
+            // 'https://',and sometimes a protocolless '//' as the protocols.
+            // We will do the replacement on all of these options.
+            $fromurl = $protocol . $fromhost . '/';
+            foreach ($results as $result) {
+                // Update the URL in the places it needs updating.
+                if ($result->count > 0) {
+                    // Currently we have 2 types of data that we are
+                    // processing.
+                    // If a field contains serialized data, we need to
+                    // unserialize it, update the data, and then reserialize
+                    // it before saving it again. Currently "section_block" is
+                    // the only type that contains serialized data.
+                    // If a field is just plain text, we can just do a simple
+                    // string replace. This is the "else" part of the condition.
+                    if ($result->type == 'section_block') {
+                        // This processes the configdata field in the
+                        // block_instance table.
+                        // If other types added that contain serialized data,
+                        // this section will need to be made more generic or an
+                        // "else if" added for the new type.
+                        // Also note that this only works with key/value pairs.
+                        // If the serialized data contains nested arrays, this
+                        // will not work.
+                        $blockcount = $result->count;
+                        // need to handle special so first find the blocks
+                        $sql = "SELECT id FROM {block_instance} WHERE configdata LIKE ?";
+                        $records = get_records_sql_array($sql, array('%' . $fromurl . '%'));
+                        if ($records) {
+                            $count = 0;
+                            $limit = 1000;
+                            $total = count($records);
+                            require_once(get_config('docroot').'blocktype/lib.php');
+                            foreach ($records as $record) {
+                                $bi = new BlockInstance($record->id);
+                                $configdata = $bi->get('configdata');
+                                foreach ($configdata as $ck => $cv) {
+                                    $newvalue = preg_replace("@" . $fromurl . "@", get_config('wwwroot'), $cv);
+                                    if ($newvalue != $cv) {
+                                        // we have changed data in the configdata option
+                                        $configdata[$ck] = $newvalue;
+                                        $bi->set('configdata', $configdata);
+                                        $bi->commit();
+                                    }
                                 }
-                            }
-                            $count++;
-                            if (($count % $limit) == 0 || $count == $total) {
-                                set_time_limit(30);
+                                $count++;
+                                if (($count % $limit) == 0 || $count == $total) {
+                                    set_time_limit(30);
+                                }
                             }
                         }
                     }
-                }
-                else {
-                    execute_sql("UPDATE " . db_table_name($result->t) . " SET " . db_quote_identifier($result->f) . " = REPLACE(" . db_quote_identifier($result->f) . ", ?, ?) WHERE " . db_quote_identifier($result->f) . " LIKE ?", array($fromurl, get_config('wwwroot'), '%' . $fromurl . '%'));
-                    $basiccount += $result->count;
+                    else {
+                        // If the field just contains raw html/text then we can
+                        // just do a simple update.
+                        execute_sql("UPDATE " . db_table_name($result->t) . " SET " . db_quote_identifier($result->f) . " = REPLACE(" . db_quote_identifier($result->f) . ", ?, ?) WHERE " . db_quote_identifier($result->f) . " LIKE ?", array($fromurl, get_config('wwwroot'), '%' . $fromurl . '%'));
+                        $basiccount += $result->count;
+                    }
                 }
             }
         }
