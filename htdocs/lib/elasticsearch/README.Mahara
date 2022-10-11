@@ -13,3 +13,4 @@ Changes:
 
  * Removed the phpunit tests .xml files, the */tests/ and */docs/ and */travis/ dirs
  * Removed the .github/ dir and .git* files
+ * Fixed the CurlFactory.php switch/loop
