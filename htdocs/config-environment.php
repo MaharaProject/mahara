@@ -125,6 +125,7 @@ set_from_env($cfg, 'plugin_search_elasticsearch7_indexname', 'MAHARA_ELASTICSEAR
 set_from_env($cfg, 'plugin_search_elasticsearch7_bypassindexname', 'MAHARA_ELASTICSEARCH7_BYPASS_INDEX_NAME');
 set_from_env($cfg, 'plugin_search_elasticsearch7_analyzer', 'MAHARA_ELASTICSEARCH7_ANALYZER');
 set_from_env($cfg, 'plugin_search_elasticsearch7_types', 'MAHARA_ELASTICSEARCH7_TYPES');
+# The ignoressl setting is not used if productionmode is set to true.
 set_from_env($cfg, 'plugin_search_elasticsearch7_ignoressl', 'MAHARA_ELASTICSEARCH7_IGNORE_SSL');
 set_from_env($cfg, 'plugin_search_elasticsearch7_requestlimit', 'MAHARA_ELASTICSEARCH7_REQUEST_LIMIT');
 set_from_env($cfg, 'plugin_search_elasticsearch7_redolimit', 'MAHARA_ELASTICSEARCH7_REDO_LIMIT');

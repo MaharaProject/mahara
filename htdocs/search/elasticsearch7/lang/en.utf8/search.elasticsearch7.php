@@ -96,6 +96,7 @@ $string['pluginstatustitlecluster_health'] = 'Cluster health';
 $string['pluginstatustitlecron'] = 'Cron';
 $string['pluginstatustitleindexstatus'] = 'Index status';
 $string['pluginstatustitleserver_health'] = 'Server health';
+$string['pluginstatusignoresslerror'] = 'The <code>ignoressl</code> setting is ignored when <code>productionmode</code> is true. Either use a valid SSL certificate for Elasticsearch 7 or set <code>productionmode</code> to "false".';
 $string['port'] = 'Elasticsearch port';
 $string['portdescription'] = 'The port to contact Elasticsearch on. Default is %s.';
 $string['Portfolio'] = 'Portfolio';

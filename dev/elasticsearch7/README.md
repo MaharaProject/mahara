@@ -101,8 +101,15 @@ $cfg->plugin_search_elasticsearch7_username = 'mahara';
 $cfg->plugin_search_elasticsearch7_password = 'ThisIsThePassword';
 $cfg->plugin_search_elasticsearch7_indexingusername = 'mahara';
 $cfg->plugin_search_elasticsearch7_indexingpassword = 'ThisIsThePassword';
+# This is only used if productionmode is false.
 $cfg->plugin_search_elasticsearch7_ignoressl = true;
 ```
+### Ignore SSL on non-production site
+In addition to the `$cfg` above, ensure `$cfg->productionmode = false` is also set.
+
+If `productionmode` is `true`, then the `ignoressl` setting will be ignored and the following error will be presented:
+
+> Error: SSL certificate problem: unable to get local issuer certificate
 
 ### Stand up the cluster
 
