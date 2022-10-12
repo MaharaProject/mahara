@@ -15,7 +15,7 @@ Scenario Outline: Testing Themes
   | theme | <theme> |
   And I choose "Overview" in "Admin home" from administration menu
   And I wait until the page is ready
-  And I scroll to the base of id "clear_caches"
+  And I scroll to the center of id "clear_caches"
   And I press "Clear caches"
   And I wait to be redirected
   And I go to the homepage
