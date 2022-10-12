@@ -139,6 +139,10 @@ For Mahara 22.10, the supported browser versions are:
 
 Mahara has been translated into many languages. You can download [language packs](https://langpacks.mahara.org/), [install and update them via CLI](https://manual.mahara.org/en/22.10/administration/cli.html#install-and-update-language-packs), or [install and update them via the administration area](https://manual.mahara.org/en/22.10/administration/development.html#languages) in Mahara.
 
+# DOCUMENT YOUR CUSTOMISATIONS
+
+Document your customisations for easy record keeping in CUSTOMISATIONS.md by copying CUSTOMISATIONS-example.md. The file sits outside of the `htdocs` directory and should not be uploaded to a server.
+
 ------------------
 # COPYRIGHT NOTICE
 
