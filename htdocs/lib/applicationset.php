@@ -31,7 +31,8 @@ class ApplicationSet implements Iterator {
         reset($this->resultset);
     }
 
-    public function current(): mixed {
+    #[\ReturnTypeWillChange]
+    public function current() {
         if (false === current($this->resultset)) {
             return false;
         }

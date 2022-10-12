@@ -180,10 +180,8 @@ class Peer {
             if (false == $exists) {
                 return insert_record('host',$host);
             }
-            return true;
         }
-
-        return update_record('host',$host,array('wwwroot' => $host->wwwroot));
+        return update_record('host', $host, array('wwwroot' => $host->wwwroot));
     }
 
     public function bootstrap($wwwroot, $pubkey, $appname = 'moodle', $institution = null) {
