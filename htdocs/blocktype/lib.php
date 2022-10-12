@@ -161,9 +161,9 @@ abstract class PluginBlocktype extends Plugin implements IPluginBlocktype {
             safe_require('blocktype', $namespaced);
             $classname = generate_class_name('blocktype', $namespaced);
             $types[] = array('name' => $block->name,
-                             'title' => call_static_method($classname, 'get_title'),
-                             'cssicon' => call_static_method($classname, 'get_css_icon', $block->name),
-                             'cssicontype' => call_static_method($classname, 'get_css_icon_type', $block->name),
+                             'title' => $classname::get_title(),
+                             'cssicon' => $classname::get_css_icon($block->name),
+                             'cssicontype' => $classname::get_css_icon_type($block->name),
                              'count' => $block->blockcount,
                              );
         }
@@ -673,17 +673,17 @@ EOF;
             // the condition, and also to View::addblocktype and
             // View::get_category_data
             $classname = generate_class_name('blocktype', $namespaced);
-            if (call_static_method($classname, 'allowed_in_view', $view)) {
+            if ($classname::allowed_in_view($view)) {
                 $blocktypes[] = array(
                     'name'           => $bt->name,
-                    'title'          => call_static_method($classname, 'get_title'),
-                    'description'    => call_static_method($classname, 'get_description'),
-                    'singleonly'     => call_static_method($classname, 'single_only'),
-                    'single_artefact_per_block' => call_static_method($classname, 'single_artefact_per_block'),
+                    'title'          => $classname::get_title(),
+                    'description'    => $classname::get_description(),
+                    'singleonly'     => $classname::single_only(),
+                    'single_artefact_per_block' => $classname::single_artefact_per_block(),
                     'artefactplugin' => $bt->artefactplugin,
                     'thumbnail_path' => get_config('wwwroot') . 'thumb.php?type=blocktype&bt=' . $bt->name . ((!empty($bt->artefactplugin)) ? '&ap=' . $bt->artefactplugin : ''),
-                    'cssicon'        => call_static_method($classname, 'get_css_icon', $bt->name),
-                    'cssicontype'    => call_static_method($classname, 'get_css_icon_type', $bt->name),
+                    'cssicon'        => $classname::get_css_icon($bt->name),
+                    'cssicontype'    => $classname::get_css_icon_type($bt->name),
                     'sortorder'      => $bt->sortorder,
                 );
             }
@@ -876,7 +876,8 @@ EOF;
      * @return array The configuration required to import the block again later
      */
     public static function export_blockinstance_config_leap(BlockInstance $bi) {
-        $configdata = call_static_method(generate_class_name('blocktype', $bi->get('blocktype')), 'export_blockinstance_config', $bi);
+        $classname = generate_class_name('blocktype', $bi->get('blocktype'));
+        $configdata = $classname::export_blockinstance_config($bi);
         foreach ($configdata as $key => &$value) {
             $value = json_encode(array($value));
         }
@@ -1480,7 +1481,8 @@ class BlockInstance {
 
         if (is_callable(array(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_save'))) {
             try {
-                $values = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'instance_config_save', $values, $this);
+                $classname = generate_class_name('blocktype', $this->get('blocktype'));
+                $values = $classname::instance_config_save($values, $this);
             }
             catch (MaharaException $e) {
                 $result['message'] = $e instanceof UserException ? $e->getMessage() : get_string('unrecoverableerror', 'error');
@@ -1558,7 +1560,7 @@ class BlockInstance {
      */
     public function get_title() {
         $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
-        $override = call_static_method($blocktypeclass, 'override_instance_title', $this);
+        $override = $blocktypeclass::override_instance_title($this);
         if ($override !== false) {
             return $override;
         }
@@ -1566,7 +1568,7 @@ class BlockInstance {
             return $title;
         }
         if (method_exists($blocktypeclass, 'get_instance_title')) {
-            return call_static_method($blocktypeclass, 'get_instance_title', $this);
+            return $blocktypeclass::get_instance_title($this);
         }
         return '';
     }
@@ -1610,15 +1612,15 @@ class BlockInstance {
         else {
             try {
               $user_roles = get_column('view_access', 'role', 'usr', $USER->get('id'), 'view', $this->view);
-              if (!call_static_method($blocktypeclass, 'display_for_roles', $this, $user_roles)) {
+              if (!$blocktypeclass::display_for_roles($this, $user_roles)) {
                   $content = '';
                   $css = '';
                   $js = '';
               }
               else   {
-                $content = call_static_method(generate_class_name('blocktype', $this->get('blocktype')), 'render_instance', $this, true);
-                $jsfiles = call_static_method($blocktypeclass, 'get_instance_javascript', $this);
-                $inlinejs = call_static_method($blocktypeclass, 'get_instance_inline_javascript', $this);
+                $content = $blocktypeclass::render_instance($this, true);
+                $jsfiles = $blocktypeclass::get_instance_javascript($this);
+                $inlinejs = $blocktypeclass::get_instance_inline_javascript($this);
                 $js = $this->get_get_javascript_javascript($jsfiles) . $inlinejs;
                 $css = '';
               }
@@ -1638,7 +1640,7 @@ class BlockInstance {
             }
         }
 
-        $configtitle = $title == '' ? call_static_method($blocktypeclass, 'get_title') : $title;
+        $configtitle = $title == '' ? $blocktypeclass::get_title() : $title;
 
         $smarty = smarty_core();
         $id = $this->get('id');
@@ -1655,7 +1657,7 @@ class BlockInstance {
         $smarty->assign('height', $this->get('height'));
 
         $smarty->assign('blocktype', $this->get('blocktype'));
-        $smarty->assign('configurable', call_static_method($blocktypeclass, 'has_instance_config', $this));
+        $smarty->assign('configurable', $blocktypeclass::has_instance_config($this));
         $smarty->assign('configure', $configure); // Used by the javascript to rewrite the block, wider.
         $smarty->assign('configtitle',  $configtitle);
         $smarty->assign('content', $content);
@@ -1668,9 +1670,9 @@ class BlockInstance {
         $smarty->assign('strremovetitletext', $title == '' ? get_string('removethisblock1', 'view', $id) : get_string('removeblock1', 'view', "'$title'", $id));
         $smarty->assign('strremovetitletexttooltip', get_string('removeblock2', 'view'));
         $smarty->assign('lockblocks', ($this->get_view()->get('lockblocks') && ($this->get_view()->get('owner') || $this->get_view()->get('group')))); // Only lock blocks for user's portfolio and group pages
-        $smarty->assign('cssicontype', call_static_method($blocktypeclass, 'get_css_icon_type',  $this->get('blocktype')));
-        $smarty->assign('cssicon', call_static_method($blocktypeclass, 'get_css_icon',  $this->get('blocktype')));
-        $smarty->assign('blocktypename', call_static_method($blocktypeclass, 'get_title'));
+        $smarty->assign('cssicontype', $blocktypeclass::get_css_icon_type($this->get('blocktype')));
+        $smarty->assign('cssicon', $blocktypeclass::get_css_icon($this->get('blocktype')));
+        $smarty->assign('blocktypename', $blocktypeclass::get_title());
 
         $configdata = $this->get('configdata');
         $smarty->assign('draft', (isset($configdata['draft']) ? $configdata['draft'] : 0));
@@ -1775,7 +1777,7 @@ class BlockInstance {
         $user_roles = get_column('view_access', 'role', 'usr', $USER->get('id'), 'view', $this->view);
 
         $classname = generate_class_name('blocktype', $this->get('blocktype'));
-        $displayforrole = call_static_method($classname, 'display_for_roles', $this, $user_roles);
+        $displayforrole = $classname::display_for_roles($this, $user_roles);
         $checkview = $this->get_view();
         $checkviewowner = $checkview->get('owner');
         $is_admin_for_user = !empty($checkviewowner) && $USER->is_admin_for_user($checkviewowner);
@@ -1788,13 +1790,13 @@ class BlockInstance {
             $content = '';
             $smarty->assign('loadbyajax', false);
         }
-        else if (get_config('ajaxifyblocks') && call_static_method($classname, 'should_ajaxify') && $exporting === false && $versioning === false) {
+        else if (get_config('ajaxifyblocks') && $classname::should_ajaxify() && $exporting === false && $versioning === false) {
             $content = '';
             $smarty->assign('loadbyajax', true);
         }
         else if ($exporting !== false) {
             try {
-                $content = call_static_method($classname, 'render_instance_export', $this, false, $versioning, $exporting);
+                $content = $classname::render_instance_export($this, false, $versioning, $exporting);
             }
             catch (NotFoundException $e) {
                 $content = '';
@@ -1803,7 +1805,7 @@ class BlockInstance {
         else {
             $smarty->assign('loadbyajax', false);
             try {
-                $content = call_static_method($classname, 'render_instance', $this, false, $versioning);
+                $content = $classname::render_instance($this, false, $versioning);
             }
             catch (NotFoundException $e) {
                 // Ignore not found error when fetching old versions of view
@@ -1824,7 +1826,7 @@ class BlockInstance {
         $smarty->assign('id',     $this->get('id'));
         $smarty->assign('blocktype', $this->get('blocktype'));
         // hide the title if required and no content is present
-        if (call_static_method($classname, 'hide_title_on_empty_content')
+        if ($classname::hide_title_on_empty_content()
             && !trim($content)) {
             return;
         }
@@ -1842,14 +1844,14 @@ class BlockInstance {
         $configdata = $this->get('configdata');
         $smarty->assign('blockid', $this->get('id'));
         if (!empty($configdata['artefactid']) && $displayforrole) {
-            if (call_static_method($classname, 'has_title_link')) {
+            if ($classname::has_title_link()) {
                 $smarty->assign('artefactid', $configdata['artefactid']);
             }
         }
 
         if ($displayforrole) {
             if (method_exists($classname, 'feed_url')) {
-                $smarty->assign('feedlink', call_static_method($classname, 'feed_url', $this));
+                $smarty->assign('feedlink', $classname::feed_url($this));
             }
         }
 
@@ -1860,17 +1862,17 @@ class BlockInstance {
                 $smarty->assign('retractedonload', $configdata['retractedonload']);
             }
         }
-        $cssicontype = call_static_method($classname, 'get_css_icon_type', $this->blocktype);
+        $cssicontype = $classname::get_css_icon_type($this->blocktype);
         $cardicontype = !empty($cssicontype) ? preg_replace('/^icon-/', 'card-', $cssicontype) : '';
         $smarty->assign('cardicontype', $cardicontype);
         $smarty->assign('versioning', $versioning);
 
         // Apply comments and details block header to blocks with have one artefact per block
         // Blocks with more than one artefact per block get their header via individual templates
-        $blockheader = call_static_method($classname, 'single_artefact_per_block', $this->blocktype);
+        $blockheader = $classname::single_artefact_per_block($this->blocktype);
         // Set up template for the blocks that have the comments and details header
         // Check also that an artefact has been attached to ensure empty blocks don't get empty modals
-        if ($blockheader && (!empty($configdata['artefactid']) || call_static_method($classname, 'shows_details_in_modal', $this))) {
+        if ($blockheader && (!empty($configdata['artefactid']) || $classname::shows_details_in_modal($this))) {
             $smarty->assign('blockheader', $blockheader);
             if (!empty($configdata['artefactid'])) {
                 $smarty->assign('artefactid', $configdata['artefactid']);
@@ -1936,7 +1938,7 @@ class BlockInstance {
 
         safe_require('blocktype', $this->get('blocktype'));
         $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
-        $elements = call_static_method($blocktypeclass, 'instance_config_form', $this, $this->get_view()->get('template'), $new);
+        $elements = $blocktypeclass::instance_config_form($this, $this->get_view()->get('template'), $new);
 
         // Block types may specify a method to generate a default title for a block
         $hasdefault = method_exists($blocktypeclass, 'get_instance_title');
@@ -1946,9 +1948,9 @@ class BlockInstance {
         $retractable = (isset($configdata['retractable']) ? $configdata['retractable'] : false);
         $retractedonload = (isset($configdata['retractedonload']) ? $configdata['retractedonload'] : $retractable);
         $this->ineditconfig = true;
-        $overridetitle = call_static_method($blocktypeclass, 'override_instance_title', $this);
+        $overridetitle = $blocktypeclass::override_instance_title($this);
         $titlerules = array('maxlength' => 255);
-        if (call_static_method($blocktypeclass, 'title_mandatory', $this)) {
+        if ($blocktypeclass::title_mandatory($this)) {
             $titlerules = array_merge($titlerules, array('required' => true));
         }
 
@@ -2088,7 +2090,7 @@ class BlockInstance {
             }
         }
 
-        $configjs = call_static_method($blocktypeclass, 'get_instance_config_javascript', $this);
+        $configjs = $blocktypeclass::get_instance_config_javascript($this);
         if (is_array($configjs)) {
             $js .= $this->get_get_javascript_javascript($configjs);
         }
@@ -2133,7 +2135,7 @@ class BlockInstance {
 
         safe_require('blocktype', $this->get('blocktype'));
         $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
-        $elements = call_static_method($blocktypeclass, 'instance_quickedit_form', $this, $this->get_view()->get('template'));
+        $elements = $blocktypeclass::instance_quickedit_form($this, $this->get_view()->get('template'));
 
         // Block types may specify a method to generate a default title for a block
         $hasdefault = method_exists($blocktypeclass, 'get_instance_title');
@@ -2143,7 +2145,7 @@ class BlockInstance {
         $retractable = (isset($configdata['retractable']) ? $configdata['retractable'] : false);
         $retractedonload = (isset($configdata['retractedonload']) ? $configdata['retractedonload'] : $retractable);
         $this->ineditconfig = true;
-        if (call_static_method($blocktypeclass, 'override_instance_title', $this)) {
+        if ($blocktypeclass::override_instance_title($this)) {
             $titleelement = array(
                 'type' => 'hidden',
                 'value' => $title,
@@ -2258,7 +2260,7 @@ class BlockInstance {
             }
         }
 
-        $configjs = call_static_method($blocktypeclass, 'get_instance_config_javascript', $this);
+        $configjs = $blocktypeclass::get_instance_config_javascript($this);
         if (is_array($configjs)) {
             $js .= $this->get_get_javascript_javascript($configjs);
         }
@@ -2354,9 +2356,8 @@ class BlockInstance {
 
         delete_records('view_artefact', 'block', $this->id);
         safe_require('blocktype', blocktype_name_to_namespaced($this->get('blocktype')));
-        if (!$artefacts = call_static_method(
-            generate_class_name('blocktype', $this->get('blocktype')),
-            'get_artefacts', $this)) {
+        $classname = generate_class_name('blocktype', $this->get('blocktype'));
+        if (!$artefacts = $classname::get_artefacts($this)) {
             db_commit();
             return true;
         }
@@ -2460,7 +2461,7 @@ class BlockInstance {
         safe_require('blocktype', $this->get('blocktype'), 'lib.php', 'require_once', true);
         $classname = generate_class_name('blocktype', $this->get('blocktype'));
         if (is_callable($classname . '::delete_instance')) {
-            call_static_method($classname, 'delete_instance', $this);
+            $classname::delete_instance($this);
         }
         delete_records('view_artefact', 'block', $this->id);
         delete_records('block_instance_dimension', 'block', $this->id);
@@ -2627,7 +2628,7 @@ class BlockInstance {
             $copytype = $configdata['copytype'];
         }
         else {
-            $copytype = call_static_method($blocktypeclass, 'default_copy_type', $this, $view);
+            $copytype = $blocktypeclass::default_copy_type($this, $view);
         }
 
         $viewowner = $view->ownership();
@@ -2640,7 +2641,7 @@ class BlockInstance {
         // determines whether this blockinstance should be copied into a view.
         // This could be a different question from Blocktype::allowed_in_view!
         // But for now they use the same method.
-        if (!call_static_method($blocktypeclass, 'allowed_in_view', $view)) {
+        if (!$blocktypeclass::allowed_in_view($view)) {
             return false;
         }
         if ($copytype == 'nocopy' && !$sameowner) {
@@ -2681,7 +2682,7 @@ class BlockInstance {
         // Track the artefact IDs associated to the block we are copying
         $artefactids = array();
         // If this block has artefacts ignored on block copy, only bring over artefacts not in that list
-        if ($ignore = call_static_method($blocktypeclass, 'ignore_copy_artefacttypes', $view)) {
+        if ($ignore = $blocktypeclass::ignore_copy_artefacttypes($view)) {
             $artefactids = (array)get_column_sql('
                 SELECT artefact FROM {view_artefact} va
                 JOIN {artefact} a ON a.id = va.artefact
@@ -2752,12 +2753,12 @@ class BlockInstance {
         }
         else {
             // Use the blocktype's custom steps for copying and rewriting config for those without config artefacts but other types
-            $configdata = call_static_method($blocktypeclass, 'rewrite_blockinstance_config', $view, $configdata);
+            $configdata = $blocktypeclass::rewrite_blockinstance_config($view, $configdata);
         }
 
         // Rewrite the extra configuration of block
         $newblock->commit();
-        $configdata = call_static_method($blocktypeclass, 'rewrite_blockinstance_extra_config', $view, $newblock, $configdata, $artefactcopies);
+        $configdata = $blocktypeclass::rewrite_blockinstance_extra_config($view, $newblock, $configdata, $artefactcopies);
 
         $newblock->set('configdata', $configdata);
         $newblock->commit();
@@ -2805,7 +2806,8 @@ class BlockInstance {
             if (!isset($this->temp[$key])) {
                 $this->temp[$key] = array();
             }
-            $this->temp[$key][$id] = call_static_method($blocktypeclass, 'get_instance_' . $key, $id);
+            $instancekey =  'get_instance_' . $key;
+            $this->temp[$key][$id] = $blocktypeclass::{$instancekey}($id);
         }
         return $this->temp[$key][$id];
     }
@@ -2956,7 +2958,7 @@ function blocktype_get_types_from_filter($filter) {
             if (!is_callable($classname . '::get_blocktype_type_content_types')) {
                 continue;
             }
-            $blocktypetypes = call_static_method($classname, 'get_blocktype_type_content_types');
+            $blocktypetypes = $classname::get_blocktype_type_content_types();
             foreach ($blocktypetypes as $blocktype => $contenttypes) {
                 if (!empty($contenttypes)) {
                     foreach ($contenttypes as $ct) {

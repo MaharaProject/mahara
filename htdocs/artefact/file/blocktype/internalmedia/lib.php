@@ -111,7 +111,7 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
         $smarty->assign('commentcount', $commentcount);
         $smarty->assign('comments', $comments);
         $result = '<div class="mediaplayer-container card-body flush"><div class="mediaplayer">';
-        $result .= call_static_method($playerclass, 'get_html', $artefact, $instance, $width, $height);
+        $result .= $playerclass::get_html($artefact, $instance, $width, $height);
         $result .= '</div></div>';
 
         $smarty->assign('html', $result);
@@ -170,7 +170,8 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
     }
 
     public static function artefactchooser_get_element_data($artefact) {
-        $artefact->icon = call_static_method(generate_artefact_class_name($artefact->artefacttype), 'get_icon', array('id' => $artefact->id));
+        $classname = generate_artefact_class_name($artefact->artefacttype);
+        $artefact->icon = $classname::get_icon(array('id' => $artefact->id));
         return $artefact;
     }
 
@@ -319,9 +320,9 @@ class PluginBlocktypeInternalmedia extends MaharaCoreBlocktype {
             return array();
         }
 
-        $jsfile = call_static_method($playerclass, 'get_js_library');
-        $jsblock = call_static_method($playerclass, 'get_js_initjs', $artefact, $instance, $width, $height);
-        $extrafilejs = call_static_method($playerclass, 'get_js_library_extra');
+        $jsfile = $playerclass::get_js_library();
+        $jsblock = $playerclass::get_js_initjs($artefact, $instance, $width, $height);
+        $extrafilejs = $playerclass::get_js_library_extra();
 
         $js = array();
         if ($jsfile) {

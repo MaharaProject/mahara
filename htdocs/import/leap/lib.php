@@ -427,8 +427,7 @@ class PluginImportLeap extends PluginImport {
             }
             $entry = $this->get_entry_by_id($entryid);
             $classname = 'LeapImport' . ucfirst($strategydata['artefactplugin']);
-            call_static_method($classname, 'add_import_entry_request_using_strategy',
-                            $entry, $this, $strategydata['strategy'], $strategydata['other_required_entries']);
+            $classname::add_import_entry_request_using_strategy($entry, $this, $strategydata['strategy'], $strategydata['other_required_entries']);
 
             $usedlist[] = $entryid;
             if (isset($strategydata['other_required_entries'])) {
@@ -443,7 +442,7 @@ class PluginImportLeap extends PluginImport {
             foreach (plugins_installed('artefact') as $plugin) {
                 $classname = 'LeapImport' . ucfirst($plugin->name);
                 if (method_exists($classname, 'add_import_entry_request_author_data')) {
-                    call_static_method($classname, 'add_import_entry_request_author_data', $this, $this->persondataid);
+                    $classname::add_import_entry_request_author_data($this, $this->persondataid);
                 }
             }
         }
@@ -497,7 +496,7 @@ class PluginImportLeap extends PluginImport {
                 $classname = 'LeapImport' . ucfirst($plugin);
                 if (method_exists($classname, 'render_import_entry_requests')) {
                     safe_require('artefact', $plugin);
-                    $html .= call_static_method($classname, 'render_import_entry_requests', $this);
+                    $html .= $classname::render_import_entry_requests($this);
                 }
             }
         }
@@ -527,7 +526,7 @@ class PluginImportLeap extends PluginImport {
                 $classname = 'LeapImport' . ucfirst($plugin);
                 if (method_exists($classname, $method)) {
                     safe_require('artefact', $plugin);
-                    call_static_method($classname, $method, $this);
+                    $classname::{$method}($this);
                 }
             }
         }
@@ -679,7 +678,7 @@ class PluginImportLeap extends PluginImport {
                 $classname = 'LeapImport' . ucfirst($plugin);
                 if (method_exists($classname, 'setup')) {
                     safe_require('artefact', $plugin);
-                    call_static_method($classname, 'setup', $this);
+                    $classname::setup($this);
                 }
             }
         }
@@ -724,7 +723,7 @@ class PluginImportLeap extends PluginImport {
                         throw new SystemException("Class $classname does not extend LeapImportArtefactPlugin as it should");
                     }
                     if (method_exists($classname, 'get_import_strategies_for_entry')) {
-                        $strategies = call_static_method($classname, 'get_import_strategies_for_entry', $entry, $this);
+                        $strategies = $classname::get_import_strategies_for_entry($entry, $this);
                         $this->trace("   artefact.$plugin strategies: " . count($strategies));
                         if ($strategies) {
                             $this->trace($strategies, self::LOG_LEVEL_VERBOSE);
@@ -886,8 +885,7 @@ class PluginImportLeap extends PluginImport {
             // TODO: this throws ImportException if it can't be imported, need
             // to decide if this exception can bubble up or whether it should
             // be caught here
-            $artefactmapping = call_static_method($classname, 'import_using_strategy',
-                $entry, $this, $strategydata['strategy'], $strategydata['other_required_entries']);
+            $artefactmapping = $classname::import_using_strategy($entry, $this, $strategydata['strategy'], $strategydata['other_required_entries']);
 
             if (!is_array($artefactmapping)) {
                 throw new SystemException("import_from_load_mapping(): $classname::import_using_strategy has not return a list");
@@ -913,7 +911,7 @@ class PluginImportLeap extends PluginImport {
             foreach (plugins_installed('artefact') as $plugin) {
                 $classname = 'LeapImport' . ucfirst($plugin->name);
                 if (method_exists($classname, 'import_author_data')) {
-                    call_static_method($classname, 'import_author_data', $this, $this->persondataid);
+                    $classname::import_author_data($this, $this->persondataid);
                 }
             }
         }
@@ -924,8 +922,7 @@ class PluginImportLeap extends PluginImport {
             $strategydata = $this->loadmapping[$entryid];
             $classname = 'LeapImport' . ucfirst($strategydata['artefactplugin']);
             $entry = $this->get_entry_by_id($entryid);
-            $maybeartefacts = call_static_method($classname, 'setup_relationships',
-                $entry, $this, $strategydata['strategy'], $strategydata['other_required_entries']);
+            $maybeartefacts = $classname::setup_relationships($entry, $this, $strategydata['strategy'], $strategydata['other_required_entries']);
             if (is_array($maybeartefacts)) { // some might add new artefacts (eg files attached by relpath, rather than leap id)
                 $this->artefactids = array_merge_recursive($this->artefactids, $maybeartefacts);
             }
@@ -997,8 +994,7 @@ class PluginImportLeap extends PluginImport {
                 $strategydata = $this->loadmapping[$entryid];
                 $classname = 'LeapImport' . ucfirst($strategydata['artefactplugin']);
                 $entry = $this->get_entry_by_id($entryid);
-                call_static_method($classname, 'setup_view_relationships',
-                    $entry, $this, $strategydata['strategy'], $strategydata['other_required_entries']);
+                $classname::setup_view_relationships($entry, $this, $strategydata['strategy'], $strategydata['other_required_entries']);
             }
         }
 
@@ -1037,7 +1033,7 @@ class PluginImportLeap extends PluginImport {
         foreach (plugins_installed('artefact') as $plugin) {
             $classname = 'LeapImport' . ucfirst($plugin->name);
             if (method_exists($classname, 'cleanup')) {
-                call_static_method($classname, 'cleanup', $this);
+                $classname::cleanup($this);
             }
         }
         $this->trace("------------------\nimport_completed()");
@@ -1859,7 +1855,7 @@ class PluginImportLeap extends PluginImport {
          safe_require('blocktype', $blockinstance['type']);
          $classname = generate_class_name('blocktype', $blockinstance['type']);
          $method = 'import_rewrite_blockinstance_extra_config_leap';
-         $blockinstance['config'] = call_static_method($classname, $method, $this->artefactids, $blockinstance['config']);
+         $blockinstance['config'] = $classname::{$method}($this->artefactids, $blockinstance['config']);
      }
 
 
@@ -1902,7 +1898,7 @@ class PluginImportLeap extends PluginImport {
                     safe_require('blocktype', $blockrec->blocktype);
                     $classname = generate_class_name('blocktype', $blockrec->blocktype);
                     $method = 'import_rewrite_blockinstance_relationships_leap';
-                    $blockinstance['config'] = call_static_method($classname, $method, $blockrec->id, $this);
+                    $blockinstance['config'] = $classname::{$method}($blockrec->id, $this);
                 }
             }
         }

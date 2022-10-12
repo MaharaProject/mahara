@@ -68,7 +68,7 @@ class PluginNotificationInternal extends PluginNotification {
                     unset ($pluginlist[$key]);
                     continue;
                 }
-                call_static_method($classname, 'notification_created', $messageid, $toinsert, 'notification_internal_activity');
+                $classname::notification_created($messageid, $toinsert, 'notification_internal_activity');
             }
         }
 

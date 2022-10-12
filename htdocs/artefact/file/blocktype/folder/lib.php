@@ -209,8 +209,8 @@ class PluginBlocktypeFolder extends MaharaCoreBlocktype {
      */
     public static function artefactchooser_get_element_data($artefact) {
         $folderdata = ArtefactTypeFileBase::artefactchooser_folder_data($artefact);
-
-        $artefact->icon = call_static_method(generate_artefact_class_name($artefact->artefacttype), 'get_icon', array('id' => $artefact->id));
+        $classname = generate_artefact_class_name($artefact->artefacttype);
+        $artefact->icon = $classname::get_icon(array('id' => $artefact->id));
         $artefact->hovertitle = $artefact->description;
 
         $path = $artefact->parent ? ArtefactTypeFileBase::get_full_path($artefact->parent, $folderdata->data) : '';

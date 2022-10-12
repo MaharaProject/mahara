@@ -259,8 +259,8 @@ function user_authorise($token, $useragent) {
     require_once(get_config('docroot') . 'artefact/lib.php');
     require_once(get_config('docroot') . 'artefact/internal/lib.php');
 
-    $element_list = call_static_method('ArtefactTypeProfile', 'get_all_fields');
-    $element_required = call_static_method('ArtefactTypeProfile', 'get_mandatory_fields');
+    $element_list = ArtefactTypeProfile::get_all_fields();
+    $element_required = ArtefactTypeProfile::get_mandatory_fields();
 
     // load existing profile information
     $profilefields = array();
@@ -914,7 +914,7 @@ function submit_view_for_assessment($username, $id, $iscollection = false, $apil
         safe_require('artefact', $plugin->name);
         $classname = generate_class_name('artefact', $plugin->name);
         if (is_callable($classname . '::view_submit_external_data')) {
-            $data[$plugin->name] = call_static_method($classname, 'view_submit_external_data', $id, $iscollection);
+            $data[$plugin->name] = $classname::view_submit_external_data($id, $iscollection);
         }
     }
     db_commit();
@@ -951,7 +951,7 @@ function release_submitted_view($id, $assessmentdata, $teacherusername, $iscolle
         safe_require('artefact', $plugin->name);
         $classname = generate_class_name('artefact', $plugin->name);
         if (is_callable($classname . '::view_release_external_data')) {
-            call_static_method($classname, 'view_release_external_data', $id, $assessmentdata, $teacher ? $teacher->id : 0, $iscollection);
+            $classname::view_release_external_data($id, $assessmentdata, $teacher ? $teacher->id : 0, $iscollection);
         }
     }
 

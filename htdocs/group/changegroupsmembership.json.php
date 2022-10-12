@@ -49,7 +49,8 @@ foreach ($allgroups as $groupid) {
     if ($loggedinrole == 'admin') {
         continue;
     }
-    if (!in_array($loggedinrole, call_static_method('GroupType' . $groupdata[$groupid]->grouptype, 'get_view_assessing_roles'))) {
+    $classname = 'GroupType' . $groupdata[$groupid]->grouptype;
+    if (!in_array($loggedinrole, $classname::get_view_assessing_roles())) {
         json_reply('local', get_string('accessdenied', 'error'));
     }
     if (group_user_access($groupid, $userid) && in_array($groupid, array_diff($initialgroups, $resultgroups))) {

@@ -26,7 +26,7 @@ if ($institution && $plugin) {
     $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
     try {
         safe_require('auth', strtolower($plugin));
-        $has_instance_config = call_static_method($classname, 'has_instance_config');
+        $has_instance_config = $classname::has_instance_config();
     }
     catch (Exception $e) {
         // this is a custom webservice plugin without a defined class
@@ -61,7 +61,7 @@ if ($institution && $plugin) {
         exit;
     }
 
-    $form = call_static_method($classname, 'get_instance_config_options', $institution, $instanceid);
+    $form = $classname::get_instance_config_options($institution, $instanceid);
     if (isset($form['error'])) {
         json_reply(false, array('pluginname' => strtolower($plugin),
                                 'html' => $form['error'])
@@ -121,7 +121,7 @@ function auth_config_validate(Pieform $form, $values) {
     $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
 
     try {
-        $values = call_static_method($classname, 'validate_instance_config_options', $values, $form);
+        $values = $classname::validate_instance_config_options($values, $form);
     }
     catch (Exception $e) {
         if (!$form->has_errors()) {
@@ -136,7 +136,7 @@ function auth_config_submit(Pieform $form, $values) {
     $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
 
     safe_require('auth', strtolower($plugin));
-    $values = call_static_method($classname, 'save_instance_config_options', $values, $form);
+    $values = $classname::save_instance_config_options($values, $form);
 
     $form->json_reply(
         PIEFORM_OK,

@@ -867,7 +867,7 @@ function siteoptions_validate(Pieform $form, $values) {
     // Call the new search plugin's can connect
     safe_require('search', $values['searchplugin']);
     $search_class_name = generate_class_name('search', $values['searchplugin']);
-    $connect = call_static_method($search_class_name, 'can_connect');
+    $connect = $search_class_name::can_connect();
     if (!$connect) {
         $form->set_error('searchplugin', get_string('searchconfigerror1', 'admin', $values['searchplugin']));
     }
@@ -1025,10 +1025,12 @@ function siteoptions_submit(Pieform $form, $values) {
     if ($oldsearchplugin != $values['searchplugin']) {
         // Call the old search plugin's sitewide cleanup method
         safe_require('search', $oldsearchplugin);
-        call_static_method(generate_class_name('search', $oldsearchplugin), 'cleanup_sitewide');
+        $oldclassname = generate_class_name('search', $oldsearchplugin);
+        $oldclassname::cleanup_sitewide();
         // Call the new search plugin's sitewide initialize method
         safe_require('search', $values['searchplugin']);
-        $initialize = call_static_method(generate_class_name('search', $values['searchplugin']), 'initialize_sitewide');
+        $classname = generate_class_name('search', $values['searchplugin']);
+        $initialize = $classname::initialize_sitewide();
         if (!$initialize) {
             $form->set_error('searchplugin', get_string('searchconfigerror1', 'admin', $values['searchplugin']));
             $fieldsfailed += 1;

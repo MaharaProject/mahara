@@ -47,8 +47,8 @@ $highlight = null;
 if ($file = param_integer('file', 0)) {
     $highlight = array($file);
 }
-
-$elements = call_static_method(generate_artefact_class_name($type), 'get_addform_elements');
+$classname = generate_artefact_class_name($type);
+$elements = $classname::get_addform_elements();
 // Replace 'files' pieform element with 'filebrowser' one.
 unset($elements['attachments']);
 $elements['filebrowser'] = array(

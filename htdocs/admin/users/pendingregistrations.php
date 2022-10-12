@@ -75,7 +75,7 @@ function build_pending_html($data, $institution) {
                         $extracols[$k] = 1;
                     }
                     if (is_callable(array($classname, 'format_result'))) {
-                        $out = call_static_method($classname, 'format_result', $v);
+                        $out = $classname::format_result($v);
                         $item->extra->$k = $out;
                     }
                 }

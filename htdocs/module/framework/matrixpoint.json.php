@@ -56,8 +56,8 @@ if ($action == 'update') {
         json_reply(true, get_string('accessdenied', 'error'));
         exit;
     }
-
-    $values = call_static_method(generate_class_name('blocktype', $bi->get('blocktype')), 'instance_config_save', $values, $bi);
+    $classname = generate_class_name('blocktype', $bi->get('blocktype'));
+    $values = $classname::instance_config_save($values, $bi);
     $title = (isset($values['title'])) ? $values['title'] : '';
     unset($values['title']);
     unset($values['_redrawblocks']);

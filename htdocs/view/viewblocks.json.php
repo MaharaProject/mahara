@@ -75,8 +75,8 @@ else {
         $options['blockid'] = $blockid;
         safe_require_plugin('blocktype', $block->get('blocktype'));
         $classname = generate_class_name('blocktype', $block->get('blocktype'));
-        if (call_static_method($classname, 'shows_details_in_modal', $block)) {
-            $rendered = call_static_method($classname, 'render_details_in_modal', $block);
+        if ($classname::shows_details_in_modal($block)) {
+            $rendered = $classname::render_details_in_modal($block);
         }
         $title = $block->get('title');
     }

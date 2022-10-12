@@ -18,8 +18,9 @@ require_once('form/elements/artefactchooser.php');
 $extradata = json_decode(param_variable('extradata'));
 
 safe_require('blocktype', $extradata->blocktype);
+$classname = generate_class_name('blocktype', $extradata->blocktype);
 $data = pieform_element_artefactchooser_set_attributes(
-    call_static_method(generate_class_name('blocktype', $extradata->blocktype), 'artefactchooser_element', $extradata->value)
+    $classname::artefactchooser_element($extradata->value)
 );
 $data['offset'] = param_integer('offset', 0);
 $data['lazyload'] = false;

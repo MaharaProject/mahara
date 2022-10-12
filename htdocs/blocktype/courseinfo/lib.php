@@ -212,7 +212,8 @@ class PluginBlocktypeCourseinfo extends MaharaCoreBlocktype {
         $configdata['username'] = $username;
         if ($connections = Plugin::get_webservice_connections($owner, 'fetch_userid')) {
             foreach ($connections as $connection) {
-                $result = call_static_method($connection->connection->class, 'fetch_userid', $connection, $owner, $configdata);
+                $classname = $connection->connection->class;
+                $result = $classname::fetch_userid($connection, $owner, $configdata);
                 if (!empty($result)) {
                     return $result;
                 }
@@ -257,7 +258,8 @@ class PluginBlocktypeCourseinfo extends MaharaCoreBlocktype {
         $total = 0;
         if ($connections = Plugin::get_webservice_connections($owner, 'fetch_coursecompletion')) {
             foreach ($connections as $connection) {
-                $content = call_static_method($connection->connection->class, 'fetch_coursecompletion', $connection, $owner, $configdata);
+                $classname = $connection->connection->class;
+                $content = $classname::fetch_coursecompletion($connection, $owner, $configdata);
             }
         }
 

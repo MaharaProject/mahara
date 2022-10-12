@@ -30,8 +30,8 @@ else {
     $classname = generate_class_name($plugintype, $pluginname);
 }
 
-if (call_static_method($classname, 'has_config_info')) {
-    $info = call_static_method($classname, 'get_config_info');
+if ($classname::has_config_info()) {
+    $info = $classname::get_config_info();
     $result['info_header'] = $info['header'];
     $result['info_body'] = $info['body'];
     json_reply(null, array('data' => $result));

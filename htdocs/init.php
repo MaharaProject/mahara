@@ -480,7 +480,8 @@ if (!defined('INSTALLER')) {
         if ($plugins = plugins_installed('module')) {
             foreach ($plugins as &$plugin) {
                 if (safe_require_plugin('module', $plugin->name)) {
-                    call_static_method(generate_class_name('module', $plugin->name), 'bootstrap');
+                    $moduleclassname = generate_class_name('module', $plugin->name);
+                    $moduleclassname::bootstrap();
                 }
             }
         }

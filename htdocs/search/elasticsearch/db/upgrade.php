@@ -82,7 +82,8 @@ function xmldb_search_elasticsearch_upgrade($oldversion=0) {
             // set the shards / replicas to default elasticsearch values
             set_config_plugin('search', 'elasticsearch', 'shards', 5);
             set_config_plugin('search', 'elasticsearch', 'replicashards', 1);
-            list($status, $info) = call_static_method(generate_class_name('search', 'elasticsearch'), 'elasticsearch_server');
+            $classname = generate_class_name('search', 'elasticsearch');
+            list($status, $info) = $classname::elasticsearch_server();
             if (!empty($info->error)) {
                 // warn them if problems with elasticsearch server
                 log_warn($info->error);

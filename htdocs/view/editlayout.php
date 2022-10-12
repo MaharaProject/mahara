@@ -997,7 +997,7 @@ function create_block($bt, $configdata, $view, $blockinfo = null, $dimension = n
     $bi = new BlockInstance(0, array('blocktype' => $bt, 'view' => $view->get('id')));
     $blocktypeclass = generate_class_name('blocktype', $bt);
     if (method_exists($blocktypeclass, 'get_instance_title')) {
-        $title = call_static_method($blocktypeclass, 'get_instance_title', $bi);
+        $title = $blocktypeclass::get_instance_title($bi);
         $defaulttitle = false;
     }
     else {

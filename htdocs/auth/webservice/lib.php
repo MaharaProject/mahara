@@ -230,7 +230,7 @@ class PluginAuthWebservice extends PluginAuth {
                     if (safe_require_plugin($moduletype, $module)) {
                         $classname = generate_class_name($moduletype, $module);
                         if (is_callable(array($classname, 'get_oauth_service_config_options'))) {
-                            $config = call_static_method($classname, 'get_oauth_service_config_options', $serverid);
+                            $config = $classname::get_oauth_service_config_options($serverid);
                             $elements = array_merge($elements, $config);
                         }
                     }
@@ -254,7 +254,7 @@ class PluginAuthWebservice extends PluginAuth {
                     if (safe_require_plugin($moduletype, $module)) {
                         $classname = generate_class_name($moduletype, $module);
                         if (is_callable(array($classname, 'save_oauth_service_config_options'))) {
-                            call_static_method($classname, 'save_oauth_service_config_options', $serverid, $values);
+                            $classname::save_oauth_service_config_options($serverid, $values);
                         }
                     }
                 }

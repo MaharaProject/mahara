@@ -106,10 +106,10 @@ foreach (plugin_types() as $plugintype) {
             $classname = generate_class_name($plugintype, $job->plugin);
 
             safe_require($plugintype, $job->plugin, 'lib.php', 'require_once');
-
+            $runmethod = $job->callfunction . '_needs_to_run';
             // check if the cron function needs to run on the DB
             if (!method_exists($classname, $job->callfunction . '_needs_to_run') ||
-                call_static_method($classname, $job->callfunction . '_needs_to_run')) {
+                $classname::{$runmethod}()) {
 
                 log_info("Running $classname::" . $job->callfunction);
 
@@ -119,7 +119,7 @@ foreach (plugin_types() as $plugintype) {
                 }
 
                 try {
-                    call_static_method($classname, $job->callfunction);
+                    $classname::{$job->callfunction}();
                 }
                 catch (Exception $e) {
                     log_message($e->getMessage(), LOG_LEVEL_WARN, true, true, $e->getFile(), $e->getLine(), $e->getTrace());

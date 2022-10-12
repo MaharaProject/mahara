@@ -27,8 +27,8 @@ $enable  = param_integer('enable', 0);
 $disable = param_integer('disable', 0);
 
 
-
-if ($disable && !call_static_method(generate_class_name($plugintype, $pluginname), 'can_be_disabled')) {
+$classname = generate_class_name($plugintype, $pluginname);
+if ($disable && !$classname::can_be_disabled()) {
     throw new UserException("Plugin $plugintype $pluginname cannot be disabled");
 }
 
@@ -47,13 +47,13 @@ else {
     $classname = generate_class_name($plugintype, $pluginname);
 }
 
-if (!call_static_method($classname, 'has_config')) {
+if (!$classname::has_config()) {
     throw new InvalidArgumentException("$classname doesn't have config options available");
 }
 
-$form = call_static_method($classname, 'get_config_options');
+$form = $classname::get_config_options();
 if (method_exists($classname, 'get_config_options_css')) {
-    $formcss = call_static_method($classname, 'get_config_options_css');
+    $formcss = $classname::get_config_options_css();
 }
 else {
     $formcss = array();
@@ -114,7 +114,7 @@ function pluginconfig_submit(Pieform $form, $values) {
     global $plugintype, $pluginname, $classname;
 
     try {
-        call_static_method($classname, 'save_config_options', $form, $values);
+        $classname::save_config_options($form, $values);
         $success = true;
     }
     catch (Exception $e) {
@@ -146,6 +146,6 @@ function pluginconfig_submit(Pieform $form, $values) {
 function pluginconfig_validate(PieForm $form, $values) {
     global $plugintype, $pluginname, $classname;
     if (is_callable($classname . '::validate_config_options')) {
-        call_static_method($classname, 'validate_config_options', $form, $values);
+        $classname::validate_config_options($form, $values);
     }
 }

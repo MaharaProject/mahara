@@ -1198,7 +1198,8 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
                                 }
                             }
                             else {
-                                $is_singular = call_static_method(generate_artefact_class_name($ier->entrytype), 'is_singular');
+                                $classname = generate_artefact_class_name($ier->entrytype);
+                                $is_singular = $classname::is_singular();
                                 $profilefieldvalue['disabled'][PluginImport::DECISION_ADDNEW] = $is_singular;
                                 $profilefieldvalue['disabled'][PluginImport::DECISION_APPEND] = !$is_singular;
                                 $profilefieldvalue['disabled'][PluginImport::DECISION_REPLACE] = !$is_singular;

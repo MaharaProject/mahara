@@ -1254,7 +1254,7 @@ function install_blocktype_categories_for_plugin($blocktype) {
     $classname = generate_class_name('blocktype', $blocktype);
     $categories = $classname::get_categories();
     if ($categories) {
-        foreach ($categories as $k=>$v) {
+        foreach ($categories as $k => $v) {
             if (is_string($k) && is_int($v)) {
                 // New block with name => sortorder array.
                 $cat = $k;

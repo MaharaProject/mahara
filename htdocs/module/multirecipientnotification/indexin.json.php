@@ -40,7 +40,7 @@ if ($readone) {
         $classname = generate_class_name($plugin->plugintype, $plugin->name);
         safe_require($plugin->plugintype, $plugin->name);
         if (is_callable(array($classname, 'notification_read'))) {
-            call_static_method($classname, 'notification_read', array($readone), $USER->get('id'), $list);
+            $classname::notification_read(array($readone), $USER->get('id'), $list);
         }
     }
     json_reply(false, array('data' => $data));
@@ -90,7 +90,7 @@ if ($markasread) {
 
             foreach ($plugins as $plugin) {
                 $classname = generate_class_name($plugin->plugintype, $plugin->name);
-                call_static_method($classname, 'notification_read', $idsperlist, $USER->get('id'), $list);
+                $classname::notification_read($idsperlist, $USER->get('id'), $list);
             }
         }
     }
@@ -160,7 +160,7 @@ else if ($delete) {
 
         foreach ($plugins as $plugin) {
             $classname = generate_class_name($plugin->plugintype, $plugin->name);
-            call_static_method($classname, 'notification_delete', $idsperlist, $USER->get('id'), $list);
+            $classname::notification_delete($idsperlist, $USER->get('id'), $list);
         }
     }
     db_commit();

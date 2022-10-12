@@ -43,10 +43,10 @@ if ($membership != 'admin') {
 }
 
 $returnto = param_alpha('returnto', 'view');
-
+$classname = generate_class_name('interaction', $plugin);
 $elements = array_merge(
     PluginInteraction::instance_config_base_form($plugin, $group, $instance),
-    call_static_method(generate_class_name('interaction', $plugin), 'instance_config_form', $group, $instance),
+    $classname::instance_config_form($group, $instance),
     array(
         'submit' => array(
             'type'  => 'submitcancel',
@@ -58,7 +58,7 @@ $elements = array_merge(
     )
 );
 
-$js = call_static_method(generate_class_name('interaction', $plugin), 'instance_config_js', $group, $instance);
+$js = $classname::instance_config_js($group, $instance);
 
 // save, validate and cancelhandlers are in interaction/lib.php
 $form = pieform(array(

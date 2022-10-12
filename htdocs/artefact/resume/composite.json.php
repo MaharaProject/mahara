@@ -39,7 +39,7 @@ if (!$data = get_records_sql_array($sql, array($owner, $type))) {
 $classname = generate_artefact_class_name($type);
 $iswysiwyg = false;
 if (is_callable($classname . '::is_wysiwyg')) {
-    $iswysiwyg = call_static_method($classname, 'is_wysiwyg');
+    $iswysiwyg = $classname::is_wysiwyg();
 }
 foreach ($data as &$row) {
     foreach ($row as $key => $value) {

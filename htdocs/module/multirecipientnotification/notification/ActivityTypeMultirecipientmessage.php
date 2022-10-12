@@ -128,7 +128,7 @@ class ActivityTypeMultirecipientmessage extends ActivityTypeUsermessage {
                     unset ($pluginlist[$key]);
                     continue;
                 }
-                call_static_method($classname, 'notification_created', $userdata->notification, $userdata, 'module_multirecipient_notification');
+                $classname::notification_created($userdata->notification, $userdata, 'module_multirecipient_notification');
             }
         }
 
@@ -147,7 +147,7 @@ class ActivityTypeMultirecipientmessage extends ActivityTypeUsermessage {
                 }
             }
             try {
-                call_static_method($notificationclass, 'notify_user', $user, $userdata);
+                $notificationclass::notify_user($user, $userdata);
             }
             catch (MaharaException $e) {
                 static $badnotification = false;
