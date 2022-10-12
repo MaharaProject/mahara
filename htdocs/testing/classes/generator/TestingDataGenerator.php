@@ -1494,6 +1494,15 @@ EOD;
     public static function generate_configdata_profileinfo($sortedfields, $ownertype, $ownerid) {
         $configdata = array();
 
+        /**
+         * 'Introtext', aka 'Introduction text' is a configdata field of the profile block.
+         * This is different from the profile artefact 'introduction'.
+         * In a profile block, the 'Introduction text' config field needs to be blank for the
+         * introduction artefact text to show (if selected).
+         * Otherwise, if the 'Introduction text' config field is not blank, whether the
+         * introduction artefact is ticked or not, the config field will show instead.
+         */
+
         foreach ($sortedfields as $key => $value) {
             if ($key == 'introtext') {
                 require_once('embeddedimage.php');
