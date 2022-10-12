@@ -467,3 +467,22 @@ section {
     margin-top: 0;
   }
 }
+
+.mce-content-body {
+    figure {
+        display: table;
+        margin: 1rem auto;
+
+        & .image.align-center {
+            display: table;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        & .align-left {
+            float: left;
+        }
+        & .align-right {
+            float: right;
+        }
+    }
+}

@@ -189,6 +189,9 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
                 $src = get_config('wwwroot') . 'artefact/file/download.php?file=' . $artefactid;
                 $src .= '&view=' . $instance->get('view');
                 $description = $image->get('description');
+                $alttext = $image->get('alttext');
+                $altiscaption = $image->get('altiscaption');
+                $isdecorative = $image->get('isdecorative');
             }
             else {
                 continue;
@@ -210,7 +213,11 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
                 'title' => $image->get('title'),
                 'description' => $showdescription ? $description : '',
                 'fancybox' => $fancyboxattr,
-                'squaredimensions' => $width
+                'squaredimensions' => $width,
+                'alttext' => $alttext,
+                'altiscaption' => $altiscaption,
+                'isdecorative' => $isdecorative,
+                'bootstrapcaption' => $altiscaption ? $alttext : $description
             );
         }
 
@@ -340,7 +347,7 @@ class PluginBlocktypeGallery extends MaharaCoreBlocktype {
             ),
             'showdescription' => array(
                 'type'  => 'switchbox',
-                'title' => get_string('showdescriptions', 'blocktype.file/gallery'),
+                'title' => get_string('showdescriptions1', 'blocktype.file/gallery'),
                 'description' => get_string('showdescriptionsdescription', 'blocktype.file/gallery'),
                 'defaultvalue' => !empty($configdata['showdescription']) ? true : false,
             )

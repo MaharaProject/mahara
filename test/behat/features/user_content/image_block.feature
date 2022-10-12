@@ -24,11 +24,15 @@ Scenario: Create and delete image block
     Then I should see "Image Block 1: Edit"
     And I expand the section "Image"
     And I attach the file "Image1.jpg" to "File"
-    Then I should see "Image - Image1.jpg"
-    And I enable the switch "Show description"
+    And I expand the section "Image"
+    And I click on "Edit" in the "#instconf_artefactid_filelist" "css_element"
+    And I set the field "Alt text" to "Image one caption"
+    And I enable the switch "Use alt text as image caption"
+    And I click on "Save changes"
+    And I enable the switch "Show caption"
     And I click on "Save" in the "Submission" "Modal" property
     And I display the page
-    And I should see "Image1.jpg"
+    Then I should see "Image one caption"
     # delete image block
     And I click on "Edit"
     And I delete the block "Image Block 1"

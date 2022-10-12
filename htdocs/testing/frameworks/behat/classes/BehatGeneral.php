@@ -1688,8 +1688,27 @@ EOF;
 
         // Find the section heading link.
         $textliteral = $this->escaper->escapeLiteral($text);
-        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the collapsed section heading containing the text "' . $text . '"');
-        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' collapsible-group ')]" .
+        $test_section_heading_link = false;
+        // Test to see if it's already open and if so no need to open it
+        try {
+            $test_xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' collapsible-group ')]" .
+                    "//a[contains(concat(' ', normalize-space(@data-bs-toggle), ' '), ' collapse ')" .
+                        " and contains(normalize-space(.), " . $textliteral . ")" .
+                        " and not(contains(concat(' ', normalize-space(@class), ' '), ' collapsed '))]" .
+                 " | " .
+                 "//div[contains(concat(' ', normalize-space(@class), ' '), ' collapsible-group ')]" .
+                    "//button[contains(concat(' ', normalize-space(@data-bs-toggle), ' '), ' collapse ')" .
+                        " and contains(normalize-space(.), " . $textliteral . ")" .
+                        " and not(contains(concat(' ', normalize-space(@class), ' '), ' collapsed '))]";
+            $test_section_heading_link = $this->find('xpath', $test_xpath);
+        }
+        catch (ElementNotFoundException $e) {
+            // not currently open
+        }
+
+        if (!$test_section_heading_link) {
+            $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the collapsed section heading containing the text "' . $text . '"');
+            $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' collapsible-group ')]" .
                     "//a[contains(concat(' ', normalize-space(@data-bs-toggle), ' '), ' collapse ')" .
                         " and contains(normalize-space(.), " . $textliteral . ")" .
                         " and contains(concat(' ', normalize-space(@class), ' '), ' collapsed ')]" .
@@ -1698,13 +1717,13 @@ EOF;
                     "//button[contains(concat(' ', normalize-space(@data-bs-toggle), ' '), ' collapse ')" .
                         " and contains(normalize-space(.), " . $textliteral . ")" .
                         " and contains(concat(' ', normalize-space(@class), ' '), ' collapsed ')]";
-        $section_heading_link = $this->find('xpath', $xpath, $exception);
+            $section_heading_link = $this->find('xpath', $xpath, $exception);
 
-        $this->ensure_node_is_visible($section_heading_link);
-        $this->ensure_node_is_in_viewport($section_heading_link, $text);
-        $this->getSession()->wait(self::WAIT_TIMEOUT, false);
-        $section_heading_link->click();
-
+            $this->ensure_node_is_visible($section_heading_link);
+            $this->ensure_node_is_in_viewport($section_heading_link, $text);
+            $this->getSession()->wait(self::WAIT_TIMEOUT, false);
+            $section_heading_link->click();
+        }
     }
 
     /**

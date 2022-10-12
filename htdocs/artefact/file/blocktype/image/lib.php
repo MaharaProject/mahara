@@ -54,6 +54,9 @@ class PluginBlocktypeImage extends MaharaCoreBlocktype {
         }
         else {
             $src = $wwwroot . 'artefact/file/download.php?file=' . $id . '&view=' . $viewid . $edittime;
+            $isdecorative = $image->get('isdecorative');
+            $alttext = $image->get('alttext');
+            $altiscaption = $image->get('altiscaption');
             $description = $image->get('description');
             $description = empty($description) ? $image->get('title') : $description;
         }
@@ -71,6 +74,9 @@ class PluginBlocktypeImage extends MaharaCoreBlocktype {
         $smarty->assign('commentcount', $commentcount);
         $smarty->assign('comments', $comments);
         $smarty->assign('src', $src);
+        $smarty->assign('isdecorative', $isdecorative);
+        $smarty->assign('alttext', $alttext);
+        $smarty->assign('altiscaption', $altiscaption);
         $smarty->assign('description', $description);
         $smarty->assign('showdescription', !empty($configdata['showdescription']) && !empty($description));
         $smarty->assign('blockid', $instance->get('id'));
@@ -101,7 +107,8 @@ class PluginBlocktypeImage extends MaharaCoreBlocktype {
             ),
             'showdescription' => array(
                 'type'  => 'switchbox',
-                'title' => get_string('showdescription', 'blocktype.file/image'),
+                'title' => get_string('showdescription1', 'blocktype.file/image'),
+                'description' => get_string('showdescriptiondescription', 'blocktype.file/image'),
                 'defaultvalue' => !empty($configdata['showdescription']) ? true : false,
             ),
             'width' => array(

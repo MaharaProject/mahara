@@ -381,6 +381,8 @@ tinyMCE.init({
         + ",param[name|value]"
         + ",embed[src|type|width|height|flashvars|wmode]"
         + ",script[src,type,language]"
+        + ",figure[class]"
+        + ",figcaption[class]"
         + ",ul[id|type|compact]"
         + ",iframe[src|width|height|name|scrolling|frameborder|allowfullscreen|webkitallowfullscreen|mozallowfullscreen|longdesc|marginheight|marginwidth|align|title|class|type]"
         + ",a[id|class|title|href|name|target]"
@@ -4042,6 +4044,9 @@ function clean_html($text, $xhtml=false) {
         $area->excludes = array('area' => true);
         // Allow button tags
         $def->addElement('button', 'Inline', 'Inline', 'Common');
+        // Allow figure and figcaption
+        $def->addElement('figcaption', 'Block', 'Flow', 'Common');
+        $def->addElement('figure', 'Block', 'Optional: (figcaption, Flow) | (Flow, figcaption) | Flow', 'Common');
     }
 
     $purifier = new HTMLPurifier($config);

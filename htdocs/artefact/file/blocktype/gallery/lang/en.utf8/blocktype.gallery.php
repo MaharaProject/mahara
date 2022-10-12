@@ -27,7 +27,7 @@ $string['style'] = 'Style';
 $string['stylethumbs'] = 'Thumbnails';
 $string['stylesquares'] = 'Thumbnails (square)';
 $string['styleslideshow'] = 'Slideshow';
-$string['showdescriptions'] = 'Show descriptions';
+$string['showdescriptions1'] = 'Show captions';
 $string['showdescriptionsdescription'] = 'Select to caption each image with its description.';
 $string['cannotdisplayslideshow'] = 'Cannot display slideshow.';
 

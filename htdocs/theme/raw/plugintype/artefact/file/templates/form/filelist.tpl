@@ -157,12 +157,12 @@
                             {assign var=deletetext value=str(tag=deletespecific arg1=$displaytitle)}
                         {/if}
 
-                        <button name="{$prefix}_edit[{$file->id}]" class="btn btn-secondary btn-sm">
+                        <button name="{$prefix}_edit[{$file->id}]" class="btn btn-secondary btn-sm" title="{str tag=edit}">
                             <span class="icon icon-pencil-alt" role="presentation" aria-hidden="true"></span>
                             <span class="visually-hidden">{$edittext|escape:html|safe}</span>
                         </button>
 
-                        <button name="{$prefix}_delete[{$file->id}]" class="btn btn-secondary btn-sm">
+                        <button name="{$prefix}_delete[{$file->id}]" class="btn btn-secondary btn-sm" title="{str tag=delete}">
                             <span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span>
                             <span class="visually-hidden">{$deletetext|escape:html|safe}</span>
                         </button>
