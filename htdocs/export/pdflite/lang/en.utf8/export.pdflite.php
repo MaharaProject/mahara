@@ -17,3 +17,4 @@ $string['needsinstalledpdfexport'] = 'It requires the "PDF" export plugin to be 
 $string['needsactivepdfexport'] = 'It requires the "PDF" export plugin to be enabled.';
 $string['exportpdfdisabled'] = 'PDF lite export dependencies are missing. PDF lite export is disabled. For more information see <a href="%s">\'Plugin administration\'</a>.';
 $string['isexperimental'] = 'This is an experimental export option that relies on the PDF export option to be installed and enabled.';
+$string['beginpdfliteviewexport'] = 'Begin the PDFLite export process';
