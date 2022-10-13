@@ -3,8 +3,7 @@
 {include file="view/editviewpageactions.tpl" selected='share'}
 
 <div id="accessurl-container">
-
-<div class="view-container">
+  <div class="view-container">
     {if $collectionid}
         <label>{str tag=pagepartofcollection section=view arg1=$collectiontitle}</label>
     {/if}
@@ -69,17 +68,42 @@
 
     </div>
     {/if}
+  </div>
 
-</div>
-
-<div class="pageshare">
+  <div class="pageshare">
 
     <h2 class="access-title">{str tag=sharedwithothers section=view}</h2>
     <!-- Access -->
     {$form|safe}
     {include file="progress_meter.tpl"}
 
+  </div>
 </div>
 
+{* Modal form *}
+<div tabindex="0" class="modal fade" id="copy-secreturl">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
+                <h1 class="modal-title">
+                    <span class="icon icon-regular icon-copy"></span>
+                    {str tag=copyingsecreturl section=view}
+                </h1>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+$('.url-copytoclipboardbutton').each(function() {
+    var clipbutton = $(this);
+    $(clipbutton).on('click', function() {
+        $("#copy-secreturl .modal-body").text(clipbutton.data('clipboard-text'));
+        $("#copy-secreturl").modal('show');
+    });
+});
+</script>
 {include file="footer.tpl"}
