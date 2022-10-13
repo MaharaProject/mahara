@@ -3955,6 +3955,9 @@ function clean_html($text, $xhtml=false) {
      */
     // $config->set('CSS.AllowTricky', true);
 
+    // Enable position styles.
+    $config->set('CSS.Trusted', true);
+
     // Add extra CSS3 classes.
     $config->set('CSS.Proprietary', true);
     /// And remove the opacity parameters we just included.
