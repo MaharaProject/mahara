@@ -164,6 +164,8 @@ $string['secreturls'] = 'Secret URLs';
 $string['existingURLS'] = 'Existing URLs';
 $string['publicaccessnotallowed'] = "Your institution or site administrator has disabled public pages and secret URLs. Any secret URLs you see listed here are currently inactive.";
 $string['publicaccessnotallowedforprobation'] = "Sorry, newly registered people aren't allowed to create secret URLs.";
+$string['copyingsecreturl'] = 'Copied secret URL to clipboard';
+
 // view user
 $string['inviteusertojoingroup'] = 'Invite this person to join a group';
 $string['addusertogroup'] = 'Add this person to a group';

@@ -53,4 +53,30 @@
     {/if}
 </div>
 
+{* Modal form *}
+<div tabindex="0" class="modal fade" id="copy-secreturl">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
+                <h1 class="modal-title">
+                    <span class="icon icon-regular icon-copy"></span>
+                    {str tag=copyingsecreturl section=view}
+                </h1>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$('.url-copytoclipboardbutton').each(function() {
+    var clipbutton = $(this);
+    $(clipbutton).on('click', function() {
+        $("#copy-secreturl .modal-body").text(clipbutton.data('clipboard-text'));
+        $("#copy-secreturl").modal('show');
+    });
+});
+</script>
 {include file="footer.tpl"}
