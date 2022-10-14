@@ -61,6 +61,11 @@ function isEmptyCollectionByPortfolioUrl(url) {
     return (url.split('/').pop().split('?')[0] === 'views.php');
 }
 
+function isSpecialCollectionPageByPortfolioUrl(url) {
+    const regex = /matrix\.php|progresscompletion\.php/;
+    return url.match(regex);
+}
+
 function setShowPortfolioClickEvents() {
     // Add a goto portfolio button if needed
     if ($('#page-modal .modal-footer .goto').length == 0) {
@@ -69,26 +74,34 @@ function setShowPortfolioClickEvents() {
     else {
         $('#page-modal .goto').show();
     }
+    $('.btn-view, .btn-outcome').off('click');
     $('.btn-view, .btn-outcome').on('click', function (event) {
         event.preventDefault();
-
-        if (isEmptyCollectionByPortfolioUrl(this.href)) {
+        if (isEmptyCollectionByPortfolioUrl($(this).data('url'))) {
             alert(get_string('emptycollection'));
             return;
         }
+        let contentpath = config.wwwroot + 'view/viewcontent.json.php';
+        let iscollectionid = 0;
+        if (isSpecialCollectionPageByPortfolioUrl($(this).data('url'))) {
+            contentpath = config.wwwroot + 'collection/viewcontent.json.php';
+            iscollectionid = 1;
+        }
+
         var Me = this;
         var params = {
-            'id': getUrlParameter('id', Me.href) || '',
-            'export': 1
+            'id': getUrlParameter('id', $(Me).data('url')) || '',
+            'export': 1,
+            'iscollection': iscollectionid
         };
 
-        sendjsonrequest(config.wwwroot + 'view/viewcontent.json.php', params, 'POST', showPreview.bind(null, 'big'));
+        sendjsonrequest(contentpath, params, 'POST', showPreview.bind(null, 'big'));
         $('#page-modal .goto').off('click');
         $('#page-modal .goto').on('click', function() {
             var newWindow = window.open();
             newWindow.opener = null;
-            newWindow.location.href = Me.href;
-             $('#page-modal').modal("hide");
+            newWindow.location.href = $(Me).data('url');
+            $('#page-modal').modal("hide");
         });
     });
 }
