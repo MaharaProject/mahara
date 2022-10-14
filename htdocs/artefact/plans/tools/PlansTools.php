@@ -253,7 +253,10 @@ class PlansTools {
                                                                         'description' => get_string('taskviewsfortemplateplan', 'artefact.plans', $targetGroupPlan->get('title')),
                                                                         'navigation' => 1,
                                                                         'submittedstatus' => 0,
-                                                                        'progresscompletion' => 0
+                                                                        'progresscompletion' => 0,
+                                                                        'lock' => 0,
+                                                                        'autocopytemplate' => 0,
+                                                                        'template' => 0,
                                                                     ]
                                                                 );
                     $targetTaskViewCollection->commit();
@@ -391,7 +394,7 @@ class PlansTools {
                     LEFT JOIN {artefact_plans_task} AS tc ON tc.outcome = c.id AND tc.outcometype = 'collection')
                 ON v.id = cv.view
                 WHERE v." . $searchField . " = ?
-                AND v.submittedstatus = 0 AND v.type NOT IN ('profile', 'dashboard', 'grouphomepage')
+                AND v.submittedstatus = 0 AND v.type NOT IN ('profile', 'dashboard', 'grouphomepage', 'progress')
                 AND (tv.taskview IS NULL OR tv.artefact = ?)
                 AND tov.outcome IS NULL AND tc.outcome IS NULL
                 ORDER BY c.name, v.title";
