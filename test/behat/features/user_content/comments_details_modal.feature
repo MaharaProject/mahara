@@ -74,8 +74,8 @@ Scenario: Add a block with multiple artefacts and see the comments and details h
     And I click on "Edit" in "Page UserA_01" card menu
     When I click on the add block button
     And I click on "Add" in the "Add new block" "Blocks" property
-    And I set the field "Block title" to "File(s) to Download Block"
-    And I click on blocktype "File(s) to download"
+    And I set the field "Block title" to "Files Block"
+    And I click on blocktype "Files"
     And I expand the section "Files"
     And I attach the file "Image2.png" to "File"
     And I attach the file "mahara_about.pdf" to "File"

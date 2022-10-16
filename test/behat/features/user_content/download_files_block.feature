@@ -19,7 +19,7 @@ Scenario: Add Files to download block
     And I click on "Edit" in "Page UserA_01" card menu
     When I click on the add block button
     And I click on "Add" in the "Add new block" "Blocks" property
-    And I click on blocktype "File(s) to download"
+    And I click on blocktype "Files"
     And I expand "Files" node in the "File download modal" "Modal" property
 
     And I attach the file "mahara_about.pdf" to "File"

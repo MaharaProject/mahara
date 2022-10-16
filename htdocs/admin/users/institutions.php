@@ -594,7 +594,7 @@ if ($institution || $add) {
 
         $elements['allowinstitutionpublicviews'] = array(
             'type'         => 'switchbox',
-            'title'        => get_string('allowinstitutionpublicviews1', 'admin'),
+            'title'        => get_string('allowinstitutionpublicviews2', 'admin'),
             'description'  => get_string('allowinstitutionpublicviewsdescription3','admin'),
             'defaultvalue' => get_config('allowpublicviews') && $data->allowinstitutionpublicviews,
             'disabled'     => get_config('allowpublicviews') == false,
@@ -603,7 +603,7 @@ if ($institution || $add) {
 
         $elements['allowpeersviewcontent'] = array(
             'type'         => 'switchbox',
-            'title'        => get_string('allowpeersviewcontent', 'admin'),
+            'title'        => get_string('allowpeersviewcontent1', 'admin'),
             'description'  => get_string('allowpeersviewcontentdescription','admin'),
             'defaultvalue' => isset($data->allowpeersviewcontent) ? $data->allowpeersviewcontent : false,
             'help'         => true,
@@ -645,7 +645,7 @@ if ($institution || $add) {
     }
     $elements['allowinstitutionsmartevidence'] = array(
         'type'         => 'switchbox',
-        'title'        => get_string('allowinstitutionsmartevidence', 'admin'),
+        'title'        => get_string('allowinstitutionsmartevidence1', 'admin'),
         'description'  => get_string('allowinstitutionsmartevidencedescription','admin'),
         'defaultvalue' => is_plugin_active('framework', 'module') && $data->allowinstitutionsmartevidence,
         'disabled'     => is_plugin_active('framework', 'module') == false,

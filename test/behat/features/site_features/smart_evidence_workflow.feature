@@ -41,7 +41,7 @@ Background: Setting up test data for people and portfolio pages
     # Enable Institutions to allow SmartEvidencelcd
     And I choose "Settings" in "Institutions" from administration menu
     And I click on "Edit"
-    And I enable the switch "Allow SmartEvidence"
+    And I enable the switch "SmartEvidence"
     And I click on "Submit"
     Then I log out
 

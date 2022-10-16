@@ -250,7 +250,7 @@ $string['selfsearch'] = 'Search my portfolio';
 $string['resultsperpage'] = 'Results per page';
 
 // Institution tags
-$string['allowinstitutiontags'] = 'Allow institution tags';
+$string['allowinstitutiontags'] = 'Institution tags';
 $string['allowinstitutiontagsdescription'] = 'Administrators can define a set of tags that institution members can use.';
 $string['cantlistinstitutiontags'] = 'You are not allowed to list institution tags.';
 $string['createtag'] = 'Create tag';

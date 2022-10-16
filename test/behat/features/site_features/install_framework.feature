@@ -55,7 +55,7 @@ Scenario: Installing framework module and activating for an institution
  # Activate smartevidence in an institution
  And I choose "Settings" in "Institutions" from administration menu
  And I click on "Edit" in "No Institution" row
- And I enable the switch "Allow SmartEvidence"
+ And I enable the switch "SmartEvidence"
  And I click on "Submit"
  Then I should see "Institution updated successfully."
 
