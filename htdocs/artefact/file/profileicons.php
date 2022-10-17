@@ -303,7 +303,6 @@ function upload_submit(Pieform $form, $values) {
  */
 function profileiconsettings_submit_default(Pieform $form, $values) {
     global $USER, $SESSION;
-    log_debug($values);
 
     $default = param_integer('d');
 
