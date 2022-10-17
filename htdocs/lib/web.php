@@ -384,7 +384,7 @@ tinyMCE.init({
         + ",figure[class]"
         + ",figcaption[class]"
         + ",ul[id|type|compact]"
-        + ",iframe[src|width|height|name|scrolling|frameborder|allowfullscreen|webkitallowfullscreen|mozallowfullscreen|longdesc|marginheight|marginwidth|align|title|class|type]"
+        + ",iframe[src|width|height|name|scrolling|frameborder|allowfullscreen|webkitallowfullscreen|mozallowfullscreen|longdesc|marginheight|marginwidth|align|title|class|type|style]"
         + ",a[id|class|title|href|name|target]"
         + ",button[id|class|title]"
     ,urlconverter_callback : "custom_urlconvert",
@@ -3955,6 +3955,9 @@ function clean_html($text, $xhtml=false) {
      */
     // $config->set('CSS.AllowTricky', true);
 
+    // Enable position styles.
+    $config->set('CSS.Trusted', true);
+
     // Add extra CSS3 classes.
     $config->set('CSS.Proprietary', true);
     /// And remove the opacity parameters we just included.
@@ -4007,6 +4010,7 @@ function clean_html($text, $xhtml=false) {
                 'longdesc' => 'URI',
                 'marginheight' => 'Pixels',
                 'marginwidth' => 'Pixels',
+                'style' => 'Text',
             )
         );
         // allow the tags used with image map to be rendered
