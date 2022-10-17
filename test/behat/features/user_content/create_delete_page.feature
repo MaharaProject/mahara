@@ -44,7 +44,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     # Adding media block
     When I click on the add block button
     And I click on "Add" in the "Add new block" "Blocks" property
-    And I click on blocktype "File(s) to download"
+    And I click on blocktype "Files"
     And I click on "Save" in the "Submission" "Modal" property
     # Adding Journal block
     When I click on the add block button

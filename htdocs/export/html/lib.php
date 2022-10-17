@@ -947,9 +947,9 @@ class PluginExportHtml extends PluginExport {
     }
 
 /**
-*  Creates the hard-coded modals for File(s) to download block
+*  Creates the hard-coded modals for 'Files' block
 * @param array  &$idarray       The existing array that stores modal ids to be created
-* @param BlockInstance $bi      The File(s) to download block
+* @param BlockInstance $bi      The 'Files' block
 */
 private function get_folder_modals(&$idarray, BlockInstance $bi) {
     $artefacts = PluginBlocktypeFolder::get_current_artefacts($bi);

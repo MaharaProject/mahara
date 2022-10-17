@@ -36,7 +36,7 @@ And the following "pages" exist:
     # Enable Institutions to allow SmartEvidence
     And I choose "Settings" in "Institutions" from administration menu
     And I click on "Edit"
-    And I enable the switch "Allow SmartEvidence"
+    And I enable the switch "SmartEvidence"
     And I click on "Submit"
     Then I log out
 

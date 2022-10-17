@@ -1,5 +1,5 @@
 @javascript @core @core_portfolio
-Feature: Annotation via smart evnidence map
+Feature: Annotation via SmartEvidence map
  In order to verify the empty annotations are disabled
  As an admin
  So I can annotate people's work
@@ -24,7 +24,7 @@ Scenario: Accessing annotation block
  And I should see "Hide" in the "Smartevidence" "Smartevidence" property
  And I choose "Settings" in "Institutions" from administration menu
  And I click on "Edit"
- And I enable the switch "Allow SmartEvidence"
+ And I enable the switch "SmartEvidence"
  And I click on "Submit"
 
  # Make sure we have a matrix config form

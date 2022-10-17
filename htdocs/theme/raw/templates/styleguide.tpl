@@ -1707,7 +1707,7 @@ As used on the "Extensions" pages in the administration area.
 
 <section data-markdown data-category="icons">
 ### File download
-Used for the "File(s) to download" block.
+Used for the "Files" block.
 ```
 <div class="icon icon-filedownload" role="presentation"></div>
 ```
