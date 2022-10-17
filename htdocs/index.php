@@ -30,6 +30,7 @@ if ($USER->is_logged_in()) {
     // get the user's dashboard view
     require_once(get_config('libroot') . 'view.php');
     $view = $USER->get_view_by_type('dashboard');
+    $viewcontent = '';
     $layoutjs = array();
     if ($newlayout = $view->uses_new_layout()) {
         $layoutjs = array('js/gridstack/gridstack_modules/gridstack-h5.js', 'js/gridlayout.js');

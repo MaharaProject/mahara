@@ -29,11 +29,14 @@ function PluginListTags(Core $core, $tags, $owner, $view = null, $showtags = nul
     if (!is_array($tags)) {
         return '';
     }
+    $viewobj = false;
+    $viewobjowner = false;
     if ($view) {
         $viewobj= new View($view);
+        $viewobjowner = $viewobj->get('owner');
     }
     foreach ($tags as &$t) {
-        if ($view && !$viewobj->get('owner')) {
+        if ($view && !$viewobjowner) {
             $t = (is_array($t) ? hsc(str_shorten_text($t['tag'], 50)) : hsc(str_shorten_text($t, 50)));
         }
         else if ($owner != $USER->get('id')) {

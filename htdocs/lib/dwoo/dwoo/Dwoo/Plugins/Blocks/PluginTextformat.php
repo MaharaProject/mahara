@@ -115,5 +115,7 @@ class PluginTextformat extends BlockPlugin
         } else {
             return implode($this->wrapChar . $this->wrapChar, $pgs);
         }
+        // Default to an empty string.
+        return '';
     }
 }

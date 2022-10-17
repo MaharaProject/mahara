@@ -63,9 +63,9 @@ foreach (array_keys($plugins) as $plugin) {
                     $plugins[$plugin]['installed'][$key]['types'] = array();
                     safe_require('artefact', $key);
                     if ($types = call_static_method(generate_class_name('artefact', $i->name), 'get_artefact_types')) {
+                        $hasconfigbuttons = 0;
+                        $hasconfigbuttonscollapsed = 0;
                         foreach ($types as $t) {
-                            $hasconfigbuttons = 0;
-                            $hasconfigbuttonscollapsed = 0;
                             $classname = generate_artefact_class_name($t);
                             if ($collapseto = call_static_method($classname, 'collapse_config')) {
                                 $plugins[$plugin]['installed'][$key]['types'][$collapseto]['config'] = true;

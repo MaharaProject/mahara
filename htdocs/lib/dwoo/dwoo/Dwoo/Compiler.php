@@ -712,7 +712,7 @@ class Compiler implements ICompiler
     public function compile(Core $core, ITemplate $template)
     {
         // init vars
-        //		$compiled = '';
+        $compiled = '';
         $tpl                  = $template->getSource();
         $ptr                  = 0;
         $this->core           = $core;
@@ -956,7 +956,7 @@ class Compiler implements ICompiler
             echo '=============================================================================================' . "\n";
         }
 
-        $this->template = $this->dwoo = null;
+        $this->template = null;
         $tpl            = null;
 
         return $output;
@@ -2064,7 +2064,7 @@ class Compiler implements ICompiler
                 if ($func === 'tif') {
                     $params[] = $tokens;
                 }
-                $output = call_user_func_array($funcCompiler, $params);
+                $output = call_user_func_array($funcCompiler, array_values($params));
             } else {
                 $params = self::implode_r($params);
                 if ($pluginType & Core::CUSTOM_PLUGIN) {
@@ -2126,7 +2126,7 @@ class Compiler implements ICompiler
                 if ($func === 'tif') {
                     $params[] = $tokens;
                 }
-                $output = call_user_func_array($funcCompiler, $params);
+                $output = call_user_func_array($funcCompiler, array_values($params));
             } else {
                 array_unshift($params, '$this');
                 $params = self::implode_r($params);
@@ -2528,7 +2528,21 @@ class Compiler implements ICompiler
             }
 
             if ($this->autoEscape === true && $curBlock !== 'condition') {
-                $output = '(is_string($tmp=' . $output . ') ? htmlspecialchars($tmp, ENT_QUOTES, $this->charset) : $tmp)';
+                // Simple output string.
+                $output_is_string = '(is_string($tmp=' . $output . ') ? htmlspecialchars($tmp, ENT_QUOTES, $this->charset) : $tmp)';
+
+                // Do we have an array variable with a key?  e.g. $_REQUEST['search'] or $this->foo['bar']['baz']
+                $var_regex = '^(\$[A-Za-z0-9_\-\>]+)\[[\'|"]([A-Za-z0-9_\'"\[\]]+)[\'|"]\]$';
+                if (preg_match('/' . $var_regex . '/i', $output, $output_array)) {
+                    // PHP8 : Unparenthesized ` a ? b :  c  ? d : e` is not supported.
+                    //        Use either      `(a ? b :  c) ? d : e`
+                    //        or              ` a ? b : (c  ? d : e)`
+                    // We have a simple array variable, so account for the key possibly not being available.
+                    $output = "(!isset($output) ? '' : " . $output_is_string . ")";
+                }
+                else {
+                    $output = $output_is_string;
+                }
             }
 
             // handle modifiers
@@ -2747,12 +2761,34 @@ class Compiler implements ICompiler
                     }
 
                     if ($curBlock !== 'root') {
-                        $output = '(isset(' . $output . ') ? ' . $output . ':null)';
+                        $output_is_string = '(isset(' . $output . ') ? ' . $output . ':null)';
+                        // Do we have an array variable with a key?  e.g. $_REQUEST['search'] or $this->foo['bar']['baz']
+                        $var_regex = '^(\$[A-Za-z0-9_\-\>]+)\[[\'|"]([A-Za-z0-9_\'"\[\]]+)[\'|"]\]$';
+                        if (preg_match('/' . $var_regex . '/i', $output, $output_array)) {
+                            // PHP8 : Unparenthesized ` a ? b :  c  ? d : e` is not supported.
+                            //        Use either      `(a ? b :  c) ? d : e`
+                            //        or              ` a ? b : (c  ? d : e)`
+                            // We have a simple array variable, so account for the key possibly not being available.
+                            $output = "(!isset($output) ? null : " . $output_is_string . ")";
+                        }
+                        else {
+                            $output = $output_is_string;
+                        }
                     }
                 }
 
                 if (count($m[2])) {
                     unset($m[0]);
+                    // Do we have an array variable with a key?  e.g. $_REQUEST['search'] or $this->foo['bar']['baz']
+                    $var_regex = '^(\$[A-Za-z0-9_\-\>]+)\[[\'|"]([A-Za-z0-9_\'"\[\]]+)[\'|"]\]$';
+                    if (preg_match('/' . $var_regex . '/i', $output, $output_array)) {
+                        // PHP8 : Unparenthesized ` a ? b :  c  ? d : e` is not supported.
+                        //        Use either      `(a ? b :  c) ? d : e`
+                        //        or              ` a ? b : (c  ? d : e)`
+                        // We have a simple array variable, so account for the key possibly not being available.
+                        $output = "(!isset($output) ? null : " . $output . ")";
+                    }
+
                     $output = '$this->readVarInto(' . str_replace("\n", '', var_export($m, true)) . ', ' . $output . ', ' . ($curBlock == 'root' ? 'false' : 'true') . ')';
                 }
             }

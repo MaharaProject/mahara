@@ -19,7 +19,6 @@ namespace Dwoo\Smarty;
 use Dwoo\Core;
 use Dwoo\Compiler;
 use Dwoo\Data;
-use Dwoo\Security\Policy as SecurityPolicy;
 use Dwoo\Exception as Exception;
 use Dwoo\Template\File as TemplateFile;
 use Dwoo\Smarty\Filter\Adapter as FilterAdapter;
@@ -27,13 +26,6 @@ use Dwoo\Smarty\Processor\Adapter as ProcessorAdapter;
 
 if (!defined('DIR_SEP')) {
     define('DIR_SEP', DIRECTORY_SEPARATOR);
-}
-
-if (!defined('SMARTY_PHP_PASSTHRU')) {
-    define('SMARTY_PHP_PASSTHRU', 0);
-    define('SMARTY_PHP_QUOTE', 1);
-    define('SMARTY_PHP_REMOVE', 2);
-    define('SMARTY_PHP_ALLOW', 3);
 }
 
 /**
@@ -158,7 +150,6 @@ class Adapter extends Core
     public $security          = false;
     public $trusted_dir       = array();
     public $secure_dir        = array();
-    public $php_handling      = SMARTY_PHP_PASSTHRU;
     public $security_settings = array(
         'PHP_HANDLING'    => false,
         'IF_FUNCS'        => array(
@@ -244,40 +235,6 @@ class Adapter extends Core
         $this->setCacheDir($this->cache_dir);
         $this->setCompileDir($this->compile_dir);
 
-        if ($this->security) {
-            $policy = new SecurityPolicy();
-            $policy->addPhpFunction(array_merge($this->security_settings['IF_FUNCS'], $this->security_settings['MODIFIER_FUNCS']));
-
-            $phpTags = $this->security_settings['PHP_HANDLING'] ? SMARTY_PHP_ALLOW : $this->php_handling;
-            if ($this->security_settings['PHP_TAGS']) {
-                $phpTags = SMARTY_PHP_ALLOW;
-            }
-            switch ($phpTags) {
-            case SMARTY_PHP_ALLOW:
-            case SMARTY_PHP_PASSTHRU:
-                $phpTags = SecurityPolicy::PHP_ALLOW;
-                break;
-            case SMARTY_PHP_QUOTE:
-                $phpTags = SecurityPolicy::PHP_ENCODE;
-                break;
-            case SMARTY_PHP_REMOVE:
-            default:
-                $phpTags = SecurityPolicy::PHP_REMOVE;
-                break;
-            }
-            $policy->setPhpHandling($phpTags);
-
-            $policy->setConstantHandling($this->security_settings['ALLOW_CONSTANTS']);
-
-            if ($this->security_settings['INCLUDE_ANY']) {
-                $policy->allowDirectory(preg_replace('{^((?:[a-z]:)?[\\\\/]).*}i', '$1', __FILE__));
-            } else {
-                $policy->allowDirectory($this->secure_dir);
-            }
-
-            $this->setSecurityPolicy($policy);
-        }
-
         if (!empty($this->plugins_dir)) {
             foreach ($this->plugins_dir as $dir) {
                 $this->getLoader()->addDirectory(rtrim($dir, '\\/'));
@@ -324,7 +281,7 @@ class Adapter extends Core
             $_compiler = $this->compiler;
         }
 
-        return parent::get($_tpl, $data, $_compiler, $_output);
+        return parent::get($_tpl, $data, $_compiler);
     }
 
     /**
@@ -472,7 +429,6 @@ class Adapter extends Core
     {
         foreach ($this->_filters['output'] as $index => $filter) {
             if ($filter->callback === $callback) {
-                $this->removeOutputFilter($filter);
                 unset($this->_filters['output'][$index]);
             }
         }

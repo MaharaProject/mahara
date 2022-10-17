@@ -1,16 +1,16 @@
 <div class="plan-list-group list-group list-group-lite list-group-top-border">
     {if $plans.group}
-        {$groupurlquery = "group=$plans.group&"}
+        {assign var="groupurlquery" value='group=$plans.group&'}
     {/if}
 
     {foreach from=$plans.data item=plan}
 {*        ToDo: Do we need to mark plans with time critical tasks?*}
 {*        {if $plan->template}*}
-{*            {$templateBackgroundClass = " list-group-item-secondary"}*}
+{*            {assign var="templateBackgroundClass" value=" list-group-item-secondary"}*}
 {*        {elseif $plan->hastimecriticaltasks}*}
-{*            {$templateBackgroundClass = " list-group-item-warning"}*}
+{*            {assign var="templateBackgroundClass" value=" list-group-item-warning"}*}
 {*        {else}*}
-{*            {$templateBackgroundClass = ""}*}
+{*            {assign var="templateBackgroundClass" value=""}*}
 {*        {/if}*}
         <div class="list-group-item{$templateBackgroundClass}">
             <div class="flex-row">

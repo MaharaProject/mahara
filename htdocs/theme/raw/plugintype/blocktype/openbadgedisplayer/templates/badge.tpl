@@ -1,4 +1,4 @@
-{{$sec = 'blocktype.openbadgedisplayer'}}
+{assign var="sec" value='blocktype.openbadgedisplayer'}
 
 <div class="badge-template badge-container">
     <img class="badge-image" src="" />

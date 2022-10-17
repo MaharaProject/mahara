@@ -20,6 +20,8 @@ require_once('collection.php');
 // We need both tag and view id to proceed
 $tag  = param_variable('tag');
 $viewid = param_integer('view');
+$owner = null;
+$view = null;
 
 // Check view id to see if we are allowed access the view and the view is owned by a user
 if ($viewid) {

@@ -123,8 +123,11 @@ class ComposerStaticInit
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
+            // @phpstan-ignore-next-line
             $loader->prefixLengthsPsr4 = ComposerStaticInit::$prefixLengthsPsr4;
+            // @phpstan-ignore-next-line
             $loader->prefixDirsPsr4 = ComposerStaticInit::$prefixDirsPsr4;
+            // @phpstan-ignore-next-line
             $loader->classMap = ComposerStaticInit::$classMap;
 
         }, null, ClassLoader::class);

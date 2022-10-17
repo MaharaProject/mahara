@@ -328,8 +328,12 @@ if ($view->get('accessibleview')) {
 // To allow any blocktype that has config with calendar fields to work
 // as get_instance_config_javascript() loads the .js files via ajax
 // and so don't exist yet when the calendar wants to set the field
-$javascript[] = get_config('wwwroot') . 'js/momentjs/moment-with-locales.min.js';
-$javascript[] = get_config('wwwroot') . 'js/bootstrap-datetimepicker/tempusdominus-bootstrap-4.js';
+$wwwroot = get_config('wwwroot');
+if ($wwwroot == '/') {
+    $wwwroot = '';
+}
+$javascript[] = $wwwroot . 'js/momentjs/moment-with-locales.min.js';
+$javascript[] = $wwwroot . 'js/bootstrap-datetimepicker/tempusdominus-bootstrap-4.js';
 $stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'js/jquery/jquery-ui/css/smoothness/jquery-ui.min.css') . '">';
 
 $smarty = smarty($javascript, $stylesheets, $strings, $extraconfig);

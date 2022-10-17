@@ -35,7 +35,7 @@
         {if $prevkey !== $k}
                 </div>
             </fieldset>
-            {$prevkey = $k}
+            {assign var='prevkey' value=$k}
         {/if}
         </div>
     {/foreach}

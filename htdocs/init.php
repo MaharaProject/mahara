@@ -15,6 +15,9 @@ if (defined('CLI') && !is_cli()) {
     die();
 }
 
+// Adding for symbol discovery. Overridden in config.php.
+$cfg = new stdClass();
+
 $CFG = new stdClass();
 $CFG->docroot = dirname(__FILE__) . DIRECTORY_SEPARATOR;
 //array containing site options from database that are overridden by $CFG
@@ -160,6 +163,8 @@ try {
 
     // Now we have a connection, verify the server is a new enough version
     $dbversion = $db->ServerInfo();
+    $okversion = null;
+    $dbfriendlyname = null;
     if (is_postgres()) {
         $okversion = '9.3';
         $dbfriendlyname = 'PostgreSQL';
@@ -338,6 +343,8 @@ if (!get_config('productionmode')) {
 if (get_config('installed')) {
     // Check whether core upgrades need to be done. If so, "close" the site
     // from logins
+    // Added for symbol discovery. Overridden in version.php
+    $config = null;
     require(get_config('libroot') . 'version.php');
     $upgradeavailable = $config->version > get_config('version');
     if ($config->version < get_config('version')) {

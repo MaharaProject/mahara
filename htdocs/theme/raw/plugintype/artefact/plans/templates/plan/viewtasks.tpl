@@ -1,5 +1,5 @@
 {if $group}
-    {$groupurlquery = "group=$group&"}
+    {assign var="groupurlquery" value="group=$group&"}
 {/if}
 
 {foreach from=$tasks.data item=task}
@@ -74,16 +74,16 @@
                 <div class="btn-group">
                     {if !$task->outcomeiscurrentlysubmitted && !$canedit && $tasks.selectiontasks}
                         {if $task->isActiveRootGroupTask}
-                            {$checked = 'checked'}
+                            {assign var="checked" value='checked'}
                         {else}
-                            {$checked = ''}
+                            {assign var="checked" value=''}
                         {/if}
                         {if $task->outcomeiscurrentlysubmitted}
-                            {$prepareforeventsclass = ''}
-                            {$disabled = 'disabled'}
+                            {assign var="prepareforeventsclass" value=''}
+                            {assign var="disabled" value='disabled'}
                         {else}
-                            {$prepareforeventsclass = 'btn-toggle '}
-                            {$disabled = ''}
+                            {assign var="prepareforeventsclass" value='btn-toggle '}
+                            {assign var="disabled" value=''}
                         {/if}
                         <div class="form-switch {$prepareforeventsclass}" data-taskid="{$task->id}" data-chosen={$task->isActiveRootGroupTask}>
                             <div class="switch">

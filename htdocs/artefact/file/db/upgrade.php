@@ -157,6 +157,7 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
                 foreach ($files as $file) {
                     $checked[] = $file->artefact;
                 }
+                // @phpstan-ignore-next-line
                 if (!empty($checked)) {
                     set_field_select('artefact', 'artefacttype', 'video', "artefacttype = 'file' AND id IN (" . join(',', $checked) . ')', array());
                 }
@@ -191,6 +192,7 @@ function xmldb_artefact_file_upgrade($oldversion=0) {
                  foreach ($files as $file) {
                      $checked[] = $file->artefact;
                  }
+                 // @phpstan-ignore-next-line
                  if (!empty($checked)) {
                      set_field_select('artefact', 'artefacttype', 'audio', "artefacttype = 'file' AND id IN (" . join(',', $checked) . ')', array());
                 }

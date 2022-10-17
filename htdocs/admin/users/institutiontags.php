@@ -31,7 +31,7 @@ if (!$institutionelement || empty($institutionelement['options'])) {
 if (!$institution || !$USER->can_edit_institution($institution, true)) {
     $institution = empty($institutionelement['value']) ? $institutionelement['defaultvalue'] : $institutionelement['value'];
 }
-else if (!empty($institution)) {
+else {
     $institutionelement['defaultvalue'] = $institution;
 }
 

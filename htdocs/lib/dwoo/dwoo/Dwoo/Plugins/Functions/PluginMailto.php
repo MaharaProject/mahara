@@ -37,19 +37,19 @@ use Dwoo\Plugin;
 class PluginMailto extends Plugin
 {
     /**
-     * @param      $address
-     * @param null $text
-     * @param null $subject
-     * @param null $encode
-     * @param null $cc
-     * @param null $bcc
-     * @param null $newsgroups
-     * @param null $followupto
-     * @param null $extra
+     * @param string $address
+     * @param string $text
+     * @param string $subject
+     * @param string $encode
+     * @param string $cc
+     * @param string $bcc
+     * @param string $newsgroups
+     * @param string $followupto
+     * @param string $extra
      *
      * @return string
      */
-    public function process($address, $text = null, $subject = null, $encode = null, $cc = null, $bcc = null, $newsgroups = null, $followupto = null, $extra = null)
+    public function process($address, $text = '', $subject = '', $encode = 'none', $cc = '', $bcc = '', $newsgroups = '', $followupto = '', $extra = '')
     {
         if (empty($address)) {
             return '';
@@ -140,5 +140,7 @@ class PluginMailto extends Plugin
             default:
                 $this->core->triggerError('Mailto: <em>encode</em> argument is invalid, it must be one of : <em>none (= no value), js, js_charcode or hex</em>', E_USER_WARNING);
         }
+        // If we get this far, retun an empty string.
+        return '';
     }
 }
