@@ -9,7 +9,7 @@ types of portfolios, including learning portfolio, development portfolio,
 presentation / showcase portfolio, employability portfolio.
 
 For more information about Mahara and ePortfolios, see the Mahara manual's
-[introduction chapter](https://manual.mahara.org/en/22.10/intro/introduction.html#what-is-mahara).
+[introduction chapter](https://manual.mahara.org/en/23.04/intro/introduction.html#what-is-mahara).
 
 ## SUPPORT
 
@@ -35,7 +35,7 @@ Please refer to the installation instructions for the details:
 
 # UPGRADING
 
-Mahara 22.10 supports direct upgrades from previous Mahara versions 20.04.0 and later.
+Mahara 23.04 supports direct upgrades from previous Mahara versions 20.04.0 and later.
 
 If you are upgrading from an earlier version, you will need to upgrade
 in steps:
@@ -44,7 +44,7 @@ in steps:
 * then/else upgrade version to 17.04.10
 * then/else upgrade version to 18.04.6
 * then/else upgrade version to 20.04.5
-* then upgrade to 22.04.X (latest stable release)
+* then upgrade to 23.04.X (latest stable release)
 
 Note: Older versions of Mahara are not compatible with latest versions
 of PHP. You will need to do intermediate upgrade steps before
@@ -53,12 +53,12 @@ updating your server's PHP.
 To upgrade an existing Mahara installation, follow the [upgrade instructions](https://wiki.mahara.org/wiki/System_Administrator%27s_Guide/Upgrading_Mahara).
 
 If you upgrade from Mahara 15.10 or earlier, you will need to [add a 'urlsecret'
-value to your config.php file](https://manual.mahara.org/en/22.10/administration/config_php.html#urlsecret-run-the-cron-or-upgrade-only-when-you-are-authorised) if you wish to use the web-based upgrade and/or
+value to your config.php file](https://manual.mahara.org/en/23.04/administration/config_php.html#urlsecret-run-the-cron-or-upgrade-only-when-you-are-authorised) if you wish to use the web-based upgrade and/or
 cron scripts. See:
 
 # SYSTEM REQUIREMENTS
 
-Here are the system requirements needed to run Mahara 22.10.
+Here are the system requirements needed to run Mahara 23.04.
 
 ### Operating system for the server
 
@@ -127,7 +127,7 @@ three most recent versions that are officially supported by Microsoft.
 You can still use Mahara on older browsers, but may not have all functionality
 available.
 
-For Mahara 22.10, the supported browser versions are:
+For Mahara 23.04, the supported browser versions are:
  * Firefox 99.0
  * Chrome 88.0
  * Safari 13.1
@@ -137,7 +137,7 @@ For Mahara 22.10, the supported browser versions are:
 
 # TRANSLATIONS
 
-Mahara has been translated into many languages. You can download [language packs](https://langpacks.mahara.org/), [install and update them via CLI](https://manual.mahara.org/en/22.10/administration/cli.html#install-and-update-language-packs), or [install and update them via the administration area](https://manual.mahara.org/en/22.10/administration/development.html#languages) in Mahara.
+Mahara has been translated into many languages. You can download [language packs](https://langpacks.mahara.org/), [install and update them via CLI](https://manual.mahara.org/en/23.04/administration/cli.html#install-and-update-language-packs), or [install and update them via the administration area](https://manual.mahara.org/en/23.04/administration/development.html#languages) in Mahara.
 
 # DOCUMENT YOUR CUSTOMISATIONS
 
@@ -146,7 +146,7 @@ Document your customisations for easy record keeping in CUSTOMISATIONS.md by cop
 ------------------
 # COPYRIGHT NOTICE
 
-Copyright (C) 2006-2022 Catalyst IT Limited and others
+Copyright (C) 2006-2023 Catalyst IT Limited and others
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
