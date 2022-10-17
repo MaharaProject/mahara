@@ -44,7 +44,7 @@ in steps:
 * then/else upgrade version to 17.04.10
 * then/else upgrade version to 18.04.6
 * then/else upgrade version to 20.04.5
-* then upgrade to 22.04.X (latest stable release)
+* then upgrade to 22.10.X (latest stable release)
 
 Note: Older versions of Mahara are not compatible with latest versions
 of PHP. You will need to do intermediate upgrade steps before
