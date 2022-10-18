@@ -78,7 +78,7 @@
             <h2 class="card-header">{str tag=registermaharasite section=admin} <span class="icon icon-star float-end" role="presentation" aria-hidden="true"></span></h2>
             <div class="card-body">
                 {if $newregisterpolicy}
-                    <strong>{str tag=newregistrationpolicyinfo section=admin}</strong>
+                    <strong>{str tag=newregistrationpolicyinfo1 section=admin}</strong>
                 {/if}
             {str tag=registeryoursitesummary section=admin args=$WWWROOT}
             {if $firstregistered}
