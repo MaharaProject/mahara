@@ -16,6 +16,7 @@ export MAHARA_REDIS_SERVER = ${COMPOSE_PROJECT_NAME}-mahara-redis
 export MAHARA_DOCKER_PORT = 6142
 export MAHARA_WWW_ROOT = http://localhost:${MAHARA_DOCKER_PORT}/${COMPOSE_PROJECT_NAME}
 export MAHARA_ELASTICSEARCH_HOST = ${COMPOSE_PROJECT_NAME}-mahara-elastic
+export NVM_DIR = ${HOME}/.nvm
 
 CCRED=$(shell echo "\033[0;31m")
 CCYELLOW=$(shell echo "\033[0;33m")
@@ -34,8 +35,10 @@ all: css
 
 nvmsh := $(shell ls -l ${HOME}/.nvm/nvm.sh 2>/dev/null)
 
+ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+#The following is a workaround for https://github.com/nvm-sh/nvm/issues/1985.
 define nvm_check
-	. ${HOME}/.nvm/nvm.sh && nvm install
+	cd .. && . "${HOME}/.nvm/nvm.sh" && cd $(ROOT_DIR) && nvm install
 endef
 
 production = true
