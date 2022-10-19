@@ -1116,7 +1116,7 @@ var FileBrowser = (function($) {
           jQuery('#' + self.id + '_empty_selectlist').removeClass('d-none');
       }
       if (jQuery('#' + self.id + '_select_' + id).length) {
-          jQuery('[id="file:' + id + '"]').addClass('active');
+          jQuery('[id="file:' + id + '"]').removeClass('active');
       }
       return false;
     }
