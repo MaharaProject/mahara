@@ -5137,8 +5137,9 @@ function build_portfolio_search_html(&$data) {
             $namespaced = blocktype_single_to_namespaced($item->artefacttype, $bi->get('artefactplugin'));
             $classname = generate_class_name('blocktype', $namespaced);
             $item->typestr = call_static_method($classname, 'get_css_icon', $item->artefacttype);
-            if (in_array($item->artefacttype, array('entireresume', 'resumefield'))) {
-                $item->typelabel = get_string('title', 'blocktype.resume/' . $item->artefacttype);
+            $parentartefact = get_field('blocktype_installed', 'artefactplugin', 'name', $item->artefacttype);
+            if ($parentartefact) {
+                $item->typelabel = get_string('title', 'blocktype.' . $parentartefact . '/' . $item->artefacttype);
             }
             else {
                 $item->typelabel = get_string('title', 'blocktype.' . $item->artefacttype);
