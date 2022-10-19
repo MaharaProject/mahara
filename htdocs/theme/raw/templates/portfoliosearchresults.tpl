@@ -64,6 +64,7 @@
                         <a href="{$WWWROOT}view/view.php?id={$id}">{$view|str_shorten_html:50:true|safe}</a>
                         <!-- Profile artefact can only be displayed in views -->
                         {if $view->type != "profile"}
+                            {if $result->artefacttype != "plan"}
                             <span class="viewartefact">[
                                 <a href="{$WWWROOT}view/view.php?id={$id}&modal=1&artefact={$result->id}">
                                     {str tag=viewartefact}
@@ -84,6 +85,7 @@
                                     {/if}
                                 </a>]
                             </span>
+                            {/if}
                         {/if}
                     </li>
                     {/foreach}
