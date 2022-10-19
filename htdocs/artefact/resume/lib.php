@@ -1329,6 +1329,7 @@ EOF;
                 'pluginname' => 'resume',
                 'elements' => $elements,
                 'jsform' => true,
+                'validatecallback' => 'compositeform_validate',
                 'successcallback' => 'compositeform_submit',
                 'jssuccesscallback' => 'compositeSaveCallback',
             );
@@ -2300,6 +2301,44 @@ function addbook_validate(Pieform $form, $values) {
         $isvalid = is_valid_url($values['url']);
         if (!$isvalid) {
             $form->set_error('url', get_string('notvalidurl', 'artefact.resume'));
+        }
+    }
+}
+
+function compositeform_validate(Pieform $form, $values) {
+    global $USER;
+
+    // Check if new attachment is already attached to another item for this artefact
+    $a = false;
+    try {
+        $a = artefact_instance_from_type($values['compositetype'], $USER->get('id'));
+    }
+    catch (ArtefactNotFoundException $e) {
+        // no artefact so no attachment clash
+    }
+
+    if ($a && array_key_exists('filebrowser', $values)) {
+        $is_error = array();
+        $new = is_array($values['filebrowser']) ? $values['filebrowser'] : array();
+        // only allow the attaching of files that exist and are editable by user
+        foreach ($new as $key => $fileid) {
+            $file = artefact_instance_from_id($fileid);
+            if (!($file instanceof ArtefactTypeFile) || !$USER->can_publish_artefact($file)) {
+                $form->set_error(null, get_string('invalidattachment', 'artefact.file'));
+            }
+            if (record_exists('artefact_attachment', 'artefact', $a->get('id'), 'attachment', $fileid)) {
+                $artefactfile = artefact_instance_from_id($fileid);
+                $is_error[] = $artefactfile->get('title');
+            }
+        }
+        if (!empty($is_error)) {
+            if (sizeof($is_error) > 1) {
+                $error = get_string('duplicateattachments', 'artefact.resume', implode('\', \'', $is_error));
+            }
+            else {
+                $error = get_string('duplicateattachment', 'artefact.resume', implode(', ', $is_error));
+            }
+            $form->set_error(null, $error);
         }
     }
 }
