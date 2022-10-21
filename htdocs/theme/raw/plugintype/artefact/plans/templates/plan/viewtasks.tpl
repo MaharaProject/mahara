@@ -40,13 +40,13 @@
             <div class="text-nowrap">
                 <div class="btn-group btn-tasks">
                     {if $task->taskview}
-                        <button href="{$WWWROOT}view/view.php?id={$task->taskview}" type="button" class="btn btn-secondary btn-sm btn-view" title="{$showassignedview}">
+                        <button data-url="{$WWWROOT}view/view.php?id={$task->taskview}" data-ignore="true" type="button" class="btn btn-secondary btn-sm btn-view" title="{$showassignedview}">
                             <span class="icon icon-info" role="presentation" aria-hidden="true"></span>
                         </button>
                     {/if}
 
                     {if $task->outcomeurl}
-                        <button data-url="{$task->outcomeurl}" class="btn btn-secondary btn-sm btn-outcome" type="button" title="{$editassignedoutcome}" {if $task->sourceoutcomeurl}data-sourceoutcomeurl="{$task->sourceoutcomeurl}"{/if}>
+                        <button data-url="{$task->outcomeurl}" data-ignore="true" class="btn btn-secondary btn-sm btn-outcome" type="button" title="{$editassignedoutcome}" {if $task->sourceoutcomeurl}data-sourceoutcomeurl="{$task->sourceoutcomeurl}"{/if}>
                             <span class="icon icon-file" role="presentation" aria-hidden="true"></span>
                         </button>
                     {/if}

@@ -17,11 +17,24 @@ require_once(get_config('libroot') . 'view.php');
 require_once(get_config('libroot') . 'collection.php');
 
 $id = param_integer('id');
-if (!can_view_view($id)) {
+// This indicates that the $id is a collection id and not a view id
+$iscollection = param_integer('iscollection', false);
+if ($iscollection) {
+    // Get the collection from the $id
+    $collection = new Collection($id);
+    $viewid = $collection->first_view()->get('id');
+}
+else {
+    $viewid = $id;
+}
+if (!can_view_view($viewid)) {
     json_reply('local', get_string('accessdenied', 'error'));
 }
-$firstview = new View($id);
-$collection = $firstview->get('collection');
+$firstview = new View($viewid);
+if (!$iscollection) {
+    // Get the collection from view
+    $collection = $firstview->get('collection');
+}
 
 if ($firstview->uses_new_layout()) {
     $blocks = $firstview->get_blocks(false, true);
@@ -33,7 +46,7 @@ else {
 }
 
 $smarty = smarty_core();
-$smarty->assign('viewid', $id);
+$smarty->assign('viewid', $viewid);
 $smarty->assign('collectiontitle', $collection->get('name'));
 $smarty->assign('ownername', $firstview->formatted_owner());
 $smarty->assign('collectiondescription', $collection->get('description'));

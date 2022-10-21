@@ -64,7 +64,7 @@ $(function () {
     });
 
     $('#template_selection_button').click(function () {
-        $('#template_selection_dialog').modal();
+        $('#template_selection_dialog').modal('show');
     });
 
     $('#addplan_template').change(function() {
