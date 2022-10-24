@@ -1246,7 +1246,7 @@ function xmlenc_envelope($message, $remote_certificate) {
     // Generate a key resource from the remote_certificate text string
     $publickey = openssl_get_publickey($remote_certificate);
 
-    if ( gettype($publickey) != 'resource' ) {
+    if ( gettype($publickey) != 'resource' && !is_a($publickey, 'OpenSSLAsymmetricKey') ) {
         // Remote certificate is faulty.
         throw new MaharaException('Could not generate public key resource from certificate', 1);
     }
@@ -1641,12 +1641,16 @@ class OpenSslRepo {
 
         // We export our self-signed certificate to a string.
         openssl_x509_export($selfSignedCert, $this->keypair['certificate']);
-        openssl_x509_free($selfSignedCert);
+        if (PHP_VERSION_ID < 80000) {
+            openssl_x509_free($selfSignedCert);
+        }
 
         // Export your public/private key pair as a PEM encoded string. You
         // can protect it with an optional passphrase if you wish.
         $export = openssl_pkey_export($new_key, $this->keypair['keypair_PEM'] , null /*$passphrase */, $config);
-        openssl_pkey_free($new_key);
+        if (PHP_VERSION_ID < 80000) {
+            openssl_pkey_free($new_key);
+        }
         unset($new_key); // Free up the resource
 
         // Calculate fingerprints
