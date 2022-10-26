@@ -59,7 +59,7 @@ endif
 
 ifndef npmsetup
 	@echo "System node version: " && node -v;
-	@$(nvm_check) && nvm ls --no-alias
+	@$(nvm_check) && nvm ls
 	@$(nvm_check) && npm install
 endif
 	@echo "Building CSS..."
