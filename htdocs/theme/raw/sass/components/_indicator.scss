@@ -63,6 +63,10 @@
     .card-secondary h2.card-header & {
       margin-top: 0.625rem; // 10px;
     }
+    // but not on edit screen
+    .card-secondary h2.card-header .btn-group-top & {
+      margin-top: 0;
+    }
 }
 
 // just valigning the attachment indicator
