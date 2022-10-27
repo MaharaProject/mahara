@@ -1007,5 +1007,69 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql("DELETE FROM {blocktype_installed} WHERE name='signoff'");
     }
 
+    if ($oldversion < 2022121901) {
+        log_debug('Adding "outcomeportfolio" field to "institution" table');
+        $table = new XMLDBTable('institution');
+        $field = new XMLDBField('outcomeportfolio');
+        if (!field_exists($table, $field)) {
+            $field->setAttributes(XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+            add_field($table, $field);
+        }
+        log_debug('Adding "outcomeportfolio" field to "collection" table');
+        $table = new XMLDBTable('collection');
+        $field = new XMLDBField('outcomeportfolio');
+        if (!field_exists($table, $field)) {
+            $field->setAttributes(XMLDB_TYPE_INTEGER, 1, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, 0);
+            add_field($table, $field);
+        }
+        log_debug('Adding outcome table "outcome_category"');
+        $table = new XMLDBTable('outcome_category');
+        if (!table_exists($table)) {
+            $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            $table->addFieldInfo('institution', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('title', XMLDB_TYPE_CHAR, 100, null, XMLDB_NOTNULL);
+            $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->addKeyInfo('instfk', XMLDB_KEY_FOREIGN, array('institution'), 'institution', array('name'));
+
+            create_table($table);
+        }
+        log_debug('Adding outcome table "outcome_type"');
+        $table = new XMLDBTable('outcome_type');
+        if (!table_exists($table)) {
+            $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            $table->addFieldInfo('outcome_category', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+            $table->addFieldInfo('title', XMLDB_TYPE_CHAR, 100, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('abbreviation', XMLDB_TYPE_CHAR, 10, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('styleclass', XMLDB_TYPE_CHAR, 63, null, XMLDB_NOTNULL);
+            $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->addKeyInfo('outcatfk', XMLDB_KEY_FOREIGN, array('outcome_category'), 'outcome_category', array('id'));
+
+            create_table($table);
+        }
+        log_debug('Adding outcome table "outcome_subject_category"');
+        $table = new XMLDBTable('outcome_subject_category');
+        if (!table_exists($table)) {
+            $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            $table->addFieldInfo('name', XMLDB_TYPE_CHAR, 100, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('institution', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+            $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->addKeyInfo('instfk', XMLDB_KEY_FOREIGN, array('institution'), 'institution', array('name'));
+
+            create_table($table);
+        }
+        log_debug('Adding outcome table "outcome_subject"');
+        $table = new XMLDBTable('outcome_subject');
+        if (!table_exists($table)) {
+            $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            $table->addFieldInfo('outcome_subject_category', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+            $table->addFieldInfo('title', XMLDB_TYPE_CHAR, 100, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('abbreviation', XMLDB_TYPE_CHAR, 10, null, XMLDB_NOTNULL);
+            $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->addKeyInfo('outsubcatfk', XMLDB_KEY_FOREIGN, array('outcome_subject_category'), 'outcome_subject_category', array('id'));
+
+            create_table($table);
+        }
+    }
+
     return $status;
 }
