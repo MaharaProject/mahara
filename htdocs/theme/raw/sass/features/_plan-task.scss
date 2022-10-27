@@ -39,4 +39,11 @@
             margin: $spacing-base 0 0 0;
         }
     }
+
+    // when on edit page, chevron needs to move a little to the left to make space for buttons
+    .btn-group-top ~ .task-item-content {
+      .plan-task-heading .collapse-indicator {
+        margin-right: 1rem;
+      }
+    }
 }

@@ -6,7 +6,7 @@
             <button class="btn btn-secondary btn-sm" data-url="{$WWWROOT}artefact/plans/task/delete.php?id={$task->id}{if $view}&view={$view}{/if}" title="{str tag='deletethistask' section='artefact.plans' arg1=$task->title}"><span class="icon icon-trash-alt text-danger"></span></button>
         </div>
         {/if}
-        <span class="{if $task->completed == -1}overdue-task{else}complete-task{/if}">
+        <span class="task-item-content{if $task->completed == -1} overdue-task{else} complete-task{/if}">
             {if $task->completed == -1}
                 <span class="icon icon-times text-danger icon-lg left task{$task->id}{if $editing || $canedit} plan-task-icon{/if}" role="presentation" aria-hidden="true" data-task="{$task->id}"></span>
                 <span class="visually-hidden">{str tag=overdue section=artefact.plans}</span>
