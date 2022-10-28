@@ -881,19 +881,28 @@ class PluginModuleLti_advantage extends PluginModule {
                     throw new WebserviceInvalidParameterException(get_string('usernameexists2', 'module.lti', $user->username));
                 }
 
-                $userid = create_user($user, array(), $institution, true, $params['user_id']);
+                if ($parentauthid) {
+                    $authinstance = AuthFactory::create($parentauthid);
+                    $needremote = $authinstance->needs_remote_username();
+                    $remotevalue = $authinstance->needs_remote_username() ? $user->username : null;
+                    // We are creating the user with the parent authentication id as the one to save in the usr table
+                    // so we need to make the parent auth_remote_user row first via create_user()
+                    $userid = create_user($user, array(), $institution, $needremote, $remotevalue);
+                    // Then add the auth_remote_user row for this auth method second
+                    user_add_remote($user->id, $authinstanceid, $params['user_id']);
+                    // Then add the auth_remote_user row if lis_person_sourcedid exists against the parent auth
+                    // so that we end up with 2 options for parent auth as Moodle can send the correct value for
+                    // the parent auth on this parameter.
+                    if (!empty($params['lis_person_sourcedid'])) {
+                        user_add_remote($user->id, $parentauthid, $params['lis_person_sourcedid']);
+                    }
+                }
+                else {
+                    $userid = create_user($user, array(), $institution, true, $params['user_id']);
+                }
 
                 $updateremote = false;
                 $updateuser = false;
-
-                if ($parentauthid) {
-                    $authremoteuser = new stdClass();
-                    $authremoteuser->authinstance = $parentauthid;
-                    $authremoteuser->remoteusername = $user->username;
-                    $authremoteuser->localusr = $user->id;
-
-                    insert_record('auth_remote_user', $authremoteuser);
-                }
             }
             else {
                 $USER->logout();

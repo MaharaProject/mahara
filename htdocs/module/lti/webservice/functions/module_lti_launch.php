@@ -196,12 +196,13 @@ class module_lti_launch extends external_api {
                     // so we need to make the parent auth_remote_user row first via create_user()
                     $userid = create_user($user, array(), $WEBSERVICE_INSTITUTION, $needremote, $remotevalue);
                     // Then add the auth_remote_user row for this auth method second
-                    $authremoteuser = new stdClass();
-                    $authremoteuser->authinstance = $authinstanceid;
-                    $authremoteuser->remoteusername = $params['user_id'];
-                    $authremoteuser->localusr = $user->id;
-
-                    insert_record('auth_remote_user', $authremoteuser);
+                    user_add_remote($user->id, $authinstanceid, $params['user_id']);
+                    // Then add the auth_remote_user row if lis_person_sourcedid exists against the parent auth
+                    // so that we end up with 2 options for parent auth as Moodle can send the correct value for
+                    // the parent auth on this parameter.
+                    if (!empty($params['lis_person_sourcedid'])) {
+                        user_add_remote($user->id, $parentauthid, $params['lis_person_sourcedid']);
+                    }
                 }
                 else {
                     $userid = create_user($user, array(), $WEBSERVICE_INSTITUTION, true, $params['user_id']);
