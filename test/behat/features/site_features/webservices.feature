@@ -75,7 +75,7 @@ Scenario: As administrator I can
     # NOTE: Pressing "Execute" here fails as behat is not set up to handle webservice calls
     ###
     And I choose "Plugin administration" in "Extensions" from administration menu
-    And I follow "Configuration for module mobileapi"
+    And I click on "Configuration for module Mahara Mobile API"
     And I enable the switch "Manual token generation"
     And I press "Save"
     When I choose "Connected apps" in "Settings" from account menu
@@ -90,7 +90,7 @@ Scenario: As administrator I can
   2) Generate a manual token once administrator has allowed this
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Plugin administration" in "Extensions" from administration menu
-    And I follow "Configuration for module mobileapi"
+    And I click on "Configuration for module Mahara Mobile API"
     And I enable the switch "Auto-configure mobile apps API"
     And I enable the switch "Manual token generation"
     And I press "Save"

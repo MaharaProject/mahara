@@ -365,9 +365,8 @@ $commentoptions->view = $view;
 $feedback = ArtefactTypeComment::get_comments($commentoptions);
 
 // Set up theme
-// if the view theme is set in view table
-$viewtheme = $view->get('theme');
-if ($viewtheme && $THEME->basename != $viewtheme) {
+// if the view theme is set in view table as is usable
+if ($view->is_themeable() && $view->get('theme') && $THEME->basename != $view->get('theme')) {
     $THEME = new Theme($view);
 }
 // if it's another users view, it should be displayed with the other users institution theme

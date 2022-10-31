@@ -196,7 +196,7 @@ class AuthXmlrpc extends Auth {
 
             //TODO: import institution's per-user-quota?:
             //$user->quota              = $userrecord->quota;
-            $user->authinstance       = empty($this->config['parent']) ? $this->instanceid : $this->parent;
+            $user->authinstance       = empty($this->config['parent']) ? $this->instanceid : $this->config['parent'];
 
             db_begin();
             $user->username           = get_new_username($remoteuser->username, 200);
@@ -590,6 +590,15 @@ class PluginAuthXmlrpc extends PluginAuth {
         'authloginmsg'          => '',
         'active'                => 1
     );
+
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('title', 'auth.xmlrpc');
+    }
 
     public static function has_config() {
         return false;

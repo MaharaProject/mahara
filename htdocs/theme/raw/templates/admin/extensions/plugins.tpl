@@ -4,7 +4,7 @@
 <div class="card-items js-masonry extensions" data-masonry-options='{ "itemSelector": ".card" }'>
 {foreach from=$plugins key='plugintype' item='plugins'}
     <div class="card">
-        <h2 class="card-header">{str tag='plugintype'}: {$plugintype}
+        <h2 class="card-header">{$plugintypes.$plugintype}
         {if $plugins.configure}
             <div class="btn-group btn-group-top">
                 <a class="btn btn-secondary float-left btn-group-item" title="{str tag='configfor'} {$plugintype}" href="plugintypeconfig.php?plugintype={$plugintype}">
@@ -65,34 +65,22 @@
                         {if $data.activateform}
                             {$data.activateform|safe}
                         {/if}
+                        {if $data.types && $data.typeswithconfig == 1}
+                        {* place the config button at top of section *}
+                        {include file="admin/extensions/pluginstypes.tpl" typedata=$data plugin=$plugin plugintype=$plugintype}
+                        {/if}
                         </div>
+                        <div class="text-small">{str tag=plugintype section=admin arg1=$plugin}</div>
+                        <div class="text-small">{str tag=versionnumber section=admin arg1=$data.version}</div>
                         {if $data.deprecated}{if gettype($data.deprecated) eq 'string'}<div class="alert alert-warning text-small">{$data.deprecated}</div>{else}{str tag=deprecated section=admin}{/if}{/if}
                         {if $data.dependencies}
                             {if $data.dependencies.needs}<div class="notes">{$data.dependencies.needs|safe}</div>{/if}
                             {if $data.dependencies.requires}<div class="danger">{$data.dependencies.requires|safe}</div>{/if}
                         {/if}
                     </div>
-
-                    {if $data.types}
-                        <ul>
-                        {foreach from=$data.types key='type' item='config'}
-                            <li>
-                            {$type}
-                            {if $config.info}
-                                <a class="btn btn-secondary btn-sm btn-group float-right" data-toggle="modal-docked" data-target="#infomodal" title="{str tag='infofor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}" href="#" data-plugintype='{$plugintype}' data-pluginname='{$plugin}' data-type='{$type}'>
-                                    <span class="icon icon-cog icon-lg" role="presentation" aria-hidden="true"></span>
-                                    <span class="accessible-hidden sr-only">{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span>
-                                </a>
-                            {/if}
-                            {if $config.config}
-                                <a class="btn btn-secondary btn-sm btn-group float-right" title="{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}" href="pluginconfig.php?plugintype={$plugintype}&amp;pluginname={$plugin}&amp;type={$type}">
-                                    <span class="icon icon-cog" role="presentation" aria-hidden="true"></span>
-                                    <span class="accessible-hidden sr-only">{str tag='configfor'} {$plugintype} {if $data.name}{$data.name}{else}{$plugin}{/if}</span>
-                                </a>
-                            {/if}
-                            </li>
-                        {/foreach}
-                        </ul>
+                    {if $data.types && $data.typeswithconfig > 1}
+                    {* list the plugin types with their config buttons next to name *}
+                    {include file="admin/extensions/pluginstypes.tpl" typedata=$data plugin=$plugin plugintype=$plugintype}
                     {/if}
                 </li>
             {/foreach}

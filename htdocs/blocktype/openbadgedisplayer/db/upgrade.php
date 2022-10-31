@@ -61,5 +61,46 @@ function xmldb_blocktype_openbadgedisplayer_upgrade($oldversion = 0) {
         change_field_type($table, $field, true, true);
     }
 
+    if ($oldversion < 2022090200) {
+        if (!get_record('blocktype_cron', 'callfunction', 'refresh_badgr_tokens')) {
+            log_debug('Add cron job for refreshing badgr token');
+            // Every 15 mins we see if there are any old tokens are about to expire and refreshes them
+            $cron = new stdClass();
+            $cron->plugin       = 'openbadgedisplayer';
+            $cron->callfunction = 'refresh_badgr_tokens';
+            $cron->minute       = '*/15';
+            $cron->hour         = '*';
+            $cron->day          = '*';
+            $cron->month        = '*';
+            $cron->dayofweek    = '*';
+            insert_record('blocktype_cron', $cron);
+            // We need to remove any current badgr tokens as they are obsolete now
+            log_debug('Clear old badgr tokens as they do not work anymore');
+            if ($records = get_records_array('usr_account_preference', 'field', 'badgr_token')) {
+                require_once(get_config('libroot') . 'activity.php');
+                $sitename = get_config('sitename');
+                $count = 0;
+                $limit = 100;
+                $total = count($records);
+                foreach ($records as $record) {
+                    $lang = get_user_language($record->usr);
+                    $user = get_record('usr', 'id', $record->usr);
+                    activity_occurred('maharamessage', array(
+                        'users'   => array($record->usr),
+                        'subject' => get_string_from_language($lang, 'resetobsoletebadgrtokensubject', 'blocktype.openbadgedisplayer'),
+                        'message' => get_string_from_language($lang, 'resetobsoletebadgrtokenmessage1', 'blocktype.openbadgedisplayer', display_name($user, null, true), $sitename),
+                        'url'     => get_config('wwwroot') . 'blocktype/openbadgedisplayer/badgrtoken.php',
+                    ));
+                    delete_records('usr_account_preference', 'field', 'badgr_token');
+                    $count++;
+                    if (($count % $limit) == 0 || $count == $total) {
+                        log_debug("$count/$total");
+                        set_time_limit(30);
+                    }
+                }
+            }
+        }
+    }
+
     return true;
 }

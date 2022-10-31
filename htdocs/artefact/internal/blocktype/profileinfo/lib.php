@@ -164,6 +164,18 @@ class PluginBlocktypeProfileinfo extends MaharaCoreBlocktype {
         $return = array();
         if (isset($configdata['artefactids']) && is_array($configdata['artefactids'])) {
             $return = $configdata['artefactids'];
+            foreach ($configdata['artefactids'] as $id) {
+                // Check if there are any embedded images associated with this
+                $embedded = get_column_sql("SELECT afe.fileid
+                                            FROM {artefact} a
+                                            JOIN {artefact_file_embedded} afe ON afe.resourcetype = a.artefacttype
+                                            WHERE a.owner = afe.resourceid
+                                            AND a.id = ?
+                                            AND afe.fileid != ?", array($id, $id));
+                if (!empty($embedded)) {
+                    $return = array_merge($return, $embedded);
+                }
+            }
         }
         if (!empty($configdata['profileicon'])) {
             $return = array_merge($return, array($configdata['profileicon']));

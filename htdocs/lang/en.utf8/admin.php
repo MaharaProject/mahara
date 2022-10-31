@@ -62,6 +62,11 @@ $string['clisitename'] = 'The site name';
 $string['cliupdatesitenamefailed'] = 'Updating site name failed.';
 $string['cliinstallerdescription'] = 'Install Mahara and create required data directories';
 $string['cliinstallingmahara'] = 'Installing Mahara';
+$string['versionnumber'] = 'Version: %s';
+$string['plugintype'] = 'Plugin: %s';
+$string['updateeventlogconfigoption'] = 'The value for $cfg->eventloglevel may need to be updated from "masq" to "masquerade" in your config.php file.';
+$string['registrationisoptout'] = 'Anonymous registration data is now opt-out';
+
 // CLI upgrade script
 $string['cli_upgrade_description'] = 'Upgrade the Mahara database and data to the version of Mahara installed.';
 $string['cli_upgrade_title'] = 'Upgrading Mahara';
@@ -239,6 +244,14 @@ $string['section_artefact'] = 'Artefact content';
 $string['section_interaction'] = 'Forum description';
 $string['section_interactionpost'] = 'Forum content';
 $string['section_block'] = 'Block content';
+$string['section_static_pages'] = 'Static page content';
+$string['section_wall_post'] = 'Wall content';
+$string['section_artefact_resume_certification'] = 'Résumé: Certification content';
+$string['section_artefact_resume_educationhistory'] = 'Résumé: education history';
+$string['section_artefact_resume_book'] = 'Résumé: book content';
+$string['section_verification_comment'] = 'Verification comment';
+$string['section_artefact_resume_membership'] = 'Résumé: membership';
+$string['section_artefact_resume_employmenthistory'] = 'Résumé: employment history';
 $string['potentialfor'] = 'Results for %s';
 
 // sanity check warnings
@@ -278,31 +291,31 @@ $string['filemissingdesc'] = 'File %s%s is missing from server';
 // Register your Mahara
 $string['Field'] = 'Field';
 $string['Value'] = 'Value';
-$string['dataincluded'] = 'Data included';
-$string['datathathavebeensent'] = 'Data that has been sent';
 $string['sendweeklyupdates'] = 'Send weekly updates';
 $string['sendweeklyupdatesdescription'] = 'Allow your site to send weekly updates to <a href="https://mahara.org/">mahara.org</a> with some statistics about your site.';
-$string['newregistrationpolicyinfo'] = '<p>We have updated our registration data policy to require registered sites to provide weekly updates of their data. Please follow the link below to confirm or remove your registration.</p>';
-$string['registerwithmahara'] = 'Register with mahara.org';
-$string['registerwithmaharadescription'] = 'Once your site is registered with the Mahara project, you cannot unregister it.';
+$string['newregistrationpolicyinfo1'] = '<ul><li>We have updated our registration data policy to require sites to opt out of providing weekly updates of anonymous data to gain better insight into how Mahara is used.</li><li>We have altered what anonymous data we collect.</li></ul>';
+$string['registerwithmahara1'] = 'Opt out from the data collection';
+$string['registerwithmaharadescription1'] = 'You can opt out from sending anonymised data to the Mahara project for your site. We encourage you to keep your site registered though to assist the Mahara project team in the product development.';
 $string['Register'] = 'Register';
 $string['Registration'] = 'Registration';
 $string['registrationcancelled'] = 'You can choose to register at any time by going to the <a href="%sadmin/registersite.php">site registration page</a>.';
 $string['registrationfailedtrylater'] = 'Registration failed with error code %s. Please try again later.';
+$string['registrationoptoutsuccessful'] = 'Registration opt-out successful - no more data will be sent.';
 $string['registrationsuccessfulthanksforregistering'] = 'Registration successful - thanks for registering.';
 $string['registermaharasite'] = 'Site registration';
 $string['registeryoursitesummary'] = '
 <p>Registering your Mahara site with <a href="https://mahara.org/">mahara.org</a> helps us to get a picture of the Mahara installations around the world.</p>';
-$string['registeryourmaharasitedetail'] = '
-<p>You can register your Mahara site with the Mahara project. Registration is free and helps us get a picture of the Mahara installations around the world.</p>
-<p>If you decide to send weekly updates, you can see the information that will be sent to the Mahara project. Nothing that can personally identify any person on your site will be sent.</p>';
+$string['registeryourmaharasitedetail1'] = '
+<p>Sites are registered with the Mahara project automatically. Registration is free and helps us get a picture of the Mahara installations around the world and how they are used.</p>
+<p>The Mahara project does not collect personal nor person-identifiable data. Most data is collected in aggregated form to allow the project to identify trends. Below you can see what data is collected and sent on a weekly basis.</p>
+<p>If you have any questions for the data collection, please <a href="mailto:info@mahara.org?subject=Site registration data collection">get in touch</a>.</p>';
 $string['sendingweeklyupdates1'] = 'You are sending weekly updates.';
 $string['notsendingweeklyupdates'] = 'You are not sending weekly updates.';
-$string['siteisregisteredsince'] = 'Your site has been registered with <a href="https://mahara.org/">mahara.org</a> since %s.';
-$string['siteisregistered'] = 'Your site is registered with <a href="https://mahara.org/">mahara.org</a>.';
-$string['siteregistrationpolicy'] = '<p>To ensure our statistics show accurately how Mahara is being used, registration now includes sending us weekly updates. Please review and confirm your registration by clicking &quot;Save&quot; below.</p>';
+$string['siteisregisteredsince1'] = 'Your site has been registered with <a href="https://mahara.org/">mahara.org</a> since %s.';
+$string['sitenotregistered'] = 'Currently, your site is not registered with the Mahara project. Opt in below to help us learn more about your usage.';
+$string['siteisregistered1'] = 'Your site is registered with <a href="https://mahara.org/">mahara.org</a> and is sending weekly data.';
+$string['siteregistrationpolicy1'] = 'The registration policy has changed in the following ways';
 $string['startsendingdata'] = 'Your site is sending weekly updates to <a href="https://mahara.org/">mahara.org</a>';
-$string['stoppedsendingdata'] = 'The weekly updates have been stopped';
 
 // Close site
 $string['Close'] = 'Close';
@@ -1567,3 +1580,14 @@ $string['savedgroupconfigsuccessfully'] = 'Saved default group settings.';
 $string['defaultreset'] = 'Reset to default';
 $string['defaultresetlabel'] = 'Reset';
 $string['defaultresetdesc'] = 'Reset all of the above options to their default values.';
+
+$string['pluginartefact'] = 'Plugin type: Artefact';
+$string['pluginauth'] = 'Plugin type: Authentication';
+$string['pluginblocktype'] = 'Plugin type: Block type';
+$string['pluginexport'] = 'Plugin type: Export';
+$string['plugingrouptype'] = 'Plugin type: Group type';
+$string['pluginimport'] = 'Plugin type: Import';
+$string['plugininteraction'] = 'Plugin type: Interaction';
+$string['pluginmodule'] = 'Plugin type: Module';
+$string['pluginnotification'] = 'Plugin type: Notification';
+$string['pluginsearch'] = 'Plugin type: Search';

@@ -147,6 +147,7 @@ $manual_link_map = array(
     "" => "", // default - means go to manual homepage
     "adminhome|home" => "administration/overview.html#admin-home",
     "adminhome|registersite" => "administration/overview.html#register-your-mahara-site",
+    "adminhome|config|productionmode" => "administration/config_php.html#productionmode-enable-or-disable-production-mode",
     "blocktype|blocks" => "blocks/blocks.html",
     "configextensions|cleanurls" => "administration/extensions.html#clean-urls",
     "configextensions|filters" => "administration/extensions.html#html-filters",

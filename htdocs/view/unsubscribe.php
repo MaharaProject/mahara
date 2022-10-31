@@ -16,7 +16,7 @@ define('SECTION_PLUGINNAME', 'site');
 define('SECTION_PAGE', 'unsubscribe');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
-require('view.php');
+require_once('view.php');
 
 $unsubscribed = false;
 $viewtitle = false;

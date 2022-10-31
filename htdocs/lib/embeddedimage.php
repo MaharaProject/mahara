@@ -18,6 +18,81 @@ class EmbeddedImage {
     function __construct() {
     }
 
+
+    /**
+     * Return the resourcetable mapping.
+     *
+     * The mapping tells us which DB table the resource ID comes from.
+     * It can let us how to go about checking the access rights.
+     *  e.g. academic goals => 'usr' tells us that it won't with the same logic as
+     *  resourcetypes that map to view_artefact.
+     *
+     * TODO: Finish mapping all resource types.
+     *
+     * @return array
+     */
+    public static function get_resourcetable_mapping() {
+        return [
+            'academicgoal' => 'usr',
+            'academicskill' => 'usr',
+            'careergoal' => 'usr',
+            'annotation' => 'view_artefact',
+            'annotationfeedback' => 'artefact_annotation_feedback',
+            'assessment' => 'artefact_peer_assessment',
+            'blog' => 'view_artefact',
+            'blogpost' => 'view_artefact',
+            'book' => 'usr',
+            'comment' => 'artefact_comment_comment',
+            'coverletter' => 'usr',
+            'forum' => 'interaction_forum_post',
+            'group' => 'group',
+            'institution' => 'institution',
+            // @TODO: Instructions needs to be updated.
+            // view instructions are to become viewinstructions.
+            // text can remain as instructions.
+            // Update task: load all artefact_file_embedded records
+            // where resourcetype = 'instructions' and update.
+            // To update try to load the resourceid as a view and as a block instance.
+            // Save it.  The images should update.
+            // Check view instruction fields do not have an 'instructions' querystring.
+            'instructions' => 'resourcetype_is_viewid',
+            'viewinstructions' => 'view',
+            'interest' => 'usr',
+            'introduction' => 'usr',
+            'introtext' => 'block_instance',
+            'membership' => 'usr',
+            'peerassessment' => 'block_instance',
+            'peerinstruction' => 'block_instance',
+            'personalgoal' => 'usr',
+            'personalskill' => 'usr',
+            'post' => 'interaction_forum_post',
+            'staticpages' => 'site_content',
+            'text' => 'block_instance',
+            'textbox' => 'view_artefact',
+            'textinstructions' => 'block_instance',
+            'topic' => 'interaction_forum_topic',
+            // Special case view images blocks (and to work with comments in the side modal).
+            'view' => 'view_artefact', // generalise this to view_artefact as can be used there too
+            'verification_comment' => 'blocktype_verification_comment',
+            'wallpost' => 'blocktype_wall_post',
+            'workskill' => 'usr',
+        ];
+    }
+
+    /**
+     * Return the resourcetable value for a resource type.
+     *
+     * @param string $resourcetype
+     * @return string
+     */
+    public static function get_resourcetable($resourcetype) {
+        $mapping = self::get_resourcetable_mapping();
+        if (isset($mapping[$resourcetype])) {
+            return $mapping[$resourcetype];
+        }
+        return '';
+    }
+
     /**
      * Prepare/update embedded images
      *
@@ -28,16 +103,30 @@ class EmbeddedImage {
      * Add a database reference to the embedded image if required, to set viewing permissions for it
      *
      * @param string $fieldvalue The HTML source of the text body added to the TinyMCE text editor
-     * @param string $resourcetype The type of resource which the TinyMCE editor is used in, e.g. 'forum', 'topic', 'post' for forum text boxes
+     * @param string $resourcetype The type of resource which the TinyMCE editor is used in, e.g. 'forum', 'topic',
+     *  'post' for forum text boxes
      * @param int $resourceid The resourcetype ID, e.g. the block instance using the resource (artefact)
      * @param int $groupid The id of the group the resource is in if applicable
      * @param int $userid The user trying to embed the image (current user if null)
-     * @return string The updated $fieldvalue
+     * @param int $checkonly Check if the fieldvalue needs to embed images only
+     * @return string|boolean The updated $fieldvalue
      */
-    public static function prepare_embedded_images($fieldvalue, $resourcetype, $resourceid, $groupid = NULL, $userid = NULL) {
+    public static function prepare_embedded_images(
+        $fieldvalue,
+        $resourcetype,
+        $resourceid,
+        $groupid = null,
+        $userid = null,
+        $checkonly = false
+    ) {
 
         if (empty($fieldvalue) || empty($resourcetype) || empty($resourceid)) {
             return $fieldvalue;
+        }
+
+        // Check that resourcetype exists in get_resourcetable_mapping
+        if (in_array($resourcetype, array_keys(self::get_resourcetable_mapping()))) {
+            // yay - otherwise do not continue
         }
 
         global $USER;
@@ -70,9 +159,15 @@ class EmbeddedImage {
             $query = '//img[starts-with(@src,"' . $srcstart . '")]';
             $images = $xpath->query($query);
             if (!$images->length) {
-                self::remove_embedded_images($resourcetype, $resourceid);
-                return $fieldvalue;
+                if ($checkonly) {
+                    return false;
+                }
+                else {
+                    self::remove_embedded_images($resourcetype, $resourceid);
+                    return $fieldvalue;
+                }
             }
+            $hasimage = false;
             foreach ($images as $image) {
                 // is this user allowed to publish this image?
                 $imgsrc = $image->getAttribute('src');
@@ -94,6 +189,7 @@ class EmbeddedImage {
                             continue;
                         }
                         else {
+                            $hasimage = true;
                             $publicimages[] = $imgid;
                             $imgispublic = get_field('artefact_file_embedded', 'id', 'fileid', $imgid, 'resourcetype', $resourcetype, 'resourceid', $resourceid);
                             // add to embedded_images table for public access, specifiying context
@@ -144,6 +240,9 @@ class EmbeddedImage {
                 }
                 $image->parentNode->replaceChild($imgnode, $image);
             }
+            if ($checkonly) {
+                return $hasimage;
+            }
             self::remove_embedded_images($resourcetype, $resourceid, $publicimages);
 
             // we only want the fragments inside the body tag created by new DOMDocument
@@ -157,6 +256,31 @@ class EmbeddedImage {
             $fieldvalue = substr($dummydom->saveHTML($dummydom->getElementsByTagName('div')->item(0)), strlen('<div>'), -strlen('</div>'));
             return $fieldvalue;
         }
+    }
+
+    /**
+     * Check to see if the markup contains an embedded image.
+     *
+     * This is useful if we just want to know if the markup contains an embedded image without
+     * executing the delete embedded images part of the prepare_embedded_images() function.
+     * Needed when checking other parts of a composite resume artefact when we need to find out if
+     * any of the artefact's items has an embedded image (not just the particular artefact item we
+     * are currently saving).
+     *
+     * @param string $fieldvalue The HTML source of the text body added to the TinyMCE text editor
+     * @param string $resourcetype The type of resource which the TinyMCE editor is used in
+     * @param int $resourceid The resourcetype ID, e.g. the block instance using the resource (artefact)
+     * @param int $compositeid The id of the composite
+     * @param int $userid The user trying to embed the image (current user if null)
+     * @return boolean An embedded image exists
+     */
+    public static function has_embedded_image($fieldvalue, $resourcetype, $resourceid, $userid = NULL) {
+
+        if (empty($fieldvalue) || empty($resourcetype) || empty($resourceid)) {
+            // not enough info
+            return false;
+        }
+        return self::prepare_embedded_images($fieldvalue, $resourcetype, $resourceid, NULL, $userid, true);
     }
 
     /**
@@ -191,9 +315,75 @@ class EmbeddedImage {
         }
     }
 
-    public static function can_see_embedded_image($fileid, $resourcetype, $resourceid) {
-        $imgispublic = get_field('artefact_file_embedded', 'id', 'fileid', $fileid, 'resourcetype', $resourcetype, 'resourceid', $resourceid);
-        return $imgispublic !== false;
+    /**
+     * Locate *any* Views that the embedded file is used in by checking view_artefact.
+     *
+     * No access control is performed here.
+     *
+     * Important:
+     * - not all artefacts in a view are in embedded in a TinyMCE, e.g. image blocks in views
+     * - not all embedded files appear in view_artefacts, i.e. they are not all saved there
+     *
+     * At this point, the resourcetype doesn't matter as we are sure that
+     * only artefacts are being used there
+     * Artefacttypes are the matching resourcetypes (in this context),
+     * See accesscontrol.php that ensures the resourcetable
+     * is 'artefact' before calling this function.
+     *
+     * @param int $fileid The file ID we are looking up.
+     * @return array $view_ids
+     * @throws InvalidArgumentException
+     */
+    public static function find_viewids_from_embedded_file($fileid) {
+        if (!is_int($fileid)) {
+            throw new InvalidArgumentException("File ID must be an integer");
+        }
+        $validartefactresourcetypes = array_keys(self::get_resourcetable_mapping(), 'view_artefact');
+        $validblockresourcetypes = array_keys(self::get_resourcetable_mapping(), 'block_instance');
+        $sql = "
+        /* Find Views matching View Artefacts artefact as the Resource ID */
+        SELECT va.view
+        FROM
+            {view_artefact} va
+            JOIN {artefact_file_embedded} afe ON afe.resourceid = va.artefact
+            AND afe.resourcetype IN (" . join(',', array_map('db_quote', $validartefactresourcetypes)) . ")
+        WHERE afe.fileid = ?
+        /* Find Views matching View Artefacts block as the Resource ID */
+        UNION
+        SELECT va.view
+        FROM
+            {view_artefact} va
+            JOIN {artefact_file_embedded} afe ON afe.resourceid = va.block
+            AND afe.resourcetype IN (" . join(',', array_map('db_quote', $validblockresourcetypes)) . ")
+        WHERE afe.fileid = ?
+        ";
+        $data = get_records_sql_array($sql, [$fileid, $fileid]);
+
+        if (!$data) {
+            return [];
+        }
+
+        $view_ids = [];
+        foreach ($data as $object) {
+            $view_ids[] = $object->view;
+        }
+        return $view_ids;
+    }
+
+    /**
+     * Check if the embedded image is visible to the user.
+     *
+     * @param object $file The file object
+     * @param string $resourcetype The type of the resource the image is in.
+     * @param int $resourceid The id of the resource the image is in.
+     * @return boolean
+     */
+    public static function can_see_embedded_image(object $file, $resourcetype = '', $resourceid = 0) {
+        global $USER;
+        return AccessControl::user($USER)
+            ->set_file($file)
+            ->set_resource($resourcetype, $resourceid)
+            ->is_visible();
     }
 
     static function remove_embedded_images($resourcetype, $resourceid, $publicimages = NULL) {
@@ -207,15 +397,16 @@ class EmbeddedImage {
             }
         }
     }
-/**
- * Rewrites all possible embedded image urls when import a html string
- *
- * @param string $text the html string
- * @param array $artefactids artefact ID mapping, see more PluginImportLeap::$artefactids
- * @param string $resourcetype
- * @param string $resourceid
- * @return mixed
- */
+
+    /**
+     * Rewrites all possible embedded image urls when import a html string
+     *
+     * @param string $text the html string
+     * @param array $artefactids artefact ID mapping, see more PluginImportLeap::$artefactids
+     * @param string $resourcetype
+     * @param string $resourceid
+     * @return mixed
+     */
     public static function rewrite_embedded_image_urls_from_import($text, array $artefactids, $resourcetype=null, $resourceid=null) {
         $resourcestr = (!empty($resourcetype) && !empty($resourceid)) ?
                           "&$resourcetype=$resourceid"
