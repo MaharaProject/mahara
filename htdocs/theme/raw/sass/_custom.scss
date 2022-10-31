@@ -641,3 +641,13 @@ div.toolbarhtml {
         color: scale-color($gray-300, $lightness: 28%);
     }
 }
+
+.plugin-active {
+    color: $progresscompletion-verified-color;
+}
+.plugin-inactive {
+    color: $progresscompletion-notverified-color;
+}
+#register_whatsent_container .fieldset-body {
+    padding-top: 0;
+}

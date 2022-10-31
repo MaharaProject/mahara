@@ -42,12 +42,12 @@ class PluginModuleLti_advantage extends PluginModule {
     }
 
     /**
-     * API-Function get the Plugin ShortName
+     * API-Function get the Plugin Name
      *
-     * @return string ShortName of the plugin
+     * @return string Name of the plugin
      */
     public static function get_plugin_display_name() {
-        return 'ltiadvantage';
+        return get_string('maharaltiadvantage', 'module.lti_advantage');
     }
 
     /**

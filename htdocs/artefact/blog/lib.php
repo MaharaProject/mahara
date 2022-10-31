@@ -31,6 +31,15 @@ class PluginArtefactBlog extends PluginArtefact {
         return 'blog';
     }
 
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('pluginname', 'artefact.blog');
+    }
+
     public static function admin_menu_items() {
         $map['manageinstitutions/blogs'] = array(
             'path'   => 'manageinstitutions/blogs',

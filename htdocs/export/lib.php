@@ -290,7 +290,7 @@ abstract class PluginExport extends Plugin implements IPluginExport {
             $query = 'SELECT id FROM {artefact} WHERE "owner" = ?';
             $args = array($userid);
             if (sizeof($tmpviews)) {
-                $query .= 'UNION
+                $query .= ' UNION
                     SELECT artefact
                     FROM {view_artefact}
                 WHERE "view" IN (SELECT id FROM {view} WHERE "owner" = ?)

@@ -23,6 +23,15 @@ class PluginModuleMonitor extends PluginModule {
     const type_elasticsearch      = 'elasticsearch';
 
     /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('monitor', 'module.monitor');
+    }
+
+    /**
      * API-Function: Is the plugin activated or not?
      *
      * @return boolean true, if the plugin is activated, otherwise false.

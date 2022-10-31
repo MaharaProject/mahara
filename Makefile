@@ -16,6 +16,7 @@ export MAHARA_REDIS_SERVER = ${COMPOSE_PROJECT_NAME}-mahara-redis
 export MAHARA_DOCKER_PORT = 6142
 export MAHARA_WWW_ROOT = http://localhost:${MAHARA_DOCKER_PORT}/${COMPOSE_PROJECT_NAME}
 export MAHARA_ELASTICSEARCH_HOST = ${COMPOSE_PROJECT_NAME}-mahara-elastic
+export NVM_DIR = ${HOME}/.nvm
 
 CCRED=$(shell echo "\033[0;31m")
 CCYELLOW=$(shell echo "\033[0;33m")
@@ -32,6 +33,14 @@ CCEND=$(shell echo "\033[0m")
 
 all: css
 
+nvmsh := $(shell ls -l ${HOME}/.nvm/nvm.sh 2>/dev/null)
+
+ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+#The following is a workaround for https://github.com/nvm-sh/nvm/issues/1985.
+define nvm_check
+	cd .. && . "${HOME}/.nvm/nvm.sh" && cd $(ROOT_DIR) && nvm install
+endef
+
 production = true
 css:
 	$(info Rebuilding CSS on host)
@@ -44,12 +53,17 @@ endif
 ifeq (, $(shell which gulp))
 	$(error ERROR: Can't find the "gulp" executable. Try doing "sudo npm install -g gulp")
 endif
+ifndef nvmsh
+	$(error ERROR: Can't find the "nvm" executable at path ${HOME}/.nvm/nvm.sh - either install or make path executable)
+endif
+
 ifndef npmsetup
-	npm install
+	@echo "System node version: " && node -v;
+	@$(nvm_check) && nvm ls
+	@$(nvm_check) && npm install
 endif
 	@echo "Building CSS..."
-	@if gulp css --production $(production) ; then echo "Done!"; else npm install; gulp css --production $(production);  fi
-
+	@if $(nvm_check) && npm rebuild node-sass && gulp css --production $(production) ; then echo "Done!"; else $(nvm_check) && npm rebuild node-sass && npm install; gulp css --production $(production);  fi
 clean-css:
 	find ./htdocs/theme/* -maxdepth 1 -name "style" -type d -exec rm -Rf {} \;
 

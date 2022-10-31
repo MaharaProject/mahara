@@ -1034,24 +1034,34 @@ class View {
                 }
             }
         }
-        // Delete any submission history
+        // Delete any submission related history
         delete_records('module_assessmentreport_history', 'event', 'view', 'itemid', $this->id);
-
-        handle_event('deleteview', $eventdata);
-        delete_records('view_rows_columns', 'view', $this->id);
-        delete_records('view_copy_queue', 'view', $this->id);
+        $submissionids = get_column('module_submissions', 'id', 'portfolioelementtype', 'view', 'portfolioelementid', $this->id);
+        if ($submissionids) {
+            execute_sql("DELETE FROM {module_submissions_evaluation} WHERE submissionid IN (" . join(',', $submissionids) . ")");
+            execute_sql("DELETE FROM {module_submissions} WHERE id IN (" . join(',', $submissionids) . ")");
+        }
         if (is_plugin_active('lti', 'module')) {
             delete_records('lti_assessment_submission', 'viewid', $this->id);
         }
-        delete_records('view','id',$this->id);
+
+        // Delete view related material
+        delete_records('view_rows_columns', 'view', $this->id);
+        delete_records('view_copy_queue', 'view', $this->id);
+
         if (!empty($this->owner) && $this->is_submitted()) {
             // There should be no way to delete a submitted view,
             // but unlock its artefacts just in case.
             ArtefactType::update_locked($this->owner);
         }
+
         require_once('embeddedimage.php');
         EmbeddedImage::delete_embedded_images('description', $this->id);
         EmbeddedImage::delete_embedded_images('instructions', $this->id);
+
+        // Finally delete the view itself
+        delete_records('view', 'id', $this->id);
+        handle_event('deleteview', $eventdata);
         $this->deleted = true;
         db_commit();
     }
@@ -1743,7 +1753,7 @@ class View {
             db_begin();
             self::_db_pendingrelease(array($this->get('id')));
             safe_require('module', 'submissions');
-            if (PluginModuleSubmissions::is_active() && $this->get('submittedgroup')) {
+            if (PluginModuleSubmissions::is_active() && $this->get('submittedgroup') && !group_external_group($this->get('submittedgroup'))) {
                 PluginModuleSubmissions::pending_release_submission($this, $releaseuser);
             }
             require_once(get_config('docroot') . 'export/lib.php');
@@ -1794,7 +1804,7 @@ class View {
             db_begin();
             self::_db_release(array($this->id), $this->get('owner'), $this->get('submittedgroup'));
             safe_require('module', 'submissions');
-            if (PluginModuleSubmissions::is_active() && $this->get('submittedgroup')) {
+            if (PluginModuleSubmissions::is_active() && $this->get('submittedgroup') && !group_external_group($this->get('submittedgroup'))) {
                 PluginModuleSubmissions::release_submission($this, $releaseuser);
             }
             db_commit();
@@ -3771,7 +3781,7 @@ class View {
                 $select = "(a.institution = 'mahara' OR ga.can_view = 1";
             }
 
-            if (is_string($group)) {
+            if (is_string($group) || is_int($group)) {
                 $ph = array((int)$group, $user->get('id'));
             }
             else {
@@ -6811,15 +6821,31 @@ class View {
     }
 
     /**
-     * Determine whether the current view is of a type which can be themed.
-     * Certain view types do not respect themes when displayed.
-     * Templates do not respect themes as well
+     * Determine whether the current view can have user chosen theme applied
+     *
+     * Needs to have the config 'userscanchooseviewthemes' turned on
+     * and be the right view type / ownership to respect the theme to be displayed
      *
      * @return boolean whether the view type may be themed
      */
     function is_themeable() {
+        if (!get_config('userscanchooseviewthemes')) {
+            return false;
+        }
+        if ($this->institution) {
+            // Institution pages should respect the default theme of their institution
+            return false;
+        }
         $unthemable_types = array('grouphomepage', 'dashboard');
-        return !$this->get('template') && !in_array($this->type, $unthemable_types);
+        if (in_array($this->type, $unthemable_types)) {
+            return false;
+        }
+        if (is_isolated()) {
+            // We don't really want people picking a theme from another institution
+            // if they can't see that institution
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -7177,6 +7203,7 @@ class View {
      */
     public function submit($group = null, $submittedhost = null, $owner = null, $sendnotification=true) {
         global $USER;
+        require_once('group.php');
 
         // One of these is needed.
         if (!$group && !$submittedhost) {
@@ -7209,7 +7236,7 @@ class View {
             db_begin();
             self::_db_submit(array($this->id), $group, $submittedhost, $owner);
             safe_require('module', 'submissions');
-            if (PluginModuleSubmissions::is_active() && $group) {
+            if (PluginModuleSubmissions::is_active() && $group && !group_external_group($group)) {
                 // We have a Group.  Add the Submissions using the Submissions module as well.
                 PluginModuleSubmissions::add_submission($this, $group);
             }

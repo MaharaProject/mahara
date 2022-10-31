@@ -301,7 +301,10 @@ function collectionedit_submit(Pieform $form, $values) {
             $collection->set_active_collection_template($institutionname);
         }
         else {
-            $collection->unset_active_collection_template($collection->get('id'), $institutionname, !empty($values['template']));
+            // Only unset autocopy template if currently set to true.
+            if (get_field('collection', 'autocopytemplate', 'id', $collection->get('id'))) {
+                $collection->unset_active_collection_template($collection->get('id'), $institutionname, !empty($values['template']));
+            }
         }
     }
     $result = array(

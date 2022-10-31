@@ -2445,7 +2445,7 @@ function xmldb_core_upgrade($oldversion=0) {
             $limit = 100;
             $total = count($records);
             foreach ($records as $record) {
-                execute_sql("UPDATE artefact SET title = ? WHERE id = ?", array($record->email, $record->id));
+                execute_sql("UPDATE {artefact} SET title = ? WHERE id = ?", array($record->email, $record->id));
                 $count++;
                 if (($count % $limit) == 0 || $count == $total) {
                     log_debug("$count/$total");
@@ -2462,6 +2462,46 @@ function xmldb_core_upgrade($oldversion=0) {
             $field = new XMLDBField('token');
             $field->setAttributes(XMLDB_TYPE_CHAR, 8);
             change_field_precision($table, $field);
+        }
+    }
+
+    if ($oldversion < 2021080222) {
+        if (get_config('eventloglevel') === 'masq') {
+            set_config('eventloglevel', 'masquerade');
+            log_warn(get_string('updateeventlogconfigoption', 'admin'), true, false);
+        }
+        log_warn(get_string('registrationisoptout', 'admin'), true, false);
+        set_config('new_registration_policy', true);
+        if (!get_config('registration_sendweeklyupdates')) {
+            require_once('registration.php');
+            list($status, $message) = register_again(true);
+            if ($status == 'error') {
+                log_warn($message, true, false);
+            }
+            else {
+                log_info($message);
+            }
+        }
+    }
+
+    if ($oldversion < 2021080223) {
+        if ($records = get_column_sql("SELECT id FROM {view} WHERE theme IS NOT NULL")) {
+            log_debug('Tidy up user chosen themes for portfolios');
+            require_once(get_config('docroot') . 'lib/view.php');
+            $count = 0;
+            $limit = 100;
+            $total = count($records);
+            foreach ($records as $id) {
+                $view = new View($id);
+                if (!$view->is_themeable()) {
+                    execute_sql("UPDATE {view} SET theme = NULL WHERE id = ?", array($id));
+                }
+                $count++;
+                if (($count % $limit) == 0 || $count == $total) {
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
+            }
         }
     }
 

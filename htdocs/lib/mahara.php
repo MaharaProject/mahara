@@ -2131,7 +2131,7 @@ function handle_event($event, $data, $ignorefields = array()) {
     $parentuser = $USER->get('parentuser');
     $eventloglevel = get_config('eventloglevel');
     if ($eventloglevel === 'all'
-            or ($parentuser and $eventloglevel === 'masq')) {
+            or ($parentuser and $eventloglevel === 'masquerade')) {
         $logentry = (object) array(
             'usr'      => $USER->get('id'),
             'realusr'  => $parentuser ? $parentuser->id : $USER->get('id'),
@@ -3721,6 +3721,7 @@ function artefact_in_view($artefact, $view) {
                 ON v.skin = s.id
             WHERE v.id = ? AND ? in (s.bodybgimg, s.headingbgimg)
     ";
+
     $params = array_merge($params, array($view, $artefact->get('id')));
 
     return record_exists_sql($sql, $params);

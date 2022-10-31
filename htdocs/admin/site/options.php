@@ -805,9 +805,9 @@ $siteoptionform = array(
                     'description'  => get_string('eventlogleveldescription', 'admin'),
                     'defaultvalue' => get_config('eventloglevel'),
                     'options'      => array(
-                        'none' => get_string('eventloglevelnone', 'admin'),
-                        'masq' => get_string('eventloglevelmasq', 'admin'),
-                        'all' => get_string('eventloglevelall', 'admin'),
+                        'none'       => get_string('eventloglevelnone', 'admin'),
+                        'masquerade' => get_string('eventloglevelmasq', 'admin'),
+                        'all'        => get_string('eventloglevelall', 'admin'),
                     ),
                     'help'         => true,
                     'disabled'     => in_array('eventloglevel', $OVERRIDDEN),

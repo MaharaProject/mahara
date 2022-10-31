@@ -15,6 +15,15 @@ class PluginNotificationInternal extends PluginNotification {
 
     static $userdata = array('urltext', 'subject', 'message');
 
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('name', 'notification.internal');
+    }
+
     public static function notify_user($user, $data) {
         static $pluginlist = null;
 

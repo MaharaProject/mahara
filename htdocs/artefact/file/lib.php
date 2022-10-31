@@ -39,6 +39,15 @@ class PluginArtefactFile extends PluginArtefact {
         return 'file';
     }
 
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('pluginname', 'artefact.file');
+    }
+
     public static function menu_items() {
         return array(
             'create/files' => array(
@@ -535,7 +544,7 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
         global $USER;
         $select = '
             SELECT
-                a.id, a.artefacttype, a.mtime, f.size, fi.orientation, a.title, a.description, a.license, a.licensor, a.licensorurl, a.locked, a.allowcomments, u.profileicon AS defaultprofileicon, a.author,
+                a.id, a.owner, a.group, a.institution, a.artefacttype, a.mtime, f.size, fi.orientation, a.title, a.description, a.license, a.licensor, a.licensorurl, a.locked, a.allowcomments, u.profileicon AS defaultprofileicon, a.author,
                 COUNT(DISTINCT c.id) AS childcount, COUNT (DISTINCT aa.artefact) AS attachcount, COUNT(DISTINCT va.view) AS viewcount, COUNT(DISTINCT s.id) AS skincount,
                 COUNT(DISTINCT api.id) AS profileiconcount, COUNT(DISTINCT fpa.id) AS postcount';
         $from = '
@@ -642,7 +651,9 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                 $item->mtime = format_date(strtotime($item->mtime), 'strfdaymonthyearshort');
                 $item->tags = array();
                 $item->allowcomments = (bool) $item->allowcomments;
-                $item->icon = call_static_method(generate_artefact_class_name($item->artefacttype), 'get_icon', array('id' => $item->id));
+                $item->icon = call_static_method(generate_artefact_class_name($item->artefacttype), 'get_icon', array('id' => $item->id,
+                                                                                                                      'group' => $item->group,
+                                                                                                                      'institution' => $item->institution));
                 if ($item->size) { // Doing this here now for non-js users
                     $item->size = ArtefactTypeFile::short_size($item->size, true);
                 }
@@ -2499,6 +2510,12 @@ class ArtefactTypeImage extends ArtefactTypeFile {
         }
         if (isset($options['post'])) {
             $url .= '&post=' . $options['post'];
+        }
+        if (isset($options['group'])) {
+            $url .= '&group=' . $options['group'];
+        }
+        if (isset($options['institution'])) {
+            $url .= '&institution=' . $options['institution'];
         }
         if (isset($options['size'])) {
             $url .= '&size=' . $options['size'];
