@@ -1,3 +1,20 @@
+21.04.7 (2022-11-01)
+- Bug 1958297: Submissions list shows 'Account deleted' entries with link to account that is gone
+- Bug 1969548: Export not working with MySQL8
+- Bug 1978300: Mahara 22.04 upgrade fails due to missing use of dbprefix syntax
+- Bug 1978425: Change site registration to opt-out
+- Bug 1982520: Error with old block configdata
+- Bug 1983308: Public group homepage / forum not viewable
+- Bug 1985857: If a portfolio is shared and made copyable then it's page theme disappears
+- Bug 1987027: MNet failing to set parent auth correctly when creating account via MNet
+- Bug 1988692: Badgr API has changed and badges not displaying anymore
+- Bug 1991157: Certain embedded images can be accessed without login
+- Bug 1979575: Vulnerable PDF can trigger remote shell with PDF export and ghostscript
+- Bug 1979921: Potential issue with artefact chooser and getting group artefacts
+- Bug 1988005: Groups containing collections with cover images cannot be deleted
+- Bug 1992312: embededurls.php doesn't handle protocolless URLs
+- Bug 1991864: Badgr token reset message fix
+
 21.04.6 (2022-06-16)
 - Bug 1978520: Only allow images to be served by thumb.php
 - Bug 1971639: webservices need to check match in lowecase at both ends
