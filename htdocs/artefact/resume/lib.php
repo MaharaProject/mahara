@@ -625,6 +625,32 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume implements
     }
 
     /**
+     * This function returns the correct field name for the given composite resume type.
+     *
+     * In the DB, there are different tables for each type of resume artefact.
+     * Each table has a different description field name, i.e. from 'qualdescription' to 'description'.
+     * Composite types:
+     * - artefact_resume_book
+     * - artefact_resume_certification
+     * - artefact_resume_educationhistory
+     * - artefact_resume_employmenthistory
+     * - artefact_resume_membership
+     * - artefact_resume_personal_information
+     *
+     * @param  array|object $resumeartefact
+     * @return void
+     */
+    public static function find_resume_composite_description_field($resumeartefact) {
+        $descriptionKey = '';
+        foreach (array_keys((array)$resumeartefact) as $key) {
+            if (strpos($key, 'description') !== false) {
+                $descriptionKey = $key;
+            }
+        }
+        return $descriptionKey;
+    }
+
+    /**
     * This function processes the form for the composite
     * @throws Exception
     */
@@ -673,7 +699,12 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume implements
         $a->commit();
 
         $values['artefact'] = $a->get('id');
-
+        require_once('embeddedimage.php');
+        $descriptionField = self::find_resume_composite_description_field($values);
+        $newdescription = EmbeddedImage::prepare_embedded_images($values[$descriptionField], $compositetype, $owner);
+        if ($newdescription) {
+            $values['description'] = $newdescription;
+        }
         $table = 'artefact_resume_' . $compositetype;
         if (!empty($values['id'])) {
             $itemid = $values['id'];
@@ -689,7 +720,21 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume implements
             }
             $itemid = insert_record($table, (object)$values, 'id', true);
         }
-
+        // now we need to check all the composites to see if any have an embedded image
+        // so we have the artefact_file_embedded value even if this one doesn't have and embedded image
+        if ($records = get_records_sql_array("SELECT * FROM " . db_table_name($table) . " WHERE artefact = ?", array($values['artefact']))) {
+            foreach ($records as $record) {
+                if (EmbeddedImage::has_embedded_image($record->$descriptionField, $compositetype, $owner)) {
+                    $whereobject = (object)array(
+                        'fileid' => $values['artefact'],
+                        'resourcetype' => $compositetype,
+                        'resourceid' => $owner,
+                    );
+                    ensure_record_exists('artefact_file_embedded', $whereobject, $whereobject);
+                    break;
+                }
+            }
+        }
         // If there are any attachments, attach them to your Resume...
         if ($compositetype == 'educationhistory' || $compositetype == 'employmenthistory') {
             $goto = get_config('wwwroot') . 'artefact/resume/employment.php';
@@ -786,6 +831,19 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume implements
                     }
                     return array('error'=>$error);
                 }
+            }
+        }
+        // Check if we need to update any blocks to get the correct embedded images
+        if ($blocks = get_column_sql("SELECT DISTINCT va.block
+                                      FROM {view_artefact} va
+                                      JOIN {block_instance} bi ON bi.id = va.block
+                                      JOIN {view} v ON v.id = va.view
+                                      WHERE bi.blocktype IN ('entireresume', 'resumefield')
+                                      AND v.owner = ?", array($a->get('owner')))) {
+            foreach ($blocks as $blockid) {
+                $bi = new BlockInstance($blockid);
+                $bi->set('dirty', true);
+                $bi->commit();
             }
         }
         return array('artefactid' => $a->id, 'itemid' => $itemid);
@@ -2269,11 +2327,11 @@ function simple_resumefield_submit(Pieform $form, $values) {
     $owner = $USER->get('id');
 
     if (isset($values['coverletter'])) {
-        $newcoverletter = EmbeddedImage::prepare_embedded_images($values['coverletter'], 'resumecoverletter', $USER->get('id'));
+        $newcoverletter = EmbeddedImage::prepare_embedded_images($values['coverletter'], 'coverletter', $USER->get('id'));
         $values['coverletter'] = $newcoverletter;
     }
     else if (isset($values['interest'])) {
-        $newinterest = EmbeddedImage::prepare_embedded_images($values['interest'], 'resumeinterest', $USER->get('id'));
+        $newinterest = EmbeddedImage::prepare_embedded_images($values['interest'], 'interest', $USER->get('id'));
         $values['interest'] = $newinterest;
     }
 

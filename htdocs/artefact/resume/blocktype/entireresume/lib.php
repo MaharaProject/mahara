@@ -146,6 +146,15 @@ class PluginBlocktypeEntireresume extends MaharaCoreBlocktype {
         }
     }
 
+   /**
+    * Fetch the associated artefacts including embedded images.
+    *
+    * The result of this method is used to populate the view_artefact table, and
+    * thus decide whether an artefact is in a view for the purposes of access.
+    *
+    * @param BlockInstance $instance
+    * @return array ids of artefacts in this block instance
+    */
     public static function get_artefacts(BlockInstance $instance) {
         $configdata = $instance->get('configdata');
         $return = array();
@@ -163,6 +172,20 @@ class PluginBlocktypeEntireresume extends MaharaCoreBlocktype {
                 )', array($instance->get('view')))) {
             foreach ($artefacts as $artefact) {
                 $return[] = $artefact->id;
+                // Check if there are any embedded images associated with this
+                $embedded = get_column_sql("SELECT afe.fileid
+                                            FROM {artefact} a
+                                            JOIN {artefact_file_embedded} afe ON afe.resourcetype = a.artefacttype
+                                            WHERE a.owner = afe.resourceid
+                                            AND a.id = ?", array($artefact->id));
+                if (!empty($embedded)) {
+                    $return = array_merge($return, $embedded);
+                }
+                // Check if there are any associated attachments
+                $attachments = get_column_sql("SELECT aa.attachment FROM {artefact_attachment} aa WHERE aa.artefact = ?", array($artefact->id));
+                if (!empty($attachments)) {
+                    $return = array_merge($return, $attachments);
+                }
             }
         }
         return $return;

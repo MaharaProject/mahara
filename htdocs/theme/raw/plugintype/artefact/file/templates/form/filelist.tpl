@@ -80,7 +80,7 @@
                 {elseif !$publishable}
                     <span class="display-title">{$displaytitle}</span>
                 {else}
-                    <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}" title="{str tag=downloadfile section=artefact.file arg1=$displaytitle}" class="file-download-link {if $file->artefacttype == 'image' || $file->artefacttype == 'profileicon'}img-modal-preview{/if}">
+                    <a href="{$WWWROOT}artefact/file/download.php?file={$file->id}{if $file->group}&group={$file->group}{/if}{if $file->institution}&institution={$file->institution}{/if}" title="{str tag=downloadfile section=artefact.file arg1=$displaytitle}" class="file-download-link {if $file->artefacttype == 'image' || $file->artefacttype == 'profileicon'}img-modal-preview{/if}">
                         <span class="display-title">{$displaytitle}</span>
                     </a>
                 {/if}

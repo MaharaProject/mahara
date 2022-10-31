@@ -3460,7 +3460,7 @@ function site_menu() {
             }
             else if ($i->file) {
                 $menu[] = array('name' => $i->title,
-                                'link' => get_config('wwwroot') . 'artefact/file/download.php?file=' . $i->file);
+                                'link' => get_config('wwwroot') . 'artefact/file/download.php?file=' . $i->file . '&institution=mahara');
             }
         }
     }
