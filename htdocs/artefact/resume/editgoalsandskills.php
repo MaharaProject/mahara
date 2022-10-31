@@ -162,6 +162,19 @@ function editgoalsandskills_submit(Pieform $form, array $values) {
     // Attachments
     update_attachments($artefact, $values['filebrowser'], null, null, true);
 
+    // Check if we need to update any blocks to get the correct embedded images
+    if ($blocks = get_column_sql("SELECT DISTINCT va.block
+                                  FROM {view_artefact} va
+                                  JOIN {block_instance} bi ON bi.id = va.block
+                                  JOIN {view} v ON v.id = va.view
+                                  WHERE bi.blocktype IN ('entireresume', 'resumefield')
+                                  AND v.owner = ?", array($artefact->get('owner')))) {
+        foreach ($blocks as $blockid) {
+            $bi = new BlockInstance($blockid);
+            $bi->set('dirty', true);
+            $bi->commit();
+        }
+    }
     db_commit();
 
     $result = array(

@@ -94,5 +94,89 @@ function xmldb_artefact_resume_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2022100700) {
+        log_debug("Adjust some 'resume*' for embedded images to match their actual artefact type");
+        $mapping = array('resumecoverletter' => 'coverletter',
+                         'resumeinterest' => 'interest');
+        foreach ($mapping as $mk => $mv) {
+            log_debug("- for " . $mk);
+            if ($records = get_records_sql_array("
+                    SELECT a.id AS aid, a.owner, afe.id AS embedid
+                    FROM {artefact_file_embedded} afe
+                    JOIN {artefact} a ON a.owner = afe.resourceid
+                    WHERE afe.resourcetype = ?
+                    AND a.artefacttype = ?", array($mk, $mv))) {
+                $count = 0;
+                $limit = 500;
+                $total = count($records);
+                foreach ($records as $record) {
+                    execute_sql("UPDATE {artefact_file_embedded} SET resourcetype = ? WHERE id = ?", array($mv, $record->embedid));
+                    execute_sql("UPDATE {artefact} SET description = REPLACE(description, '" . $mk . "=', '" . $mv . "=') WHERE id = ?", array($record->aid));
+                    $count++;
+                    if (($count % $limit) == 0 || $count == $total) {
+                        log_debug("$count/$total");
+                        set_time_limit(30);
+                    }
+                }
+            }
+        }
+        log_debug("Re-save some resume composite items so their embedded items are recorded in the database");
+        $compositesdescriptions = array('book' => 'description',
+                                        'certification' => 'description',
+                                        'membership' => 'description',
+                                        'employmenthistory' => 'positiondescription',
+                                        'educationhistory' => 'qualdescription');
+        $composites = array_keys($compositesdescriptions);
+        require_once('embeddedimage.php');
+        foreach ($composites as $composite) {
+            $tablename = 'artefact_resume_' . $composite;
+            if ($records = get_records_sql_array("SELECT a.owner, a.artefacttype, ac.* FROM " . db_table_name($tablename) . " ac JOIN {artefact} a ON a.id = ac.artefact")) {
+                foreach ($records as $record) {
+                    if (EmbeddedImage::has_embedded_image($record->{$compositesdescriptions[$composite]}, $composite, $record->owner)) {
+                        $whereobject = (object)array(
+                            'fileid' => $record->artefact,
+                            'resourcetype' => $composite,
+                            'resourceid' => $record->owner,
+                        );
+                        ensure_record_exists('artefact_file_embedded', $whereobject, $whereobject);
+                        break;
+                    }
+                }
+            }
+        }
+
+        log_debug("Re-save resume blocks so their embedded/attached items are associated with the view");
+        require_once(get_config('docroot') . 'blocktype/lib.php');
+        $artefacttypes = PluginArtefactResume::get_artefact_types();
+        if ($users = get_column_sql("
+            SELECT DISTINCT resourceid FROM {artefact_file_embedded}
+            WHERE resourcetype IN (" . join(',', array_map('db_quote', array_values($artefacttypes))) . ")")) {
+            $count = 0;
+            $limit = 500;
+            $total = count($users);
+            foreach ($users as $userid) {
+                // Update the resume blocks for this person
+                if ($blocks = get_column_sql("SELECT DISTINCT va.block
+                                              FROM {view_artefact} va
+                                              JOIN {block_instance} bi ON bi.id = va.block
+                                              JOIN {view} v ON v.id = va.view
+                                              WHERE bi.blocktype IN ('entireresume', 'resumefield')
+                                              AND v.owner = ?", array($userid))) {
+                    log_debug("Re-saving resume blocks for person ID: " . $userid);
+                    foreach ($blocks as $blockid) {
+                        $bi = new BlockInstance($blockid);
+                        $bi->set('dirty', true);
+                        $bi->commit();
+                    }
+                }
+                $count++;
+                if (($count % $limit) == 0 || $count == $total) {
+                     log_debug("$count/$total");
+                     set_time_limit(30);
+                }
+            }
+        }
+    }
+
     return $status;
 }
