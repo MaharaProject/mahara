@@ -1,5 +1,3 @@
-@TODO This is only a draft. Review before the final .0 release and update the information accordingly.
-
 # Mahara Readme
 
 Mahara is an open source ePortfolio system. An ePortfolio is a type of
@@ -91,13 +89,15 @@ MariaDB 10.8+ versions.
 
 ### PHP
 
-Mahara can be used with PHP version 7.2.X, 7.3.X, or 7.4.X. The 'magic_quotes'
+Mahara 22.10 can be used with PHP version 7.2.X, 7.3.X, or 7.4.X. The 'magic_quotes'
 and 'register_globals' settings should be turned *off* (which is the default on
 modern PHP installations).
 
-Note: Mahara has **not** been fully tested with PHP 8.X. Some aspects of Mahara may not function as expected. [Plans are in place](https://mahara.org/interaction/forum/topic.php?id=8989) to support PHP 8.1.
+Note: Mahara has **not** been fully tested with PHP 8.1. Basic support is available,
+but at the moment we do not recommend using PHP 8.1 on a production site. We invite
+feedback though from any testing. We will focus on PHP 8.1 and skip PHP 8.0.
 
-The following PHP extensions are also required:
+The following PHP extensions are required:
  * curl
  * gd (including Freetype support)
  * json
@@ -120,7 +120,8 @@ The following PHP extensions are also required:
 ### Web browser
 
 Mahara should be accessible in any modern web browser with JavaScript support.
-However, it is only actively tested in the most recent versions of Firefox and Chrome (also on Android). Testing on Safari (also for iOS) is done on occasion,
+However, it is only actively tested in the most recent versions of Firefox and Chrome
+(also on Android). Testing on Safari (also for iOS) is done on occasion,
 Microsoft browsers, i.e. Microsoft Edge, are supported to a maximum of the
 three most recent versions that are officially supported by Microsoft.
 
@@ -128,20 +129,23 @@ You can still use Mahara on older browsers, but may not have all functionality
 available.
 
 For Mahara 22.10, the supported browser versions are:
- * Firefox 99.0
- * Chrome 88.0
- * Safari 13.1
- * MS Edge 100.0
+ * Firefox 105.0
+ * Chrome 106.0
+ * Safari 15.6
  * Safari for iOS
  * Chrome for Android
 
 # TRANSLATIONS
 
-Mahara has been translated into many languages. You can download [language packs](https://langpacks.mahara.org/), [install and update them via CLI](https://manual.mahara.org/en/22.10/administration/cli.html#install-and-update-language-packs), or [install and update them via the administration area](https://manual.mahara.org/en/22.10/administration/development.html#languages) in Mahara.
+Mahara has been translated into many languages. You can download [language packs](https://langpacks.mahara.org/),
+[install and update them via CLI](https://manual.mahara.org/en/22.10/administration/cli.html#install-and-update-language-packs),
+or [install and update them via the administration area](https://manual.mahara.org/en/22.10/administration/development.html#languages) in Mahara.
 
 # DOCUMENT YOUR CUSTOMISATIONS
 
-Document your customisations for easy record keeping in CUSTOMISATIONS.md by copying CUSTOMISATIONS-example.md. The file sits outside of the `htdocs` directory and should not be uploaded to a server.
+Document your customisations for easy record keeping in CUSTOMISATIONS.md by copying
+CUSTOMISATIONS-example.md. The file sits outside of the `htdocs` directory and should
+not be uploaded to a server.
 
 ------------------
 # COPYRIGHT NOTICE
