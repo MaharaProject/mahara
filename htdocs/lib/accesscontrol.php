@@ -60,20 +60,6 @@ class AccessControl {
   protected $resourceid;
 
   /**
-   * The artefact types we can handle.
-   *
-   * Do we actually need this?
-   *
-   * @var array
-   */
-  protected $artefactTypes = [
-    'ArtefactTypeImage',
-    'ArtefactTypeArchive',
-    'ArtefactTypeVideo',
-    'ArtefactTypeAudio',
-  ];
-
-  /**
    * The resource types we can handle.
    *
    * The full list. Should all of these be in the array?
@@ -153,17 +139,18 @@ class AccessControl {
    *
    * @param object $file
    * @return AccessControl
+   * @throws InvalidArgumentException
    */
   public function set_file($file) {
-    // Check that the file is one of the types we can handle.
-    if (!in_array(get_class($file), $this->artefactTypes)) {
-      throw new InvalidArgumentException('Invalid file type');
+    // Check if the $file is of type ArtefactTypeFile.
+    if ($file instanceof ArtefactTypeFile) {
+      // We can handle this. Set the file.
+      $this->file = $file;
+      self::log('File ID: ' . $this->file->get('id'));
+      return $this;
     }
-
-    // We can handle this. Set the file.
-    $this->file = $file;
-    self::log('File ID: ' . $this->file->get('id'));
-    return $this;
+    // If we don't have a file, then we can't continue.
+    throw new InvalidArgumentException('Invalid file type');
   }
 
   /**
