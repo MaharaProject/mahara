@@ -86,8 +86,8 @@ class Peer {
             else if ($field == 'publickey') {
                 if (!is_object($this->publickey)) {
                     $this->publickey = new stdClass();
+                    $this->publickey->certificate = $value;
                 }
-                $this->publickey->certificate = $value;
             }
             else if ($field == 'publickeyexpires') {
                 $this->publickey->expires = $value;

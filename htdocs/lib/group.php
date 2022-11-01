@@ -292,6 +292,12 @@ function group_role_can_access_archives($group, $role) {
  * @return boolean
  */
 function group_user_can_assess_submitted_views($groupid, $userid) {
+    global $USER;
+    if (!$USER->is_logged_in()) {
+        // When viewing a public group when logged out we don't want to show submissions page
+        return false;
+    }
+
     $groupid = group_param_groupid($groupid);
     $userid  = group_param_userid($userid);
 
@@ -1030,6 +1036,13 @@ function group_delete($groupid, $shortname=null, $institution=null, $notifymembe
     foreach (get_column('view', 'id', 'submittedgroup', $group->id) as $viewid) {
         $view = new View($viewid);
         $view->release();
+    }
+
+    // Delete collections owned by the group
+    require_once(get_config('libroot') . 'collection.php');
+    foreach (get_column('collection', 'id', 'group', $group->id) as $collectionid) {
+        $collection = new Collection($collectionid);
+        $collection->delete();
     }
 
     // Delete artefacts
@@ -2792,6 +2805,9 @@ function group_get_groupinfo_data($group) {
  */
 function group_get_homepage_view($groupid) {
     $v = get_record('view', 'group', $groupid, 'type', 'grouphomepage');
+    if (!$v) {
+        throw new ViewNotFoundException(get_string('groupnotfound', 'group', $groupid));
+    }
     return new View($v->id, (array)$v);
 }
 
@@ -3839,4 +3855,21 @@ function build_group_archived_submissions_results($search, $offset, $limit) {
         'sortby' => $search->sortby,
         'sortdir' => $search->sortdir
     ));
+}
+
+/**
+ * Check if a group is associated with an external system
+ *
+ * Currently just for LTI as we make a 'fake' group for assessment
+ * @param object|string $group
+ * @return boolean
+ */
+function group_external_group($group) {
+    if (is_string($group)) {
+        $group = get_record('group', 'id', $group);
+    }
+    if (record_exists('lti_assessment', 'group', $group->id)) {
+        return true;
+    }
+    return false;
 }

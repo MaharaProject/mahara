@@ -10,7 +10,7 @@
  */
 
 defined('INTERNAL') || die();
-
+$string['pluginname']           = 'Multi-recipient notifications';
 $string['sendmessageto']        = 'Send message';
 $string['composemessage']       = 'Compose';
 $string['composemessagedesc']   = 'Create a new message';

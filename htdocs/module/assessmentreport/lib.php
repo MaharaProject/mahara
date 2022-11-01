@@ -7,6 +7,16 @@ defined('INTERNAL') || die();
  * module plugin class. Used for registering the plugin and his functions.
  */
 class PluginModuleAssessmentreport extends PluginModule {
+
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('pluginname', 'module.assessmentreport');
+    }
+
     /**
      * Is the plugin activated or not?
      *

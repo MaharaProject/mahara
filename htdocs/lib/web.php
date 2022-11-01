@@ -529,7 +529,7 @@ EOF;
             $strings[$k] = get_raw_string($k, $v);
         }
     }
-
+    $javascript_array[] = $jsroot . 'mahara.js';
     $jsstrings = jsstrings();
     $themepaths = themepaths();
 
@@ -611,7 +611,6 @@ EOF;
         }
     }
 
-    $javascript_array[] = $jsroot . 'mahara.js';
     $javascript_array[] = $jsroot . 'formchangechecker.js';
     $javascript_array[] = $jsroot . 'textareamaxlengthchecker.js';
 
@@ -2327,7 +2326,7 @@ function admin_nav() {
         'adminhome/registersite' => array(
             'path'   => 'adminhome/registersite',
             'url'    => 'admin/registersite.php',
-            'title'  => get_string('register'),
+            'title'  => get_string('Registration', 'admin'),
             'weight' => 20,
         ),
         'configsite' => array(
@@ -3522,7 +3521,7 @@ function site_menu() {
             }
             else if ($i->file) {
                 $menu[] = array('name' => $i->title,
-                                'link' => get_config('wwwroot') . 'artefact/file/download.php?file=' . $i->file);
+                                'link' => get_config('wwwroot') . 'artefact/file/download.php?file=' . $i->file . '&institution=mahara');
             }
         }
     }
@@ -4626,7 +4625,7 @@ function build_showmore_pagination($params) {
         $js .= '});' . "\n";
 
         $js .= 'jQuery("#' . $params['databutton'] . '").on("keydown", function(e) {';
-        $js .= '    if (e.keyCode == $j.ui.keyCode.SPACE || e.keyCode == $j.ui.keyCode.ENTER) {';
+        $js .= '    if (e.keyCode == maharaui.keyCode.SPACE || e.keyCode == maharaui.keyCode.ENTER) {';
         $js .= '        e.preventDefault();';
         $js .= '        pagination_showmore(jQuery(this));';
         $js .= '    }';

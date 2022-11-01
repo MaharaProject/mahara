@@ -13,6 +13,15 @@ defined('INTERNAL') || die();
 
 class PluginGrouptypeStandard extends PluginGrouptype {
 
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('name', 'grouptype.standard');
+    }
+
     public static function postinst($prevversion) {
         if ($prevversion == 0) {
             parent::installgrouptype('GroupTypeStandard');

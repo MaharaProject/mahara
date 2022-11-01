@@ -83,6 +83,15 @@ class AuthWebservice extends AuthInternal {
  */
 class PluginAuthWebservice extends PluginAuth {
 
+    /**
+     * Fetch the human readable name for the plugin
+     *
+     * @return string
+     */
+    public static function get_plugin_display_name() {
+        return get_string('title', 'auth.webservice');
+    }
+
     public static function has_config() {
         return true;
     }
