@@ -71,6 +71,12 @@ $optionform = pieform(array(
             'type'         => 'html',
             'value'        => '<h2>' . get_string('Membership', 'group') . '</h2>',
         ),
+        'grouptype' => array(
+            'type'         => 'select',
+            'title'        => get_string('Roles1', 'group'),
+            'options'      => group_get_grouptype_options($group_data->grouptype),
+            'defaultvalue' => $group_data->grouptype,
+        ),
         'open' => array(
             'type'         => 'switchbox',
             'title'        => get_string('Open', 'group'),
@@ -89,12 +95,6 @@ $optionform = pieform(array(
             'description'  => get_string('requestdescription', 'group'),
             'defaultvalue' => !$group_data->open && $group_data->request,
             'disabled'     => $group_data->open,
-        ),
-        'grouptype' => array(
-            'type'         => 'select',
-            'title'        => get_string('Roles', 'group'),
-            'options'      => group_get_grouptype_options($group_data->grouptype),
-            'defaultvalue' => $group_data->grouptype,
         ),
         'invitefriends' => array(
             'type'         => 'switchbox',
@@ -277,6 +277,22 @@ jQuery(function($) {
             }
         }
     });
+    $("#groupsettings_grouptype").on("click", function() {
+        if ($("#groupsettings_grouptype option:selected").val() === 'outcomes') {
+            $("#groupsettings_open").prop("checked", false);
+            $("#groupsettings_open").prop("disabled", true);
+            $("#groupsettings_controlled").prop("checked", true);
+            $("#groupsettings_request").prop("disabled", false);
+            if (!$("#groupsettings_request").attr("checked")) {
+                $("#groupsettings_suggestfriends").prop("checked", false);
+                $("#groupsettings_suggestfriends").prop("disabled", true);
+            }
+        }
+        else {
+            $("#groupsettings_open").prop("disabled", false);
+            $("#groupsettings_controlled").prop("disabled", false);
+        }
+    });
     $("#groupsettings_open").on("click", function() {
         if (this.checked) {
             $("#groupsettings_controlled").prop("checked", false);
@@ -349,6 +365,9 @@ function groupsettings_validate(Pieform $form, $values) {
             if (!empty($values['request'])) {
                 $form->set_error('request', get_string('membershipopenrequest', 'group'));
             }
+        }
+        if ($values['grouptype'] === 'outcomes' && empty($values['controlled'])) {
+            $form->set_error('controlled', get_string('membershipoutcomesnotcontrolled', 'group'));
         }
         if (!empty($values['invitefriends']) && !empty($values['suggestfriends'])) {
             $form->set_error('invitefriends', get_string('suggestinvitefriends', 'group'));
