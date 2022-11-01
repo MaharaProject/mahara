@@ -1,3 +1,35 @@
+22.04.3 (2022-11-01)
+- Bug 1991157: Certain embedded images can be accessed without login
+- Bug 1979575: Vulnerable PDF can trigger remote shell with PDF export and ghostscript
+- Bug 1958297: Submissions list shows 'Account deleted' entries with link to account that is gone
+- Bug 1969548: Export not working with MySQL8
+- Bug 1969712: Can't access 2nd 'Show more' in block configuration with keyboard
+- Bug 1971702: Unable to configure mnet
+- Bug 1972922: Need separate string for revoked LTI submissions
+- Bug 1973479: Secret URL not working when page is submitted
+- Bug 1975428: SAML is removing people from institutions when it shouldn't
+- Bug 1975753: Plans js error - Uncaught ReferenceError: findButtonDataUrls is not defined
+- Bug 1977892: Cannot access 'Add block' button via keyboard
+- Bug 1978300: Mahara 22.04 upgrade fails due to missing use of dbprefix syntax
+- Bug 1978425: Change site registration to opt-out
+- Bug 1982520: Error with old block configdata
+- Bug 1982803: Wrong email footer
+- Bug 1983308: Public group homepage / forum not viewable
+- Bug 1985857: If a portfolio is shared and made copyable then it's page theme disappears
+- Bug 1987027: MNet failing to set parent auth correctly when creating account via MNet
+- Bug 1987354: Sharing permissions for institution removed when editing institution collection details
+- Bug 1988096: Add nvm support
+- Bug 1988692: Badgr API has changed and badges not displaying anymore
+- Bug 1969717: Unable to select a skin for a page with the keyboard
+- Bug 1973639: npm install fails on newer version (12+) of node
+- Bug 1979921: Potential issue with artefact chooser and getting group artefacts
+- Bug 1980291: file_cleanup_old_temp_files() causing an error
+- Bug 1988005: Groups containing collections with cover images cannot be deleted
+- Bug 1992312: embededurls.php doesn't handle protocolless URLs
+- Bug 1991864: Badgr token reset message fix
+- Bug 1994439: Remove the deprecated --no-alias tag on nvm check
+- Bug 1964847: Resume section: second file dropzone not visible due to repeated ids
+
 22.04.2 (2022-06-16)
 - Bug 1978520: Files are accessible publicly through thumb.php
 - Bug 1971517: Can't submit portfolio via LTI 1.1
