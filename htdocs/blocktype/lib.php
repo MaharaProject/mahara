@@ -1758,8 +1758,11 @@ class BlockInstance {
         $classname = generate_class_name('blocktype', $this->get('blocktype'));
         $displayforrole = call_static_method($classname, 'display_for_roles', $this, $user_roles);
         $checkview = $this->get_view();
-        if ($checkview->get('owner') == NULL ||
-            ($USER->is_admin_for_user($checkview->get('owner')) && $checkview->is_objectionable())) {
+        $checkviewowner = $checkview->get('owner');
+        $is_admin_for_user = !empty($checkviewowner) && $USER->is_admin_for_user($checkviewowner);
+        $is_progress_page = $checkview->get('type') == 'progress';
+        if ($checkviewowner === NULL ||
+            ($is_admin_for_user && $checkview->is_objectionable()) || $is_progress_page) {
             $displayforrole = true;
         }
         if (!$displayforrole) {

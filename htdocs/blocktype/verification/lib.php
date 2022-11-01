@@ -470,6 +470,7 @@ class PluginBlocktypeVerification extends MaharaCoreBlocktype {
     }
 
     public static function verification_comment_js($id, $text) {
+       $text =  str_replace(array("\r", "\n"), '', $text);
        $js = <<<EOF
 function verification_comment_success_{$id}(form, data) {
     formSuccess(form, data);
