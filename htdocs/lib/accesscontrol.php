@@ -216,6 +216,26 @@ class AccessControl {
             }
           }
         }
+        // Skin artefacts are listed in the skin table so we need to check there if the artefact is used within a skin and that
+        // the skin is on a page we can view
+        $skinviews = get_column_sql("
+            SELECT v.id FROM {view} v
+            JOIN {skin} s ON v.skin = s.id
+            WHERE s.headingbgimg = ?
+            OR s.bodybgimg = ?",
+            array(
+                $this->file->get('fileid'),
+                $this->file->get('fileid')
+            )
+        );
+        if ($skinviews) {
+            foreach ($skinviews as $skinview) {
+                if (self::can_view_view($skinview)) {
+                    self::log('TRUE: Artefact is within a skin on a page we have access to');
+                    return true;
+                }
+            }
+        }
         // we know that the user does not have access to the file.
         self::log('FALSE: No access to the file via view_artefact');
         return false;
