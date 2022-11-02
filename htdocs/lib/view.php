@@ -295,8 +295,8 @@ class View {
         else if (!empty($id) && is_numeric($id)) {
             $tempdata = get_record_sql('
                 SELECT v.*
-                FROM {view} v LEFT JOIN {group} g ON v.group = g.id
-                WHERE v.id = ? AND (v.group IS NULL OR g.deleted = 0)',
+                FROM {view} v LEFT JOIN {group} g ON v.group = g.id AND (v.group IS NULL OR g.deleted = 0)
+                WHERE v.id = ?',
                 array($id)
             );
             if (!$tempdata) {
