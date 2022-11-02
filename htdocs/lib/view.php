@@ -1036,13 +1036,17 @@ class View {
             }
         }
         // Delete any submission related history
-        delete_records('module_assessmentreport_history', 'event', 'view', 'itemid', $this->id);
-        $submissionids = get_column('module_submissions', 'id', 'portfolioelementtype', 'view', 'portfolioelementid', $this->id);
-        if ($submissionids) {
-            execute_sql("DELETE FROM {module_submissions_evaluation} WHERE submissionid IN (" . join(',', $submissionids) . ")");
-            execute_sql("DELETE FROM {module_submissions} WHERE id IN (" . join(',', $submissionids) . ")");
+        if (is_plugin_installed('assessmentreport', 'module')) {
+            delete_records('module_assessmentreport_history', 'event', 'view', 'itemid', $this->id);
         }
-        if (is_plugin_active('lti', 'module')) {
+        if (is_plugin_installed('submissions', 'module')) {
+            $submissionids = get_column('module_submissions', 'id', 'portfolioelementtype', 'view', 'portfolioelementid', $this->id);
+            if ($submissionids) {
+                execute_sql("DELETE FROM {module_submissions_evaluation} WHERE submissionid IN (" . join(',', $submissionids) . ")");
+                execute_sql("DELETE FROM {module_submissions} WHERE id IN (" . join(',', $submissionids) . ")");
+            }
+        }
+        if (is_plugin_installed('lti', 'module')) {
             delete_records('lti_assessment_submission', 'viewid', $this->id);
         }
 

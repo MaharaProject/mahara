@@ -302,21 +302,24 @@ class Collection {
         }
         delete_records('collection_view','collection', $this->id);
         delete_records('tag', 'resourcetype', 'collection', 'resourceid', $this->id);
-        if (is_plugin_active('lti', 'module')) {
+        if (is_plugin_installed('lti', 'module')) {
             delete_records('lti_assessment_submission', 'collectionid', $this->id);
         }
         delete_records('existingcopy', 'collection', $this->id);
         delete_records('collection_template', 'collection', $this->id);
         delete_records('view_copy_queue', 'collection', $this->id);
-        delete_records('collection', 'id', $this->id);
-        // Delete any submission history
-        delete_records('module_assessmentreport_history', 'event', 'collection', 'itemid', $this->id);
-        $submissionids = get_column('module_submissions', 'id', 'portfolioelementtype', 'collection', 'portfolioelementid', $this->id);
-        if ($submissionids) {
-            execute_sql("DELETE FROM {module_submissions_evaluation} WHERE submissionid IN (" . join(',', $submissionids) . ")");
-            execute_sql("DELETE FROM {module_submissions} WHERE id IN (" . join(',', $submissionids) . ")");
+        if (is_plugin_installed('assessmentreport', 'module')) {
+            // Delete any submission history
+            delete_records('module_assessmentreport_history', 'event', 'collection', 'itemid', $this->id);
         }
-
+        if (is_plugin_installed('submissions', 'module')) {
+            $submissionids = get_column('module_submissions', 'id', 'portfolioelementtype', 'collection', 'portfolioelementid', $this->id);
+            if ($submissionids) {
+                execute_sql("DELETE FROM {module_submissions_evaluation} WHERE submissionid IN (" . join(',', $submissionids) . ")");
+                execute_sql("DELETE FROM {module_submissions} WHERE id IN (" . join(',', $submissionids) . ")");
+            }
+        }
+        delete_records('collection', 'id', $this->id);
         // Secret url records belong to the collection, so remove them from the view.
         // @todo: add user message to whatever calls this.
         if ($viewids) {
