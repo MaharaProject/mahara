@@ -101,21 +101,21 @@ Scenario: Showing correct external manual help file for mahara page
   And I choose "Portfolios" in "Institutions" from administration menu
   And I click on "Help" in the "Footer" "Footer" property
   And I switch to the new window
-  And I scroll to the center of id "institution-pages"
-  And I should see "11.6.13. Institution pages and collections" in "h2" on the screen
+  And I scroll to the center of id "institution-portfolios"
+  And I should see "11.6.13. Institution portfolios" in "h2" on the screen
   And I switch to the main window
   When I am on homepage
   And I choose "Portfolios" in "Configure site" from administration menu
   And I click on "Help" in the "Footer" "Footer" property
   And I switch to the new window
-  And I scroll to the center of id "site-pages-and-collections"
-  And I should see "11.3.7. Site pages and collections" in "h2" on the screen
+  And I scroll to the center of id "site-portfolios"
+  And I should see "11.3.7. Site portfolios" in "h2" on the screen
   And I switch to the main window
   When I am on homepage
   And I click on "GroupA"
   And I click on "Portfolios" in the "Navigation" "Groups" property
   And I click on "Help" in the "Footer" "Footer" property
   And I switch to the new window
-  And I scroll to the center of id "pages-and-collections"
-  And I should see "6.4.4. Pages and collections" in "h2" on the screen
+  And I scroll to the center of id "portfolios"
+  And I should see "6.4.4. Portfolios" in "h2" on the screen
   And I switch to the main window
