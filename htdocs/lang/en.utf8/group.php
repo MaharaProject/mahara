@@ -79,6 +79,7 @@ $string['membershipopencontrolled']  = 'Membership cannot be both open and contr
 $string['membershipopenoutcomes']  = 'Membership cannot be both open and have outcomes.';
 $string['membershipopenrequest']     = "Open membership groups do not accept membership requests.";
 $string['membershipoutcomesnotcontrolled']     = "Membership cannot have outcomes and not be controlled.";
+$string['institutionoutcomesnotallowed']     = "Cannot have 'Outcomes' group type on this institution";
 $string['requestmembership']         = 'Request membership';
 $string['pendingmembers']            = 'Pending members';
 $string['reason']                    = 'Reason';

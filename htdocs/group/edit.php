@@ -117,6 +117,15 @@ else {
     }
 }
 
+// create list of institution with outcome portfolio enabled
+$userinsts = array_keys(get_institutions_to_associate());
+array_push($userinsts,'mahara');
+$instwithoutcomes = get_column_sql("
+SELECT name FROM {institution}
+WHERE outcomeportfolio = ?
+AND name IN (" . JOIN(',', array_map('db_quote', $userinsts)) . ")", array(1)
+);
+
 $namemaxlength = 128;
 
 $form = array(
@@ -179,36 +188,6 @@ $elements['membership'] = array(
     'value'        => '<h3>' . get_string('Membership', 'group') . '</h3>',
 );
 
-$elements['open'] = array(
-    'type'         => 'switchbox',
-    'title'        => get_string('Open', 'group'),
-    'description'  => get_string('opendescription', 'group'),
-    'defaultvalue' => $group_data->open,
-    'disabled'     => !$cancreatecontrolled && $group_data->controlled,
-);
-if ($cancreatecontrolled || $group_data->controlled) {
-    $elements['controlled'] = array(
-        'type'         => 'switchbox',
-        'title'        => get_string('Controlled', 'group'),
-        'description'  => get_string('controlleddescription', 'group'),
-        'defaultvalue' => $group_data->controlled,
-        'disabled'     => !$cancreatecontrolled,
-    );
-}
-else {
-    $form['elements']['controlled'] = array(
-        'type'         => 'hidden',
-        'value'        => $group_data->controlled,
-    );
-}
-$elements['request'] = array(
-    'type'         => 'switchbox',
-    'title'        => get_string('request', 'group'),
-    'description'  => get_string('requestdescription', 'group'),
-    'defaultvalue' => !$group_data->open && $group_data->request,
-    'disabled'     => $group_data->open,
-);
-
 // The grouptype determines the allowed roles
 $grouptypeoptions = group_get_grouptype_options($group_data->grouptype);
 
@@ -236,12 +215,43 @@ if (!empty($forcegrouptype) || count($grouptypeoptions) < 2) {
 else {
     $elements['grouptype'] = array(
         'type'         => 'select',
-        'title'        => get_string('Roles', 'group'),
+        'title'        => get_string('Roles1', 'group'),
         'options'      => $grouptypeoptions,
         'defaultvalue' => $group_data->grouptype,
         'help'         => true
     );
 }
+
+$elements['open'] = array(
+  'type'         => 'switchbox',
+  'title'        => get_string('Open', 'group'),
+  'description'  => get_string('opendescription', 'group'),
+  'defaultvalue' => $group_data->open,
+  'disabled'     => !$cancreatecontrolled && $group_data->controlled,
+);
+if ($cancreatecontrolled || $group_data->controlled) {
+  $elements['controlled'] = array(
+      'type'         => 'switchbox',
+      'title'        => get_string('Controlled', 'group'),
+      'description'  => get_string('controlleddescription', 'group'),
+      'defaultvalue' => $group_data->controlled,
+      'disabled'     => !$cancreatecontrolled,
+  );
+}
+else {
+  $form['elements']['controlled'] = array(
+      'type'         => 'hidden',
+      'value'        => $group_data->controlled,
+  );
+}
+$elements['request'] = array(
+  'type'         => 'switchbox',
+  'title'        => get_string('request', 'group'),
+  'description'  => get_string('requestdescription', 'group'),
+  'defaultvalue' => !$group_data->open && $group_data->request,
+  'disabled'     => $group_data->open,
+);
+
 
 $elements['invitefriends'] = array(
     'type'         => 'switchbox',
@@ -489,7 +499,7 @@ $editgroup = pieform($form);
  * @return void
  */
 function editgroup_validate(Pieform $form, $values) {
-    global $group_data, $namemaxlength;
+    global $group_data, $namemaxlength, $instwithoutcomes;
 
     if ((empty($group_data->id) || $group_data->institution !== $values['institution']) && group_max_reached($values['institution'], true)) {
         $form->set_error('institution', get_string('groupmaxreached','group', get_config('wwwroot'), $values['institution']), false);
@@ -546,6 +556,12 @@ function editgroup_validate(Pieform $form, $values) {
         if (!empty($values['request'])) {
             $form->set_error('request', get_string('membershipopenrequest', 'group'));
         }
+    }
+    if ($values['grouptype'] === 'outcomes' && empty($values['controlled'])) {
+        $form->set_error('controlled', get_string('membershipoutcomesnotcontrolled', 'group'));
+    }
+    if ($values['grouptype'] === 'outcomes' && !in_array($values['institution'], $instwithoutcomes)) {
+        $form->set_error('grouptype', get_string('institutionoutcomesnotallowed', 'group'));
     }
     if (!empty($values['invitefriends']) && !empty($values['suggestfriends'])) {
         $form->set_error('invitefriends', get_string('suggestinvitefriends', 'group'));
@@ -661,9 +677,61 @@ function editgroup_submit(Pieform $form, $values) {
 
     redirect(group_homepage_url($group_data));
 }
-
+$instwithoutcomesjs = json_encode($instwithoutcomes);
 $js = '
 jQuery(function($) {
+    // Disable outcomes field if the selected institution doent have in enabled
+    var institution = "";
+    var institutionfield = $("#editgroup_institution");
+    // Need to handle if institution field is one item/hidden field
+    if (institutionfield.prop("nodeName") === "INPUT" && institutionfield.prop("type") === "hidden") {
+        institution = institutionfield.prop("value");
+    }
+    else {
+        institution = institutionfield.find(":selected").attr("value");
+    }
+    var instwithoutcomes = ' . $instwithoutcomesjs . ';
+    if ($.inArray(institution, instwithoutcomes) < 0) {
+      // disable outcomes
+      $("#editgroup_grouptype option[value=\'outcomes\']").prop("disabled", true);
+    }
+    $("#editgroup_institution").on("change.changechecker",(e)=>{
+      institution = $("#editgroup_institution").find(":selected").attr("value");
+      var instwithoutcomes = ' . $instwithoutcomesjs . ';
+      if ($.inArray(institution, instwithoutcomes) < 0) {
+        // disable outcomes
+        $("#editgroup_grouptype option[value=\'outcomes\']").prop("disabled", true);
+        if ($("#editgroup_grouptype option:selected").val() === "outcomes") {
+          $("#editgroup_grouptype option[value=\'course\']").prop("selected", true);
+          $("#editgroup_open").prop("disabled", false);
+          $("#editgroup_controlled").prop("disabled", false);
+        }
+      }
+      else {
+        // enable outcomes
+        $("#editgroup_grouptype option[value=\'outcomes\']").prop("disabled", false);
+      }
+    });
+
+    $("#editgroup_grouptype").on("click", function() {
+      if ($("#editgroup_grouptype option:selected").val() === "outcomes") {
+        $("#editgroup_open").prop("checked", false);
+        $("#editgroup_open").prop("disabled", true);
+        $("#editgroup_controlled").prop("checked", true);
+        $("#editgroup_controlled").prop("disabled", false); // we cannot have checked and disabled both be true as nothing will be set in $_POST
+
+        $("#editgroup_request").prop("disabled", false);
+        if (!$("#editgroup_request").attr("checked")) {
+          $("#editgroup_suggestfriends").prop("checked", false);
+          $("#editgroup_suggestfriends").prop("disabled", true);
+        }
+      }
+      else {
+        $("#editgroup_open").prop("disabled", false);
+        $("#editgroup_controlled").prop("disabled", false);
+      }
+    });
+
     $("#editgroup_controlled").on("click", function() {
         if (this.checked) {
             $("#editgroup_request").prop("disabled", false);
