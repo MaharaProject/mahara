@@ -1038,6 +1038,9 @@ class PluginAuthXmlrpc extends PluginAuth {
             . '?hostwwwroot=' . substr(get_config('wwwroot'), 0, -1) . '&wantsurl=';
     }
 
+    public static function is_deprecated() {
+        return get_string('componentdeprecated', 'auth.xmlrpc');
+    }
 }
 
 /**

@@ -19,3 +19,4 @@ $string['networkingdisabledonthissite'] = 'Networking is disabled on this site.'
 $string['networkservers'] = 'Network servers';
 $string['youhaveloggedinfrom1'] = 'Return to <a href="%s">%s</a>';
 $string['authloginmsgtitle'] = 'Wrong login message';
+$string['componentdeprecated'] = 'The XML-RPC / MNet authentication method is deprecated. It will be removed in an upcoming release of Mahara. Please use LTI instead.';
