@@ -267,6 +267,9 @@ function collectionedit_submit(Pieform $form, $values) {
         $values['framework'] = null;
     }
     $values['coverimage'] = (isset($values['coverimage']) ? $values['coverimage'] : null);
+    $groupid = $collection->get('group');
+    $values['outcomeportfolio'] = (int)($groupid && is_outcomes_group($groupid));
+
     $collection = Collection::save($values);
 
     if (isset($values['progresscompletion'])) {

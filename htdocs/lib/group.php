@@ -3884,3 +3884,19 @@ function group_external_group($group) {
     }
     return false;
 }
+
+/**
+ * Check if a group is set as 'Outcomes' group
+ *
+ * @param string $id  The group ID
+ * @return boolean
+ */
+function is_outcomes_group($id) {
+    $id = (int)$id;
+    if ($id > 0) {
+        if ($group = get_record('group', 'id', $id)) {
+            return (boolean)($group->grouptype === 'outcomes');
+        }
+    }
+    return false;
+}

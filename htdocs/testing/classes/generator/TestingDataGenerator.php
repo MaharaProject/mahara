@@ -2102,7 +2102,7 @@ EOD;
         $data->navigation = 1;
         $data->submittedstatus = 0;
         $data->progresscompletion = isset($record['progresscompletion']) && $record['progresscompletion'] ? 1 : 0;
-
+        $data->outcomeportfolio = isset($record['outcomeportfolio']) && $record['outcomeportfolio'] ? 1 : 0;
         $institution = null;
         if ($data->progresscompletion && $record['ownertype'] === 'group') {
             $institution = get_field('group', 'institution', 'id', $groupid);

@@ -162,6 +162,12 @@ class Collection {
      */
     private $frameworkurl;
 
+    /**
+     * @var boolean
+     */
+    private $outcomeportfolio;
+
+
     const UNSUBMITTED = 0;
     const SUBMITTED = 1;
     const PENDING_RELEASE = 2;
@@ -578,6 +584,7 @@ class Collection {
         $data->submittedstatus = 0;
 
         $data->progresscompletion = $colltemplate->get('progresscompletion');
+        $data->outcomeportfolio = $colltemplate->get('outcomeportfolio');
         // If owner is copying a collection they own then the copy is made unlocked
         $data->lock = (isset($data->owner) && $data->owner == $colltemplate->owner) ? 0 : $colltemplate->get('lock');
         $data->autocopytemplate = 0;
