@@ -66,6 +66,7 @@
                         </div>
                         <div class="card-footer">
                             {* Note: This is positioned relative to base of card-quarter *}
+                            {if !($outcomesgroup && $role === 'member')}
                             <div class="page-access">
                                 {if $view.accesslist || $view.manageaccess}
                                     <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">                                        <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
@@ -111,7 +112,7 @@
                                     </ul>
                                 {/if}
                             </div>
-
+                            {/if}
                             <div class="page-controls">
                                 <button class="dropdown-toggle btn btn-link moremenu" type="button"
                                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="{str tag='moreoptions' section='mahara'}">
@@ -128,7 +129,7 @@
                                         </a>
                                     </li>
                                 {/if}
-                                {if !$view.submittedto && !$noedit && (!$view.locked || $editlocked) && !$view.lockedcoll}
+                                {if !$view.submittedto && !$noedit && (!$view.locked || $editlocked) && !$view.lockedcoll && !($view.collid && $outcomesgroup && $role !== 'admin')}
                                     <li class="dropdown-item with-icon">
                                     {if $view.collid}
                                         <a href="{$WWWROOT}collection/edit.php?id={$view.collid}" title="{str tag=edittitleanddescription section=view}">
@@ -140,7 +141,7 @@
                                         </a>
                                     </li>
                                 {/if}
-                                {if !$view.submittedto && $view.removable && !$noedit && (!$view.locked || $editlocked) && !$view.lockedcoll}
+                                {if !$view.submittedto && $view.removable && !$noedit && (!$view.locked || $editlocked) && !$view.lockedcoll && !($outcomesgroup && $role === 'member')}
                                     <li class="dropdown-item with-icon">
                                     {if $view.collid}
                                         <a href="{$WWWROOT}collection/delete.php?id={$view.collid}" title="{str tag=deletecollection section=collection}">

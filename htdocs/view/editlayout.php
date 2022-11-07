@@ -21,7 +21,6 @@ safe_require('artefact', 'file');
 
 $id = param_integer('id', false);
 $new = param_boolean('new', false);
-
 if ($new && $id === false) {
     // Use the site default portfolio page to create a new page
     // cribbed from createview_submit()

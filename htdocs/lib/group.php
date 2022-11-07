@@ -2222,7 +2222,7 @@ function group_get_menu_tabs() {
         'title' => get_string('Viewscollections1', 'view'),
         'weight' => 50,
     );
-    if (group_role_can_edit_views($group, $role)) {
+    if (group_role_can_edit_views($group, $role) && !(is_outcomes_group($group->id) && $role === 'member')) {
         $menu['share'] = array(
             'path' => 'groups/share',
             'url' => 'group/shareviews.php?group='.$group->id,
@@ -3899,4 +3899,15 @@ function is_outcomes_group($id) {
         }
     }
     return false;
+}
+
+
+function group_deny_access($group, $role) {
+  // Can't check so lets deny
+  if (!isset($group->id) || !isset($group->grouptype)) {
+    return true;
+  }
+  safe_require('grouptype', $group->grouptype);
+  $denyaccess = call_static_method('GroupType' . $group->grouptype, 'deny_access_for_role', $group, $role);
+  return $denyaccess;
 }

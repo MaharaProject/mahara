@@ -24,6 +24,13 @@ $collection = new Collection($id);
 if (!$USER->can_edit_collection($collection)) {
     throw new AccessDeniedException(get_string('cantdeletecollection', 'collection'));
 }
+if ($collection->get('group')) {
+    $group = get_group_by_id($collection->get('group'));
+    if (group_deny_access($group, 'member')) {
+        throw new AccessDeniedException();
+    }
+}
+
 $groupid = $collection->get('group');
 $institutionname = $collection->get('institution');
 $urlparams = array();

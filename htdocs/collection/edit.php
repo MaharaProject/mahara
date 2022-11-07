@@ -80,7 +80,7 @@ else {
     $baseurl = get_config('wwwroot') . 'view/index.php';
 }
 
-if (!$USER->can_edit_collection($collection)) {
+if (!$USER->can_edit_collection($collection) || (!empty($groupid) && group_user_access($groupid) !== 'admin')) {
     throw new AccessDeniedException(get_string('canteditcollection', 'collection'));
 }
 

@@ -509,7 +509,7 @@ class View {
         }
 
         // Lockblocks if set on template
-        $view->set('lockblocks', $template->get('lockblocks'));
+        $view->set('lockblocks', (int)($template->get('lockblocks') || $view->lockblocks));
 
         if ($template->get('locktemplate')) {
             $view->set('locktemplate', 0);
@@ -653,7 +653,7 @@ class View {
             'type'          => 'portfolio',
             'title'         => (array_key_exists('title', $viewdata)) ? $viewdata['title'] : self::new_title(get_string('Untitled', 'view'), (object)$viewdata),
             'anonymise'     => 0,
-            'lockblocks'    => 0,
+            'lockblocks'    => (int)(isset($viewdata['group']) && is_outcomes_group($viewdata['group'])),
         );
 
         $data = (object)array_merge($defaultdata, $viewdata);
@@ -6245,7 +6245,7 @@ class View {
 
     public function copy_contents($template, &$artefactcopies) {
 
-        $this->set('lockblocks', $template->get('lockblocks'));
+        $this->set('lockblocks', (int)($template->get('lockblocks') || $this->lockblocks));
         if ($template->get('template') == self::SITE_TEMPLATE
             && $template->get('type') == 'portfolio') {
             $this->set('description', '');

@@ -21,9 +21,11 @@ define('MENUITEM_SUBPAGE', 'share');
 
 define('GROUP', param_integer('group'));
 $group = group_current_group();
-if (!group_user_can_edit_views($group)) {
-    throw new AccessDeniedException();
+
+if (group_deny_access($group, 'member')) {
+  throw new AccessDeniedException();
 }
+
 
 $accesslists = View::get_accesslists(null, $group->id);
 

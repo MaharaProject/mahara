@@ -24,6 +24,13 @@ if ($groupid && !group_within_edit_window($groupid)) {
     throw new AccessDeniedException(get_string('cantdeleteview', 'view'));
 }
 
+if ($groupid) {
+    $groupobj = get_group_by_id($groupid);
+    if (group_deny_access($groupobj, 'member')) {
+        throw new AccessDeniedException();
+    }
+}
+
 $collectionnote = '';
 $collection = $view->get_collection();
 if ($collection) {

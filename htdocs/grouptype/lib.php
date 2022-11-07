@@ -97,4 +97,9 @@ abstract class GroupType implements IGroupType {
     public static function default_role() {
         return 'member';
     }
+
+    public static function deny_access_for_role($group, $denyrole) {
+      // we default to can they edit the group
+      return !group_user_can_edit_views($group);
+    }
 }

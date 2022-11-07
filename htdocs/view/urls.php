@@ -37,6 +37,13 @@ if ($group && !group_within_edit_window($group)) {
     throw new AccessDeniedException();
 }
 
+if ($group) {
+    $groupobj = get_group_by_id($group);
+    if (group_deny_access($groupobj, 'member')) {
+        throw new AccessDeniedException();
+    }
+}
+
 $newform = array(
     'name'     => 'newurl',
     'autofocus'     => false,

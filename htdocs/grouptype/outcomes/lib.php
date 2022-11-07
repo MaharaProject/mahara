@@ -34,4 +34,8 @@ class PluginGrouptypeOutcomes extends PluginGrouptype {
 
 class GrouptypeOutcomes extends GroupTypeCourse {
 
+  public static function deny_access_for_role($group, $denyrole) {
+    $accessrole = group_user_access($group->id);
+    return !group_user_can_edit_views($group) || $accessrole == $denyrole;
+  }
 }

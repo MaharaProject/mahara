@@ -60,7 +60,7 @@ class PluginArtefactPlans extends PluginArtefact {
     }
 
     public static function group_tabs($groupid, $role) {
-        if ($role) {
+        if ($role && !is_outcomes_group($groupid)) {
             return [
                 'groupplans' => [
                     'path' => 'groups/groupplans',
