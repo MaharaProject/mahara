@@ -1069,6 +1069,16 @@ function xmldb_core_upgrade($oldversion=0) {
 
             create_table($table);
         }
+        log_debug('Adding "outcomecategory" field to "collection" table');
+        $table = new XMLDBTable('collection');
+        $field = new XMLDBField('outcomecategory');
+        if (!field_exists($table, $field)) {
+            $field->setAttributes(XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED);
+            add_field($table, $field);
+            $key = new XMLDBKey('outcatfk');
+            $key->setAttributes(XMLDB_KEY_FOREIGN, array('outcomecategory'), 'outcome_category', array('id'));
+            add_key($table, $key);
+        }
     }
 
     return $status;

@@ -167,6 +167,11 @@ class Collection {
      */
     private $outcomeportfolio;
 
+    /**
+     * @var integer
+     */
+    private $outcomecategory;
+
 
     const UNSUBMITTED = 0;
     const SUBMITTED = 1;
@@ -953,6 +958,30 @@ class Collection {
                 'unselectcallback'   => 'delete_view_coverimage',
             ),
         );
+        if ($this->group && is_outcomes_group($this->group)) {
+            $institution = get_field('group', 'institution', 'id', $this->group);
+            $categories = get_records_select_array('outcome_category',  "institution = ?", array($institution));
+            $elements['outcomeportfolio'] = array(
+                'type'  => 'switchbox',
+                'title' => get_string('outcomeportfolio', 'collection'),
+                'description' => get_string('outcomeportfoliodesc', 'collection'),
+                'defaultvalue' => 1,
+            );
+            $options = [];
+            if ($categories) {
+                foreach($categories as $cat) {
+                    $options[$cat->id] = $cat->title;
+                }
+                $elements['outcomecategory'] = array(
+                    'type'  => 'select',
+                    'title' => get_string('outcomecategory','collection'),
+                    'description' => get_string('outcomecategorydesc','collection'),
+                    'options' => $options,
+                    'collapseifoneoption' => true,
+                    'defaultvalue' => null,
+                );
+            }
+        }
         if ($frameworks = $this->get_available_frameworks()) {
             $options = array('' => get_string('noframeworkselected', 'module.framework'));
             foreach ($frameworks as $framework) {

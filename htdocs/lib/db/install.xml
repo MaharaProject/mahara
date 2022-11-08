@@ -108,6 +108,53 @@
                 <INDEX NAME="instfielduk" UNIQUE="true" FIELDS="institution,field"/>
             </INDEXES>
         </TABLE>
+        <TABLE NAME="outcome_category">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="title" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="outcome_categorypk" TYPE="primary" FIELDS="id" />
+                <KEY NAME="instfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"/>
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="outcome_type">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="title" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="abbreviation" TYPE="char" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="styleclass" TYPE="char" LENGTH="63" NOTNULL="true" />
+                <FIELD NAME="outcome_category" TYPE="int" LENGTH="10" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="outcome_typepk" TYPE="primary" FIELDS="id" />
+                <KEY NAME="outcatfk" TYPE="foreign" FIELDS="outcome_category" REFTABLE="outcome_category" REFFIELDS="id"/>
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="outcome_subject_category">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="name" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="outcome_subject_categorypk" TYPE="primary" FIELDS="id" />
+                <KEY NAME="instfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"/>
+            </KEYS>
+        </TABLE>
+        <TABLE NAME="outcome_subject">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="title" TYPE="char" LENGTH="100" NOTNULL="true" />
+                <FIELD NAME="abbreviation" TYPE="char" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="outcome_subject_category" TYPE="int" LENGTH="10" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="outcome_subjectpk" TYPE="primary" FIELDS="id" />
+                <KEY NAME="outsubcatfk" TYPE="foreign" FIELDS="outcome_subject_category" REFTABLE="outcome_subject_category" REFFIELDS="id"/>
+            </KEYS>
+        </TABLE>
         <!-- PLUGIN_TYPE_SUBSTITUTION -->
         <TABLE NAME="application">
             <FIELDS>
@@ -1053,6 +1100,7 @@
                 <FIELD NAME="autocopytemplate" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="template" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="outcomeportfolio" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="outcomecategory" TYPE="int" LENGTH="10" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -1061,6 +1109,7 @@
                 <KEY NAME="groupfk" TYPE="foreign" FIELDS="group" REFTABLE="group" REFFIELDS="id"  />
                 <KEY NAME="institutionfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"  />
                 <KEY NAME="coverimagefk" TYPE="foreign" FIELDS="coverimage" REFTABLE="artefact" REFFIELDS="id"  />
+                <KEY NAME="outcatfk" TYPE="foreign" FIELDS="outcomecategory" REFTABLE="outcome_category" REFFIELDS="id"  />
             </KEYS>
         </TABLE>
         <TABLE NAME="collection_view">
@@ -1550,52 +1599,6 @@
                 <INDEX NAME="statusix" UNIQUE="false" FIELDS="status"/>
             </INDEXES>
         </TABLE>
-        <TABLE NAME="outcome_category">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="title" TYPE="char" LENGTH="100" NOTNULL="true" />
-                <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="outcome_categorypk" TYPE="primary" FIELDS="id" />
-                <KEY NAME="instfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"/>
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="outcome_type">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="title" TYPE="char" LENGTH="100" NOTNULL="true" />
-                <FIELD NAME="abbreviation" TYPE="char" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="styleclass" TYPE="char" LENGTH="63" NOTNULL="true" />
-                <FIELD NAME="outcome_category" TYPE="int" LENGTH="10" NOTNULL="true" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="outcome_typepk" TYPE="primary" FIELDS="id" />
-                <KEY NAME="outcatfk" TYPE="foreign" FIELDS="outcome_category" REFTABLE="outcome_category" REFFIELDS="id"/>
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="outcome_subject_category">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="name" TYPE="char" LENGTH="100" NOTNULL="true" />
-                <FIELD NAME="institution" TYPE="char" LENGTH="255" NOTNULL="true" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="outcome_subject_categorypk" TYPE="primary" FIELDS="id" />
-                <KEY NAME="instfk" TYPE="foreign" FIELDS="institution" REFTABLE="institution" REFFIELDS="name"/>
-            </KEYS>
-        </TABLE>
-        <TABLE NAME="outcome_subject">
-            <FIELDS>
-                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="title" TYPE="char" LENGTH="100" NOTNULL="true" />
-                <FIELD NAME="abbreviation" TYPE="char" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="outcome_subject_category" TYPE="int" LENGTH="10" NOTNULL="true" />
-            </FIELDS>
-            <KEYS>
-                <KEY NAME="outcome_subjectpk" TYPE="primary" FIELDS="id" />
-                <KEY NAME="outsubcatfk" TYPE="foreign" FIELDS="outcome_subject_category" REFTABLE="outcome_subject_category" REFFIELDS="id"/>
-            </KEYS>
-        </TABLE>
     </TABLES>
 </XMLDB>
+     

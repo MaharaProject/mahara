@@ -128,6 +128,10 @@ $string['viewnavigationdesc'] = 'Add a horizontal navigation bar to every page i
 $string['viewstobeadded'] = 'Pages to be added';
 $string['viewconfirmremove'] = 'Are you sure you wish to remove this page from the collection?';
 $string['collectioncopywouldexceedquota'] = 'Copying this collection would exceed your file quota.';
+$string['outcomeportfolio'] = 'Outcomes portfolio';
+$string['outcomeportfoliodesc'] = 'Creates a collection with outcomes that are managed in the collection.';
+$string['outcomecategory'] = 'Outcome category';
+$string['outcomecategorydesc'] = 'Select the category of outcomes that you want to use in this portfolio.';
 
 $string['copiedparticle'] = 'Copied %s';
 $string['andparticle'] = 'and %s';
