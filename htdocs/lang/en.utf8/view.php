@@ -623,5 +623,28 @@ $string['signoffviewupdated'] = 'Sign-off status updated';
 $string['verifyviewupdated'] = 'Verification status updated';
 $string['wrongsignoffviewrequest'] = 'You do not have permission to perform the requested action';
 
-// Activity page startdate
+// Activity page
 $string['startdate_rule'] = 'Start date must be before completion date';
+$string['add_activity_button'] = 'Add activity page';
+$string['activity_info_fieldset'] = 'Activity information';
+$string['activity_info_title'] = 'Activity description';
+$string['activity_info_desc'] = 'Describe the activity that the learner should achieve. It is a longer version of the page title.';
+
+// Subject
+$string['activity_info_subject'] = 'Subject';
+$string['activity_info_subject_desc'] = 'Select the subject that fits most closely for this activity.';
+$string['activity_info_supervisor'] = 'Responsible tutor or administrator';
+$string['activity_info_activity_info_supervisor_desc'] = 'Select the group tutor or group administrator who is in charge of this activity.';
+
+$string['activity_info_start_date'] = 'Start date';
+$string['activity_info_end_date'] = 'End date';
+$string['activity_info_start_date_desc'] = 'Select the date when the learner will start work on this activity';
+$string['activity_info_end_date_desc'] = 'Select the date when the learner is expected to finish this activity';
+$string['activity_info_achievement_levels'] = 'Levels of achievement';
+$string['activity_info_achievement_levels_desc'] = 'Define the levels of achievement for this particular activity.';
+
+// Activity page achievement levels
+$string['activity_info_achievement_level_1'] = 'Level 1';
+$string['activity_info_achievement_level_2'] = 'Level 2';
+$string['activity_info_achievement_level_3'] = 'Level 3';
+$string['activity_info_achievement_level_0'] = 'Not demonstrated';

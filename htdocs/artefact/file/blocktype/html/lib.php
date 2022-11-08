@@ -26,7 +26,7 @@ class PluginBlocktypeHtml extends MaharaCoreBlocktype {
     }
 
     public static function get_viewtypes() {
-        return array('dashboard', 'portfolio', 'profile');
+        return array('dashboard', 'portfolio', 'profile', 'activity');
     }
 
     public static function single_artefact_per_block() {

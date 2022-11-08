@@ -453,6 +453,7 @@ class View {
             $userid = $USER->get('id');
         }
 
+        // Viewdata need to have 'type' = 'activity'
         $user = new User();
         $user->find_by_id($userid);
 
@@ -620,12 +621,14 @@ class View {
                 $userobj = new User();
                 $userobj->find_by_id($userid);
                 if (!$userobj->is_admin_for_user($viewdata['owner'])) {
-                    throw new SystemException("View::_create: User $userid is not allowed to create a view for owner {$viewdata['owner']}");
+                    throw new SystemException(
+                        "View::_create: User $userid is not allowed to create a view for owner {$viewdata['owner']}"
+                    );
                 }
             }
 
-            // Users can only have one view of each view type except 'portfolio' and 'progress'
-            $multipletypes = array('portfolio', 'progress');
+            // Users can only have one view of each view type except 'portfolio', 'progress', and 'activity'
+            $multipletypes = array('portfolio', 'progress', 'activity');
             if (isset($viewdata['type']) && !in_array($viewdata['type'], $multipletypes) && get_record('view', 'owner', $viewdata['owner'], 'type', $viewdata['type'])) {
                 $viewdata['type'] = 'portfolio';
             }
@@ -634,7 +637,9 @@ class View {
         if (isset($viewdata['group'])) {
             require_once('group.php');
             if (!group_user_can_edit_views($viewdata['group'], $userid)) {
-                throw new SystemException("View::_create: User $userid is not permitted to create a view for group {$viewdata['group']}");
+                throw new SystemException(
+                    "View::_create: User $userid is not permitted to create a view for group {$viewdata['group']}"
+                );
             }
         }
 
@@ -642,7 +647,9 @@ class View {
             $user = new User();
             $user->find_by_id($userid);
             if (!$user->can_edit_institution($viewdata['institution'])) {
-                throw new SystemException("View::_create: User $userid is not permitted to create a view for institution {$viewdata['institution']}");
+                throw new SystemException(
+                    "View::_create: User $userid is not permitted to create a view for institution {$viewdata['institution']}"
+                );
             }
         }
 
@@ -1139,11 +1146,46 @@ class View {
         EmbeddedImage::delete_embedded_images('description', $this->id);
         EmbeddedImage::delete_embedded_images('instructions', $this->id);
 
+        // Delete any related activity pages
+        $this->delete_view_activity_pages();
+
         // Finally delete the view itself
         delete_records('view', 'id', $this->id);
         handle_event('deleteview', $eventdata);
         $this->deleted = true;
         db_commit();
+    }
+
+    /**
+     * Delete activity pages and their references
+     *
+     * Tables
+     * - outcome_view_activity
+     * - view_activity
+     * - view_activity_achievement_levels
+     * - view_activity_support
+     *
+     * @return void
+     */
+    public function delete_view_activity_pages() {
+        $view_activity = get_record('view_activity', 'view', $this->id);
+        if (!$view_activity) {
+            // No activity pages related to this view, all done :)
+            return;
+        }
+
+        // Delete reference to any outcome collections
+        delete_records('outcome_view_activity', 'activity', $view_activity->id);
+
+        // Delete related activity achievement levels
+        $levels = get_column('view_activity_achievement_levels', 'id', 'activity', $view_activity->id);
+        delete_records('view_activity_achievement_levels', 'activity', $view_activity->id);
+
+        // Delete reference to activity page
+        delete_records('view_activity', 'id', $view_activity->id);
+
+        // Delete activity feedback
+        delete_records('view_activity_support', 'activity', $this->id);
     }
 
     /* Only retrieve access records that the owner can edit on the
@@ -2006,20 +2048,28 @@ class View {
     public static function update_blocktype_installed_viewtype(string $view_type) {
         $all_view_types = get_column('view_type', 'type');
 
-        if (in_array($view_type, $all_view_types)) {
+        if (!in_array($view_type, $all_view_types)) {
             return;
         }
 
         $installed_blocktypes = get_column('blocktype_installed', 'name');
         foreach ($installed_blocktypes as $blocktype) {
-            $classname = generate_class_name('blocktype', $blocktype);
-            if ($classname::get_viewtypes()) {
-                $viewtypes = $classname::get_viewtypes();
-                if (in_array($view_type, $viewtypes)) {
+            log_debug('Adding ' . $view_type . ' to ' . $blocktype);
+            $blocktype = blocktype_namespaced_to_single($blocktype);
+            if (safe_require('blocktype', $blocktype, 'lib.php', 'require_once', true)) {
+                $classname = generate_class_name('blocktype', $blocktype);
+                $block_viewtypes = $classname::get_viewtypes();
+
+                if ($block_viewtypes && in_array($view_type, $block_viewtypes)) {
                     $data = new stdClass();
                     $data->blocktype = $blocktype;
                     $data->viewtype = $view_type;
-                    insert_record('blocktype_installed_viewtype', $data, 'id', true);
+                    if (get_record('blocktype_installed_viewtype', 'blocktype', $blocktype, 'viewtype', $view_type)) {
+                        log_debug('Record already exists');
+                    }
+                    else {
+                        insert_record('blocktype_installed_viewtype', $data);
+                    }
                 }
             }
         }

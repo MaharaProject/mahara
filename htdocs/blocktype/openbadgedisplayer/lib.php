@@ -42,7 +42,7 @@ class PluginBlocktypeOpenbadgedisplayer extends SystemBlockType {
     }
 
     public static function get_viewtypes() {
-        return array('portfolio', 'profile');
+        return array('portfolio', 'profile', 'activity');
     }
 
     public static function is_deprecated() {

@@ -27,7 +27,7 @@ class PluginBlocktypeSocialprofile extends MaharaCoreBlocktype {
     }
 
     public static function get_viewtypes() {
-        return array('dashboard', 'portfolio', 'profile');
+        return array('dashboard', 'portfolio', 'profile', 'activity');
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {

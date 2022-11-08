@@ -27,7 +27,7 @@ class PluginBlocktypeRecentForumPosts extends MaharaCoreBlocktype {
     }
 
     public static function get_viewtypes() {
-        return array('dashboard', 'portfolio', 'profile', 'grouphomepage');
+        return array('dashboard', 'portfolio', 'profile', 'grouphomepage', 'activity');
     }
 
     private static function get_group(BlockInstance $instance, $versioning=false) {

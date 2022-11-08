@@ -22,6 +22,13 @@
 {/if}
 
 <div id="view" class="view-container">
+{if $group}
+<button id="add_activity_button" class="btn btn-secondary" type="button"
+    data-bs-target="{$WWWROOT}view/editlayout.php?new=1{$urlparamsstr}&activity=1&group={$group}">
+    <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
+    {str section=view tag='add_activity_button'}
+</button>
+{/if}
     <div id="bottom-pane">
         <div id="column-container" class="user-page-content">
             {if $peerhidden}
@@ -197,4 +204,13 @@
     {include file=objectionreview.tpl}
 {/if}
 
+<script>
+    var addurl = $j("#add_activity_button").attr('data-bs-target');
+
+    $j("#add_activity_button").on('click', function() {
+        // redirect to the special 'activity page'
+        var url = addurl + '&type=activity';
+        window.location = url;
+    })
+</script>
 {include file="footer.tpl"}

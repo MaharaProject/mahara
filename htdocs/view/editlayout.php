@@ -21,6 +21,10 @@ safe_require('artefact', 'file');
 
 $id = param_integer('id', false);
 $new = param_boolean('new', false);
+$activity_view = param_boolean('activity', false);
+
+// $outcome = ... link it to the outcome collection so we know where the page should live
+
 if ($new && $id === false) {
     // Use the site default portfolio page to create a new page
     // cribbed from createview_submit()
@@ -28,6 +32,7 @@ if ($new && $id === false) {
     if (!empty($sitedefaultviewid)) {
         $artefactcopies = array();
         $values = array();
+
         $groupid = param_integer('group', 0);
         $institutionname = param_alphanum('institution', false);
         if (!empty($groupid)) {
@@ -35,6 +40,10 @@ if ($new && $id === false) {
         }
         else if (!empty($institutionname)) {
             $values['institution'] = $institutionname;
+        }
+
+        if (!empty($activity_view) && $groupid && is_outcomes_group($groupid)) {
+            $values['type'] = 'activity';
         }
 
         list($view, $template, $copystatus) = View::create_from_template($values, $sitedefaultviewid, null, true, false, $artefactcopies);
@@ -146,6 +155,7 @@ function create_settings_pieform() {
     $advancedclasslast = '';
     $advancedelements = array();
     $basicelements = array();
+    $activity_info_elements = array();
     $extrasettingformfields = array();
     $hiddenskinelements = array();
     $skinelements = array();
@@ -170,6 +180,13 @@ function create_settings_pieform() {
         $advancedclasslast = 'last';
     }
 
+    // Only allow activity pages as part of group portfolios
+    $group = $view->get('group');
+
+    if ($view->get('type') == 'activity' && $group && is_outcomes_group($group)) {
+        $activity_info_elements = get_view_activity_info_elements();
+    }
+
     //visible elements of the sections
     $formelements = array();
 
@@ -182,6 +199,18 @@ function create_settings_pieform() {
             'legend'      => get_string('basics', 'view'),
             'elements'    => $basicelements
         );
+
+        if ($view->get('type') == 'activity' && $group && is_outcomes_group($group)) {
+            $formelements['activityinfo'] = array(
+                'type'        => 'fieldset',
+                'class'       => 'first',
+                'collapsible' => true,
+                'collapsed'   => false,
+                'legend'      => get_string('activity_info_fieldset', 'view'),
+                'elements'    => $activity_info_elements
+            );
+        }
+
         $formelements['advanced'] = array(
             'type'        => 'fieldset',
             'class'       =>  $advancedclasslast,
@@ -313,6 +342,86 @@ function get_basic_elements() {
             'disabled'     => $accessibleviewdisabled,
         );
     }
+    return $elements;
+}
+
+/**
+ * Get pieform elements for activity config
+ *
+ * This will be part of 'page settings'
+ *
+ */
+function get_view_activity_info_elements(): array {
+    global $USER, $view, $group;
+    require_once(get_config('docroot') . 'lib/pieforms/pieform/elements/container.php');
+
+    $admin_tutor_ids = group_get_member_ids($group, array('admin', 'tutor'));
+
+    $activity = get_record('view_activity', 'view', $view->get('id'));
+    $activity = $activity ? $activity : new stdClass();
+    $elements = array();
+
+    $elements['activity_description'] = array(
+        'type'         => 'textarea',
+        'title'        => get_string('activity_info_title', 'view'),
+        'description'  => get_string('activity_info_desc', 'view'),
+        'rows'         => 5,
+        'cols'         => 70,
+        'rules'        => array('maxlength' => 1000000, 'required' => true),
+        'defaultvalue' => property_exists($activity, 'description') ? $activity->description : '',
+    );
+
+    $outcome_subjects = get_records_array('outcome_subject');
+    $subjects_ids = $subjects_names = array();
+    foreach ($outcome_subjects as $subject) {
+        $subjects_ids[] = $subject->id;
+        $subjects_names[] = $subject->title;
+    }
+    $subjects_options =  array_combine($subjects_ids, $subjects_names);
+
+    $elements['subject'] = array(
+        'type'         => 'select',
+        'title'        => get_string('activity_info_subject', 'view'),
+        'description'  => get_string('activity_info_subject_desc', 'view'),
+        'rows'         => 5,
+        'cols'         => 70,
+        'required'     => true,
+        'options' => $subjects_options,
+        'defaultvalue' => property_exists($activity, 'subject')  ? $activity->subject : key($subjects_options),
+    );
+
+    $supervisor_options = array();
+    foreach ($admin_tutor_ids as $id) {
+        $supervisor_options[$id] = display_name($id);
+    }
+
+    $elements['supervisor'] = array(
+        'type' => 'select',
+        'title' => get_string('activity_info_supervisor', 'view'),
+        'options' => $supervisor_options,
+        'defaultvalue' => property_exists($activity, 'supervisor') ? $activity->supervisor : $USER->id
+    );
+
+    $elements['startdate'] = array(
+        'type' => 'calendar',
+        'title' => get_string('activity_info_start_date', 'view'),
+        'description' => get_string('activity_info_start_date_desc', 'view'),
+        'defaultvalue' => property_exists($activity, 'start_date') ? strtotime($activity->start_date) : null,
+    );
+
+    $elements['enddate'] = array(
+        'type' => 'calendar',
+        'title' => get_string('activity_info_end_date', 'view'),
+        'description' => get_string('activity_info_end_date_desc', 'view'),
+        'defaultvalue' => property_exists($activity, 'end_date') ? strtotime($activity->end_date) : null,
+    );
+
+    $elements['achievement_levels_title'] = [
+        'type' => 'container',
+        'elements' => [],
+        'title' => get_string('activity_info_achievement_levels', 'view'),
+    ];
+
     return $elements;
 }
 
@@ -720,6 +829,10 @@ function settings_validate(Pieform $form, $values) {
             throw new AccessDeniedException();
         }
     }
+
+    if ($view->get('type') == 'activity') {
+        validate_view_activity_info($form, $values);
+    }
 }
 
 function settings_submit(Pieform $form, $values) {
@@ -743,6 +856,10 @@ function settings_submit(Pieform $form, $values) {
         else {
             $view->unlock_instructions_edit();
         }
+    }
+
+    if ($view->get('type') == 'activity') {
+        set_view_activity_info($form, $values);
     }
 
     $view->commit();
@@ -1078,7 +1195,7 @@ function set_view_title_and_description(Pieform $form, $values) {
  * @return void
  */
 function validate_view_activity_info(Pieform $form, $values) {
-    if (isset($values['start_date']) && isset($values['end_date']) && $values['start_date'] > $values['end_date']) {
+    if (isset($values['startdate']) && isset($values['enddate']) && $values['startdate'] > $values['enddate']) {
         $form->set_error('startdate', get_string('startdate_rule', 'view'));
     }
 }
@@ -1091,15 +1208,14 @@ function validate_view_activity_info(Pieform $form, $values) {
  * @return void
  */
 function set_view_activity_info(Pieform $form, $values) {
-    global $view, $urlallowed, $USER;
+    global $view;
 
-    log_debug($values['supervisor']);
     $view_activity = new StdClass();
     $view_activity->description = $values['activity_description'];
     $view_activity->subject = $values['subject'];
-    $view_activity->supervisor = 0; // TODO: Doris complete this
-    $view_activity->start_date =  !is_null($values['start_date']) ? db_format_timestamp($values['start_date']) : null;
-    $view_activity->end_date = !is_null($values['end_date']) ? db_format_timestamp($values['end_date']) : null;
+    $view_activity->supervisor = $values['supervisor'];
+    $view_activity->start_date =  !is_null($values['startdate']) ? db_format_timestamp($values['startdate']) : null;
+    $view_activity->end_date = !is_null($values['enddate']) ? db_format_timestamp($values['enddate']) : null;
     $view_activity->view = $view->get('id');
     $view_activity->mtime = db_format_timestamp(time());
 
@@ -1113,16 +1229,25 @@ function set_view_activity_info(Pieform $form, $values) {
         update_record('view_activity', $view_activity, array('view' => $view->get('id')));
     }
     // Add reference to outcome_view_actitivy
-    // ensure_record_exists('outcome_view_activity', 'outcome' => $view_actitivty->outcome), 'view_activity' => $new_acitivity_id;
+    $new_outcome_view_activity = new StdClass();
+    $new_outcome_view_activity->activity = $activity_id;
+    $new_outcome_view_activity->outcome = null; // TODO: Doris, replace null with outcome collection if applicable
 
     // Achivement levels done by type and value
     // Brand new activity + achievement levels
+    // If there are more achievement levels than 4,
+    // their string needs to be created/and existing ones overwritten if don't want to say 'Level 1'
     $achievement_levels = get_levels($values);
-    log_debug($achievement_levels); // If there are more achievement levels than 4, their string needs to be created/and existing ones overwritten if don't want to say 'Level 1'
 
     // Go through each one to insert/update
     foreach ($achievement_levels as $type => $value) {
-        $existing_achievement_level = get_record('view_activity_achievement_levels', 'activity', $activity_id, 'type', $type);
+        $existing_achievement_level = get_record(
+            'view_activity_achievement_levels',
+            'activity',
+            $activity_id,
+            'type',
+            $type
+        );
         if ($existing_achievement_level) {
             $existing_achievement_level->value = $value;
             update_record('view_activity_achievement_levels', $existing_achievement_level);
@@ -1195,17 +1320,14 @@ function set_view_advanced(Pieform $form, $values) {
 function set_signoff_verify(Pieform $form, $values) {
     global $view;
     $view_id = $view->get('id');
-
     if (!in_array('signoff', $values)) {
         return;
     }
-
     $show_signoff = $values['signoff'] ? 1 : 0;
     $show_verify = $values['verify'] ? 1 : 0;
     $dataobj = (object) [
         'view' => $view->get('id'),
     ];
-
     if ($show_signoff) {
         ensure_record_exists('view_signoff_verify', $dataobj, $dataobj, 'id', true);
         set_field('view_signoff_verify', 'show_verify', $show_verify, 'view', $view_id);

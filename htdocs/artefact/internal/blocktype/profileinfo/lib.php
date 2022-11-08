@@ -26,7 +26,7 @@ class PluginBlocktypeProfileinfo extends MaharaCoreBlocktype {
     }
 
     public static function get_viewtypes() {
-        return array('dashboard', 'portfolio', 'profile');
+        return array('dashboard', 'portfolio', 'profile', 'activity');
     }
 
     public static function get_css_icon_type($blockname) {

@@ -34,7 +34,7 @@ class PluginBlocktypePdf extends MaharaCoreBlocktype {
     }
 
     public static function get_viewtypes() {
-        return array('dashboard', 'portfolio', 'profile', 'grouphomepage');
+        return array('dashboard', 'portfolio', 'profile', 'grouphomepage', 'activity');
     }
 
     public static function render_instance_export(BlockInstance $instance, $editing=false, $versioning=false, $exporting=null) {

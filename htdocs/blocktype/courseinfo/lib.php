@@ -38,7 +38,7 @@ class PluginBlocktypeCourseinfo extends MaharaCoreBlocktype {
     }
 
     public static function get_viewtypes() {
-        return array('portfolio');
+        return array('portfolio', 'activity');
     }
 
     public static function get_css_icon($blocktypename) {

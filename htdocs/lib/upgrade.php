@@ -1070,7 +1070,7 @@ function core_install_firstcoredata_defaults() {
         insert_record('cron', $cron);
     }
 
-    $viewtypes = array('dashboard', 'portfolio', 'profile', 'grouphomepage', 'progress');
+    $viewtypes = array('dashboard', 'portfolio', 'profile', 'grouphomepage', 'progress', 'activity');
     foreach ($viewtypes as $vt) {
         insert_record('view_type', (object)array(
             'type' => $vt,

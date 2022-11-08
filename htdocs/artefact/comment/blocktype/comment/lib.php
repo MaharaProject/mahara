@@ -39,7 +39,7 @@ class PluginBlocktypeComment extends MaharaCoreBlocktype {
     }
 
     public static function get_viewtypes() {
-        return array('portfolio');
+        return array('portfolio', 'activity');
     }
 
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {

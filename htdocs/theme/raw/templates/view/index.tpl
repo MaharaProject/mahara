@@ -77,6 +77,12 @@
         window.location = url;
     });
 
+    $j("#add-activity-button").on("click", function () {
+        // redirect to the special 'activity page'
+        var url = addurl + "&type=activity";
+        window.location = url;
+    });
+
     $('.modal').on('shown.bs.modal', function() {
         $('#add-collection-button').trigger("focus");
     });

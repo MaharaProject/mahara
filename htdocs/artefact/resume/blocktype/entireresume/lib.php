@@ -26,7 +26,7 @@ class PluginBlocktypeEntireresume extends MaharaCoreBlocktype {
     }
 
     public static function get_viewtypes() {
-        return array('dashboard', 'portfolio', 'profile');
+        return array('dashboard', 'portfolio', 'profile', 'activity');
     }
 
     public static function get_blocktype_type_content_types() {
