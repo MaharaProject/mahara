@@ -1081,5 +1081,30 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2022121902) {
+        log_debug('Adding outcome table "outcome"');
+        $table = new XMLDBTable('outcome');
+        if (!table_exists($table)) {
+            $table->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            $table->addFieldInfo('outcome_type', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED);
+            $table->addFieldInfo('short_title', XMLDB_TYPE_CHAR, 70, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('full_title', XMLDB_TYPE_CHAR, 255);
+            $table->addFieldInfo('support', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+            $table->addFieldInfo('progress', XMLDB_TYPE_CHAR, 255);
+            $table->addFieldInfo('collection', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+            $table->addFieldInfo('complete', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+            $table->addFieldInfo('lastauthor', XMLDB_TYPE_INTEGER, 10);
+            $table->addFieldInfo('lastedit', XMLDB_TYPE_DATETIME);
+            $table->addFieldInfo('lastauthorprogress', XMLDB_TYPE_INTEGER, 10);
+            $table->addFieldInfo('lasteditprogress', XMLDB_TYPE_DATETIME);
+            $table->addKeyInfo('primary', XMLDB_KEY_PRIMARY, array('id'));
+            $table->addKeyInfo('outtypefk', XMLDB_KEY_FOREIGN, array('outcome_type'), 'outcome_type', array('id'));
+            $table->addKeyInfo('collectionfk', XMLDB_KEY_FOREIGN, array('collection'), 'collection', array('id'));
+            $table->addKeyInfo('authorfk', XMLDB_KEY_FOREIGN, array('lastauthor'), 'usr', array('id'));
+            $table->addKeyInfo('authorprofk', XMLDB_KEY_FOREIGN, array('lastauthorprogress'), 'usr', array('id'));
+            create_table($table);
+        }
+    }
+
     return $status;
 }

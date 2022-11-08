@@ -1599,6 +1599,28 @@
                 <INDEX NAME="statusix" UNIQUE="false" FIELDS="status"/>
             </INDEXES>
         </TABLE>
+        <TABLE NAME="outcome">
+            <FIELDS>
+                <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
+                <FIELD NAME="outcome_type" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="short_title" TYPE="char" LENGTH="70" NOTNULL="true" />
+                <FIELD NAME="full_title" TYPE="char" LENGTH="255" NOTNULL="false" />
+                <FIELD NAME="support" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+                <FIELD NAME="progress" TYPE="char" LENGTH="255" NOTNULL="false"/>
+                <FIELD NAME="collection" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="lastedit" TYPE="datetime" NOTNULL="false"/>
+                <FIELD NAME="lastauthor" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="lasteditprogress" TYPE="datetime" NOTNULL="false"/>
+                <FIELD NAME="lastauthorprogress" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="complete" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="outcome_subjectpk" TYPE="primary" FIELDS="id" />
+                <KEY NAME="outtypefk" TYPE="foreign" FIELDS="outcome_type" REFTABLE="outcome_type" REFFIELDS="id"/>
+                <KEY NAME="collectionfk" TYPE="foreign" FIELDS="collection" REFTABLE="collection" REFFIELDS="id" />
+                <KEY NAME="authorfk" TYPE="foreign" FIELDS="lastauthor" REFTABLE="usr" REFFIELDS="id" />
+                <KEY NAME="authorprofk" TYPE="foreign" FIELDS="lastauthorprogress" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
     </TABLES>
 </XMLDB>
-     
