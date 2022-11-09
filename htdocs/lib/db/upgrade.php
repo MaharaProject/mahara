@@ -971,5 +971,41 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2022121900) {
+        log_debug('Moving the sign-off and verify settings from a block into page settings');
+        log_debug('Adding the show_verify into view_signoff_verify table');
+        $table = new XMLDBTable('view_signoff_verify');
+        $signoff_verify_fields = [];
+        $signoff_verify_fields[] = new XMLDBField('show_verify');
+
+        foreach ($signoff_verify_fields as $field) {
+            if (!field_exists($table, $field)) {
+                $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+                add_field($table, $field);
+            }
+        }
+
+        // Get all the blocktypes that are of type 'signoff and clean up where they're referenced'
+        $sql = "SELECT id from block_instance where blocktype = ?";
+        $signoff_blocks = get_records_sql_array($sql, array('signoff'));
+
+        if ($signoff_blocks) {
+            foreach ($signoff_blocks as $signoff_block) {
+                $block_instance = new BlockInstance($signoff_block->id);
+                $configdata = $block_instance->get('configdata');
+                $verify = in_array('verify', $configdata) && $configdata['verify'] ? 1 : 0;
+                set_field('view_signoff_verify', 'show_verify', $verify, 'view', $block_instance->get('view'));
+
+                execute_sql("DELETE FROM {watchlist_queue} WHERE block=?", [$signoff_block->id]);
+                $block_instance->delete();
+            }
+        }
+
+        execute_sql("DELETE FROM {blocktype_installed_viewtype} WHERE blocktype='signoff'");
+        execute_sql("DELETE FROM {blocktype_installed_category} WHERE blocktype='signoff'");
+        execute_sql("DELETE FROM {blocktype_config} WHERE plugin='signoff'");
+        execute_sql("DELETE FROM {blocktype_installed} WHERE name='signoff'");
+    }
+
     return $status;
 }

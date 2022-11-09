@@ -18,8 +18,8 @@
     <caption class="visually-hidden">{str tag="tabledesc" section="module.framework"}</caption>
     <tr class="table-pager">
         <th>{str tag="view"}</th>
-        <th class="userrole">{str tag="signoff" section="blocktype.peerassessment/signoff"}
-            <div class="progress-help text-small">{str tag=signoffhelp section="blocktype.peerassessment/signoff"}</div>
+<th class="userrole">{str tag="signoff" section="view"}
+<div class="progress-help text-small">{str tag=signoffhelp section="view"}</div>
         </th>
         {if $showVerification}<th class="userrole">{str tag="verification" section="collection"}</th>{/if}
     </tr>
@@ -71,12 +71,12 @@
             <div class="modal-header">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
                 <h1 class="modal-title">
-                    {str tag=signoffpagetitle section=blocktype.peerassessment/signoff}
+{str tag=signoffpagetitle section=view}
                 </h1>
             </div>
             <div class="modal-body">
-                <p id="signoff-on" class="hidden">{str tag=signoffpageundodesc section=blocktype.peerassessment/signoff}</p>
-                <p id="signoff-off" class="hidden">{str tag=signoffpagedesc section=blocktype.peerassessment/signoff}</p>
+<p id="signoff-on" class="hidden">{str tag=signoffpageundodesc section=view}</p>
+<p id="signoff-off" class="hidden">{str tag=signoffpagedesc section=view}</p>
                 <div class="btn-group">
                     <button id="signoff-yes-button" type="button" class="btn btn-secondary">{str tag="yes"}</button>
                     <button id="signoff-back-button" type="button" class="btn btn-secondary">{str tag="no"}</button>
@@ -92,11 +92,11 @@
             <div class="modal-header">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
                 <h1 class="modal-title">
-                    {str tag=verifypagetitle section=blocktype.peerassessment/signoff}
+{str tag=verifypagetitle section=view}
                 </h1>
             </div>
             <div class="modal-body">
-                <p>{str tag=verifypagedesc section=blocktype.peerassessment/signoff}</p>
+<p>{str tag=verifypagedesc section=view}</p>
                 <div class="btn-group">
                     <button id="verify-yes-button" type="button" class="btn btn-secondary">{str tag="yes"}</button>
                     <button id="verify-back-button" type="button" class="btn btn-secondary">{str tag="no"}</button>

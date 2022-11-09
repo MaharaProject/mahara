@@ -35,6 +35,11 @@ $(function () {
 <div class="cb"></div>
 {/if}
 
+{if $signoff}
+    <div class="viewsignoff-export view-signoff">
+        {$signoff|clean_html|safe}
+    </div>
+{/if}
 {if $viewinstructions}
     <div>{str tag='instructions' section='view'}</div>
     <div class="viewinstruction-export">

@@ -181,7 +181,7 @@ class PluginArtefactPeerassessment extends PluginArtefact {
                 'name' => 'verify',
                 'title' => get_string('verifyassessment', 'artefact.peerassessment'),
                 'plugin' => 'peerassessment',
-                'active' => get_field('blocktype_installed', 'active', 'name', 'signoff', 'artefactplugin', 'peerassessment'),
+                'active' => get_field('artefact_installed', 'active', 'name', 'peerassessment'),
                 'iscountable' => true,
                 'is_metaartefact' => true,
             )
@@ -584,14 +584,8 @@ class ArtefactTypePeerassessment extends ArtefactType {
      * @param $view the view object of the view to verify
     */
     public static function is_verify_enabled(View $view) {
-        $configdata = get_field_sql("SELECT configdata FROM {block_instance} WHERE view = ? AND blocktype = ? LIMIT 1", array($view->get('id'), 'signoff'));
-        if ($configdata) {
-            $configdata = unserialize($configdata);
-            if (isset($configdata['verify'])) {
-                return $configdata['verify'];
-            }
-        }
-        return false;
+        $verify = get_field('view_signoff_verify', 'show_verify', 'view', $view->get('id'));
+        return $verify;
     }
 
     public static function is_verified(View $view) {

@@ -2,6 +2,10 @@
 {include file='modal-details.tpl'}
 
 <input type="hidden" id="viewid" name="id" value="{$viewid}">
+
+{* Sign-off/verify block *}
+{$signoff_html|safe}
+
 {if $viewinstructions}
 <div id="viewinstructions" class="pageinstructions view-instructions first last form-group collapsible-group small-group {if $toolbarhtml}with-toolbar{/if}">
     <fieldset  class="pieform-fieldset collapsible collapsible-small">

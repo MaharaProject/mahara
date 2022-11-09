@@ -540,6 +540,7 @@ class PluginExportHtml extends PluginExport {
             $smarty->assign('viewdescription', $view->get('description'));
             if ($this->exporttype != 'pdflite') {
                 $smarty->assign('viewinstructions', $view->get('instructions'));
+                $smarty->assign('signoff', $view->has_signoff() ? $view->get_signoff_verify_form(true) : '');
             }
 
             if ($this->exportingoneview) {

@@ -440,7 +440,14 @@ class View {
      * @throws SystemException under various circumstances, see the source for
      *                         more information
      */
-    public static function create_from_template($viewdata, $templateid, $userid=null, $checkaccess=true, $titlefromtemplate=false, &$artefactcopies=array()) {
+    public static function create_from_template(
+        $viewdata,
+        $templateid,
+        $userid = null,
+        $checkaccess = true,
+        $titlefromtemplate = false,
+        &$artefactcopies = array()
+    ) {
         if (is_null($userid)) {
             global $USER;
             $userid = $USER->get('id');
@@ -507,6 +514,19 @@ class View {
         if ($template->get('locktemplate')) {
             $view->set('locktemplate', 0);
             $view->lock_instructions_edit($template->get('id'));
+        }
+
+        // Check for signoff/verify page settings exist
+        $template_signoff = get_record('view_signoff_verify', 'view', $templateid);
+        if ($template_signoff) {
+            $dataobj = (object) [
+                'view' => $view->get('id'),
+                'show_verify' => $template_signoff->show_verify,
+            ];
+            $whereobj = (object) [
+                'view' => $view->get('id'),
+            ];
+            ensure_record_exists('view_signoff_verify', $whereobj, $dataobj, 'id', true);
         }
 
         $view->commit();
@@ -1084,6 +1104,10 @@ class View {
                 }
             }
         }
+
+        // Delete any sign-off related data
+        delete_records('view_signoff_verify', 'view', $this->id);
+
         // Delete any submission related history
         delete_records('module_assessmentreport_history', 'event', 'view', 'itemid', $this->id);
         $submissionids = get_column('module_submissions', 'id', 'portfolioelementtype', 'view', 'portfolioelementid', $this->id);
@@ -7693,9 +7717,73 @@ class View {
         }
     }
 
-    public function has_signoff_block() {
-        $blocks = get_record('block_instance', 'blocktype', 'signoff', 'view', $this->id);
-        return ($blocks ? true : false);
+    /**
+     * Returns whether the page setting 'signoff' is set.
+     *
+     * If set to true, on displaying the page, a form will appear
+     * that allows signing off/verifying a page.
+     */
+    public function has_signoff(): bool {
+        $view_sign_off = get_record('view_signoff_verify', 'view', $this->id);
+        return (bool) $view_sign_off;
+    }
+
+    /**
+     * Get the sign-off verify form that will appear at the top of the page.
+     *
+     * @param  boolean $export  To display the form in HTML export
+     * @return string $html
+     */
+    public function get_signoff_verify_form($export = false) {
+        safe_require('artefact', 'peerassessment');
+        $show_verify = ArtefactTypePeerAssessment::is_verify_enabled($this);
+        $owneraction = $this->get_progress_action('owner');
+        $manageraction = $this->get_progress_action('manager');
+        $signable = (bool)$owneraction->get_action();
+        $verifiable = (bool)$manageraction->get_action();
+
+        $smarty = smarty_core();
+        $smarty->assign('WWWROOT', get_config('wwwroot'));
+        $smarty->assign('view', $this->get('id'));
+        // Verify option
+        $smarty->assign('showverify', $show_verify);
+        $smarty->assign('verifiable', $verifiable);
+        $smarty->assign('verified', ArtefactTypePeerassessment::is_verified($this));
+        // Signoff option
+        $smarty->assign('signable', $signable);
+        $smarty->assign('signoff', ArtefactTypePeerassessment::is_signed_off($this));
+
+        if ($export) {
+            $html = $smarty->fetch('view/verifyform_export.tpl');
+            return $html;
+        }
+
+        // We make a couple of dummy forms so we get pieform 'switchbox' markup but we don't want
+        // to submit via pieforms as the markup will be accessed via javascript
+        $signoff_element['signoff'] = array(
+            'type'         => 'switchbox',
+            'title'        => '',
+            'defaultvalue' => ArtefactTypePeerassessment::is_signed_off($this, false),
+            'readonly'     => !$signable
+        );
+
+        $form = array('name' => 'dummyform', 'elements' => $signoff_element);
+        $form = pieform_instance($form);
+        $smarty->assign('signoffbutton', $form->build(false));
+
+        $verify_element['verify'] = array(
+            'type'         => 'switchbox',
+            'title'        => '',
+            'defaultvalue' => ArtefactTypePeerassessment::is_verified($this, false),
+            'readonly'     => ArtefactTypePeerassessment::is_verified($this, false)
+        );
+
+        $form = array('name' => 'dummyform', 'elements' => $verify_element);
+        $form = pieform_instance($form);
+        $smarty->assign('verifybutton', $form->build(false));
+
+        $html = $smarty->fetch('view/verifyform.tpl');
+        return $html;
     }
 
     public function get_progress_action($column = 'owner') {
@@ -7713,7 +7801,7 @@ class View {
         return false;
     }
 
-    /*
+    /**
      * Gets the id of the view that this view is a copy of
      * @return integer view id of the original view, 0 if this view is not a copy
      */
@@ -7789,15 +7877,15 @@ class ProgressAction {
             $this->view_as = 'manager';
         }
 
-        $hassignoffblock = $view->has_signoff_block();
-        $issignedoff = ArtefactTypePeerassessment::is_signed_off($view);
-        $isverifiedenabled = ArtefactTypePeerassessment::is_verify_enabled($view);
-        $isverified = ArtefactTypePeerassessment::is_verified($view);
+        $has_signoff = $view->has_signoff();
+        $is_signedoff = ArtefactTypePeerassessment::is_signed_off($view);
+        $is_verifiedenabled = ArtefactTypePeerassessment::is_verify_enabled($view);
+        $is_verified = ArtefactTypePeerassessment::is_verified($view);
 
         $this->status = self::STATUS_NOTHING;
-        if ($hassignoffblock) {
+        if ($has_signoff) {
             if ($column == 'owner') {
-                if ($issignedoff) {
+                if ($is_signedoff) {
                     $this->status = self::STATUS_COMPLETED;
                     if ($this->view_as == 'owner') {
                         $this->action = self::ACTION_UNSIGNOFF;
@@ -7814,11 +7902,11 @@ class ProgressAction {
                 }
             }
             else if ($column == 'manager') {
-                if ($isverifiedenabled) {
-                    if (!$issignedoff) {
+                if ($is_verifiedenabled) {
+                    if (!$is_signedoff) {
                         $this->status = self::STATUS_ACTIONNOTALLOWED;
                     }
-                    else if ($isverified) {
+                    else if ($is_verified) {
                         $this->status = self::STATUS_COMPLETED;
                     }
                     else {

@@ -15,33 +15,21 @@ define('JSON', 1);
 require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once(get_config('libroot') . 'view.php');
 safe_require('artefact', 'peerassessment');
-safe_require('blocktype', 'signoff');
 
-$blockid = param_integer('block', null);
 $viewid = param_integer('view', null);
 $signoff = param_integer('signoff', null);
 $verify = param_integer('verify', null);
 $signoffstatus = param_integer('signoffstatus', null);
 
-$bi = null;
-if (empty($viewid) && !empty($blockid)) {
-    // try to find view from blockid
-    $bi = new BlockInstance($blockid);
-    $viewid = $bi->get_view()->get('id');
+// Does the view display a sign-off switch
+$view_signoff = get_record('view_signoff_verify', 'view', $viewid);
+if (!$view_signoff) {
+    json_reply('local', 'Sign-off is not set for this page.');
 }
 
-// Does the view have a signoff block
-if (!$block = get_field('block_instance', 'id', 'view', $viewid, 'blocktype', 'signoff')) {
-    json_reply('local', get_string('wrongblocktype', 'view'));
-}
-else {
-    $bi = new BlockInstance($block);
-}
-
+$showsignoff = (bool)$view_signoff;
 $view = new View($viewid);
-$configdata = $bi->get('configdata');
-$showsignoff = !empty($configdata['signoff']) ? true : false;
-$showverify = !empty($configdata['verify']) ? true : false;
+$showverify = $view_signoff->show_verify;
 $owneraction = $view->get_progress_action('owner');
 $manageraction = $view->get_progress_action('manager');
 
@@ -55,20 +43,20 @@ if ($signoffstatus) {
     $record = get_record_sql("SELECT * from {view_signoff_verify} where view = ?", array($viewid));
     if ($view->get("owner") && $record->signofftime) {
         $signedoffby = (int)$view->get('owner');
-        $signedoffbymsg = get_string('signedoffbyondate', 'blocktype.peerassessment/signoff', display_name($signedoffby, null, true), format_date(strtotime($record->signofftime), 'strftimedate'));
+        $signedoffbymsg = get_string('signedoffbyondate', 'view', display_name($signedoffby, null, true), format_date(strtotime($record->signofftime), 'strftimedate'));
         $msg = $signedoffbymsg;
         if (($verifiedby = $record->verifier) && $showverify) {
-            $verifiedbymsg = get_string('verifiedbyondate', 'blocktype.peerassessment/signoff', display_name($verifiedby, null, true), format_date(strtotime($record->verifiedtime), 'strftimedate'));
+            $verifiedbymsg = get_string('verifiedbyondate', 'view', display_name($verifiedby, null, true), format_date(strtotime($record->verifiedtime), 'strftimedate'));
             $msg = '<p>' . $signedoffbymsg . '</p>' . '<p>' . $verifiedbymsg . '</p>';
         }
         else if ($showverify && !ArtefactTypePeerassessment::is_verified($view)) {
-            $msg = get_string('readyforverification', 'blocktype.peerassessment/signoff');
+            $msg = get_string('readyforverification', 'view');
         }
         json_reply(false, array('data' => $msg));
     }
     else {
         //throw an error
-        json_reply('local', get_string('wrongsignoffviewrequest', 'blocktype.peerassessment/signoff'));
+        json_reply('local', get_string('wrongsignoffviewrequest', 'view'));
     }
 }
 
@@ -91,12 +79,12 @@ if ($showsignoff && $signable && $signoff !== null) {
                 'strings'   => (object) array(
                     'subject' => (object) array(
                         'key'     => 'removedverifynotificationsubject',
-                        'section' => 'blocktype.peerassessment/signoff',
+                        'section' => 'view',
                         'args'    => array($title),
                     ),
                     'message' => (object) array(
                         'key'     => 'removedverifynotification',
-                        'section' => 'blocktype.peerassessment/signoff',
+                        'section' => 'view',
                         'args'    => array($title),
                     ),
                     'urltext' => (object) array(
@@ -125,8 +113,8 @@ else if ($showverify && $verifiable && !empty($verify)) {
 }
 else {
     // No rights to do what is requested
-    json_reply('local', get_string('wrongsignoffviewrequest', 'blocktype.peerassessment/signoff'));
+    json_reply('local', get_string('wrongsignoffviewrequest', 'view'));
 }
-$message = $verify ? get_string('verifyviewupdated', 'blocktype.peerassessment/signoff') : get_string('signoffviewupdated', 'blocktype.peerassessment/signoff');
+$message = $verify ? get_string('verifyviewupdated', 'view') : get_string('signoffviewupdated', 'view');
 json_reply(false, array('message' => $message,
                         'data' => $data));

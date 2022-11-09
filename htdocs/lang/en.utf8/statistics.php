@@ -146,7 +146,6 @@ $string['blocktype_profileinfo'] = 'Profile information';
 $string['blocktype_recentforumposts'] = 'Recent forum posts';
 $string['blocktype_recentposts'] = 'Recent journal entries';
 $string['blocktype_resumefield'] = 'Résumé field';
-$string['blocktype_signoff'] = 'Sign-off';
 $string['blocktype_socialprofile'] = 'Social media';
 $string['blocktype_taggedposts'] = 'Tagged journal entries';
 $string['blocktype_text'] = 'Text';

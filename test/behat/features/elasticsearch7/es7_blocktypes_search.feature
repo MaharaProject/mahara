@@ -84,7 +84,6 @@ Background:
     | The Post                       | taggedposts        | Films | no          | tags=cats; maxposts=5;showfullentries=yes; |
     | Suffragette City               | comment            | Films | no          | |
     | Ricki and the Flash            | peerassessment     | Films | no          | |
-   #| Into the Woods                 | signoff            | Films | no          | | (not supported in Behat)
     | The Giver                      | creativecommons    | Films | no          | commercialuse=yes;license=3.0;allowmods=no |
     | The Homesman                   | navigation         | Films | no          | collection=Complete Works |
     | Hope Springs                   | plans              | Films | no          | plans=Voice Acting,Auditions;tasksdisplaycount=10 |

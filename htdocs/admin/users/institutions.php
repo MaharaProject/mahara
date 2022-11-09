@@ -634,15 +634,13 @@ if ($institution || $add) {
             );
         }
     }
-    if (is_plugin_active('signoff', 'blocktype')) {
-        $elements['progresscompletion'] = array(
-          'type'         => 'switchbox',
-          'title'        => get_string('progresscompletion', 'admin'),
-          'description'  => get_string('progresscompletiondescription','admin'),
-          'defaultvalue' => isset($data->progresscompletion) && $data->progresscompletion,
-          'help'         => true,
-        );
-    }
+    $elements['progresscompletion'] = array(
+        'type'         => 'switchbox',
+        'title'        => get_string('progresscompletion', 'admin'),
+        'description'  => get_string('progresscompletiondescription','admin'),
+        'defaultvalue' => isset($data->progresscompletion) && $data->progresscompletion,
+        'help'         => true,
+    );
     $elements['allowinstitutionsmartevidence'] = array(
         'type'         => 'switchbox',
         'title'        => get_string('allowinstitutionsmartevidence1', 'admin'),

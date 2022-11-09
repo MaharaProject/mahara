@@ -1107,35 +1107,33 @@ class Collection {
      */
     public function can_have_progresscompletion() {
         $allowspc = false;
-        if (is_plugin_active('signoff', 'blocktype')) {
-            require_once(get_config('docroot') . 'lib/institution.php');
-            if ($this->institution) {
-                $institution = $this->institution;
-                $institution = new Institution($institution);
-                $allowspc = ($institution->progresscompletion) ? $institution : false;
-            }
-            else if ($this->group) {
-                $institution = get_field('group', 'institution', 'id', $this->group);
-                $institution = new Institution($institution);
-                $allowspc = ($institution->progresscompletion) ? $institution : false;
-            }
-            else {
-                $user = new User();
-                $user->find_by_id($this->owner);
-                $institutionids = array_keys($user->get('institutions'));
-                if (!empty($institutionids)) {
-                    foreach ($institutionids as $institution) {
-                        $institution = new Institution($institution);
-                        if ($institution->progresscompletion == true) {
-                            $allowspc = $institution;
-                            break;
-                        }
+        require_once(get_config('docroot') . 'lib/institution.php');
+        if ($this->institution) {
+            $institution = $this->institution;
+            $institution = new Institution($institution);
+            $allowspc = ($institution->progresscompletion) ? $institution : false;
+        }
+        else if ($this->group) {
+            $institution = get_field('group', 'institution', 'id', $this->group);
+            $institution = new Institution($institution);
+            $allowspc = ($institution->progresscompletion) ? $institution : false;
+        }
+        else {
+            $user = new User();
+            $user->find_by_id($this->owner);
+            $institutionids = array_keys($user->get('institutions'));
+            if (!empty($institutionids)) {
+                foreach ($institutionids as $institution) {
+                    $institution = new Institution($institution);
+                    if ($institution->progresscompletion == true) {
+                        $allowspc = $institution;
+                        break;
                     }
                 }
-                else {
-                    $institution = new Institution('mahara');
-                    $allowspc = ($institution->progresscompletion) ? $institution : false;
-                }
+            }
+            else {
+                $institution = new Institution('mahara');
+                $allowspc = ($institution->progresscompletion) ? $institution : false;
             }
         }
         return $allowspc;
@@ -2207,7 +2205,7 @@ class Collection {
         $numberofactions = 0;
         foreach ($this->views['views'] as $view) {
             $viewobj = new View($view->view);
-            if ($viewobj->has_signoff_block()) {
+            if ($viewobj->has_signoff()) {
                 $numberofactions++;
                 if (ArtefactTypePeerassessment::is_signed_off($viewobj)) {
                     $numberofcompletedactions++;

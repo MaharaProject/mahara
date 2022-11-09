@@ -320,6 +320,7 @@ function get_basic_elements() {
 function get_advanced_elements(): array {
     global $view, $urlallowed, $group, $institution, $USER, $cleanurlbase;
 
+    $inlinejs = '';
     $formatstring = '%s (%s)';
     $ownerformatoptions = array(
         View::FORMAT_NAME_FIRSTNAME => sprintf($formatstring, get_string('firstname'), $USER->get('firstname')),
@@ -505,6 +506,14 @@ function get_advanced_elements(): array {
         }
     }
 
+    list($signoff_elements, $signoff_js) = get_signoff_elements();
+    $inlinejs .= $signoff_js;
+    $elements['sign_off'] = array(
+        'type'         => 'fieldset',
+        'title'        => get_string('signoff', 'view'),
+        'elements' => $signoff_elements
+    );
+
     // Theme dropdown
     $theme = $view->set_user_theme();
     $allowedthemes = get_user_accessible_themes();
@@ -526,7 +535,7 @@ function get_advanced_elements(): array {
         );
     };
 
-    $inlinejs = <<<EOF
+    $inlinejs .= <<<EOF
 function settings_callback(form, data) {
     settings_coverimage.callback(form, data);
 };
@@ -634,6 +643,63 @@ JAVASCRIPT;
     return array($skinform, $hiddenelements, $inlinejs);
 }
 
+/**
+ * Fetch the signoff and verify field elements for the edit form
+ *
+ * This includes the pieform elements and the related javascript needed
+ * @return array
+ */
+function get_signoff_elements(): array {
+    global $view;
+    safe_require('artefact', 'peerassessment');
+    // For sign-off/verify config that came from a template, disable editing the config.
+    $is_from_template = $view->get_original_template();
+
+    // Sign-off only when the institution you are part of has portfolio completion on
+    $signoff_record = get_record('view_signoff_verify', 'view', $view->get('id'));
+    $show_verify = $signoff_record && $signoff_record->show_verify;
+
+    $elements = array(
+        'signoff' => array(
+            'type' => 'switchbox',
+            'title' => get_string('signoff', 'view'),
+            'description' => get_string('signoffdesc', 'view'),
+            'defaultvalue' => (bool) $signoff_record,
+            'disabled' => $is_from_template,
+            'class' => 'form-group-no-border',
+        ),
+        'verify' => array(
+            'type' => 'switchbox',
+            'title' => get_string('verify', 'view'),
+            'description' => get_string('verifydesc', 'view'),
+            'defaultvalue' => $show_verify ?: 0,
+            'disabled' => !$signoff_record || $is_from_template,
+        ),
+    );
+
+    // Allow verify switch to be set only when sign-off is set to true.
+    $js = '
+        jQuery(function ($) {
+            $("#settings_signoff").on("click", function () {
+                if (this.checked) {
+                    $("#settings_verify").prop("disabled", false);
+                    if (!$("#editgroup_request").attr("checked")) {
+                        $("#editgroup_suggestfriends").prop("checked", false);
+                        $("#editgroup_suggestfriends").prop("disabled", true);
+                    }
+                }
+                else {
+                    $("#settings_verify").prop("checked", false);
+                    $("#settings_verify").prop("disabled", true);
+                }
+            });
+        });
+    ';
+
+    return [$elements, $js];
+}
+
+
 function settings_validate(Pieform $form, $values) {
     global $view, $issiteview, $issitetemplate, $canuseskins;
 
@@ -663,6 +729,7 @@ function settings_submit(Pieform $form, $values) {
     if ($canedittitle) {
         set_view_title_and_description($form, $values);
         set_view_advanced($form, $values);
+        set_signoff_verify($form, $values);
     }
 
     if ($canuseskins && isset($values['skinid'])) {
@@ -1021,6 +1088,35 @@ function set_view_advanced(Pieform $form, $values) {
     }
 }
 
+/**
+ * Set sign-off and verify config for signing off and verifying pages
+ *
+ * @param  mixed $form
+ * @param  mixed $values
+ * @return void
+ */
+function set_signoff_verify(Pieform $form, $values) {
+    global $view;
+    $view_id = $view->get('id');
+
+    if (!in_array('signoff', $values)) {
+        return;
+    }
+
+    $show_signoff = $values['signoff'] ? 1 : 0;
+    $show_verify = $values['verify'] ? 1 : 0;
+    $dataobj = (object) [
+        'view' => $view->get('id'),
+    ];
+
+    if ($show_signoff) {
+        ensure_record_exists('view_signoff_verify', $dataobj, $dataobj, 'id', true);
+        set_field('view_signoff_verify', 'show_verify', $show_verify, 'view', $view_id);
+    }
+    else {
+        execute_sql("DELETE FROM {view_signoff_verify} WHERE view = ?", [$view_id]);
+    }
+}
 
 function add_view_coverimage($coverimageid) {
     global $view;

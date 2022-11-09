@@ -33,6 +33,7 @@ require_once(get_config('docroot') . 'export/lib.php');
 // an assignment submission)
 $mnetviewid = param_integer('mnetviewid', false);
 $mnetcollid = param_integer('mnetcollid', false);
+
 if (
         ($mnetviewid || $mnetcollid)
         && $SESSION->get('mnetuser')
@@ -122,6 +123,9 @@ if ($blockid = param_integer('blockconfig', 0)) {
         $bi->build_quickedit_form();
     }
 }
+
+// Prepare the signoff verify form in advance - used to be a block
+$signoff_html = $view->has_signoff() ? $view->get_signoff_verify_form() : '';
 
 $institution = $view->get('institution');
 View::set_nav($groupid, $institution, false, false, false);
@@ -924,6 +928,7 @@ $returnto = $view->get_return_to_url_and_title();
 $smarty->assign('url', $returnto['url']);
 $smarty->assign('linktext', $returnto['title']);
 $smarty->assign('viewid', $view->get('id'));
+$smarty->assign('signoff_html', $signoff_html);
 $smarty->display('view/view.tpl');
 
 mahara_touch_record('view', $viewid); // Update record 'atime'

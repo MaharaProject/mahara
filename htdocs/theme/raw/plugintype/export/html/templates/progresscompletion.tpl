@@ -29,7 +29,7 @@
     <caption class="visually-hidden">{str tag="tabledesc" section="module.framework"}</caption>
     <tr class="table-pager">
         <th>{str tag="view"}</th>
-        <th class="userrole">{str tag="signoff" section="blocktype.peerassessment/signoff"}</th>
+<th class="userrole">{str tag="signoff" section="view"}</th>
         <th class="userrole">{str tag="verification" section="collection"}</th>
     </tr>
     {foreach from=$views item=view}

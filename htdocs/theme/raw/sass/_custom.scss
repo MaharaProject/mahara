@@ -712,7 +712,7 @@ div.toolbarhtml {
   margin-bottom: $spacing-xl;
 }
 
-.bt-signoff {
+.view-signoff {
     .signoff-title,
     .verified-title {
         margin-top: 0.25rem;
@@ -739,3 +739,11 @@ div.toolbarhtml {
     }
 }
 
+#signoff div.switchbox div.switch {
+    padding-left: 3px;
+}
+.viewsignoff-export {
+    & .view-signoff {
+        float: none;
+    }
+}
