@@ -2036,6 +2036,11 @@ class View {
         $smarty->assign('blocktypes', $blocktypes);
         $smarty->assign('javascript', $javascript);
         $smarty->assign('accessible', $this->get('accessibleview'));
+        $smarty->assign('GS_DESKTOP_WIDTH', BlockInstance::GRIDSTACK_CONSTANTS['desktopWidth']);
+        $smarty->assign('GS_DEFAULT_HEIGHT', BlockInstance::GRIDSTACK_CONSTANTS['defaultHeight']);
+        $smarty->assign('GS_DRAG_HEIGHT', BlockInstance::GRIDSTACK_CONSTANTS['dragHeight']);
+        $smarty->assign('GS_DRAG_WIDTH', BlockInstance::GRIDSTACK_CONSTANTS['dragWidth']);
+
         return $smarty->fetch('view/blocktypelist.tpl');
     }
 

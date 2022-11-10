@@ -1047,6 +1047,14 @@ class BlockInstance {
     const RETRACTABLE_NO = 0;
     const RETRACTABLE_YES = 1;
     const RETRACTABLE_RETRACTED = 2;
+    // GRIDSTACK_CONSTANTS must match mahara.js GRIDSTACK_CONSTANT values
+    const GRIDSTACK_CONSTANTS = [
+        'desktopWidth' => 12,
+        'mobileWidth'  => 1,
+        'defaultHeight' => 3,
+        'dragHeight'   => 5,
+        'dragWidth' => 12,
+    ];
 
     /**
      * The ID of this block instance
@@ -1238,10 +1246,10 @@ class BlockInstance {
            }
         }
         else {
-           $this->positionx = 0;
-           $this->positiony = 0;
-           $this->width     = 4;
-           $this->height    = 3;
+            $this->positionx = 0;
+            $this->positiony = 0;
+            $this->width     = BlockInstance::GRIDSTACK_CONSTANTS['desktopWidth'];
+            $this->height    = BlockInstance::GRIDSTACK_CONSTANTS['defaultHeight'];
         }
         $this->artefactplugin = blocktype_artefactplugin($this->blocktype);
     }

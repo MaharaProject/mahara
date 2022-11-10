@@ -404,8 +404,8 @@
 
         $('.blocktype-drag.not-accessible').draggable({
             start: function(event, ui) {
-                $(this).attr('gs-width', 4);
-                $(this).attr('gs-height', 3);
+                $(this).attr('gs-width', GRIDSTACK_CONSTANTS.desktopWidth);
+                $(this).attr('gs-height', GRIDSTACK_CONSTANTS.defaultHeight);
             },
             helper: function(event) {
               var original = $(this),
@@ -505,7 +505,7 @@
             }
         }
 
-        let width = 4; // Default gridstack block width for desktop
+        let width = GRIDSTACK_CONSTANTS.desktopWidth; // Default gridstack block width for desktop
         if (grid._widthOrContainer() <= grid.opts.minWidth) {
             width = 1; // Default gridstack block width for mobile
             pd['gridonecolumn'] = true;
@@ -524,8 +524,8 @@
 
             var grid = GridStack.init();
             var minWidth = grid.opts.minCellColumns;
-            dimensions.width = 4;
-            dimensions.height = 3;
+            dimensions.width = GRIDSTACK_CONSTANTS.desktopWidth;
+            dimensions.height = GRIDSTACK_CONSTANTS.defaultHeight;
             addNewWidget(blockinstance[0], blockId, dimensions, grid, 'placeholder', minWidth, dimensions.height);
 
             if (data.data.configure) {
