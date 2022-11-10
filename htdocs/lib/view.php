@@ -6513,7 +6513,7 @@ class View {
         $search->pagination = build_pagination(array(
             'id' => 'templatesearch_pagination',
             'class' => 'center',
-            'url' => get_config('wwwroot') . 'view/choosetemplate.php' . (!$params ? ('?' . http_build_query($params)) : ''),
+            'url' => get_config('wwwroot') . 'view/choosetemplate.php' . ($params ? ('?' . http_build_query($params)) : ''),
             'count' => $results->count,
             'limit' => $search->limit,
             'offset' => $search->offset,
