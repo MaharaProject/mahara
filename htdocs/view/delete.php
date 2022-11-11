@@ -23,6 +23,9 @@ $groupid = $view->get('group');
 if ($groupid && !group_within_edit_window($groupid)) {
     throw new AccessDeniedException(get_string('cantdeleteview', 'view'));
 }
+if ($view->is_submission()) {
+    throw new AccessDeniedException(get_string('cantdeleteviewsubmission', 'view'));
+}
 
 if ($groupid) {
     $groupobj = get_group_by_id($groupid);

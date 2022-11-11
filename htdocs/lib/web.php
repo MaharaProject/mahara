@@ -4271,6 +4271,29 @@ function str_shorten_text($str, $maxlen=100, $truncate=false) {
 }
 
 /**
+ * Takes the title and the $view and returns the title any extras.
+ *
+ * Initial usege is to check to see if we need to add the submission date to
+ * the title.
+ *
+ * @param int $viewid The view id of the View we are updating.
+ * @return string The updated title if needed elsewhere.
+ */
+function set_view_title_as_submitted($viewid) {
+    $view = new View($viewid);
+    $time = $view->get('submittedtime');
+    if (!empty($time)) {
+        $date = format_date(strtotime($time), 'strftimerecentyear');
+        $title = $view->get('title') . get_string('submittedtimetitle', 'view', $date);
+        $view->set('title', $title);
+        $view->set('dirty', true);
+        $view->commit();
+        return $title;
+    }
+    return $view->get('title');
+}
+
+/**
  * Builds pagination links for HTML display.
  *
  * The pagination is quite configurable, but at the same time gives a consistent

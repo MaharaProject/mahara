@@ -46,6 +46,75 @@ class PluginBlocktypePeerassessment extends MaharaCoreBlocktype {
         return true;
     }
 
+    /**
+     * @inheritDoc
+     *
+     * @see PluginBlocktype::default_copy_type()
+     */
+    public static function default_copy_type(BlockInstance $instance, View $view) {
+        return 'fullinclself';
+    }
+
+    /**
+     * Ensure comments are copied when copying a block instance.
+     *
+     * @see PluginBlocktype::rewrite_blockinstance_extra_config()
+     * @param View $view The View the block is on.
+     * @param BlockInstance $block The new block instance.
+     * @param array $configdata
+     * @param array $artefactcopies
+     * @param View $originalView The original View the block is from.
+     * @param BlockInstance $originalBlock The original block instance.
+     * @param boolean $copyissubmission True if the copy is a submission.
+     *
+     * @return array The new configdata.
+     */
+    public static function rewrite_blockinstance_extra_config(View $view, BlockInstance $block, $configdata, $artefactcopies, View $originalView, BlockInstance $originalBlock, $copyissubmission) {
+        global $USER, $exporter;
+        // If this is not a copy for a submission then we don't need to do anything.
+        if (!$copyissubmission) {
+            return $configdata;
+        }
+
+        safe_require('artefact', 'peerassessment');
+        $options = ArtefactTypePeerassessment::get_assessment_options();
+        $options->limit = 0;
+        $options->offset = 0;
+        $options->showcomment = null;
+        $options->view = $originalBlock->get_view();
+        $options->block = $originalBlock->get('id');
+        $assessmentFeedback = ArtefactTypePeerassessment::get_assessments($options, false, $exporter);
+        foreach ($assessmentFeedback->data as $feedback) {
+            // We will rebuild the feedback from the original on the block.
+            $data = [
+                'title' => $feedback->title,
+                'description' => $feedback->description,
+                'view' => $view->get('id'),
+                'owner' => $USER->get('id'),
+                'group' => $feedback->group,
+                'institution' => property_exists($feedback, 'institution') ? $feedback->institution : null,
+                'author' => $feedback->author->id,
+                'usr' => $feedback->author->id,
+                'block' => $block->get('id'),
+                'private' => (int) $feedback->private,
+                'ctime' => $feedback->ctime,
+                'mtime' => $feedback->mtime,
+            ];
+            // We want to remove some elements from the original.
+            $newfeedback = new ArtefactTypePeerassessment(0, $data);
+            $newfeedback->commit();
+            // If there are images in the description, we need to record that and update src urls.
+            $newtext = EmbeddedImage::prepare_embedded_images($newfeedback->get('description'), 'assessment', $newfeedback->get('id'));
+            if ($newtext !== false && $newtext !== $newfeedback->get('description')) {
+                $updatedartefact = new stdClass();
+                $updatedartefact->id = $newfeedback->get('id');
+                $updatedartefact->description = $newtext;
+                update_record('artefact', $updatedartefact, 'id');
+            }
+        }
+        return $configdata;
+    }
+
     public static function render_instance(BlockInstance $instance, $editing=false, $versioning=false) {
         global $USER, $exporter;
 

@@ -36,7 +36,7 @@ Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   And I click on "Help"
   Then I should see "You can move blocks around the page either by dragging them or using your keyboard controls."
   And I click on "Close help"
-  Given I click on "Settings" in the "Toolbar buttons" "Nav" property
+  Given I click on "Configure" in the "Toolbar buttons" "Nav" property
   And I click on "Help"
   # Tags
   Then I should see "You can add tags to artefacts, pages and collections you create."

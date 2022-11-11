@@ -184,4 +184,35 @@
             border-bottom-width:0;
         }
     }
+
+    /* Use with bg-submitted to override the colours */
+    &.bg-released {
+        border-color: $state-released-border !important;
+        .card-header {
+            background-color: $state-released-bg !important;
+            color: $state-released-text !important;
+        }
+        .card-body {
+            background-color: $state-released-bg !important;
+        }
+        .card-footer {
+            color: $state-released-text !important;
+            &:hover,
+            &:focus {
+                background-color: scale-color($state-released-bg, $lightness: 80%) !important;
+                .icon {
+                    color: $state-released-text !important;
+                }
+            }
+            .icon {
+                color: $state-released-text !important;
+            }
+        }
+        .card-footer,
+        .card-body,
+        .card-header,
+        .card-header a {
+            border-color: $state-released-border !important;
+        }
+    }
 }

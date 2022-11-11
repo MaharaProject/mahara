@@ -738,9 +738,13 @@ EOF;
      * @param BlockInstance $block The new block
      * @param array $configdata The configuration data for the old blocktype
      * @param array $artefactcopies The mapping of old artefact ids to new ones
-     * @return array            The new configuration data.
+     * @param View $originalView The original View the block is from.
+     * @param BlockInstance $originalBlock The original block instance.
+     * @param boolean $copyissubmission True if the copy is a submission.
+     *
+     * @return array The new configuration data.
      */
-    public static function rewrite_blockinstance_extra_config(View $view, BlockInstance $block, $configdata, $artefactcopies) {
+    public static function rewrite_blockinstance_extra_config(View $view, BlockInstance $block, $configdata, $artefactcopies, View $originalView, BlockInstance $originalBlock, $copyissubmission) {
         return $configdata;
     }
 
@@ -1921,7 +1925,8 @@ class BlockInstance {
             $smarty->assign('blockid', $this->get('id'));
             $canedit = $USER->can_edit_view($this->get_view());
             $viewsubmitted = $this->get_view()->is_submitted();
-            $smarty->assign('showquickedit', $canedit && !$viewsubmitted);
+            $issubmission = $this->get_view()->is_submission();
+            $smarty->assign('showquickedit', $canedit && !$viewsubmitted && !$issubmission);
         }
         $blockheaderhtml = $smarty->fetch('header/block-header.tpl');
         if ($headingonly) {
@@ -2632,9 +2637,11 @@ class BlockInstance {
      * @param View $view The view that this new blockinstance is being created for
      * @param View $template The view that this (the old) blockinstance comes from
      * @param array $artefactcopies Correspondence between original artefact IDs and IDs of copies
+     * @param boolean $copyissubmission Whether the copy is being made as part of a submission
+     *
      * @return boolean Whether a new blockinstance was made or not.
      */
-    public function copy(View $view, View $template, &$artefactcopies) {
+    public function copy(View $view, View $template, &$artefactcopies, $copyissubmission = false) {
         $blocktypeclass = generate_class_name('blocktype', $this->get('blocktype'));
 
         $configdata = $this->get('configdata');
@@ -2772,7 +2779,7 @@ class BlockInstance {
 
         // Rewrite the extra configuration of block
         $newblock->commit();
-        $configdata = $blocktypeclass::rewrite_blockinstance_extra_config($view, $newblock, $configdata, $artefactcopies);
+        $configdata = $blocktypeclass::rewrite_blockinstance_extra_config($view, $newblock, $configdata, $artefactcopies, $template, $this, $copyissubmission);
 
         $newblock->set('configdata', $configdata);
         $newblock->commit();

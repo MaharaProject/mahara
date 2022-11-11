@@ -44,7 +44,7 @@ Scenario: Testing edited data appears in search
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Portfolios" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
-    And I click on "Settings" in the "Toolbar buttons" "Nav" property
+    And I click on "Configure" in the "Toolbar buttons" "Nav" property
     And I set the following fields to these values:
     | Page title | Different title |
     And I click on "Save"

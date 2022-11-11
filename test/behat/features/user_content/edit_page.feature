@@ -89,7 +89,7 @@ Scenario: Profile and dashboard pages basic settings and skins can't be edited -
  And I click on "Profile page"
  And I scroll to the base of id "viewh1"
  And I click on "Edit"
- And I click on "Settings" in the "Toolbar buttons" "Nav" property
+ And I click on "Configure" in the "Toolbar buttons" "Nav" property
  And I should not see "Basics"
  And I should see "Skin"
  And I click on "Save"
@@ -98,7 +98,7 @@ Scenario: Profile and dashboard pages basic settings and skins can't be edited -
  # Dashboard page
  And I choose "Dashboard" from main menu
  And I click on "Edit dashboard"
- And I click on "Settings" in the "Toolbar buttons" "Nav" property
+ And I click on "Configure" in the "Toolbar buttons" "Nav" property
  And I should not see "Basics"
  And I should see "Skin"
  And I click on "Save"

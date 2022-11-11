@@ -197,7 +197,7 @@ This list must take into account the sort option chosen in the block config (Bug
     # Update the group page "Page GroupA_06"
     And I click on "Portfolios" in the "Navigation" "Groups" property
     And I click on "Edit" in "Page GroupA_06" card menu
-    And I click on "Settings" in the "Toolbar buttons" "Nav" property
+    And I click on "Configure" in the "Toolbar buttons" "Nav" property
     And I set the field "Page description" to "<p>Group page 06 (updated)</p>"
     And I scroll to the base of id "settings_submitform"
     And I click on "Save"
@@ -219,7 +219,7 @@ This list must take into account the sort option chosen in the block config (Bug
     And I scroll to the base of id "showmorebtn"
     And I click on "Show more"
     And I click on "Edit" in "Page UserA_01" card menu
-    And I click on "Settings" in the "Toolbar buttons" "Nav" property
+    And I click on "Configure" in the "Toolbar buttons" "Nav" property
     And I set the field "Page description" to "<p>Page 01 (updated)</p>"
     And I scroll to the base of id "settings_submitform"
     And I click on "Save"
@@ -234,7 +234,7 @@ This list must take into account the sort option chosen in the block config (Bug
     And I should not see "Page UserA_01" in the "Pages shared with this group" "Groups" property
     # Update the shared collection "Collection UserA_06"
     And I choose "Portfolios" in "Create" from main menu
-    And I click on "Edit" in "Collection UserA_06" card menu
+    And I click on "Configure" in "Collection UserA_06" card menu
     And I fill in "Collection description" with "Collection 06 (updated)"
     And I scroll to the base of id "edit_submitform"
     And I click on "Continue"
@@ -322,12 +322,12 @@ This list must take into account the sort option chosen in the block config (Bug
     # Verifying log in was successful
     And I should see "Angela"
     And I click on "GroupD"
-    And I should not see "Page UserC_03" in the "Pages shared with this group" "Groups" property
-    And I should see "Page UserC_03" in the "Submissions to this group" "Groups" property
+    And I should see "Page UserC_03" in the "Pages shared with this group" "Groups" property
+    And I should see "Page UserC_03; submitted" in the "Submissions to this group" "Groups" property
     And I should see "Collection UserC_01" in the "Collections shared with this group" "Groups" property
-    And I should not see "Collection UserC_03" in the "Collections shared with this group" "Groups" property
+    And I should see "Collection UserC_03" in the "Collections shared with this group" "Groups" property
     And I should see "Collection UserC_04" in the "Collections shared with this group" "Groups" property
-    And I should see "Collection UserC_03" in the "Submissions to this group" "Groups" property
+    And I should see "Collection UserC_03; submitted" in the "Submissions to this group" "Groups" property
     And I log out
     Given I log in as "UserB" with password "Kupuh1pa!"
     # Verifying log in was successful
@@ -401,16 +401,16 @@ This list must take into account the sort option chosen in the block config (Bug
     And I click on "GroupC"
     And I should see "Page UserC_09" in the "Pages shared with this group" "Groups" property
     And I should not see "Page UserC_10" in the "Pages shared with this group" "Groups" property
-    And I should not see "Page UserC_11" in the "Pages shared with this group" "Groups" property
+    And I should see "Page UserC_11" in the "Pages shared with this group" "Groups" property
     And I should see "Page UserC_12" in the "Pages shared with this group" "Groups" property
-    And I should see "Page UserC_10" in the "Submissions to this group" "Groups" property
-    And I should see "Page UserC_11" in the "Submissions to this group" "Groups" property
+    And I should see "Page UserC_10; submitted" in the "Submissions to this group" "Groups" property
+    And I should see "Page UserC_11; submitted" in the "Submissions to this group" "Groups" property
     And I should see "Collection UserC_05" in the "Collections shared with this group" "Groups" property
     And I should not see "Collection UserC_06" in the "Collections shared with this group" "Groups" property
-    And I should not see "Collection UserC_07" in the "Collections shared with this group" "Groups" property
+    And I should see "Collection UserC_07" in the "Collections shared with this group" "Groups" property
     And I should see "Collection UserC_08" in the "Collections shared with this group" "Groups" property
-    And I should see "Collection UserC_06" in the "Submissions to this group" "Groups" property
-    And I should see "Collection UserC_07" in the "Submissions to this group" "Groups" property
+    And I should see "Collection UserC_06; submitted" in the "Submissions to this group" "Groups" property
+    And I should see "Collection UserC_07; submitted" in the "Submissions to this group" "Groups" property
 
 Scenario: Check progress completion is availble in group collections
     Given I log in as "UserA" with password "Kupuh1pa!"

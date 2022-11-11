@@ -54,7 +54,7 @@ Background:
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I go to portfolio page "Page UserA_00"
     Then I click on "Edit"
-    And I click on "Settings" in the "Toolbar buttons" "Nav" property
+    And I click on "Configure" in the "Toolbar buttons" "Nav" property
     When I click on "Advanced"
     And I enable the switch "Sign-off"
     And I enable the switch "Verify"
@@ -63,7 +63,7 @@ Background:
     And I go to portfolio page "Page UserA_01"
     Then I click on "Edit"
     # Author adds sign off switch
-    And I click on "Settings" in the "Toolbar buttons" "Nav" property
+    And I click on "Configure" in the "Toolbar buttons" "Nav" property
     When I click on "Advanced"
     And I enable the switch "Sign-off"
     And I enable the switch "Verify"
@@ -74,7 +74,7 @@ Background:
     Given I go to portfolio page "Page UserA_03"
     And I click on "Edit"
     # Author adds sign off switch
-    And I click on "Settings" in the "Toolbar buttons" "Nav" property
+    And I click on "Configure" in the "Toolbar buttons" "Nav" property
     When I click on "Advanced"
     And I enable the switch "Sign-off"
     And I enable the switch "Verify"

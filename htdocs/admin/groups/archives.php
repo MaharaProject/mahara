@@ -37,6 +37,8 @@ else {
 
 if ($USER->get('admin') && param_exists('releaseids')) {
     $releaseids = array_map('intval', (array) param_variable('releaseids'));
+    $releaseaction = param_variable('action');
+    $returntouser = false;
     // Release the locked items.
     foreach ($releaseids as $releaseid) {
         $view = new View($releaseid);
@@ -60,6 +62,9 @@ if ($USER->get('admin') && param_exists('releaseids')) {
             }
         }
 
+        if ($releaseaction == 'releaseandreturnsubmissions') {
+            $returntouser = true;
+        }
         // If we're a collection, release that.
         if ($collection) {
             try {
@@ -70,7 +75,7 @@ if ($USER->get('admin') && param_exists('releaseids')) {
                         'messagekey' => 'currentarchivereleasedsubmittedhostmessage',
                     ],
                 ];
-                $collection->release($USER, $releasemessageoverrides);
+                $collection->release($USER, $releasemessageoverrides, $returntouser);
                 $msg = get_string('portfolioreleasedsuccesswithname', 'group', $collection->get('name'));
             }
             catch (SystemException $e) {
@@ -87,7 +92,7 @@ if ($USER->get('admin') && param_exists('releaseids')) {
                         'messagekey' => 'currentarchivereleasedsubmittedhostmessage',
                     ],
                 ];
-                $view->release($USER, $releasemessageoverrides);
+                $view->release($USER, $releasemessageoverrides, $returntouser);
                 $msg = get_string('portfolioreleasedsuccesswithname', 'group', $view->get('title'));
             }
             catch (SystemException $e) {

@@ -57,6 +57,12 @@ class View {
     private $categorydata;
 
     /**
+     * The collection this collection is a copy of.
+     * @var int
+     */
+    private $submissionoriginal;
+
+    /**
      * The type of template (integer = 0 if neither USER_TEMPLATE nor SITE_TEMPLATE)
      *
      * @var USER_TEMPLATE|SITE_TEMPLATE|integer
@@ -459,6 +465,8 @@ class View {
         db_begin();
 
         $template = new View($templateid);
+        $viewissubmission = false;
+        $collectionissubmission = false;
 
         if ($template->get('deleted')) {
             throw new SystemException("View::create_from_template: This template has been deleted");
@@ -491,10 +499,17 @@ class View {
                 && !($template->get('owner') === 0
                     && $template->get('type') == 'portfolio')) {
             $desiredtitle = $template->get('title');
-            if (get_config('renamecopies')) {
-                $desiredtitle = get_string('Copyof', 'mahara', $desiredtitle);
+            $viewissubmission = !empty($viewdata['submissionoriginal']);
+            $collectionissubmission = !empty($viewdata['submissionoriginalcollection']);
+            if (!$viewissubmission && !$collectionissubmission) {
+                // This isn't a submission. We can add the 'Copy of' or ".v N".
+                if (get_config('renamecopies')) {
+                    $desiredtitle = get_string('Copyof', 'mahara', $desiredtitle);
+                }
+                $desiredtitle = self::new_title($desiredtitle, (object)$viewdata);
             }
-            $view->set('title', self::new_title($desiredtitle, (object)$viewdata));
+
+            $view->set('title', $desiredtitle);
             $view->set('dirty', true);
         }
 
@@ -503,7 +518,7 @@ class View {
         $view->urlid = self::new_urlid($view->urlid, (object)$viewdata);
 
         try {
-            $copystatus = $view->copy_contents($template, $artefactcopies);
+            $copystatus = $view->copy_contents($template, $artefactcopies, $viewissubmission);
         }
         catch (QuotaExceededException $e) {
             db_rollback();
@@ -975,7 +990,7 @@ class View {
         if (empty($this->id)) {
             // users are only allowed one profile view
             if (!$this->template && $this->type == 'profile' && record_exists('view', 'owner', $this->owner, 'type', 'profile')) {
-                throw new SystemException(get_string('onlonlyyoneprofileviewallowed', 'error'));
+                throw new SystemException(get_string('onlyoneprofileviewallowed', 'error'));
             }
             $this->id = insert_record('view', $fordb, 'id', true);
             handle_event('createview', array('id' => $this->id, 'eventfor' => 'view', 'viewtype' => $this->type));
@@ -1906,10 +1921,32 @@ class View {
         return $this->copynewgroups;
     }
 
+    /**
+     * Returns true if the View is still a submission.
+     *
+     * This checks the submissionoriginal field that link thiss to the source
+     * View.
+     *
+     * @return boolean
+     */
+    public function is_submission() {
+        return (bool) $this->get_submission_origin();
+    }
+
+    /**
+     * Returns true if the View is still in a submitted state.
+     *
+     * @return boolean
+     */
     public function is_submitted() {
         return $this->get('submittedgroup') || $this->get('submittedhost');
     }
 
+    /**
+     * Returns the group or host that this view was submitted to
+     *
+     * @return array|null
+     */
     public function submitted_to() {
         if ($group = $this->get('submittedgroup')) {
             return array('type' => 'group', 'id' => $group, 'name' => get_field('group', 'name', 'id', $group));
@@ -1970,10 +2007,11 @@ class View {
      *
      * @param LiveUser|null $releaseuser The Account releasing the Portfolio.
      * @param array $releasemessageoverrides Optional array of string keys to use rather than the defaults.
+     * @param boolean $returntouser If true, the submissionoriginal will also be cleared.
      *
      * @return void
      */
-    public function release($releaseuser=null, $releasemessageoverrides = []) {
+    public function release($releaseuser=null, $releasemessageoverrides = [], $returntouser = false) {
         $submitinfo = $this->submitted_to();
         if (is_null($submitinfo)) {
             throw new ParameterException("View with id " . $this->get('id') . " has not been submitted");
@@ -1981,7 +2019,7 @@ class View {
         $releaseuser = optional_userobj($releaseuser);
         try {
             db_begin();
-            self::_db_release(array($this->id), $this->get('owner'), $this->get('submittedgroup'));
+            self::_db_release(array($this->id), $this->get('owner'), $this->get('submittedgroup'), $returntouser);
             safe_require('module', 'submissions');
             if (PluginModuleSubmissions::is_active() && $this->get('submittedgroup') && !group_external_group($this->get('submittedgroup'))) {
                 PluginModuleSubmissions::release_submission($this, $releaseuser);
@@ -2047,7 +2085,7 @@ class View {
         );
     }
 
-    public static function _db_release(array $viewids, $owner, $group=null) {
+    public static function _db_release(array $viewids, $owner, $group=null, $returntouser = false) {
         require_once(get_config('docroot') . 'artefact/lib.php');
 
         if (empty($viewids) || empty($owner)) {
@@ -2057,12 +2095,16 @@ class View {
         $owner = intval($owner);
 
         db_begin();
-        execute_sql("
-            UPDATE {view}
-            SET submittedgroup = NULL,
+        $set = 'submittedgroup = NULL,
                 submittedhost = NULL,
                 submittedtime = NULL,
-                submittedstatus = " . self::UNSUBMITTED . "
+                submittedstatus = ' . self::UNSUBMITTED;
+        if ($returntouser) {
+            $set .= ', submissionoriginal = ' . self::UNSUBMITTED;
+        }
+        execute_sql("
+            UPDATE {view}
+            SET $set
             WHERE id IN ($idstr) AND owner = ?",
             array($owner)
         );
@@ -4379,25 +4421,88 @@ class View {
      * @param string $orderby Sets the order of the results
      *        values: latestcreated, latestmodified, latestviewed, mostvisited, mostcomments
      * @param bool $alltags Used in conjunction with $serachin = tagsonly. When true it only returns results with all supplied tags
+     * @param bool $showsubmissions If true, returns submitted Portfolios as well
      * @return object containing views matching the query and their count
      */
-    public static function get_myviews_data($limit=12, $offset=0, $query=null, $tag=null, $groupid=null, $institution=null, $orderby=null, $searchin=null, $alltags=false) {
+    public static function get_myviews_data($limit=12, $offset=0, $query=null, $tag=null, $groupid=null, $institution=null, $orderby=null, $searchin=null, $alltags=false, $showsubmissions=false) {
         global $USER;
         $userid = (!$groupid && !$institution) ? $USER->get('id') : null;
         $haslti = is_plugin_active('lti', 'module') ? true : false;
 
         $select = '
-            SELECT v.id, v.id AS vid, v.title, v.title AS vtitle, v.description, v.type,  v.ctime as vctime, v.mtime as vmtime, v.atime as vatime,
-            v.owner, v.group, v.institution, v.locked, v.ownerformat, v.urlid, v.visits AS vvisits, 1 AS numviews, NULL AS lockedcoll, NULL AS collid, v.coverimage, NULL as outcomeportfolio';
+            SELECT
+                v.id,
+                v.id AS vid,
+                v.title,
+                v.title AS vtitle,
+                v.description,
+                v.type,
+                v.ctime as vctime,
+                v.mtime as vmtime,
+                v.atime as vatime,
+                v.owner,
+                v.group,
+                v.institution,
+                v.locked,
+                v.ownerformat,
+                v.urlid,
+                v.visits AS vvisits,
+                1 AS numviews,
+                NULL AS lockedcoll,
+                NULL AS collid,
+                v.coverimage,
+                v.submissionoriginal,
+                NULL as outcomeportfolio';
         $collselect = '
             UNION
-            SELECT cvid.view AS id, null AS vid, c.name as title, c.name AS vtitle, c.description, null AS type, c.ctime AS vctime, c.mtime AS vmtime, c.mtime AS vatime,
-            c.owner, c.group, c.institution, null AS locked, null AS ownerformat, null AS urlid, null AS vvisits,
-            numviews.numviews AS numviews, c.lock AS lockedcoll, c.id AS collid, c.coverimage, c.outcomeportfolio';
+            SELECT
+                cvid.view AS id,
+                null AS vid,
+                c.name as title,
+                c.name AS vtitle,
+                c.description,
+                null AS type,
+                c.ctime AS vctime,
+                c.mtime AS vmtime,
+                c.mtime AS vatime,
+                c.owner,
+                c.group,
+                c.institution,
+                null AS locked,
+                null AS ownerformat,
+                null AS urlid,
+                null AS vvisits,
+                numviews.numviews AS numviews,
+                c.lock AS lockedcoll,
+                c.id AS collid,
+                c.coverimage,
+                c.submissionoriginal,
+                c.outcomeportfolio';
         $emptycollselect = '
             UNION
-            SELECT null AS id, null AS vid, c.name AS title, c.name AS vtitle, c.description, null AS type, c.ctime AS vctime, c.mtime AS vmtime, c.mtime AS vatime,
-            c.owner, c.group, c.institution, null AS locked, null AS ownerformat, null AS urlid, null AS vvisits, 0 AS numviews, NULL AS lockedcoll, c.id AS collid, c.coverimage, c.outcomeportfolio';
+            SELECT
+                null AS id,
+                null AS vid,
+                c.name AS title,
+                c.name AS vtitle,
+                c.description,
+                null AS type,
+                c.ctime AS vctime,
+                c.mtime AS vmtime,
+                c.mtime AS vatime,
+                c.owner,
+                c.group,
+                c.institution,
+                null AS locked,
+                null AS ownerformat,
+                null AS urlid,
+                null AS vvisits,
+                0 AS numviews,
+                NULL AS lockedcoll,
+                c.id AS collid,
+                c.coverimage,
+                c.submissionoriginal,
+                c.outcomeportfolio';
 
         $from = '
             FROM {view} v
@@ -4426,6 +4531,20 @@ class View {
         $emptycollwhere = '
             WHERE c.' . self::owner_sql((object) array('owner' => $userid, 'group' => $groupid, 'institution' => $institution)) . '
             AND NOT EXISTS (SELECT cv2.view FROM {collection_view} cv2 JOIN {view} v2 ON v2.id = cv2.view WHERE cv2.collection = c.id AND v2.type != \'progress\')';
+
+        // are we showing submissions?
+        if (!$showsubmissions) {
+            $where .= '
+                AND (
+                    v.submittedstatus = ' . self::UNSUBMITTED . ' AND
+                    v.submissionoriginal = ' . self::UNSUBMITTED . '
+                )';
+            $collwhere .= '
+                AND (
+                    v.submittedstatus = ' . self::UNSUBMITTED . ' AND
+                    c.submissionoriginal = ' . self::UNSUBMITTED . '
+                )';
+        }
 
         // We use institution='mahara' and template=2 for the default site template
         if (isset($institution) && $institution === 'mahara') {
@@ -4635,6 +4754,8 @@ class View {
         require_once('group.php');
         if ($viewdata) {
             foreach ($viewdata as $id => &$data) {
+                $data['issubmission'] = 0;
+                $data['isreleased'] = 0;
                 $data['uniqueid'] = 'u' . $data['id'] . '_' . $data['collid'];
                 if (!empty($data['collid'])) {
                     $collobj = new Collection($data['collid']);
@@ -4674,13 +4795,71 @@ class View {
 
                     if ($status && !empty($time)) {
                         $data['submittedto'] = get_string('viewsubmittedtogroupon1', 'view', $url, $name, $time);
+                        $data['issubmission'] = 1;
                     }
                     else if ($status) {
                         $data['submittedto'] = get_string('viewsubmittedtogroup1', 'view', $url, $name);
+                        $data['issubmission'] = 1;
                     }
                     if ($status == self::PENDING_RELEASE) {
                         $data['submittedto'] .= ' ' . get_string('submittedpendingrelease', 'view');
+                        $data['issubmission'] = 1;
                     }
+                }
+
+                // Add the URL to the original view if it has a submissionoriginal.
+                if ($data['submissionoriginal'] > 0) {
+                    $submissionid = false;
+                    $submissionurl = false;
+                    // We may or may not have an original submission id
+                    // regardless of if it is still present.
+                    $data['issubmission'] = 1;
+                    // If submittedstatus is empty it has been released.
+                    if (empty($data['submittedstatus'])) {
+                        $data['isreleased'] = 1;
+                    }
+                    // If we have a collection id we have a collection.
+                    if (!empty($data['collid'])) {
+                        // This Portfolio is a Collection. Load the submission
+                        // original collection and use the ID of the first view in that.
+                        try {
+                            $submissioncollection = new Collection($data['submissionoriginal']);
+                        }
+                        catch (CollectionNotFoundException $e) {
+                            // Submission original has been deleted.
+                            $submissioncollection = false;
+                            $data['issubmissionbutoriginaldeleted'] = true;
+                        }
+                        // The original collection may be deleted. If we have a first view we can use it.
+                        if ($submissioncollection) {
+                            $submissionid = $submissioncollection->first_view()->get('id');
+                            $submissiontitle = $submissioncollection->get('name');
+                            $submissionurl = $submissioncollection->get_url(true);
+                        }
+                    }
+                    else {
+                        // Check if the original view is still there.
+                        try {
+                            $submissionview = new View($data['submissionoriginal']);
+                        }
+                        catch (ViewNotFoundException $e) {
+                            // Submission original has been deleted.
+                            $submissionview = false;
+                            $data['issubmissionbutoriginaldeleted'] = true;
+                        }
+                        if ($submissionview) {
+                            $submissionid = $submissionview->get('id');
+                            $submissiontitle = $submissionview->get('title');
+                            $submissionurl = $submissionview->get_url(true);
+                        }
+                    }
+                    if ($submissionid) {
+                        $data['submissionoriginalurl'] = $submissionurl ?: get_config('wwwroot') . 'view/view.php?id=' . $submissionid;
+                        $data['submissionoriginaltitle'] = $submissiontitle;
+                    }
+                }
+                else {
+                    $data['submissionoriginalurl'] = false;
                 }
 
                 // get the access rules for this view/collection
@@ -4747,7 +4926,7 @@ class View {
         );
     }
 
-    public static function get_myviews_url($group=null, $institution=null, $query=null, $searchin=null, $orderby=null, $matchalltags=false) {
+    public static function get_myviews_url($group=null, $institution=null, $query=null, $searchin=null, $orderby=null, $matchalltags=false, $showsubmissions=false) {
         $queryparams = array();
 
         if ($query != '') {
@@ -4761,6 +4940,9 @@ class View {
         }
         if (!empty($matchalltags)) {
             $queryparams[] = 'matchalltags=' . urldecode($matchalltags);
+        }
+        if (!empty($showsubmissions)) {
+            $queryparams[] = 'showsubmissions=' . urldecode($showsubmissions);
         }
         if ($group) {
             $url = get_config('wwwroot') . 'view/groupviews.php';
@@ -4825,6 +5007,7 @@ class View {
             set_account_preference($USER->get('id'), 'searchinfields', $searchin);
         }
         $matchalltags = param_boolean('matchalltags', false);
+        $showsubmissions = param_boolean('showsubmissions', false);
         $query  = param_variable('query', null);
 
         $searchoptions = array(
@@ -4838,8 +5021,11 @@ class View {
         $searchform = array(
             'name' => 'searchviews',
             'checkdirtychange' => false,
+            'renderer' => 'div',
             'class' => 'with-heading form-inline',
             'autofocus' => false,
+            'plugintype' => 'core',
+            'pluginname' => 'view',
             'elements' => array(
                 'searchwithin' => array (
                     'type' => 'fieldset',
@@ -4891,8 +5077,17 @@ class View {
                     'title' => get_string('matchalltags', 'view'),
                     'defaultvalue' => $matchalltags,
                     'description' => get_string('matchalltagsdesc', 'view'),
-                )
-            )
+                ),
+                // Add a Show Submissions checkbox.
+                'showsubmissions' => [
+                    'type' => 'checkbox',
+                    'class' => 'stacked',
+                    'title' => get_string('showsubmissions', 'view'),
+                    'defaultvalue' => $showsubmissions,
+                    'help' => true,
+                    'helpinlabel' => true,
+                ],
+            ),
         );
 
         if ($group) {
@@ -4904,7 +5099,7 @@ class View {
 
         $searchform = pieform($searchform);
 
-        $data = self::get_myviews_data($limit, $offset, $query, null, $group, $institution, $orderby, $searchin, $matchalltags);
+        $data = self::get_myviews_data($limit, $offset, $query, null, $group, $institution, $orderby, $searchin, $matchalltags, $showsubmissions);
 
         $url = self::get_myviews_url($group, $institution, $query, $searchin, $orderby, $matchalltags);
 
@@ -4988,12 +5183,17 @@ class View {
      *
      * @return bool
      */
-    public function is_copyable() {
+    public function is_copyable($assubmission = false) {
         global $USER;
 
-        $search = new stdClass();
-        $search->copyableby = (object) array('group' => null, 'institution' => null, 'owner' => $USER->get('id'));
-        $results = self::view_search('', '', null, $search->copyableby, null, null, true, null, null, false, null, null, $this->id);
+        $copyableby = array(
+            'group' => null,
+            'institution' => null,
+            'owner' => $USER->get('id'),
+            'issubmission' => $assubmission,
+        );
+
+        $results = self::view_search('', '', null, (object)$copyableby, null, null, true, null, null, false, null, null, $this->id);
         // Check that the this view is one the user is allowed to copy
         if (!empty($results->count)) {
             return true;
@@ -5061,16 +5261,21 @@ class View {
      * @param integer  $viewid      Only return a particular view (find by view id)
      * @param integer  $excludeowner Only return views not owned by this owner id
      * @param boolean  $groupbycollection Return one record for each collection, and one record for each view that's not in a collection
+     * @param boolean  $excludesubmissions Exclude views that are submissions
      * @return object
      */
     public static function view_search($query=null, $ownerquery=null, $ownedby=null, $copyableby=null, $limit=null, $offset=0,
                                        $extra=true, $sort=null, $types=null, $collection=false, $accesstypes=null, $tag=null,
-                                       $viewid=null, $excludeowner=null, $groupbycollection=null) {
+                                       $viewid=null, $excludeowner=null, $groupbycollection=null, $excludesubmissions = false) {
         global $USER;
         $admin = $USER->get('admin');
         $loggedin = $USER->is_logged_in();
         $viewerid = $USER->get('id');
 
+        // Ensure we have issubmission for later use.
+        if (is_object($copyableby) && !property_exists($copyableby, 'issubmission')) {
+            $copyableby->issubmission = false;
+        }
         // Query parameters
         $fromparams = array();
         $whereparams = array();
@@ -5083,13 +5288,18 @@ class View {
             LEFT OUTER JOIN {group} sg ON sg.id = v.group
         ';
         $typecast = is_postgres() ? '::varchar' : '';
-        $where = '';
+        $where = ' WHERE ';
+        // Are we excluding submissions?
+        if ($excludesubmissions) {
+            $where .= ' v.submissionoriginal = 0 AND ';
+        }
+
         if ($excludeowner) {
-            $where .= ' WHERE (v.owner IS NULL OR (v.owner > 0 AND v.owner != ?))';
+            $where .= ' (v.owner IS NULL OR (v.owner > 0 AND v.owner != ?))';
             $whereparams[] = $excludeowner;
         }
         else {
-            $where .= ' WHERE (v.owner IS NULL OR v.owner > 0)';
+            $where .= ' (v.owner IS NULL OR v.owner > 0)';
         }
         $where .= ' AND v.template != ' . self::SITE_TEMPLATE;
         $where .= '
@@ -5132,7 +5342,12 @@ class View {
 
         if ($copyableby) {
             $where .= '
-                AND ((v.template = 1 OR (v.' . self::owner_sql($copyableby) . ')) AND v.type != \'progress\')';
+                AND ((v.template = 1 OR (v.' . self::owner_sql($copyableby) . '))';
+            // If we are not dealing with a submission we want to exclude the progress page.
+            if (!$copyableby->issubmission) {
+                $where .= ' AND v.type != \'progress\'';
+            }
+            $where .= ')';
         }
 
         $like = db_ilike();
@@ -6564,10 +6779,18 @@ class View {
         return null;
     }
 
+    /**
+     * Copy the the contents of the template to the view.
+     *
+     * @param View $template The template to copy from
+     * @param array $artefactcopies An array of artefact copies to use
+     * @param boolean $copyissubmission Whether to copy comments as well
+     *
+     * @return array The summary of how much of what was copied.
+     */
+    public function copy_contents($template, &$artefactcopies, $copyissubmission = false) {
 
-    public function copy_contents($template, &$artefactcopies) {
         $clean_description_templates = ['portfolio', 'activity'];
-
         $this->set('lockblocks', (int)($template->get('lockblocks') || $this->lockblocks));
         if ($template->get('template') == self::SITE_TEMPLATE
             &&  in_array($template->get('type'), $clean_description_templates)
@@ -6637,7 +6860,7 @@ class View {
             foreach ($blocks as $b) {
                 if (safe_require('blocktype', $b->blocktype, 'lib.php', 'require_once', true) !== false) {
                     $oldblock = new BlockInstance($b->id, $b);
-                    if ($oldblock->copy($this, $template, $artefactcopies)) {
+                    if ($oldblock->copy($this, $template, $artefactcopies, $copyissubmission)) {
                         $numcopied['blocks']++;
                     }
                 }
@@ -6653,7 +6876,62 @@ class View {
             }
         }
         $numcopied['artefacts'] = count($artefactcopies);
+        // Copy the comments on the template if requested
+        if ($copyissubmission) {
+            $numcopied['comments'] = $this->copy_comments($template, $this);
+        }
         return $numcopied;
+    }
+
+    /**
+     * Copy comments from one view to another.
+     *
+     * @param View $from
+     * @param View $to
+     *
+     * @return array A summary of the artefacts copied
+     */
+    public function copy_comments($from, $to) {
+        $commentscopied = 0;
+        $summary = [
+            'comments' => $commentscopied,
+        ];
+        if ($comments = get_records_array('artefact_comment_comment', 'onview', $from->get('id'))) {
+            // Store the updated parents as key:value of src comment id => new comment id
+            $parents = [];
+            foreach ($comments as $c) {
+                // Load the source comment.
+                $srccomment = new ArtefactTypeComment($c->artefact);
+                $newcomment = clone $srccomment;
+                // Get the source comment's ancestors before we mess with them.
+                // $sourceancestors = $srccomment->get_item_ancestors();
+                $newcomment->set('onview', $to->get('id'));
+                $newcomment->set('id', 0);
+                // Check if we have a parent.
+                if ($newcomment->get('parent')) {
+                    // If we have a parent, check if we have a new parent.
+                    if (isset($parents[$newcomment->get('parent')])) {
+                        // If we have a new parent, set it.
+                        $newcomment->set('parent', $parents[$newcomment->get('parent')]);
+                    }
+                }
+                $newcomment->commit();
+                $parents[$srccomment->get('id')] = $newcomment->get('id');
+                $commentscopied++;
+
+                // Check if we have attachments.
+                $srccommentattachments = ArtefactType::attachments_from_id_list(array($srccomment->get('id')));
+                if (!empty($srccommentattachments)) {
+                    foreach ($srccommentattachments as $srccommentattachment) {
+                        // We just need to attach the file id to the new comment.
+                        $newcomment->attach($srccommentattachment->attachment);
+                    }
+                }
+            }
+        }
+        $summary['comments'] = $commentscopied;
+
+        return $summary;
     }
 
     /**
@@ -7267,10 +7545,12 @@ class View {
         $excludelocked = $group && group_user_access($group) != 'admin';
         $sql = "
             SELECT v.id, v.type, v.title, v.ownerformat, v.startdate, v.stopdate, v.template,
-                v.owner, v.group, v.institution, v.urlid, v.submittedgroup, v.submittedhost, " .
+                v.owner, v.group, v.institution, v.urlid, v.submittedgroup, v.submittedhost,
+                v.submissionoriginal, " .
                 db_format_tsfield('v.submittedtime', 'submittedtime') . ", v.submittedstatus,
                 c.id AS cid, c.name AS cname, c.framework,
-                c.submittedgroup AS csubmitgroup, c.submittedhost AS csubmithost, " .
+                c.submittedgroup AS csubmitgroup, c.submittedhost AS csubmithost,
+                c.submissionoriginal AS csubmissionoriginal, " .
                 db_format_tsfield('c.submittedtime', 'csubmittime') . ", c.submittedstatus AS csubmitstatus,
                 c.progresscompletion, cv.displayorder, c.outcomeportfolio
             FROM {view} v
@@ -7329,6 +7609,7 @@ class View {
                 'submittedhost'  => $r['submittedhost'],
                 'submittedtime'  => $r['submittedtime'],
                 'submittedstatus' => $r['submittedstatus'],
+                'submissionoriginal' => $r['submissionoriginal'],
                 'displayorder' => $r['displayorder'],
             );
             if (isset($r['user'])) {
@@ -7351,6 +7632,7 @@ class View {
                         'submittedhost'  => $r['csubmithost'],
                         'submittedtime'  => $r['csubmittime'],
                         'submittedstatus' => $r['csubmitstatus'],
+                        'submissionoriginal' => $r['csubmissionoriginal'],
                         'template'       => $r['template'],
                         'views' => array(),
                     );
@@ -7596,6 +7878,30 @@ class View {
     }
 
     /**
+     * Copy signoff status from another View to this one.
+     *
+     * @param int $viewid
+     * @return void
+     */
+    public function copy_signoff_status($viewid) {
+        // Fetch the original view_signoff_verify record.
+        $signoffrecord = get_record_sql("SELECT * from {view_signoff_verify} where view = ?", array($viewid));
+        // We only copy if we find an record on the original View.
+        if ($signoffrecord) {
+            // Set the view to the new View ID
+            $signoffrecord->view = $this->get('id');
+            // Unset the ID so we can insert a new record.
+            unset($signoffrecord->id);
+            // All other fields are the same. Insert the new record for the new view.
+            ensure_record_exists(
+                'view_signoff_verify',
+                (object) array('view' => $signoffrecord->view),
+                $signoffrecord
+            );
+        }
+    }
+
+    /**
      * Submit this View to a group or a remote host.
      *
      * While $group and $submittedhost are optional, at least one is required.
@@ -7607,9 +7913,12 @@ class View {
      * @param string|null $submittedhost A URL for the remote host.
      * @param int|null $owner A User ID.
      * @param bool $sendnotification Should we send a notification for this submission?
+     * @throws SystemException
+     * @throws SubmissionException
+     * @return View The copy of this View that was submitted.
      */
     public function submit($group = null, $submittedhost = null, $owner = null, $sendnotification=true) {
-        global $USER;
+        global $USER, $SESSION;
         require_once('group.php');
 
         // One of these is needed.
@@ -7617,8 +7926,13 @@ class View {
             throw new SystemException('Group or Submitted Host is needed.');
         }
 
-        if ($this->is_submitted()) {
-            throw new SystemException('Attempting to submit a submitted view');
+        // We need to make a copy of the view, and then submit that.
+        $copy = copyview($this->get('id'), false, null, null, true);
+
+        if ($copy === false) {
+            $SESSION->add_error_msg(get_string('cantsubmitcopyfailed', 'view'));
+            // Redirect back to the portfolio they came from. Any messages are in the $SESSION.
+            redirect($this->get_url());
         }
 
         if (is_plugin_active('plans', 'artefact') && !get_config_plugin('artefact', 'plans', 'allowselectiontaskportfoliosubmissionafterenddate')) {
@@ -7641,25 +7955,33 @@ class View {
 
         try {
             db_begin();
-            self::_db_submit(array($this->id), $group, $submittedhost, $owner);
+            self::_db_submit(array($copy->id), $group, $submittedhost, $owner);
+            db_commit();
+            // This gets around the race condition of the submitted time not being available until after the commit.
+            $copy->title = set_view_title_as_submitted($copy->id);
             safe_require('module', 'submissions');
             if (PluginModuleSubmissions::is_active() && $group && !group_external_group($group)) {
                 // We have a Group.  Add the Submissions using the Submissions module as well.
-                PluginModuleSubmissions::add_submission($this, $group);
+                PluginModuleSubmissions::add_submission($copy, $group);
+                db_commit();
             }
-            db_commit();
         }
         catch (Exception $e) {
             db_rollback();
             throw $e;
         }
 
-        handle_event('addsubmission', array('id' => $this->id,
-                                            'eventfor' => 'view',
-                                            'name' => $this->title,
-                                            'group' => ($group) ? $group->id : null,
-                                            'groupname' => ($group) ? $group->name : null,
-                                            'externalhost' => ($submittedhost) ? $submittedhost : null));
+        handle_event(
+            'addsubmission',
+            [
+                'id' => $copy->id,
+                'eventfor' => 'view',
+                'name' => $copy->title,
+                'group' => ($group) ? $group->id : null,
+                'groupname' => ($group) ? $group->name : null,
+                'externalhost' => ($submittedhost) ? $submittedhost : null
+            ]
+        );
 
         if ($group && $sendnotification) {
             activity_occurred(
@@ -7667,7 +7989,7 @@ class View {
                 array(
                     'group'         => $group->id,
                     'roles'         => $group->roles,
-                    'url'           => $this->get_url(false),
+                    'url'           => $copy->get_url(false),
                     'strings'       => (object) array(
                         'urltext' => (object) array('key' => 'view'),
                         'subject' => (object) array(
@@ -7680,7 +8002,7 @@ class View {
                             'section' => 'activity',
                             'args'    => array(
                                 display_name($USER, null, false, true),
-                                $this->title,
+                                $copy->title,
                                 $group->name,
                             ),
                         ),
@@ -7688,6 +8010,7 @@ class View {
                 )
             );
         }
+        return $copy;
     }
 
     /**
@@ -8144,6 +8467,31 @@ class View {
         return 0;
     }
 
+    /**
+     * Returns the submission origin id of the view.
+     *
+     * Return is mixed:
+     *   - false if the view is not a submission (no view.submissionoriginal is set)
+     *   - 0 view.submissionoriginal is set but the related view does not exist
+     *   - integer view id of the original view to link to.
+     *
+     * @return integer|false
+     */
+    public function get_submission_origin() {
+        $submissionoriginal = $this->get('submissionoriginal');
+        if (empty($submissionoriginal)) {
+            // Not currently a submission.
+            return false;
+        }
+
+        if (get_record('view', 'id', $submissionoriginal)) {
+            // We have a record.
+            return $submissionoriginal;
+        }
+        // If we get this far the submission original has been deleted.
+        return 0;
+    }
+
     /*
      * Lock the instructions edit for this copy
      * @param integer $templateid the view id of the template this view is a copy of
@@ -8508,18 +8856,19 @@ function createview_submit(Pieform $form, $values) {
  * Copy a view via a 'copy' url
  * Currently for copying a page via a 'copy' button on view/view.php
  *
- * @param integer $id           View id
- * @param bool $istemplate      (optional) If you want to mark as template
- * @param integer $groupid      (optional) The group to copy the view to
- * @param integer $collectionid (optional) Provide the collection id to indicate we want
+ * @param integer $id            View id
+ * @param bool $istemplate       (optional) If you want to mark as template
+ * @param integer $groupid       (optional) The group to copy the view to
+ * @param integer $collectionid  (optional) Provide the collection id to indicate we want
  *                                         to copy collection the view belongs to
+ * @param bool $copyissubmission (optional) Is this copy being created as a submission?
  */
-function copyview($id, $istemplate = false, $groupid = null, $collectionid = null) {
+function copyview($id, $istemplate = false, $groupid = null, $collectionid = null, $copyissubmission = false) {
     global $USER, $SESSION;
 
     // check that the user can copy view
     $view = new View($id);
-    if (!$view->is_copyable()) {
+    if (!$view->is_copyable($copyissubmission)) {
         throw new AccessDeniedException(get_string('thisviewmaynotbecopied', 'view'));
     }
 
@@ -8527,7 +8876,13 @@ function copyview($id, $istemplate = false, $groupid = null, $collectionid = nul
     $values = array('new' => 1,
                     'owner' => $USER->get('id'),
                     'template' => (int) $istemplate,
+                    'submissionoriginal' => 0,
+                    'submissionoriginalcollection' => 0,
                     );
+    if ($copyissubmission) {
+        $values['submissionoriginal'] = $id;
+        $values['submissionoriginalcollection'] = $collectionid;
+    }
     if (!empty($groupid) && is_int($groupid)) {
         $values['group'] = $groupid;
     }
@@ -8539,22 +8894,50 @@ function copyview($id, $istemplate = false, $groupid = null, $collectionid = nul
         list($collection, $template, $copystatus) = Collection::create_from_template($values, $collectionid);
         if (isset($copystatus['quotaexceeded'])) {
             $SESSION->add_error_msg(get_string('collectioncopywouldexceedquota', 'collection'));
-            redirect(get_config('wwwroot') . 'view/view.php?id=' . $id);
+            if ($copyissubmission) {
+                // We could not create the submission. Error is in the $SESSION.
+                return false;
+            }
+            else {
+                // Redirect to the view page to present the error message in the $SESSION.
+                redirect(get_config('wwwroot') . 'view/view.php?id=' . $id);
+            }
         }
         $msg = get_ok_copy_msg( $template->get('name'), $copystatus['blocks'], $copystatus['artefacts'],$copystatus['pages']);
         $SESSION->add_ok_msg($msg);
-        redirect(get_config('wwwroot') . 'collection/edit.php?copy=1&id=' . $collection->get('id'));
+        if ($copyissubmission) {
+            // We have the collection. Return that.
+            return $collection;
+        }
+        else {
+            // Redirect to the collection edit page so the account can tweak it.
+            redirect(get_config('wwwroot') . 'collection/edit.php?copy=1&id=' . $collection->get('id'));
+        }
     }
     else {
         $artefactcopies = array();
         list($view, $template, $copystatus) = View::create_from_template($values, $id, null, true, false, $artefactcopies);
         if (isset($copystatus['quotaexceeded'])) {
             $SESSION->add_error_msg(get_string('viewcopywouldexceedquota', 'view'));
-            redirect(get_config('wwwroot') . 'view/view.php?id=' . $id);
+            if ($copyissubmission) {
+                // We could not create the View. Error is in the $SESSION.
+                return false;
+            }
+            else {
+                // Redirect to the view page to present the error message in the $SESSION.
+                redirect(get_config('wwwroot') . 'view/view.php?id=' . $id);
+            }
         }
         $msg = get_ok_copy_msg( $template->get('title'), $copystatus['blocks'], $copystatus['artefacts']);
         $SESSION->add_ok_msg($msg);
-        redirect(get_config('wwwroot') . 'view/editlayout.php?new=1&id=' . $view->get('id'));
+        if ($copyissubmission) {
+            // We have the View. Return that.
+            return $view;
+        }
+        else {
+            // Redirect to the View edit page so the account can tweak it.
+            redirect(get_config('wwwroot') . 'view/editlayout.php?new=1&id=' . $view->get('id'));
+        }
     }
 }
 
@@ -8590,9 +8973,10 @@ function searchviews_submit(Pieform $form, $values) {
     $searchin = isset($values['type']) ? $values['type'] : null;
     $orderby = isset($values['orderby']) ? $values['orderby'] : null;
     $matchalltags = isset($values['matchalltags']) ? $values['matchalltags'] : false;
+    $showsubmissions = isset($values['showsubmissions']) ? $values['showsubmissions'] : false;
     $group = isset($values['group']) ? $values['group'] : null;
     $institution = isset($values['institution']) ? $values['institution'] : null;
-    redirect(View::get_myviews_url($group, $institution, $query, $searchin, $orderby, $matchalltags));
+    redirect(View::get_myviews_url($group, $institution, $query, $searchin, $orderby, $matchalltags, $showsubmissions));
 }
 
 /**

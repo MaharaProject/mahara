@@ -502,6 +502,21 @@
         }
     }
 
+    label,
+    .pseudolabel {
+        .help {
+            margin-top: initial;
+            float: none;
+            top: 0px;
+        }
+    }
+
+    &.helpinlabel {
+        input[type=checkbox] {
+            margin-top: -1.3rem !important;
+        }
+    }
+
     .errmsg {
         @extend .align-with-input;
         color: $danger;

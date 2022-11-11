@@ -1267,5 +1267,19 @@ function xmldb_core_upgrade($oldversion=0) {
         install_skins_default();
     }
 
+    if ($oldversion < 2023022000) {
+        log_debug('Adding submissionoriginal column to the view and collection tables');
+        $field1 = new XMLDBField('submissionoriginal');
+        $field1->setAttributes(XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL, null, null, null, 0);
+        $table1 = new XMLDBTable('view');
+        if (!field_exists($table1, $field1)) {
+            add_field($table1, $field1);
+        }
+        $table2 = new XMLDBTable('collection');
+        if (!field_exists($table2, $field1)) {
+            add_field($table2, $field1);
+        }
+    }
+
     return $status;
 }

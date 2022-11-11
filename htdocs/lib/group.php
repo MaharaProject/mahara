@@ -1665,13 +1665,13 @@ function group_view_submission_form($groupid) {
     }
 
     foreach ($collections as $c) {
-        if (empty($c['submittedgroup']) && empty($c['submittedhost'])) {
+        if (empty($c['submittedgroup']) && empty($c['submittedhost']) && empty($c['submissionoriginal'])) {
             $collectionoptions['c:' . $c['id']] = $c['name'];
         }
     }
 
     foreach ($views as $v) {
-        if ($v['type'] != 'profile' && empty($v['submittedgroup']) && empty($v['submittedhost'])) {
+        if ($v['type'] != 'profile' && empty($v['submittedgroup']) && empty($v['submittedhost']) && empty($v['submissionoriginal'])) {
             $viewoptions['v:' . $v['id']] = $v['name'];
         }
     }

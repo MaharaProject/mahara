@@ -49,6 +49,16 @@
                 </li>
             {/strip}{/if}
 
+            {* Configure links - lead to the Page/Collection configure forms *}
+            {if $issubmission || $editurl}
+                <li class="dropdown-item with-icon">
+                    <a href="{$configureurl}" title="{str tag=configure}">
+                        <span class="icon icon-cogs left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag="configure" section="mahara"}</span>
+                        <span class="visually-hidden">{str(tag=configurespecific arg1=$maintitle)|escape:html|safe}</span>
+                    </a>
+                </li>
+            {/if}
+
             {if $usercaneditview || $userisowner || $actionsallowed}
                 <li class="dropdown-item with-icon">
                     <a id="" title="{str tag=manageaccess section=view}" href="{$accessurl}">

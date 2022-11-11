@@ -276,9 +276,25 @@ function collectionedit_submit(Pieform $form, $values) {
         $values['framework'] = null;
     }
     $values['coverimage'] = (isset($values['coverimage']) ? $values['coverimage'] : null);
+
+    if (isset($values['linkedtosourceportfolio']) && $values['linkedtosourceportfolio'] == 0) {
+        // Set submissionoriginal to 0 to unlink the view from the source portfolio.
+        $values['submissionoriginal'] = 0;
+    }
+
     $groupid = $collection->get('group');
     $values['outcomeportfolio'] = (int)($groupid && is_outcomes_group($groupid) && $values['outcomeportfolio']);
     $collection = Collection::save($values);
+
+    if (isset($values['linkedtosourceportfolio']) && $values['linkedtosourceportfolio'] == 0 && $collection) {
+        // Unlink the views in this collection from their source view.
+        $viewids = $collection->get_viewids();
+        foreach ($viewids as $viewid) {
+            $view = new View($viewid);
+            $view->set('submissionoriginal', 0);
+            $view->commit();
+        }
+    }
 
     if (isset($values['progresscompletion'])) {
         if ($values['progresscompletion']) {

@@ -46,7 +46,7 @@ Background:
      #Apply the skin to a page
      Given I choose "Portfolios" in "Create" from main menu
      And I click on "Edit" in "Page UserA_01" card menu
-     And I click on "Settings" in the "Toolbar buttons" "Nav" property
+     And I click on "Configure" in the "Toolbar buttons" "Nav" property
      And I expand the section "Skin"
      And I scroll to the base of id "settings_skin_open"
      Then I select the skin "A fabulous new skin" from "userskins"
@@ -63,7 +63,7 @@ Background:
      #Check the deleted skin has been removed from the page
      Given I choose "Portfolios" in "Create" from main menu
      And I click on "Edit" in "Page UserA_01" card menu
-     And I click on "Settings" in the "Toolbar buttons" "Nav" property
+     And I click on "Configure" in the "Toolbar buttons" "Nav" property
      And I expand the section "Skin"
      And I should not see "A fabulous new skin"
 
@@ -95,7 +95,7 @@ Scenario: Create a private skin and check its visibility
     And I click on "Add \"A fabulous public skin\" to favourites"
     Given I choose "Portfolios" in "Create" from main menu
     And I click on "Edit" in "Page UserB_01" card menu
-    And I click on "Settings" in the "Toolbar buttons" "Nav" property
+    And I click on "Configure" in the "Toolbar buttons" "Nav" property
     And I expand the section "Skin"
     And I scroll to the base of id "settings_skin_container"
     # Apply a a skin saved to favourite skins

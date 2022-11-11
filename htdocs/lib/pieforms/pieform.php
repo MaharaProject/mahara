@@ -1601,6 +1601,23 @@ EOF;
         $function = 'pieform_element_' . $element['type'];
         $element['html'] = $function($this, $element);
 
+        // Prepare the help icon.
+        $helpicon = '';
+        $helpiconinlabel = '';
+        if (!empty($element['help'])) {
+            $function = $this->get_property('helpcallback');
+            if (function_exists($function)) {
+                $helpicon = $function($this, $element);
+            }
+            else {
+                $helpicon = '<span class="help"><a href="" title="' . Pieform::hsc($element['help']) . '" onclick="return false;">?</a></span>';
+            }
+            if (!empty($element['helpinlabel'])) {
+                $helpiconinlabel = $helpicon;
+                $element['class'] .= ' helpinlabel';
+            }
+        }
+
         // Element title
         if (isset($element['title']) && $element['title'] !== '') {
             $title = self::hsc($element['title']);
@@ -1645,10 +1662,10 @@ EOF;
                 // Special 'nolabeltypes' have their own label(s) added direct to the form field(s).
                 // You can style specific non labels to be like labels by accessing the
                 // pseudolabel class attribute.
-                $element['labelhtml'] = '<span class="pseudolabel">' . $title . $requiredmarker . $oneofmarker . '</span>';
+                $element['labelhtml'] = '<span class="pseudolabel">' . $title . $requiredmarker . $oneofmarker . $helpiconinlabel . '</span>';
             }
             else {
-                $element['labelhtml'] = '<label' . $labelclass . ' for="' . $this->name . '_' . $element['id'] . '">' . $title . $requiredmarker . $oneofmarker . '</label>';
+                $element['labelhtml'] = '<label' . $labelclass . ' for="' . $this->name . '_' . $element['id'] . '">' . $title . $requiredmarker . $oneofmarker . $helpiconinlabel . '</label>';
             }
         }
 
@@ -1666,14 +1683,9 @@ EOF;
         }
 
         // Help icon
-        if (!empty($element['help'])) {
-            $function = $this->get_property('helpcallback');
-            if (function_exists($function)) {
-                $element['helphtml'] = $function($this, $element);
-            }
-            else {
-                $element['helphtml'] = '<span class="help"><a href="" title="' . Pieform::hsc($element['help']) . '" onclick="return false;">?</a></span>';
-            }
+        if (!empty($element['help']) && empty($element['helpinlabel'])) {
+            // The help icon is not in the label. Add it as an element of its own.
+            $element['helphtml'] = $helpicon;
         }
 
         // Issue a warning if this element wants to add something in the <head> tag, and it's too late to do that.

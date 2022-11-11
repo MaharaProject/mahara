@@ -129,6 +129,9 @@ $string['nosharedviewsyet'] = 'There are no pages shared with this group yet';
 $string['viewssharedtogroupbyothers'] = 'Pages shared with this group by others';
 $string['sharedviews'] = 'Shared pages';
 $string['submissionstogroup'] = 'Submissions to this group';
+$string['viewsourceportfolio'] = 'Original portfolio \'%s\'';
+$string['originalsubmissiondeleted'] = 'Original portfolio deleted';
+$string['showsubmissions'] = 'Show submitted portfolios';
 $string['nosubmittedviewscollectionsyet1'] = 'There are no portfolios submitted to this group yet';
 $string['nosubmissionsfrom'] = 'Members without a submission to the group';
 $string['submittogroup1'] = 'Submit a portfolio to this group';
@@ -227,16 +230,18 @@ $string['shareallwithmaximum'] = array(
     'You can share the selected portfolios with up to 1 person or group of people.',
     'You can share the selected portfolios with up to %d people or groups of people.'
 );
-$string['submitconfirm'] = 'If you submit \'%s\' to %s for assessment, you will not be able to edit its contents until your tutor has finished marking it. Are you sure you want to submit now?';
-$string['viewsubmitted'] = 'Page submitted';
-$string['collectionsubmitted'] = 'Collection submitted';
+$string['submitconfirm1'] = 'If you submit \'%s\' to \'%s\', a copy will be made and submitted for assessment. You can continue editing your original portfolio. However, you will not be able to edit the submitted copy until it is released. Are you sure you want to submit your portfolio now?';
+$string['portfoliosubmitted'] = 'Portfolio submitted. You can <a href="%s">view your submission</a>.';
 $string['viewnotsubmitted'] = 'Portfolio not currently submitted';
 $string['collectionviewsalreadysubmitted'] = "Some pages in this collection have already been submitted: \"%s\"\nYou cannot submit the collection until they have been released, or removed from the collection.";
 $string['viewalreadysubmitted'] = 'This page has already been submitted to another assignment or group.';
 $string['collectionalreadysubmitted'] = 'This collection has already been submitted to another assignment or group.';
 $string['collectionsubmissionexceptiontitle'] = 'Could not submit collection';
 $string['collectionsubmissionexceptionmessage'] = 'This collection cannot be submitted for the following reason:';
+$string['cantsubmitcopyfailed'] = 'A copy of this portfolio could not be created. No submission has been made.';
 $string['cantsubmitemptycollection'] = 'This collection does not contain any pages.';
+$string['cantsubmitneedgrouporsubmittedhost'] = 'Submissions need to be made to a group or to a submitted host.';
+$string['submittedtimetitle'] = '; submitted at %s';
 $string['viewsubmissionexceptiontitle'] = 'Could not submit page';
 $string['viewsubmissionexceptionmessage'] = 'This page cannot be submitted for the following reason:';
 $string['submitviewtogroup'] = 'Submit \'%s\' to \'%s\' for assessment';
@@ -245,6 +250,7 @@ $string['cantsubmitcollectiontogroup'] = 'You cannot submit this collection.';
 $string['cantsubmittogroup'] = 'You cannot submit to this group.';
 
 $string['cantdeleteview'] = 'You cannot delete this page.';
+$string['cantdeleteviewsubmission'] = 'You cannot delete this page while it is a submission.';
 $string['deletespecifiedview'] = 'Delete page "%s"';
 $string['deleteviewconfirm1'] = 'Do you really want to delete this page? It cannot be undone.';
 $string['deleteviewconfirmbackup1'] = 'Please consider creating a backup of this page by <a href="%sexport/index.php?view=%s">exporting</a> it.';
@@ -269,6 +275,7 @@ $string['viewinformationsaved'] = 'Page information saved successfully';
 
 $string['canteditdontown'] = 'You cannot edit this page because you do not own it.';
 $string['canteditsubmitted'] = 'You cannot edit this page because it has been submitted for assessment to "%s". You will have to wait until a tutor releases the page.';
+$string['canteditsubmission'] = 'You cannot edit this page while it is a submission.';
 $string['Submitted'] = 'Submitted';
 $string['submittedforassessment'] = 'Submitted for assessment';
 $string['blocknotinview'] = 'The block with ID "%d" is not in the page.';
@@ -584,6 +591,15 @@ $string['linktooriginaltemplatedescriptiondeleted'] = 'This page is based on a t
 $string['deletedview'] = 'Page deleted';
 $string['copylocked'] = 'Copy locked';
 $string['copylockeddescription'] = 'This is a template copy. Change this setting to lock/unlock the instruction fields on this copy.';
+
+$string['linktosubmissionoriginaltitle'] = 'Original portfolio';
+$string['linktosubmissionoriginallink'] = '<a href="%s">%s</a>';
+$string['linktosubmissionoriginaldescription'] = 'This portfolio is a copy made for submission purposes. The link takes you to the original portfolio.';
+$string['linktosubmissionoriginaldeleted'] = 'Deleted';
+$string['linktosubmissionoriginaldeleteddescription'] = 'This portfolio is a copy made for submission purposes. The original portfolio has been deleted.';
+$string['linkedtosourceportfoliotitle'] = 'Submission';
+$string['linkedtosourceportfoliodescription'] = 'Switching this setting to \'No\' removes the association to the original portfolio. You can then use this copy that you made for submission purposes as you would any regular portfolio.';
+$string['linkedtosourceportfoliodescriptioninacollection'] = 'This page is part of a collection that was submitted. Change the submission status in the collection settings for the entire collection.';
 
 $string['canteditcollectionlocked'] = 'Unable to edit the portfolio page because the collection is locked.';
 $string['canteditprogress'] = 'Unable to edit the portfolio completion page because the collection is locked or the page was copied from a template.';

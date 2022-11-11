@@ -110,7 +110,7 @@ Feature: Roles and permissions around functionality in outcomes portfolios
     * I click on "Portfolios" in the "Arrow-bar nav" "Nav" property
     And I <can_manage_edit_outcomes> "Manage" in "Outcome collection" card menu
     Then I <do_next_step>
-    And I <can_manage_edit_outcomes> "Edit" in "Outcome collection" card menu
+    And I <can_manage_edit_outcomes> "Configure" in "Outcome collection" card menu
     And I <continue>
     Then I should <see_outcome1>
 

@@ -11,7 +11,7 @@
       <div class="ltimodal-title"><h2>{str tag='confirmareyousure' section='module.lti_advantage'}</h2></div>
       <div class="ltimodal-content">
         <!-- Modal content -->
-        <p>{str tag='confirmwarning' section='module.lti_advantage' arg1='<span class="title" id="submissionTitle"></span>'}</p>
+        <p>{str tag='confirmwarning1' section='module.lti_advantage' arg1='<span class="title" id="submissionTitle"></span>'}</p>
       </div>
       <div class="btns">
         <a id="submissionLink" class="btn btn-primary" href="">{str tag='confirmbtntxtconfirm' section='module.lti_advantage'}</a>

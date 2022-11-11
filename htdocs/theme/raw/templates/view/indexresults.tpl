@@ -1,6 +1,6 @@
                 {foreach from=$views item=view name=loopidx}
                 <div class="card-quarter {if $view.collid}card-collection{else}card-view{/if}">
-                    <div class="card {if $view.submittedto} bg-submitted{/if}
+                    <div class="card {if $view.issubmission} bg-submitted{/if}{if $view.isreleased} bg-released{/if}
                     {if $view.template == $sitetemplate} site-template{/if}">
                         <h2 class="card-header has-link">
                             <a class="title-link title"
@@ -123,7 +123,7 @@
                                     <span class="visually-hidden">{str tag=moreoptionsfor section=mahara arg1="$view.vtitle"}</span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end" role="menu">
-                                {if $view.collid && !$view.submittedto && !$noedit && !$view.lockedcoll}
+                                {if $view.collid && !$view.submittedto && !$noedit && !$view.lockedcoll && !$view.issubmission}
                                     <li class="dropdown-item with-icon">
                                     {if $outcomesgroup && $view.collection->get('outcomeportfolio')}
                                       {if $role === 'admin'}
@@ -140,19 +140,32 @@
                                     {/if}
                                     </li>
                                 {/if}
-                                {if !$view.submittedto && !$noedit && (!$view.locked || $editlocked) && !$view.lockedcoll && !($view.collid && $outcomesgroup && $role !== 'admin')}
+
+                                {* Edit link - leads to the Page edit screen *}
+                                {if !$view.submittedto && !$noedit && (!$view.locked || $editlocked) && !$view.lockedcoll && !$view.issubmission && !$view.collid}
                                     <li class="dropdown-item with-icon">
-                                    {if $view.collid}
-                                        <a href="{$WWWROOT}collection/edit.php?id={$view.collid}" title="{str tag=edittitleanddescription section=view}">
-                                    {else}
                                         <a href="{$WWWROOT}view/blocks.php?id={$view.id}&{$querystring}" title="{str tag ="editcontentandlayout" section="view"}">
-                                    {/if}
                                             <span class="icon icon-pencil-alt left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag="edit" section="mahara"}</span>
                                             <span class="visually-hidden">{str(tag=editspecific arg1=$view.displaytitle)|escape:html|safe}</span>
                                         </a>
                                     </li>
                                 {/if}
-                                {if !$view.submittedto && $view.removable && !$noedit && (!$view.locked || $editlocked) && !$view.lockedcoll && !($outcomesgroup && $role === 'member')}
+
+                                {* Configure link - leads to the Page/Collection configure forms *}
+                                {if !$view.submittedto && !$noedit && (!$view.locked || $editlocked) && !$view.lockedcoll && !($view.collid && $outcomesgroup && $role !== 'admin')}
+                                    <li class="dropdown-item with-icon">
+                                    {if $view.collid}
+                                        <a href="{$WWWROOT}collection/edit.php?id={$view.collid}" title="{str tag=edittitleanddescription section=view}">
+                                    {else}
+                                        <a href="{$WWWROOT}view/editlayout.php?id={$view.id}&{$querystring}" title="{str tag ="editcontentandlayout" section="view"}">
+                                    {/if}
+                                            <span class="icon icon-cogs left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag="configure" section="mahara"}</span>
+                                            <span class="visually-hidden">{str(tag=configurespecific arg1=$view.displaytitle)|escape:html|safe}</span>
+                                        </a>
+                                    </li>
+                                {/if}
+
+                                {if !$view.submittedto && $view.removable && !$noedit && (!$view.locked || $editlocked) && !$view.lockedcoll && !$view.issubmission && !($outcomesgroup && $role === 'member')}
                                     <li class="dropdown-item with-icon">
                                     {if $view.collid}
                                         <a href="{$WWWROOT}collection/delete.php?id={$view.collid}" title="{str tag=deletecollection section=collection}">
@@ -185,6 +198,21 @@
                                 {/if}
                                 </ul>{* hamburger buttons *}
                             </div>
+
+                            {* Are we a submission? *}
+                            {if $view.submissionoriginalurl}
+                                <div class="page-controls" title="{str tag='viewsourceportfolio' section='view' arg1=$view.submissionoriginaltitle}">
+                                    <a href="{$view.submissionoriginalurl}" class="btn btn-link"><span class="icon icon-turn-up"></span></a>
+                                </div>
+                            {/if}
+                            {* Are we a submission that has had its origin deleted? *}
+                            {if $view.issubmissionbutoriginaldeleted}
+                                <div class="page-controls" title="{str tag='originalsubmissiondeleted' section='view'}">
+                                    <div class="btn">
+                                        <span class="icon icon-turn-up"></span>
+                                    </div>
+                                </div>
+                            {/if}
 
                             {if $view.collid}
                                 {assign var=fullnumviews value=$view.numviews}

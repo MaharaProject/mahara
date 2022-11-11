@@ -489,7 +489,7 @@ if (!$view->is_public()) {
     $headers[] = '<meta name="robots" content="noindex">';  // Tell search engines not to index non-public views
 }
 
-$can_edit = $USER->can_edit_view($view) && !$submittedgroup && !$view->is_submitted();
+$can_edit = $USER->can_edit_view($view) && !$submittedgroup && !$view->is_submitted() && !$view->is_submission();
 if ($view->get_collection()) {
     $can_edit = $can_edit && $USER->can_edit_collection($view->get_collection());
 }
@@ -862,14 +862,33 @@ if ($view->is_anonymous()) {
   $smarty->assign('anonymous', FALSE);
 }
 
-
+// Navigation title if the page is part of a collection.
 $titletext = ($collection && $shownav) ? hsc($collection->get('name')) : $view->display_title(true, false, false);
+$smarty->assign('maintitle', $titletext);
+
+// Page title.
+$title = hsc(TITLE);
+
+if ($titletext !== $title) {
+    $smarty->assign('title', $title);
+}
+
 $smarty->assign('lastupdatedstr', $view->lastchanged_message());
 $smarty->assign('visitstring', $view->visit_message());
 $smarty->assign('accessurl', get_config('wwwroot') . 'view/accessurl.php?return=view&id=' . $viewid . (!empty($collection) ? '&collection=' . $collection->get('id') : '' ));
 if ($can_edit) {
     $smarty->assign('editurl', get_config('wwwroot') . 'view/blocks.php?id=' . $viewid);
     $smarty->assign('usercaneditview', TRUE);
+}
+if ($view->is_submission()) {
+    $smarty->assign('issubmission', true);
+}
+if ($collection) {
+    // $smarty->assign('iscollection', true);
+    $smarty->assign('configureurl', get_config('wwwroot') . 'collection/edit.php?id=' . $collection->get('id'));
+}
+else {
+    $smarty->assign('configureurl', get_config('wwwroot') . 'view/editlayout.php?id=' . $viewid);
 }
 if ($can_copy) {
     $smarty->assign('copyurl', get_config('wwwroot') . 'view/copy.php?id=' . $viewid . (!empty($collection) ? '&collection=' . $collection->get('id') : ''));
@@ -883,10 +902,6 @@ if ($versions->count > 0) {
     $smarty->assign('versionurl', get_config('wwwroot') . 'view/versioning.php?view=' . $viewid);
 }
 $smarty->assign('createversionurl', get_config('wwwroot') . 'view/createversion.php?view=' . $viewid);
-
-$title = hsc(TITLE);
-
-$smarty->assign('maintitle', $titletext);
 
 // Provide a link for roaming teachers to return
 $showmnetlink = false;
@@ -955,10 +970,6 @@ $smarty->assign('viewbeingwatched', $viewbeingwatched);
 
 if ($viewgroupform) {
     $smarty->assign('view_group_submission_form', $viewgroupform);
-}
-
-if ($titletext !== $title) {
-    $smarty->assign('title', $title);
 }
 
 $smarty->assign('userisowner', ($owner && $owner == $USER->get('id')));

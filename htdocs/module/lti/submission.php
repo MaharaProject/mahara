@@ -23,7 +23,6 @@ define('TITLE', get_string('submitportfolio', 'module.lti'));
 safe_require('module', 'lti');
 
 $form = '';
-
 if (PluginModuleLti::can_grade()) {
     $form = PluginModuleLti::config_form();
 }
@@ -63,9 +62,10 @@ else if (PluginModuleLti::can_submit_for_grading()) {
         $smarty->assign('PAGEHEADING', get_string('portfoliosubmittedheader', 'module.lti'));
         // Info on submitted collection
         $info = $sub->get_portfolio_info();
+        $originalportfolioinfo = $sub->get_original_portfolio_info();
         $grader = $sub->get_grader();
 
-        $smarty->assign('title', $info->title);
+        $smarty->assign('originaltitle', $originalportfolioinfo->title);
         $smarty->assign('link', $info->link);
         $smarty->assign('timesubmitted', $sub->get('timesubmitted'));
         $smarty->assign('grade', $sub->get('grade'));

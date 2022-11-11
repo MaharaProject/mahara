@@ -133,8 +133,8 @@ var CurrentSubmissionsRelease = (function($) {
                       countrelease++;
                   }
               }
-
-              if ((countrelease && $(this).attr('name') == 'releasesubmissions')) {
+              var releasebtnpressed = ($(this).attr('name') == 'releasesubmissions' || $(this).attr('name') == 'releaseandreturnsubmissions');
+              if (countrelease && releasebtnpressed) {
                   $('#nocontentselected').addClass('d-none');
                   $('#' + formid).append($('<input>', {
                       'type': 'hidden',

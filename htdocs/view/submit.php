@@ -66,17 +66,18 @@ $form = pieform(array(
 ));
 
 $smarty = smarty();
-$smarty->assign('message', get_string('submitconfirm', 'view', $submissionname, $group->name));
+$smarty->assign('message', get_string('submitconfirm1', 'view', $submissionname, $group->name));
 $smarty->assign('form', $form);
 $smarty->display('view/submit.tpl');
 
 function submitview_submit(Pieform $form, $values) {
     global $SESSION, $USER, $view, $collection, $group;
 
+    $portfoliolink = null;
     if (!empty($collection)) {
         try {
-            $collection->submit($group, null, $USER->get('id'));
-            $SESSION->add_ok_msg(get_string('collectionsubmitted', 'view'));
+            $submittedcollection = $collection->submit($group, null, $USER->get('id'));
+            $portfoliolink = $submittedcollection->get_url();
         }
         catch (SubmissionException $e) {
             $SESSION->add_error_msg($e->getMessage());
@@ -84,12 +85,18 @@ function submitview_submit(Pieform $form, $values) {
     }
     else if (!empty($view)) {
         try {
-            $view->submit($group, null, $USER->get('id'));
-            $SESSION->add_ok_msg(get_string('viewsubmitted', 'view'));
+            $submittedview = $view->submit($group, null, $USER->get('id'));
+            $portfoliolink = $submittedview->get_url();
         }
         catch (SubmissionException $e) {
             $SESSION->add_error_msg($e->getMessage());
         }
+    }
+
+    if (!empty($portfoliolink)) {
+        // We have a portfolio link, so we can send a notification to the page.
+        $msg = get_string('portfoliosubmitted', 'view', $portfoliolink);
+        $SESSION->add_ok_msg($msg, false);
     }
 
     redirect('/' . returnto());

@@ -163,6 +163,12 @@ class Collection {
     private $frameworkurl;
 
     /**
+     * The collection this collection is a copy of.
+     * @var int
+     */
+    private $submissionoriginal = 0;
+
+    /**
      * @var boolean
      */
     private $outcomeportfolio;
@@ -551,6 +557,10 @@ class Collection {
         db_begin();
 
         $colltemplate = new Collection($templateid);
+        $issubmission = false;
+        if (isset($collectiondata['submissionoriginalcollection'])) {
+            $issubmission = ($collectiondata['submissionoriginalcollection'] > 0);
+        }
 
         $data = new stdClass();
         // Set a default name if one wasn't set in $collectiondata
@@ -572,10 +582,15 @@ class Collection {
         }
         else if (!isset($collectiondata['name'])) {
             $desiredname = $colltemplate->get('name');
-            if (get_config('renamecopies')) {
-                $desiredname = get_string('Copyof', 'mahara', $desiredname);
+            if (!$issubmission) {
+                // This is not a submission, so we should tweak the name to
+                // show that it's a copy.
+                if (get_config('renamecopies')) {
+                    $desiredname = get_string('Copyof', 'mahara', $desiredname);
+                }
+                $desiredname = self::new_name($desiredname, (object)$collectiondata);
             }
-            $data->name = self::new_name($desiredname, (object)$collectiondata);
+            $data->name = $desiredname;
         }
         else {
             $data->name = $collectiondata['name'];
@@ -596,10 +611,13 @@ class Collection {
         else {
             $data->owner = $userid;
         }
-        $data->framework = $colltemplate->get('framework');
-        $data->submittedstatus = 0;
 
+        // Copy the Smart Evidence Framework and Progress Completion settings.
+        $data->framework = $colltemplate->get('framework');
         $data->progresscompletion = $colltemplate->get('progresscompletion');
+
+        $data->submittedstatus = 0;
+        $data->submissionoriginal = $issubmission ? $collectiondata['submissionoriginalcollection'] : 0;
         $data->outcomeportfolio = $colltemplate->get('outcomeportfolio');
         // If owner is copying a collection they own then the copy is made unlocked
         $data->lock = (isset($data->owner) && $data->owner == $colltemplate->owner) ? 0 : $colltemplate->get('lock');
@@ -637,7 +655,15 @@ class Collection {
                 }
             }
 
+            if ($issubmission) {
+                $values['submissionoriginal'] = $v->id;
+                $values['submissionoriginalcollection'] = $collectiondata['submissionoriginalcollection'];
+            }
+
             list($view, $template, $copystatus) = View::create_from_template($values, $v->view, $userid, $checkaccess, $titlefromtemplate, $artefactcopies);
+            if ($issubmission) {
+                $view->copy_signoff_status($v->view);
+            }
             // Check to see if we need to re-map any framework evidence
             // and if a personal collection will be copied as another personal collection (copying to groups/institutions/site porttfolios will have no owner field)
             if (!empty($data->owner)) {
@@ -700,10 +726,11 @@ class Collection {
             }
         }
         // If there are views with framework evidence to re-map
-        // We need to get how the old views/artefacts/blocks/evidence fit together
         $evidences = array();
-        if (!empty($evidenceviews) && !empty($artefactcopies)) {
-            $evidences = get_records_sql_array('
+        if (!empty($evidenceviews) && !$issubmission) {
+            // We need to get how the old views/artefacts/blocks/evidence fit together
+            if (!empty($artefactcopies)) {
+                $evidences = get_records_sql_array('
                     SELECT va.view, va.artefact, va.block, a.artefacttype, fe.*
                     FROM {view} v
                     JOIN {view_artefact} va ON va.view = v.id
@@ -712,51 +739,55 @@ class Collection {
                     WHERE v.id IN (' . join(',', array_keys($evidenceviews)) . ')
                     AND a.id IN (' . join(',', array_keys($artefactcopies)) . ')
                     AND fe.annotation = va.block', array());
-            $newartefactcopies = array();
+                $newartefactcopies = array();
 
-            foreach ($artefactcopies as $ac) {
-                $newartefactcopies[$ac->newid] = 1;
-            }
+                foreach ($artefactcopies as $ac) {
+                    $newartefactcopies[$ac->newid] = 1;
+                }
 
-            // Get how the new views/artefacts/blocks fit together
-            $new_annotation_blocks = get_records_sql_assoc('
-                    SELECT va.artefact, va.view, va.block
-                    FROM {view} v
-                    JOIN {view_artefact} va ON va.view = v.id
-                    JOIN {artefact} a ON a.id = va.artefact
-                    WHERE v.id IN (' . join(',', array_values($evidenceviews)) . ')
-                    AND a.id IN (' . join(',', array_keys($newartefactcopies)) . ')
-                    AND artefacttype = ?', array('annotation'));
-        }
+                // Get how the new views/artefacts/blocks fit together
+                $newblocks = get_records_sql_assoc('
+                        SELECT va.artefact, va.view, va.block
+                        FROM {view} v
+                        JOIN {view_artefact} va ON va.view = v.id
+                        JOIN {artefact} a ON a.id = va.artefact
+                        WHERE v.id IN (' . join(',', array_values($evidenceviews)) . ')
+                        AND a.id IN (' . join(',', array_keys($newartefactcopies)) . ')
+                        AND artefacttype = ?', array('annotation'));
 
-        if (!empty($evidences)) { // annotation artefacts and collective file artefacts too
-            foreach ($evidences as $evidence) {
-                if (
-                    key_exists($evidence->artefact, $artefactcopies)
-                    && key_exists($artefactcopies[$evidence->artefact]->newid, $newartefactcopies)
-                ) {
-                    if ($evidence->artefacttype == 'annotation') {
-                        $newartefact = $artefactcopies[$evidence->artefact]->newid;
+                // annotation artefacts and collective file artefacts too
+                if (!empty($evidences)) {
+                    foreach ($evidences as $evidence) {
+                        if (
+                            key_exists($evidence->artefact, $artefactcopies)
+                            && key_exists($artefactcopies[$evidence->artefact]->newid, $newartefactcopies)
+                        ) {
+                            if ($evidence->artefacttype == 'annotation') {
+                                $newartefact = $artefactcopies[$evidence->artefact]->newid;
+                                // Not all the new artefacts are blocks.
+                                if (!empty($newblocks[$newartefact])) {
 
-                        $newevidence = new stdClass();
-                        $newevidence->artefact = $newartefact;
-                        $newevidence->annotation = $new_annotation_blocks[$newartefact]->block; //
-                        $newevidence->framework = $evidence->framework;
-                        $newevidence->element = $evidence->element;
-                        $newevidence->view = $new_annotation_blocks[$newartefact]->view;
-                        $newevidence->state = 0;
-                        $newevidence->reviewer = null;
-                        $newevidence->ctime = $evidence->ctime;
-                        $newevidence->mtime = $evidence->mtime;
-
-                        // Add the new annotation artefact/block - we don't need to copy files as
-                        // they'll still be owned by the same person
-                        insert_record('framework_evidence', $newevidence);
+                                    $newevidence = new stdClass();
+                                    $newevidence->artefact = $newartefact;
+                                    $newevidence->annotation = $newblocks[$newartefact]->block;
+                                    $newevidence->framework = $evidence->framework;
+                                    $newevidence->element = $evidence->element;
+                                    $newevidence->view = $newblocks[$newartefact]->view;
+                                    $newevidence->state = 0;
+                                    $newevidence->reviewer = null;
+                                    $newevidence->ctime = $evidence->ctime;
+                                    $newevidence->mtime = $evidence->mtime;
+                                    // Add the new annotation artefact/block - we don't need to copy files as
+                                    // they'll still be owned by the same person
+                                    insert_record('framework_evidence', $newevidence);
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
-        if ($colltemplate->has_progresscompletion()) {
+        if ($colltemplate->has_progresscompletion() && !$issubmission) {
             $values['type'] = 'progress';
             list($view, $template, $copystatus) = View::create_from_template($values, $colltemplate->has_progresscompletion(), $userid, false, false, $artefactcopies);
             $numcopied['blocks'] += $copystatus['blocks'];
@@ -1037,6 +1068,33 @@ class Collection {
                 'defaultvalue' => 0,
             );
         }
+        $submissionorigin = $this->get_submission_origin();
+        if ($submissionorigin !== false) {
+            if ($submissionorigin != 0) {
+                $original = new Collection($submissionorigin);
+                $title = $original->get('name');
+                $url = $original->get_url();
+                $value = get_string('linktosubmissionoriginallink', 'collection', $url, $title);
+                $description = get_string('linktosubmissionoriginaldescription', 'collection');
+            }
+            else {
+                // The original has been deleted.
+                $value = get_string('linktosubmissionoriginaldeleted', 'collection');
+                $description = get_string('linktosubmissionoriginaldeleteddescription', 'collection');
+            }
+            $elements['linktosourceportfolio'] = array(
+                'type'  => 'html',
+                'title' => get_string('linktosubmissionoriginaltitle', 'collection'),
+                'value' => $value,
+                'description' => $description,
+            );
+            $elements['linkedtosourceportfolio'] = array(
+                'type'         => 'switchbox',
+                'title'        => get_string('linkedtosourceportfoliotitle','view'),
+                'description'  => get_string('linkedtosourceportfoliodescription','view'),
+                'defaultvalue' => 1,
+            );
+        }
 
         // Populate the fields with the existing values if any
         if (!empty($this->id)) {
@@ -1048,7 +1106,9 @@ class Collection {
                     $elements[$k]['defaultvalue'] = ($this->get('coverimage') ? array($this->get('coverimage')) : null);
                 }
                 else {
-                    $elements[$k]['defaultvalue'] = $this->$k;
+                    if (isset($this->$k)) {
+                        $elements[$k]['defaultvalue'] = $this->$k;
+                    }
                 }
             }
             $elements['id'] = array(
@@ -1076,6 +1136,43 @@ class Collection {
         }
 
         return $elements;
+    }
+
+    /**
+     * Returns the submission origin id of the collection.
+     *
+     * Return is mixed:
+     *   - false if the collection is not a submission (no collection.submissionoriginal is set)
+     *   - 0 collection.submissionoriginal is set but the related collection does not exist
+     *   - integer collection id of the original collection to link to.
+     *
+     * @return integer|false
+     */
+    public function get_submission_origin() {
+        $submissionoriginal = $this->get('submissionoriginal');
+        if (empty($submissionoriginal)) {
+            // Not currently a submission.
+            return false;
+        }
+
+        if (get_record('collection', 'id', $submissionoriginal)) {
+            // We have a record.
+            return $submissionoriginal;
+        }
+        // If we get this far the submission original has been deleted.
+        return 0;
+    }
+
+    /**
+     * Returns true if the Collection is still a submission.
+     *
+     * This checks the submissionoriginal field that links this to the source
+     * Collection.
+     *
+     * @return boolean
+     */
+    public function is_submission() {
+        return (bool) $this->get_submission_origin();
     }
 
     /**
@@ -1141,6 +1238,27 @@ class Collection {
             require_once('view.php');
             $view = new View($viewid);
             return $view;
+        }
+        return null;
+    }
+
+    /**
+     * Returns the first plain view in the collection.
+     *
+     * This excludes special pages like the progress and Smart Evidence pages.
+     *
+     * @return View The first view of the collection, null if the collection is empty
+     */
+    public function first_plain_view() {
+        // A sanity check to ensure that the collection views are loaded.
+        if (empty($this->views['views'])) {
+            $this->views();
+        }
+        if (!empty($this->views['views'])) {
+            $v = $this->views['views'][0];
+            if (!empty($v->id)) {
+                return new View($v->id);
+            }
         }
         return null;
     }
@@ -1335,9 +1453,14 @@ class Collection {
 
     /**
      * Add a progress page to the progresscompletion collection
+     *
      * If the collection already has a progress page then nothing happens
+     *
+     * @param boolean $return Return the view of the progress page just created
+     *
+     * @return View|void View of the progress page or void
      */
-    public function add_progresscompletion_view() {
+    public function add_progresscompletion_view($return = false) {
         if ($this->has_progresscompletion(false) && !$this->has_progresscompletion(true)) {
             // We can add a progress page as it is allowed a
             // progress page but doesn't already have one.
@@ -1376,6 +1499,50 @@ class Collection {
             if (!empty($this->views())) {
                 $this->add_views(array($view->get('id')), 1);
             }
+            if ($return) {
+                return $view;
+            }
+        }
+    }
+
+    /**
+     * Copy the progresscompletion view from the original collection to this one.
+     *
+     * @param Collection $original The original collection
+     */
+    public function copy_progresscompletion_view($original, $submissiondetail = []) {
+
+        if ($this->get('progresscompletion')) {
+            $pccopy = $this->add_progresscompletion_view(true);
+            // Update the progresscompletion view with details from the original collection.
+            $pcoriginal = new View($original->has_progresscompletion(true));
+
+            // Copy some fields from the original progress view to the copy.
+            $fields = ['ctime', 'mtime', 'atime'];
+            for ($i = 0; $i < count($fields); $i++) {
+                $pccopy->set($fields[$i], $pcoriginal->get($fields[$i]));
+            }
+            $artefactcopies = array();
+            $pccopy->copy_contents($pcoriginal, $artefactcopies, true);
+            foreach ($submissiondetail as $key => $value) {
+                if ($value) {
+                    $pccopy->set($key, $value);
+                }
+            }
+            $pccopy->set('submissionoriginal', $pcoriginal->get('id'));
+
+            if (!empty($submissiondetail['submittedgroup'])) {
+                $viewaccess = [
+                    'role'      => 'admin',
+                    'view'        => $pccopy->get('id'),
+                    'group'       => $submissiondetail['submittedgroup'],
+                    'visible'     => 0,
+                    'allowcomments' => 1,
+                    'ctime' => db_format_timestamp(time()),
+                ];
+                ensure_record_exists('view_access', $viewaccess, $viewaccess, 'id');
+            }
+            $pccopy->commit();
         }
     }
 
@@ -1927,10 +2094,11 @@ class Collection {
      *
      * @param LiveUser|null $releaseuser The Account releasing the Portfolio.
      * @param array $releasemessageoverrides Optional array of string keys to use rather than the defaults.
+     * @param bool $returntouser If true, the submissionoriginal will also be cleared.
      *
      * @return void
      */
-    public function release($releaseuser=null, $releasemessageoverrides = []) {
+    public function release($releaseuser=null, $releasemessageoverrides = [], $returntouser = false) {
 
         if (!$this->is_submitted()) {
             throw new ParameterException("Collection with id " . $this->id . " has not been submitted");
@@ -1945,16 +2113,21 @@ class Collection {
 
         try {
             db_begin();
+            $sql = '';
+            $set = 'submittedgroup = NULL,
+                    submittedhost = NULL,
+                    submittedtime = NULL,
+                    submittedstatus = ' . self::UNSUBMITTED;
+            if ($returntouser) {
+                $set .= ', submissionoriginal = ' . self::UNSUBMITTED;
+            }
             execute_sql('
             UPDATE {collection}
-            SET submittedgroup = NULL,
-                submittedhost = NULL,
-                submittedtime = NULL,
-                submittedstatus = ' . self::UNSUBMITTED . '
+            SET ' . $set . '
             WHERE id = ?',
                         array($this->id)
             );
-            View::_db_release($viewids, $this->owner, $this->submittedgroup);
+            View::_db_release($viewids, $this->owner, $this->submittedgroup, $returntouser);
             safe_require('module', 'submissions');
             if (PluginModuleSubmissions::is_active() && $this->submittedgroup && !group_external_group($this->submittedgroup)) {
                 PluginModuleSubmissions::release_submission($this, $releaseuser);
@@ -2089,21 +2262,31 @@ class Collection {
      * @param integer $owner The owner of the collection (if not just $USER)
      * @param boolean $sendnotification
      * @throws CollectionSubmissionException
-     * @return void|false
+     * @return Collection The copy of the collection that was submitted
      */
     public function submit($group = null, $submittedhost = null, $owner = null, $sendnotification=true) {
-        global $USER;
+        global $USER, $SESSION;
         require_once('group.php');
 
-        if ($this->is_submitted()) {
-            throw new CollectionSubmissionException(get_string('collectionalreadysubmitted', 'view'));
-        }
         // Gotta provide one or the other
         if (!$group && !$submittedhost) {
-            return false;
+            throw new CollectionSubmissionException(get_string('cantsubmitneedgrouporsubmittedhost', 'view'));
+        }
+        $collectionid = $this->id;
+        $firstview = $this->first_plain_view();
+
+        $copy = copyview($firstview->get('id'), false, null, $collectionid, true);
+
+        if ($copy === false) {
+            $SESSION->add_error_msg(get_string('cantsubmitcopyfailed', 'view'));
+            // Redirect back to the portfolio they came from. Any messages are in the $SESSION.
+            redirect($this->get_url());
         }
 
-        $viewids = $this->get_viewids(true);
+        // Set the submissionoriginal field.
+        $copy->set('submissionoriginal', $this->get('id'));
+
+        $viewids = $copy->get_viewids(true);
         if (!$viewids) {
             throw new CollectionSubmissionException(get_string('cantsubmitemptycollection', 'view'));
         }
@@ -2134,21 +2317,37 @@ class Collection {
 
         try {
             db_begin();
+            $submissiondetail = [
+                'submittedgroup' => false,
+                'submittedhost' => false,
+                'submittedtime' => false,
+                'submittedstatus' => false,
+            ];
             View::_db_submit($viewids, $group, $submittedhost, $owner);
             if ($group) {
-                $this->set('submittedgroup', $group->id);
-                $this->set('submittedhost', null);
+                $copy->set('submittedgroup', $group->id);
+                $submissiondetail['submittedgroup'] = $group->id;
+                $copy->set('submittedhost', null);
             }
             else {
-                $this->set('submittedgroup', null);
-                $this->set('submittedhost', $submittedhost);
+                $copy->set('submittedgroup', null);
+                $copy->set('submittedhost', $submittedhost);
+                $submissiondetail['submittedhost'] = $submittedhost;
             }
-            $this->set('submittedtime', time());
-            $this->set('submittedstatus', self::SUBMITTED);
-            $this->commit();
+            $time = time();
+            $date = format_date($time, 'strftimerecentyear');
+            $copy->set('submittedtime', $time);
+            $submissiondetail['submittedtime'] = $time;
+            $copy->set('submittedstatus', self::SUBMITTED);
+            $submissiondetail['submittedstatus'] = self::SUBMITTED;
+            $copy->set('name', $copy->get('name') . get_string('submittedtimetitle', 'view', $date));
+            // Copy progress completion view if it exists.
+            $copy->copy_progresscompletion_view($this, $submissiondetail);
+            $copy->commit();
             safe_require('module', 'submissions');
             if (PluginModuleSubmissions::is_active() && $group && !group_external_group($group)) {
-                PluginModuleSubmissions::add_submission($this, $group);
+                // This is a submission. Add that to the title.
+                PluginModuleSubmissions::add_submission($copy, $group);
             }
             db_commit();
         }
@@ -2156,19 +2355,24 @@ class Collection {
             db_rollback();
             throw $e;
         }
-        handle_event('addsubmission', array('id' => $this->id,
-                                            'eventfor' => 'collection',
-                                            'name' => $this->name,
-                                            'group' => ($group) ? $group->id : null,
-                                            'groupname' => ($group) ? $group->name : null,
-                                            'externalhost' => ($submittedhost) ? $submittedhost : null));
+        handle_event(
+            'addsubmission',
+            array(
+                'id' => $copy->id,
+                'eventfor' => 'collection',
+                'name' => $copy->name,
+                'group' => ($group) ? $group->id : null,
+                'groupname' => ($group) ? $group->name : null,
+                'externalhost' => ($submittedhost) ? $submittedhost : null,
+            )
+        );
         if ($group && $sendnotification) {
             activity_occurred(
                 'groupmessage',
                 array(
                     'group'         => $group->id,
                     'roles'         => $group->roles,
-                    'url'           => $this->get_url(false),
+                    'url'           => $copy->get_url(false),
                     'strings'       => (object) array(
                         'urltext' => (object) array(
                             'key'     => 'Collection',
@@ -2184,7 +2388,7 @@ class Collection {
                             'section' => 'activity',
                             'args'    => array(
                                 display_name($USER, null, false, true),
-                                $this->name,
+                                $copy->name,
                                 $group->name,
                             ),
                         ),
@@ -2192,6 +2396,7 @@ class Collection {
                 )
             );
         }
+        return $copy;
     }
 
     /**

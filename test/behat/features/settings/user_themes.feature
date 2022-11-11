@@ -24,7 +24,7 @@ Scenario: Activate page themes setting and edit a page (Bug 1591304)
  Given I log in as "UserA" with password "Kupuh1pa!"
  And I click on "Page UserA_01"
  And I click on "Edit"
- And I click on "Settings" in the "Toolbar buttons" "Nav" property
+ And I click on "Configure" in the "Toolbar buttons" "Nav" property
  And I click on "Advanced"
  And I scroll to the id "settings_theme"
  And I select "Modern" from "theme"

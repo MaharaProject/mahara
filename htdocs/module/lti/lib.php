@@ -383,29 +383,38 @@ class PluginModuleLti extends PluginModule {
             throw new MaharaException("Missing assessment record");
         }
 
-        if (!empty($collectionid)) {
-            $collection = new Collection($collectionid);
-
-            $collection->submit(get_group_by_id($assessment->group), null, null, false);
-            $submissionname = $collection->get('name');
-        }
-        else {
-            $view = new View($viewid);
-
-            $view->submit(get_group_by_id($assessment->group), null, null, false);
-            $submissionname = $view->get('title');
-        }
-
+        // Prepare the submission record.
         $sub = new stdClass();
         $sub->usr = $USER->get('id');
         $sub->ltiassessment = $SESSION->get('lti.assessment');
         $sub->lisresultsourceid = $SESSION->get('lti.lis_result_sourcedid');
         $sub->timesubmitted = db_format_timestamp(time());
-        $sub->collectionid = $collectionid;
-        $sub->viewid = $viewid;
+        $sub->collectionid = null;
+        $sub->viewid = null;
 
+        $iscollection = false;
+        if (!empty($collectionid)) {
+            $portfolio = new Collection($collectionid);
+            $iscollection = true;
+        }
+        else {
+            $portfolio = new View($viewid);
+        }
+        // We are submitting a copy, not the original.
+        $copy = $portfolio->submit(get_group_by_id($assessment->group), null, null, false);
+        // Collections and Views aren't standardised. Get name/title from the
+        // copy and set the correct id on the submission record.
+        if ($iscollection) {
+            $sub->collectionid = $copy->get('id');
+            $submissionname = $copy->get('name');
+        }
+        else {
+            $sub->viewid = $copy->get('id');
+            $submissionname = $copy->get('title');
+        }
+
+        // Save the submission record.
         insert_record('lti_assessment_submission', $sub);
-
 
         $group = get_record('group', 'id', $assessment->group);
         $grouproles = get_column('grouptype_roles', 'role', 'grouptype', 'standard', 'see_submitted_views', 1);
@@ -436,11 +445,8 @@ class PluginModuleLti extends PluginModule {
                 )
             );
         }
-
         redirect('/module/lti/submission.php');
     }
-
-
 
     public static function submit_from_view_or_collection_form(View $view) {
         global $SESSION, $USER;
@@ -907,17 +913,55 @@ class ModuleLtiSubmission {
         $info = new stdClass;
 
         if (!empty($this->collectionid)) {
-            $info->title = get_field('collection', 'name', 'id', $this->collectionid);
-            $info->link  = get_config('wwwroot') . 'collection/views.php?id=' . $this->collectionid;
+            $collection = new Collection($this->collectionid);
+            $info->title = $collection->get('name');
+            $info->link = $collection->get_url();
         }
         else if (!empty($this->viewid)) {
-            $info->title = get_field('view', 'title', 'id', $this->viewid);
-            $info->link  = get_config('wwwroot') . 'view/view.php?id=' . $this->viewid;
+            $view = new View($this->viewid);
+            $info->title = $view->get('title');
+            $info->link = $view->get_url();
         }
         else {
             return false;
         }
 
+        return $info;
+    }
+
+    /**
+     * Get basic information about a submitted portfolio's origin.
+     *
+     * Submitted portfolios are copies of an original source portfolio. This
+     * function returns information about the original source portfolio.
+     *
+     * @return stdClass
+     */
+    public function get_original_portfolio_info() {
+        $info = new stdClass;
+        if (!empty($this->collectionid)) {
+            // Get the Collection that was submitted.
+            $source = new Collection($this->collectionid);
+            // Get the Collection that the submission was copied from.
+            $submissionoriginal = new Collection($source->get('submissionoriginal'));
+            $sourceid = $source->get('submissionoriginal');
+            $info->title = get_field('collection', 'name', 'id', $sourceid);
+            // We want to link to the first page in the collection, not the collection itself.
+            $firstview = $submissionoriginal->first_plain_view();
+            $info->link = $firstview->get_url();
+        }
+        else if (!empty($this->viewid)) {
+            $source = new View($this->viewid);
+            $submissionoriginal = new View($source->get('submissionoriginal'));
+            $sourceid = $source->get('submissionoriginal');
+            $info->title = get_field('view', 'title', 'id', $sourceid);
+            $info->link = $submissionoriginal->get_url();
+        }
+        else {
+            // The original portfolio is not available.
+            $info->title = false;
+            $info->link = false;
+        }
         return $info;
     }
 

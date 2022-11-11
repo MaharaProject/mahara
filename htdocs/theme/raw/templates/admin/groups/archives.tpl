@@ -130,10 +130,12 @@
                     <td colspan="{math equation="x-1" x=count($columns)}">
                         <div id="nocontentselected" class="d-none error">{str tag=nocontentselected section=admin}</div>
                     </td>
-                    <td>
+                    <td class="text-center">
                         <form class="nojs-hidden-inline" id="releaseform" action="{$WWWROOT}admin/groups/archives.php?current=1" method="post">
                             <label class="accessible-hidden visually-hidden" for="releasebtn">{str tag=withselectedcontentrelease section=admin}</label>
                             <input type="button" class="button btn btn-secondary btn-sm" name="releasesubmissions" id="releasebtn" value="{str tag=release section=statistics}">
+                            <label class="accessible-hidden visually-hidden" for="releaseandreturnbtn">{str tag=withselectedcontentreleaseandreturn section=admin}</label>
+                            <input type="button" class="button btn btn-secondary btn-sm" name="releaseandreturnsubmissions" id="releaseandreturnbtn" value="{str tag='releaseandreturn' section='module.submissions'}">
                         </form>
                     </td>
                 </tr>

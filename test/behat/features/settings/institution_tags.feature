@@ -52,7 +52,7 @@ Scenario: Mahara member can use Institution tags in their content
 
     Given I choose "Portfolios" in "Create" from main menu
     And I click on "Edit" in "Page UserA_01" card menu
-    And I click on "Settings" in the "Toolbar buttons" "Nav" property
+    And I click on "Configure" in the "Toolbar buttons" "Nav" property
     And I fill in select2 input "settings_tags" with "One tag" and select "Institution One: One tag (1)"
     And I fill in select2 input "settings_tags" with "Test" and select "Test"
     And I click on "Save"

@@ -1,6 +1,10 @@
 {include file="header.tpl"}
 
-<p>{str tag='portfoliosubmittedforgrading' section='module.lti' arg1=$link arg2=$title arg3=$timesubmitted|strtotime|format_date}</p>
+{if $originaltitle}
+    <p>{str tag='portfoliosubmittedforgrading1' section='module.lti' arg1=$link arg2=$originaltitle arg3=$timesubmitted|strtotime|format_date}</p>
+{else}
+    <p>{str tag='portfoliosubmittedforgradingoriginaldelete' section='module.lti' arg1=$link arg2=$timesubmitted|strtotime|format_date}</p>
+{/if}
 
 {$revokeform|safe}
 

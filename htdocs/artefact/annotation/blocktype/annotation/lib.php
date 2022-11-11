@@ -415,19 +415,81 @@ class PluginBlocktypeAnnotation extends MaharaCoreBlocktype {
         return $values;
     }
 
+    /**
+     * Ensure artefact annotation feedback is on the correct artefacts.
+     *
+     * Copy the annotation feedback to the new artefact id. If the annotation
+     * has a framework assessment feedback on it, copy that as well.
+     *
+     * @see PluginBlocktype::rewrite_blockinstance_extra_config()
+     * @param View $view The View the block is on.
+     * @param BlockInstance $block The new block instance.
+     * @param array $configdata
+     * @param array $artefactcopies
+     * @param View $originalView The original View the block is from.
+     * @param BlockInstance $originalBlock The original block instance.
+     * @param boolean $copyissubmission True if the copy is a submission.
+     *
+     * @return array The new configdata
+     */
+    public static function rewrite_blockinstance_extra_config(View $view, BlockInstance $block, $configdata, $artefactcopies, View $originalView, BlockInstance $originalBlock, $copyissubmission) {
+
+        // If this is not for a submission then we do not want to copy the feedback.
+        if (!$copyissubmission) {
+            return $configdata;
+        }
+
+        // Copy the framework assessment feedback if it exists.
+        $viewmap = [
+            'oldid' => $originalView->get('id'),
+            'newid' => $view->get('id'),
+        ];
+        $blockmap = [
+            'oldid' => $originalBlock->get('id'),
+            'newid' => $block->get('id'),
+        ];
+        Framework::copy_evidence($viewmap, $blockmap);
+
+        // Locate $configdata['artefactid'] in $artefactcopies[??]->newid.  Oldid is the original annotation.
+        $lookupoldid = 0;
+        foreach ($artefactcopies as $oldid => $data) {
+            if ($data->newid == $configdata['artefactid']) {
+                $lookupoldid = $oldid;
+                break;
+            }
+        }
+
+        // Lookup the feedback artefacts attached to that old annotation id.
+        $oldartefacts = get_column('artefact_annotation_feedback', 'artefact', 'onannotation', $lookupoldid);
+
+        // Did we get any artefacts?
+        if (empty($oldartefacts)) {
+            // No mapping needed. Just return the original configdata.
+            return $configdata;
+        }
+
+        // Map the old to the new.
+        foreach ($oldartefacts as $oldartefactid) {
+            // Update the copies of these artefacts to point to the new annotation.
+            if (empty($artefactcopies[$oldartefactid])) {
+                continue;
+            }
+            $newartefactid = $artefactcopies[$oldartefactid]->newid;
+            set_field('artefact_annotation_feedback', 'onannotation', $configdata['artefactid'], 'artefact', $newartefactid);
+            $artefactmap = [
+                'oldid' => $oldartefactid,
+                'newid' => $newartefactid,
+            ];
+            Framework::copy_feedback($artefactmap);
+        }
+        return $configdata;
+    }
+
     public static function default_copy_type(BlockInstance $instance, View $view) {
         if ($instance->get_view()->get('owner') == $view->get('owner')) {
             return 'fullinclself';
         }
         return 'nocopy';
-    }
-
-    /**
-     * To stop original annotation getting copies of the feedback
-     * when we copy a page
-     */
-    public static function ignore_copy_artefacttypes() {
-        return array('annotationfeedback');
     }
 
     public static function has_feedback_allowed($id) {

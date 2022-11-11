@@ -1539,6 +1539,7 @@ $string['cli_deleteinactivegroups_groupunabletoclean'] = 'Unable to fully delete
 $string['withselectedcontentexport'] = 'Re-queue items into the export queue';
 $string['withselectedcontentdelete'] = 'Delete selected items from the export queue';
 $string['withselectedcontentrelease'] = 'Release selected items';
+$string['withselectedcontentreleaseandreturn'] = 'Release selected items and return to the accounts';
 $string['allothers'] = 'All others';
 
 // Export portfolios

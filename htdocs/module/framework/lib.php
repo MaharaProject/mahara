@@ -764,6 +764,44 @@ class Framework {
     }
 
     /**
+     * Copy evidence to a new Block instance on a new View.
+     *
+     * @param array $viewmap      Map of old view id to new view id
+     * @param array $blockmap     Map of old block id to new block id
+     */
+    public static function copy_evidence($viewmap, $blockmap) {
+        // Get the original framework_evidence record.
+        $evidence = get_record('framework_evidence', 'annotation', $blockmap['oldid'], 'view', $viewmap['oldid']);
+        if ($evidence) {
+            // Update the evidence object with the new block id and view id.
+            $evidence->annotation = $blockmap['newid'];
+            $evidence->view = $viewmap['newid'];
+            // Unset the id so it will be inserted as a new record.
+            unset($evidence->id);
+            // Insert the evidence as a new record.
+            insert_record('framework_evidence', $evidence);
+        }
+    }
+
+    /**
+     * Copy feedback to another artefact.
+     *
+     * @param array $artefactmap  Map of old artefact id to new artefact id
+     */
+    public static function copy_feedback($artefactmap) {
+        // Copy feedback if we have any.
+        $feedback = get_record('framework_assessment_feedback', 'artefact', $artefactmap['oldid']);
+        if ($feedback) {
+            // Update the feedback object with the new artefact id.
+            $feedback->artefact = $artefactmap['newid'];
+            // Unset the id so it will be inserted as a new record.
+            unset($feedback->id);
+            // Insert the feedback as a new record.
+            insert_record('framework_assessment_feedback', $feedback);
+        }
+    }
+
+    /**
      * Save evidence
      * @param string $id          Framework_evidence id
      * @param string $framework   Framework id                  }

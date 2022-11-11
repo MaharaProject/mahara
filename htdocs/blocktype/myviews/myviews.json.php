@@ -42,13 +42,14 @@ $views = View::view_search(
         $offset, // $offset
         true, // $extra
         null, // $sort
-        array('portfolio'), // $types
+        array('portfolio', 'progress'), // $types
         null, // $collection
         null, // $accesstypes
         null, // $tag
         null, // $viewid
         null, // $excludeowner
-        true // $groupbycollection
+        true, // $groupbycollection
+        true // $excludesubmissions
 );
 $views = (array)$views;
 $baseurl = $dashboard->get_url();

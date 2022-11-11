@@ -24,6 +24,10 @@ $collection = new Collection($id);
 if (!$USER->can_edit_collection($collection)) {
     throw new AccessDeniedException(get_string('cantdeletecollection', 'collection'));
 }
+if ($collection->is_submission()) {
+    throw new AccessDeniedException(get_string('cantdeletecollectionsubmission', 'collection'));
+}
+
 if ($collection->get('group')) {
     $group = get_group_by_id($collection->get('group'));
     if (group_deny_access($group, 'member')) {

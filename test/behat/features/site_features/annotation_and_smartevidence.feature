@@ -38,7 +38,7 @@ Scenario: Accessing annotation block
 
  # Update 'Test collection' to have SmartEvidence
  And I choose "Portfolios" in "Create" from main menu
- And I click on "Edit" in "Collection admin_01" card menu
+ And I click on "Configure" in "Collection admin_01" card menu
  And I select "Title of your framework" from "SmartEvidence framework"
  And I click on "Continue"
  And I click on "Collection admin_01"

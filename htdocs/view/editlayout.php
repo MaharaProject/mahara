@@ -170,6 +170,7 @@ $smarty->assign('PAGEHEADING', $state);
 $returnto = $view->get_return_to_url_and_title();
 $smarty->assign('url', $returnto['url']);
 $smarty->assign('title', $returnto['title']);
+$smarty->assign('issubmission', $view->is_submission());
 
 $smarty->display('view/editlayout.tpl');
 
@@ -702,6 +703,55 @@ function get_advanced_elements(): array {
             'description' => $description,
         );
     }
+
+    // If the view is a submitted copy of a Portfoilio, link to the original.
+    $submissionorigin = $view->get_submission_origin();
+    if ($submissionorigin !== false) {
+        if ($submissionorigin != 0) {
+            $original = new View($submissionorigin);
+            // Are we part of a collection?
+            $originalcollection = $original->get_collection();
+            if ($originalcollection) {
+                // Link to the original collection.
+                $title = $originalcollection->get('name');
+                $url = $originalcollection->get_url();
+            }
+            else {
+                // Link to the original view.
+                $title = $original->get('title');
+                $url = $original->get_url();
+            }
+            $value = get_string('linktosubmissionoriginallink', 'view', $url, $title);
+            $description = get_string('linktosubmissionoriginaldescription', 'view');
+        }
+        else {
+            // The original has been deleted.
+            $value = get_string('linktosubmissionoriginaldeleted', 'view');
+            $description = get_string('linktosubmissionoriginaldeleteddescription', 'view');
+        }
+        $elements['linktosourceportfolio'] = array(
+            'type'  => 'html',
+            'title' => get_string('linktosubmissionoriginaltitle', 'view'),
+            'value' => $value,
+            'description' => $description,
+            'class' => 'form-group-no-border',
+        );
+        $isinacollection = $view->collection_id();
+        if ($isinacollection) {
+            $description = get_string('linkedtosourceportfoliodescriptioninacollection', 'view');
+        }
+        else {
+            $description = get_string('linkedtosourceportfoliodescription', 'view');
+        }
+        $elements['linkedtosourceportfolio'] = array(
+            'type'         => 'switchbox',
+            'title'        => get_string('linkedtosourceportfoliotitle','view'),
+            'description'  => $description,
+            'defaultvalue' => 1,
+            'disabled'     => $isinacollection,
+        );
+    }
+
     // give possibility to unlock the view to some roles
     // site admins in institution and site pages
     // institution admins in institution pages
@@ -975,6 +1025,10 @@ function settings_submit(Pieform $form, $values) {
         else {
             $view->unlock_instructions_edit();
         }
+    }
+    if (isset($values['linkedtosourceportfolio']) && $values['linkedtosourceportfolio'] == 0) {
+        // Set submissionoriginal to 0 to unlink the view from the source portfolio.
+        $view->set('submissionoriginal', 0);
     }
 
     if ($view->get('type') == 'activity' && !$issitetemplate) {

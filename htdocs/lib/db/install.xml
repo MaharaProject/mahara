@@ -816,6 +816,7 @@
                 <FIELD NAME="locktemplate" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="signoff" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="verify" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="submissionoriginal" TYPE="int" LENGTH="10" DEFAULT="0" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />
@@ -1101,6 +1102,7 @@
                 <FIELD NAME="template" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="outcomeportfolio" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="outcomecategory" TYPE="int" LENGTH="10" NOTNULL="false" />
+                <FIELD NAME="submissionoriginal" TYPE="int" LENGTH="10" DEFAULT="0" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />

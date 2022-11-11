@@ -48,8 +48,8 @@ Feature: Mahara users submit pages / colelctions to a group
     And I select "Collection UserA_01" from "Submit for assessment"
     And I click on "Submit"
     And I click on "Yes"
-    Then I should see "Collection submitted"
-    And I click on "Collection UserA_01"
+    Then I should see "Portfolio submitted"
+    And I click on "view your submission"
     And I click on "Details"
     And I should not see "Quick edit"
     And I log out
@@ -62,7 +62,7 @@ Feature: Mahara users submit pages / colelctions to a group
     And I select "Page UserB_02" from "Submit for assessment"
     And I click on "Submit"
     And I click on "Yes"
-    Then I should see "Page submitted"
+    Then I should see "Portfolio submitted"
     And I log out
 
     # UserC didn't submit anything so should appear on the need to do submissions list

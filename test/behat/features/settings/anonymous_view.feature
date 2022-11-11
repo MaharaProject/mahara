@@ -32,7 +32,7 @@ Scenario: Testing that views & collections are collated properly
     And I choose "Portfolios" in "Create" from main menu
     And I click on "Page UserA_01"
     And I click on "Edit"
-    And I click on "Settings" in the "Toolbar buttons" "Nav" property
+    And I click on "Configure" in the "Toolbar buttons" "Nav" property
     And I set the following fields to these values:
     | Anonymise | 1 |
     And I click on "Save"

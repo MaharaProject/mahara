@@ -61,7 +61,7 @@ Scenario: Installing framework module and activating for an institution
 
  # Adding framework to existing collection
  And I choose "Portfolios" in "Create" from main menu
- And I click on "Edit" in "Collection admin_01" card menu
+ And I click on "Configure" in "Collection admin_01" card menu
  And I select "Title of your framework" from "SmartEvidence framework"
  And I click on "Continue"
  Then I should see "Collection saved successfully."

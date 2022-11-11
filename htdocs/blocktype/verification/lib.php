@@ -682,11 +682,22 @@ EOF;
     }
 
     /**
-     * Rewrites embedded image urls in the $configdata['text']
+     * Content copying tasks.
      *
-     * See more in PluginBlocktype::rewrite_blockinstance_extra_config()
+     * Copy any verification comments on the original block to the new block.
+     *
+     * @see PluginBlocktype::rewrite_blockinstance_extra_config()
+     * @param View $view The View the block is on.
+     * @param BlockInstance $block The new block instance.
+     * @param array $configdata
+     * @param array $artefactcopies
+     * @param View $originalView The original View the block is from.
+     * @param BlockInstance $originalBlock The original block instance.
+     * @param boolean $copyissubmission True if the copy is a submission.
+     *
+     * @return array The new configdata.
      */
-    public static function rewrite_blockinstance_extra_config(View $view, BlockInstance $block, $configdata, $artefactcopies) {
+    public static function rewrite_blockinstance_extra_config(View $view, BlockInstance $block, $configdata, $artefactcopies, View $originalView, BlockInstance $originalBlock, $copyissubmission) {
         $regexp = array();
         $replacetext = array();
         $new_blockid = $block->get('id');
@@ -703,6 +714,21 @@ EOF;
         require_once('embeddedimage.php');
         $configdata['text'] = preg_replace($regexp, $replacetext, $configdata['text']);
         $configdata['text'] = EmbeddedImage::prepare_embedded_images($configdata['text'], 'text', $new_blockid);
+
+        // Fetch any verification comments on the original block.
+        $comments = get_records_array('blocktype_verification_comment', 'instance', $originalBlock->get('id'));
+        if ($comments) {
+            // Copy the comments to the new block.
+            foreach ($comments as $comment) {
+                // Update the block instance this comment is on.
+                $comment->instance = $block->get('id');
+                // Rewrite the embedded images in the comment.
+                $comment->text = EmbeddedImage::prepare_embedded_images($comment->text, 'text', $block->get('id'));
+                // Unset the id so that a new record is created.
+                unset($comment->id);
+                insert_record('blocktype_verification_comment', $comment);
+            }
+        }
         return $configdata;
     }
 

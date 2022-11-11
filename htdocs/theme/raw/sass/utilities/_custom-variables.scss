@@ -117,6 +117,11 @@ $state-submitted-bg:                        scale-color($yellow, $lightness: 90%
 $state-submitted-border:                    scale-color($yellow, $lightness: 50%) !default;
 $state-submitted-link:                      scale-color($yellow, $lightness: -30%) !default;
 
+$state-released-text:                       $theme-text-color !default;
+$state-released-border:                     scale-color($teal, $lightness: 90%) !default;
+$state-released-bg:                         scale-color($teal, $lightness: 50%) !default;
+$state-released-link:                       scale-color($teal, $lightness: -30%) !default;
+
 // Buttons + Forms
 $btn-font-family:                           $font-family-base !default;
 

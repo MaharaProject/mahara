@@ -52,6 +52,9 @@ if ($view->is_submitted()) {
     $submittedto = $view->submitted_to();
     throw new AccessDeniedException(get_string('canteditsubmitted', 'view', $submittedto['name']));
 }
+if ($view->is_submission()) {
+    throw new AccessDeniedException(get_string('canteditsubmission', 'view'));
+}
 $collectionid = false;
 if ($collection = $view->get('collection')) {
     $collectionid = $collection->get('id');

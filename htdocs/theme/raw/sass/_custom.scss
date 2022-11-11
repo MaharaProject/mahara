@@ -427,7 +427,8 @@
     }
 }
 
-#searchviews_matchalltags_container {
+#searchviews_matchalltags_container,
+#searchviews_showsubmissions_container {
     width: 100%;
     margin-top: $spacing-sm;
     label {

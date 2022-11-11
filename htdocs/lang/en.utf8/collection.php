@@ -33,6 +33,7 @@ $string['canteditinstitutioncollections'] = 'You are not allowed to edit institu
 $string['canteditcollection'] = 'You are not allowed to edit this collection.';
 $string['cantcreatecollection'] = 'You are not allowed to create this collection.';
 $string['cantdeletecollection'] = 'You cannot delete this collection.';
+$string['cantdeletecollectionsubmission'] = 'You cannot delete this collection while it is still a submission.';
 $string['canteditdontown'] = 'You cannot edit this collection because you do not own it.';
 $string['canteditsubmitted'] = 'You cannot edit this collection because it has been submitted for assessment to %s. You will have to wait until it is released.';
 $string['collection'] = 'collection';
@@ -300,3 +301,9 @@ $string['verificationdone'] = 'Confirmed statement for the portfolio "%s" by %s'
 $string['removeaccess'] = 'Remove my access from the portfolio "%s" by %s';
 
 $string['lockedcollection'] = 'Locked until %s';
+
+$string['linktosubmissionoriginaltitle'] = 'Original portfolio';
+$string['linktosubmissionoriginallink'] = '<a href="%s">%s</a>';
+$string['linktosubmissionoriginaldeleted'] = 'Deleted';
+$string['linktosubmissionoriginaldescription'] = 'This portfolio is a copy made for submission purposes. The link takes you to the original portfolio. ';
+$string['linktosubmissionoriginaldeleteddescription'] = 'This portfolio is a copy made for submission purposes. The original portfolio has been deleted.';

@@ -65,18 +65,28 @@ else {
 
 // Submitting the View or Collection locks it. The content security policy URL
 // can be used as our Submitted Host for locking the View or Collection.
-$portfolio->submit(null, $cspurl, null, false);
+$copy = $portfolio->submit(null, $cspurl, null, false);
 
-$portfolio_url = $portfolio->get_url();
-$portfolio_title = $portfolio->get($link_text_field);
+if ($copy == false) {
+  // We have no copy. Present all the session messages for the submitter to
+  // see.  Looking at $launch->get_deep_link()->output_response_form() below
+  // that does not return any html/title/body tags. Just the HTML for the form.
+  // We shouldn't need to wrap this in anything.
+  echo $SESSION->rendermessages();
+}
+else {
+  // We have a copy. Prepare and return the deep link response.
+  $portfolio_url = $copy->get_url();
+  $portfolio_title = $copy->get($link_text_field);
 
-// Return the deep link resource.
-$resource = LTI\LTI_Deep_Link_Resource::new()
-  ->set_url(get_config('wwwroot') . 'module/lti_advantage/login.php')
-  ->set_custom_params([
-    'PublicUrl' => $portfolio_url,
-  ])
-  ->set_title($portfolio_title);
+  // Return the deep link resource.
+  $resource = LTI\LTI_Deep_Link_Resource::new()
+    ->set_url(get_config('wwwroot') . 'module/lti_advantage/login.php')
+    ->set_custom_params([
+      'PublicUrl' => $portfolio_url,
+    ])
+    ->set_title($portfolio_title);
 
-$launch->get_deep_link()
-  ->output_response_form([$resource]);
+  $launch->get_deep_link()
+    ->output_response_form([$resource]);
+}

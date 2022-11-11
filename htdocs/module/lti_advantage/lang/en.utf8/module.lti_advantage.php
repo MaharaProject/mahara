@@ -59,6 +59,6 @@ $string['deeplinknoportfolios'] = 'You have no portfolios.';
 
 # Modal language strings
 $string['confirmareyousure'] = 'Are you sure?';
-$string['confirmwarning'] = 'If you submit "%s" for assessment, you will not be able to edit its content until marking has finished. Are you sure you want to submit this portfolio now?';
+$string['confirmwarning1'] = 'If you submit \'%s\', a copy will be made and submitted for assessment. You can continue editing your original portfolio. However, you will not be able to edit the submitted copy until it is released. Do you want to continue?';
 $string['confirmbtntxtconfirm'] = 'Confirm';
 $string['confirmbtntxtcancel'] = 'Cancel';
