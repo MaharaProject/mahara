@@ -1106,5 +1106,80 @@ function xmldb_core_upgrade($oldversion=0) {
         }
     }
 
+    if ($oldversion < 2022121903) {
+        log_debug('Create the DB tables to set up for activity pages');
+        log_debug('view_activity');
+        $view_activity = new XMLDBTable('view_activity');
+        if (!table_exists($view_activity)) {
+            $view_activity->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            $view_activity->addFieldInfo('view', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+            $view_activity->addFieldInfo('description', XMLDB_TYPE_CHAR, 225, null, XMLDB_NOTNULL);
+            $view_activity->addFieldInfo('subject', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
+            $view_activity->addFieldInfo('supervisor', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
+            $view_activity->addFieldInfo('start_date', XMLDB_TYPE_DATETIME);
+            $view_activity->addFieldInfo('end_date', XMLDB_TYPE_DATETIME);
+            $view_activity->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+            $view_activity->addFieldInfo('mtime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+
+            $view_activity->addKeyInfo('activitypk', XMLDB_KEY_PRIMARY, array('id'));
+            $view_activity->addKeyInfo('viewfk', XMLDB_KEY_FOREIGN, array('view'), 'view', array('id'));
+            $view_activity->addKeyInfo('supervisorfk', XMLDB_KEY_FOREIGN, array('supervisor'), 'usr', array('id'));
+            $view_activity->addKeyInfo('subjectfk', XMLDB_KEY_FOREIGN, array('subject'), 'outcome_subject', array('id'));
+            create_table($view_activity);
+        }
+
+        log_debug('outcome_view_activity');
+        $outcome_activity = new XMLDBTable('outcome_view_activity');
+        if (!table_exists($outcome_activity)) {
+            $outcome_activity->addFieldInfo('outcome', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+            $outcome_activity->addFieldInfo('activity', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+            $outcome_activity->addKeyInfo(
+                'activityfk',
+                XMLDB_KEY_FOREIGN,
+                array('activity'),
+                'view_activity',
+                array('id')
+            );
+            $outcome_activity->addKeyInfo('outcomefk', XMLDB_KEY_FOREIGN, array('outcome'), 'outcome', array('id'));
+            create_table($outcome_activity);
+        }
+
+        log_debug('view_activity_achievement_levels');
+        $levels = new XMLDBTable('view_activity_achievement_levels');
+        if (!table_exists($levels)) {
+            $levels->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            $levels->addFieldInfo('activity', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+            $levels->addFieldInfo('type', XMLDB_TYPE_CHAR, 50, null, XMLDB_NOTNULL);
+            $levels->addFieldInfo('value', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+            $levels->addKeyInfo('achievementpk', XMLDB_KEY_PRIMARY, array('id'));
+            $levels->addKeyInfo('activityfk', XMLDB_KEY_FOREIGN, array('activity'), 'view_activity', array('id'));
+            create_table($levels);
+        }
+
+        log_debug('view_activity_support');
+        $feedback = new XMLDBTable('view_activity_support');
+        if (!table_exists($feedback)) {
+            $feedback->addFieldInfo('id', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
+            $feedback->addFieldInfo('activity', XMLDB_TYPE_INTEGER, 10, XMLDB_UNSIGNED, XMLDB_NOTNULL);
+            $feedback->addFieldInfo('type', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+            $feedback->addFieldInfo('value', XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+            $feedback->addFieldInfo('author', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
+            $feedback->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+            $feedback->addFieldInfo('mtime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+
+            $feedback->addKeyInfo('supportpk', XMLDB_KEY_PRIMARY, array('id'));
+            $feedback->addKeyInfo('activityfk', XMLDB_KEY_FOREIGN, array('activity'), 'view_activity', array('id'));
+            $feedback->addKeyInfo('authorfk', XMLDB_KEY_FOREIGN, array('author'), 'usr', array('id'));
+            create_table($feedback);
+        }
+
+        log_debug('Add "activity" page type');
+        ensure_record_exists(
+            'view_type',
+            (object)array('type' => 'activity'),
+            (object)array('type' => 'activity')
+        );
+    }
+
     return $status;
 }
