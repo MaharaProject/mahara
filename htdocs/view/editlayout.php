@@ -21,14 +21,25 @@ safe_require('artefact', 'file');
 
 $id = param_integer('id', false);
 $new = param_boolean('new', false);
-$activity_view = param_boolean('activity', false);
+$view_type = param_alpha('type', 'portfolio');
 
 // $outcome = ... link it to the outcome collection so we know where the page should live
 
+
 if ($new && $id === false) {
-    // Use the site default portfolio page to create a new page
-    // cribbed from createview_submit()
-    $sitedefaultviewid = get_field('view', 'id', 'institution', 'mahara', 'template', View::SITE_TEMPLATE, 'type', 'portfolio');
+    $values['type'] = $view_type;
+
+    $sitedefaultviewid = get_field(
+        'view',
+        'id',
+        'institution',
+        'mahara',
+        'template',
+        View::SITE_TEMPLATE,
+        'type',
+        $view_type
+    );
+
     if (!empty($sitedefaultviewid)) {
         $artefactcopies = array();
         $values = array();
@@ -38,7 +49,8 @@ if ($new && $id === false) {
         if (!empty($groupid)) {
             $values['group'] = $groupid;
         }
-        else if (!empty($institutionname)) {
+
+        if (!empty($institutionname)) {
             $values['institution'] = $institutionname;
         }
 
@@ -422,7 +434,80 @@ function get_view_activity_info_elements(): array {
         'title' => get_string('activity_info_achievement_levels', 'view'),
     ];
 
+    $elements['achievement_levels'] = [
+        'type' => 'fieldset',
+        'columns' => get_string('activity_info_achievement_levels_desc', 'view'),
+        'legend' => get_string('activity_info_achievement_levels_desc', 'view'),
+        'elements' => get_achievement_levels_elements($existing_activity->id ?? null),
+    ];
     return $elements;
+}
+
+/**
+ * Get_achievement levels pieform elements
+ *
+ * @param  mixed $activity_id
+ * @return array
+ */
+function get_achievement_levels_elements(int $activity_id = null): array {
+    $num_achievement_levels = 4; // Four by default
+    $achievement_levels = []; // type => value
+
+    // If there are existing achievement levels, update the number of achievement levels
+    if (count($achievement_levels) > 0) {
+        // Resort the achievement levels and point to the strings
+        $num_achievement_levels = count($achievement_levels);
+    }
+
+    // Get the type and value for achievement levels
+    for ($i = 0; $i < $num_achievement_levels; $i++) {
+        $level_type = $i + 1;
+        $value = '';
+
+        // Set the last achievement level value to be 'Not demonstrated' by default
+        if ($i === $num_achievement_levels - 1) {
+            $value = get_string('activity_info_achievement_level_0','view');
+        }
+
+        // Populate the achievement levels if the they exist
+        if ($activity_id) {
+            $value =  get_field(
+                'view_activity_achievement_levels',
+                'value',
+                'activity',
+                $activity_id,
+                'type',
+                $level_type
+                // The string 'Level' will be appended to display on the form.
+                // Update the lang string to change the verbiage.
+            );
+        }
+        $achievement_levels[$level_type] = $value;
+    }
+
+    // Construct the pieform for achievement levels
+    $achievement_levels_elements = [];
+    $lowest_type = array_key_last($achievement_levels);
+    foreach ($achievement_levels as $level_type => $value) {
+        $default_value = $level_type === $lowest_type ? 'Not demonstrated' : '';
+        $achievement_levels_elements[$level_type] = [
+            'type' => 'text',
+            // 'title' => get_string('activity_info_achievement_' . $level_type, 'view') . '<span></span>',
+            'defaultvalue' => $value != '' ? $value : $default_value,
+            'disabled' => $level_type == $lowest_type ? 1 : 0,
+            'labelhtml' =>
+            'Level  ' .
+            '
+            <span aria-label="' . $level_type . '">
+            <span class="icon-stack" style="vertical-align: centre;">
+                <i class="icon-regular icon-circle icon-stack-2x"></i>
+                <i class="icon-solid icon-' . $level_type . ' icon-stack-1x"></i>
+            &nbsp;&nbsp;&nbsp;
+            </span>
+            '
+        ];
+    }
+    return $achievement_levels_elements;
 }
 
 function get_advanced_elements(): array {
@@ -1271,7 +1356,7 @@ function set_view_activity_info(Pieform $form, $values) {
 function get_levels(array $values) {
     $levels = [];
     foreach ($values as $type => $value) {
-        if (strpos($type, 'level') !== false) { // PHP8 str_contains
+        if (is_int($type) !== false) {
             $levels[$type] = $value;
         }
     }
