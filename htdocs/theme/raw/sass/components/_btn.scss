@@ -81,6 +81,10 @@
             border-color: $btn-disabled-border;
             background: $btn-disabled-bg;
         }
+        // Needs to reset icon color too
+        .icon {
+          color: $btn-disabled-color !important;
+        }
     }
 }
 
