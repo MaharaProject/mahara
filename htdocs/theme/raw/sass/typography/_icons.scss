@@ -293,6 +293,10 @@
 .mahara-rss-icon {
     color: $rss-icon-color;
 }
+h1 .mahara-rss-icon {
+  font-size: 0.625em;
+  padding-top: 0.75rem;
+}
 
 .postdetails {
     margin-top: $spacing-base;
