@@ -115,6 +115,9 @@ then
     if [[ $2 == @* ]]; then
         TAGS=$2
         echo "Only run tests with the tag: $TAGS"
+    elif [[ $2 == ~@* ]]; then
+        BADTAGS=$2
+        echo "Don't run test with the tag: $BADTAGS"
     elif [ $2 ]; then
         if [[ $2 == */* ]]; then
             FEATURE="test/behat/features/$2"
@@ -124,6 +127,9 @@ then
         if [[ $3 == @* ]]; then
             TAGS=$3
             echo "Only run tests in file: $FEATURE tagged with $TAGS"
+        elif [[ $3 == ~@* ]]; then
+            BADTAGS=$3
+            echo "Only run these in the file $FEATURE not tagged with $BADTAGS"
         else
             echo "Only run tests in file: $FEATURE"
         fi
@@ -226,6 +232,9 @@ then
 
     if [ "$TAGS" ]; then
         OPTIONS=$OPTIONS" --tags "$TAGS
+    fi
+    if [ "$BADTAGS" ]; then
+        OPTIONS=$OPTIONS" --tags "$BADTAGS
     fi
     if [ "$FEATURE" ]; then
         OPTIONS=$OPTIONS" "$FEATURE
