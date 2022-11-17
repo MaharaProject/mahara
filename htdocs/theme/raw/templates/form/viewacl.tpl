@@ -107,7 +107,7 @@
         <div class="date-picker js-date-picker js-hide-empty {% if (o.presets.empty) { %}d-none{% } %}">
             <div class="hasDatepickerwrapperacl">
                 <label for="accesslist{%=o.id%}_stopdate" class="accessible-hidden visually-hidden">{{str tag=element.calendar.dateto section=pieforms}} ({{str tag='element.calendar.format.arialabel' section='pieforms'}})</label>
-                <input type="text" id="accesslist{%=o.id%}_stopdate" name="accesslist[{%=o.id%}][stopdate]" class="form-control float-start datetimepicker-input" data-setmax="true" setdatatarget="from" value="{%=o.presets.stopdate%}" aria-label="{{str tag=element.calendar.dateto section=pieforms}} ({{str tag='element.calendar.format.arialabel' section='pieforms'}})" value="{%=o.presets.stopdate%}" {% if (o.presets.locked) { %}disabled{% } %} data-bs-toggle="datetimepicker" data-bs-target="#accesslist{%=o.id%}_stopdate" autocomplete="off">
+                <input type="text" id="accesslist{%=o.id%}_stopdate" name="accesslist[{%=o.id%}][stopdate]" class="form-control float-start datetimepicker-input" data-setmax="true" setdatatarget="from" value="{%=o.presets.stopdate%}" aria-label="{{str tag=element.calendar.dateto section=pieforms}} ({{str tag='element.calendar.format.arialabel' section='pieforms'}})" {% if (o.presets.locked) { %}disabled{% } %} data-bs-toggle="datetimepicker" data-bs-target="#accesslist{%=o.id%}_stopdate" autocomplete="off">
             </div>
         </div>
     </td>
