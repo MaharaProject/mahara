@@ -35,13 +35,5 @@ if ($change) {
         json_reply(true, array('message' => $e->getMessage(), 'placement' => 'placeholderlist'));
     }
 }
-// else we're just reading data...
-switch ($action) {
-case 'blocktype_list':
-    $category = param_alpha('c');
-    $data = $view->build_blocktype_list($category, true);
-    json_reply(false, array('message' => false, 'data' => $data));
-    break;
-}
 
 json_reply(true, get_string('noviewcontrolaction', 'error', $action));
