@@ -221,7 +221,7 @@ $blocks = $view->get_blocks(true);
 $blocksencode = json_encode($blocks);
 
 if ( $view->get('accessibleview')) {
-    $mincolumns = '12';
+    $mincolumns = BlockInstance::GRIDSTACK_CONSTANTS['desktopWidth'];
     $reorder = '  accessibilityReorder();';
 }
 else {
@@ -308,6 +308,11 @@ if ($placeholderblock) {
     $smarty->assign('blocktypes', $placeholderblock);
     $smarty->assign('javascript', false);
     $smarty->assign('accessible', $view->get('accessibleview'));
+    $smarty->assign('GS_DESKTOP_WIDTH', BlockInstance::GRIDSTACK_CONSTANTS['desktopWidth']);
+    $smarty->assign('GS_DEFAULT_HEIGHT', BlockInstance::GRIDSTACK_CONSTANTS['defaultHeight']);
+    $smarty->assign('GS_DRAG_HEIGHT', BlockInstance::GRIDSTACK_CONSTANTS['dragHeight']);
+    $smarty->assign('GS_DRAG_WIDTH', BlockInstance::GRIDSTACK_CONSTANTS['dragWidth']);
+
     $placeholderbutton = $smarty->fetch('view/blocktypelist.tpl');
 }
 $strings = array(

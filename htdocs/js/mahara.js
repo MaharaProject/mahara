@@ -1382,3 +1382,10 @@ const maharaui = {
         UP:38
     }
 };
+
+// Constants for GRIDSTACK, please match up with BlockInstance::GRIDSTACK_CONSTANTS
+const GRIDSTACK_CONSTANTS = {
+    desktopWidth: 12, // used to be 4
+    mobileWidth: 1,
+    defaultHeight: 3
+}

@@ -512,7 +512,7 @@ if (!($USER->has_peer_role_only($view) && $owner && !$ownerobj->peers_allowed_co
 
         $mincolumns = 'null';
         if ( $view->get('accessibleview')) {
-            $mincolumns = '12';
+            $mincolumns = BlockInstance::GRIDSTACK_CONSTANTS['desktopWidth'];
         }
 
         $blocks = $view->get_blocks();

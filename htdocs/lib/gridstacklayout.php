@@ -134,7 +134,8 @@ function get_blocks_in_old_layout($viewid) {
     $oldlayout = get_records_sql_array($sql, array($viewid));
 
     // get blocks in old layout
-    $sql = "SELECT id, " . db_quote_identifier('row') . ", " . db_quote_identifier('column') . ", " . db_quote_identifier('order') . "
+    $sql = "
+        SELECT id, " . db_quote_identifier('row') . ", " . db_quote_identifier('column') . ", " . db_quote_identifier('order') . "
         FROM {block_instance}
         WHERE view = ?
         ORDER BY " . db_quote_identifier('row') . ", " . db_quote_identifier('column') . ", " . db_quote_identifier('order');
