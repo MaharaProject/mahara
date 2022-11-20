@@ -1077,6 +1077,9 @@ function core_install_firstcoredata_defaults() {
         ));
     }
     db_commit();
+
+    // need to add a function which takes in a parameter page type e.g. 'activity' to look through the blocktype installed and see if the blocktype_installed_viewtypes can go
+    // on the page with blocktype:get_viewtypes, and if it is allowed in the array, add it into the table.
 }
 
 

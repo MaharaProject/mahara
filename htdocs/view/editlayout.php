@@ -44,7 +44,7 @@ if ($new && $id === false) {
         }
     }
     else {
-         throw new ConfigSanityException(get_string('viewtemplatenotfound', 'error'));
+        throw new ConfigSanityException(get_string('viewtemplatenotfound', 'error'));
     }
 
     $goto = get_config('wwwroot') . 'view/editlayout.php?new=1&id=' . $view->get('id');
@@ -115,7 +115,7 @@ $state = get_string('settings', 'view');
 $pieformname = 'settings';
 list($form, $inlinejavascript) = create_settings_pieform();
 
-$javascript = array('jquery','js/jquery/jquery-ui/js/jquery-ui.min.js');
+$javascript = array('jquery', 'js/jquery/jquery-ui/js/jquery-ui.min.js');
 $stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'js/jquery/jquery-ui/css/smoothness/jquery-ui.min.css') . '">';
 
 $smarty = smarty($javascript, $stylesheets, array('view' => array('Row', 'rownr')), array('sidebars' => false));
@@ -139,7 +139,7 @@ $smarty->display('view/editlayout.tpl');
 
 function create_settings_pieform() {
     global $view, $pieformname, $issiteview, $issitetemplate,
-    $canedittitle, $canuseskins;
+        $canedittitle, $canuseskins;
     $inlinejavascript = '';
 
     // Get the elements for each section of the form
@@ -204,9 +204,9 @@ function create_settings_pieform() {
     }
 
     $formelements['submitform'] = array(
-            'type' => 'submit',
-            'class' => 'btn-primary',
-            'value' => get_string('save'),
+        'type' => 'submit',
+        'class' => 'btn-primary',
+        'value' => get_string('save'),
     );
 
     //hidden elements of the sections
@@ -264,14 +264,14 @@ function get_basic_elements() {
     $elements = array(
         'title'       => array(
             'type'         => 'text',
-            'title'        => get_string('title','view'),
+            'title'        => get_string('title', 'view'),
             'defaultvalue' => $view->get('title'),
-            'rules'        => array( 'required' => true ),
+            'rules'        => array('required' => true),
             'autoselect'   => $new,
         ),
         'description' => array(
             'type'         => 'textarea',
-            'title'        => get_string('description','view'),
+            'title'        => get_string('description', 'view'),
             'rows'         => 5,
             'cols'         => 70,
             'class'        => 'view-description',
@@ -340,17 +340,17 @@ function get_advanced_elements(): array {
     if ($view->is_instruction_locked()) {
         if (!empty($view->get('instructions'))) {
             $elements['instructions'] = array(
-              'type'         => 'html',
-              'title'        => get_string('instructions','view'),
-              'class'        => 'view-description',
-              'value'        => clean_html($view->get('instructions')),
+                'type'         => 'html',
+                'title'        => get_string('instructions', 'view'),
+                'class'        => 'view-description',
+                'value'        => clean_html($view->get('instructions')),
             );
         }
     }
     else {
         $elements['instructions'] = array(
             'type'         => 'wysiwyg',
-            'title'        => get_string('instructions','view'),
+            'title'        => get_string('instructions', 'view'),
             'rows'         => 5,
             'cols'         => 70,
             'class'        => 'view-description',
@@ -394,8 +394,8 @@ function get_advanced_elements(): array {
         }
         $elements['ownerformat'] = array(
             'type'         => 'select',
-            'title'        => get_string('ownerformat','view'),
-            'description'  => get_string('ownerformatdescription','view'),
+            'title'        => get_string('ownerformat', 'view'),
+            'description'  => get_string('ownerformatdescription', 'view'),
             'options'      => $ownerformatoptions,
             'defaultvalue' => $default,
             'rules'        => array('required' => true),
@@ -404,8 +404,8 @@ function get_advanced_elements(): array {
     if (get_config('allowanonymouspages')) {
         $elements['anonymise'] = array(
             'type'         => 'switchbox',
-            'title'        => get_string('anonymise','view'),
-            'description'  => get_string('anonymisedescription','view'),
+            'title'        => get_string('anonymise', 'view'),
+            'description'  => get_string('anonymisedescription', 'view'),
             'defaultvalue' => $view->get('anonymise'),
         );
     }
@@ -425,7 +425,7 @@ function get_advanced_elements(): array {
         'group'        => $group,
         'page'         => $view->get_url() . '&browse=1',
         'filters'      => array(
-             'artefacttype' => array('image'),
+            'artefacttype' => array('image'),
         ),
         'config'       => array(
             'upload'          => true,
@@ -445,11 +445,11 @@ function get_advanced_elements(): array {
 
     if (!$view->is_instruction_locked()) { //later i'll need to check the role of the login user
         $elements['locktemplate'] = array(
-          'type'         => 'switchbox',
-          'title'        => get_string('locktemplate','view'),
-          'description'  => get_string('locktemplatedescription','view'),
-          'defaultvalue' => $view->get('locktemplate'),
-          'disabled'     => !$view->can_edit_template(),
+            'type'         => 'switchbox',
+            'title'        => get_string('locktemplate', 'view'),
+            'description'  => get_string('locktemplatedescription', 'view'),
+            'defaultvalue' => $view->get('locktemplate'),
+            'disabled'     => !$view->can_edit_template(),
         );
     }
     else {
@@ -497,10 +497,10 @@ function get_advanced_elements(): array {
         }
         if ($canremovelock) {
             $elements['copylocked'] = array(
-              'type'         => 'switchbox',
-              'title'        => get_string('copylocked','view'),
-              'description'  => get_string('copylockeddescription','view'),
-              'defaultvalue' => $view->is_instruction_locked(),
+                'type'         => 'switchbox',
+                'title'        => get_string('copylocked', 'view'),
+                'description'  => get_string('copylockeddescription', 'view'),
+                'defaultvalue' => $view->is_instruction_locked(),
             );
         }
     }
@@ -577,7 +577,7 @@ function get_skin_elements(): array {
             'description' => nl2br($currentskin->description),
             'ctime' => format_date(strtotime($currentskin->ctime)),
             'mtime' => format_date(strtotime($currentskin->mtime)),
-         );
+        );
     }
 
     $userskins   = Skin::get_user_skins();
@@ -599,7 +599,7 @@ function get_skin_elements(): array {
     $snippet->assign('currenttitle', $currentskin->title);
     $snippet->assign('currentmetadata', (!empty($currentskin->metadata)) ? $currentskin->metadata : null);
     $snippet->assign('userskins', $userskins);
-    $snippet->assign('favorskins',$favorskins);
+    $snippet->assign('favorskins', $favorskins);
     $snippet->assign('siteskins', $siteskins);
     $snippet->assign('defaultskin', $defaultskin);
     $snippet->assign('viewid', $view->get('id'));
@@ -760,7 +760,7 @@ function settings_submit(Pieform $form, $values) {
     $form->reply(PIEFORM_OK, $result);
 }
 
-function create_block($bt, $configdata, $view, $blockinfo = null, $dimension=null) {
+function create_block($bt, $configdata, $view, $blockinfo = null, $dimension = null) {
     $tagselect = array();
 
     if ($bt == 'taggedposts') {
@@ -863,7 +863,7 @@ function set_view_title_and_description(Pieform $form, $values) {
                         $combineddata[$item->type][$type] = array('count' => 1, 'ids' => array($item->id));
                     }
                     else {
-                        $combineddata[$item->type][$type]['count'] ++;
+                        $combineddata[$item->type][$type]['count']++;
                         $combineddata[$item->type][$type]['ids'][] = $item->id;
                     }
                 }
@@ -871,16 +871,16 @@ function set_view_title_and_description(Pieform $form, $values) {
                 if (!empty($combineddata['blocktype'])) {
                     foreach ($combineddata['blocktype'] as $bk => $bv) {
                         $bt = false;
-                        foreach($bv['ids'] as $bid) {
+                        foreach ($bv['ids'] as $bid) {
                             $configdata = unserialize(get_field('block_instance', 'configdata', 'id', $bid));
                             $tags = get_column('tag', 'tag', 'resourcetype', 'blocktype', 'resourceid', $bid);
-                            foreach($tags as &$t) {
+                            foreach ($tags as &$t) {
                                 if (preg_match('/^tagid\_(.*)/', $t, $matches)) {
-                                     if ($itag = get_record('tag', 'id', $matches[1])) {
-                                         $instname = get_field('institution', 'displayname', 'id', $itag->resourceid);
-                                         $t = $instname . ': ' . $itag->tag;
-                                      }
-                                  }
+                                    if ($itag = get_record('tag', 'id', $matches[1])) {
+                                        $instname = get_field('institution', 'displayname', 'id', $itag->resourceid);
+                                        $t = $instname . ': ' . $itag->tag;
+                                    }
+                                }
                             }
                             $dimension = get_record('block_instance_dimension', 'block', $bid);
                             $id = create_block($bk, $configdata, $view, array('oldid' => $bid, 'tags' => $tags), $dimension);
@@ -907,13 +907,14 @@ function set_view_title_and_description(Pieform $form, $values) {
                         }
                         if ($ak == 'html') { // This is an artefact related to the 'note' block (not 'html' block)
                             // Need to do a loop for each folder
-                            foreach($av['ids'] as $noteid) {
+                            foreach ($av['ids'] as $noteid) {
                                 // Need to add a note block
                                 $bt = 'textbox';
-                                $configdata = array('artefactid' => $noteid,
-                                                    'licensereadonly' => '', // default license placeholder
-                                                    'tagsreadonly' => '', // default tag placeholder
-                                                   );
+                                $configdata = array(
+                                    'artefactid' => $noteid,
+                                    'licensereadonly' => '', // default license placeholder
+                                    'tagsreadonly' => '', // default tag placeholder
+                                );
                                 // We need to get an example of an existing note (textbox) block to find out
                                 // if there are meant to be attachments for the note
                                 // @TODO: fix this up - we should have a artefact_note_attachment table rather than
@@ -935,13 +936,14 @@ function set_view_title_and_description(Pieform $form, $values) {
                         }
                         if ($ak == 'blog') {
                             // Need to do a loop for each folder
-                            foreach($av['ids'] as $blogid) {
+                            foreach ($av['ids'] as $blogid) {
                                 // Need to add a blog block
                                 $bt = 'blog';
-                                $configdata = array('artefactid' => $blogid,
-                                                    'count' => '5', // default number of posts to display
-                                                    'copytype' => 'nocopy', // default copy type
-                                                   );
+                                $configdata = array(
+                                    'artefactid' => $blogid,
+                                    'count' => '5', // default number of posts to display
+                                    'copytype' => 'nocopy', // default copy type
+                                );
                                 $id = create_block($bt, $configdata, $view);
                             }
                             $bt = false;
@@ -949,20 +951,22 @@ function set_view_title_and_description(Pieform $form, $values) {
                         if ($ak == 'blogpost') {
                             // Need to add a taggedpost block
                             $bt = 'taggedposts';
-                            $configdata = array('tagselect' => $createtags,
-                                                'count' => '10', // default number of posts to display
-                                                'copytype' => 'nocopy', // default copy type
-                                                'full' => false,
-                                               );
+                            $configdata = array(
+                                'tagselect' => $createtags,
+                                'count' => '10', // default number of posts to display
+                                'copytype' => 'nocopy', // default copy type
+                                'full' => false,
+                            );
                         }
                         if ($ak == 'folder') {
                             // Need to do a loop for each folder
-                            foreach($av['ids'] as $folderid) {
+                            foreach ($av['ids'] as $folderid) {
                                 // Need to add a folder block
                                 $bt = 'folder';
-                                $configdata = array('artefactid' => $folderid,
-                                                    'sortorder' => 'asc',
-                                                   );
+                                $configdata = array(
+                                    'artefactid' => $folderid,
+                                    'sortorder' => 'asc',
+                                );
                                 $id = create_block($bt, $configdata, $view);
                             }
                             $bt = false;
@@ -990,30 +994,33 @@ function set_view_title_and_description(Pieform $form, $values) {
                             else {
                                 // Need to add a pdf block
                                 $bt = 'pdf';
-                                $configdata = array('artefactid' => $av['ids'][0],
-                                                    'pdfwarning' => get_string('pdfwarning', 'blocktype.file/pdf'),
-                                                   );
+                                $configdata = array(
+                                    'artefactid' => $av['ids'][0],
+                                    'pdfwarning' => get_string('pdfwarning', 'blocktype.file/pdf'),
+                                );
                             }
                         }
                         if ($ak == 'image') {
                             if ($av['count'] > 1) {
                                 // Need to add an image gallery block
                                 $bt = 'gallery';
-                                $configdata = array('artefactids' => $av['ids'],
-                                                    'user' => $view->get('owner'), // normally 'user' is for external gallery but we set it to page owner for internal gallery
-                                                    'select' => '1', // to select images by ids
-                                                    'style' => '1',  // to display the images as slideshow
-                                                    'showdescription' => false,
-                                                    'width' => '75', // the default value added to config form
-                                                   );
+                                $configdata = array(
+                                    'artefactids' => $av['ids'],
+                                    'user' => $view->get('owner'), // normally 'user' is for external gallery but we set it to page owner for internal gallery
+                                    'select' => '1', // to select images by ids
+                                    'style' => '1',  // to display the images as slideshow
+                                    'showdescription' => false,
+                                    'width' => '75', // the default value added to config form
+                                );
                             }
                             else {
                                 // Need to add an image block
                                 $bt = 'image';
-                                $configdata = array('artefactid' => $av['ids'][0],
-                                                    'showdescription' => false,
-                                                   'width' => "",
-                                                   );
+                                $configdata = array(
+                                    'artefactid' => $av['ids'][0],
+                                    'showdescription' => false,
+                                    'width' => "",
+                                );
                             }
                         }
                         if ($bt) {
@@ -1024,9 +1031,10 @@ function set_view_title_and_description(Pieform $form, $values) {
                     // We add the plan block now
                     if (!empty($plans)) {
                         $bt = 'plans';
-                        $configdata = array('artefactids' => $plans,
-                                            'count' => 10, // default tasks
-                                           );
+                        $configdata = array(
+                            'artefactids' => $plans,
+                            'count' => 10, // default tasks
+                        );
                         $id = create_block($bt, $configdata, $view);
                     }
                     // We add in the file to download block once we work out what should be in it
@@ -1062,6 +1070,96 @@ function set_view_title_and_description(Pieform $form, $values) {
     }
 }
 
+/**
+ * Validate the activity
+ *
+ * @param Pieform $form
+ * @param array $values
+ * @return void
+ */
+function validate_view_activity_info(Pieform $form, $values) {
+    if (isset($values['start_date']) && isset($values['end_date']) && $values['start_date'] > $values['end_date']) {
+        $form->set_error('startdate', get_string('startdate_rule', 'view'));
+    }
+}
+
+/**
+ * Save the activity page information
+ *
+ * @param Pieform $form
+ * @param array $values
+ * @return void
+ */
+function set_view_activity_info(Pieform $form, $values) {
+    global $view, $urlallowed, $USER;
+
+    log_debug($values['supervisor']);
+    $view_activity = new StdClass();
+    $view_activity->description = $values['activity_description'];
+    $view_activity->subject = $values['subject'];
+    $view_activity->supervisor = 0; // TODO: Doris complete this
+    $view_activity->start_date =  !is_null($values['start_date']) ? db_format_timestamp($values['start_date']) : null;
+    $view_activity->end_date = !is_null($values['end_date']) ? db_format_timestamp($values['end_date']) : null;
+    $view_activity->view = $view->get('id');
+    $view_activity->mtime = db_format_timestamp(time());
+
+    // Add to view_actitvity table
+    $activity_id = get_field('view_activity', 'id', 'view', $view->get('id'));
+    if (!$activity_id) {
+        $view_activity->ctime = db_format_timestamp(time());
+        $activity_id = insert_record('view_activity', $view_activity, 'id', true);
+    }
+    else {
+        update_record('view_activity', $view_activity, array('view' => $view->get('id')));
+    }
+    // Add reference to outcome_view_actitivy
+    // ensure_record_exists('outcome_view_activity', 'outcome' => $view_actitivty->outcome), 'view_activity' => $new_acitivity_id;
+
+    // Achivement levels done by type and value
+    // Brand new activity + achievement levels
+    $achievement_levels = get_levels($values);
+    log_debug($achievement_levels); // If there are more achievement levels than 4, their string needs to be created/and existing ones overwritten if don't want to say 'Level 1'
+
+    // Go through each one to insert/update
+    foreach ($achievement_levels as $type => $value) {
+        $existing_achievement_level = get_record('view_activity_achievement_levels', 'activity', $activity_id, 'type', $type);
+        if ($existing_achievement_level) {
+            $existing_achievement_level->value = $value;
+            update_record('view_activity_achievement_levels', $existing_achievement_level);
+        }
+        else {
+            $new_achievement_level = new StdClass();
+            $new_achievement_level->activity = $activity_id;
+            $new_achievement_level->type = $type;
+            $new_achievement_level->value = $value;
+            insert_record('view_activity_achievement_levels', $new_achievement_level);
+        }
+    }
+}
+
+/**
+ * Get activity level
+ *
+ * @param array $values
+ * @return array
+ */
+function get_levels(array $values) {
+    $levels = [];
+    foreach ($values as $type => $value) {
+        if (strpos($type, 'level') !== false) { // PHP8 str_contains
+            $levels[$type] = $value;
+        }
+    }
+    return $levels;
+}
+
+/**
+ * Set advanced information
+ *
+ * @param Pieform $form
+ * @param array $values
+ * @return void
+ */
 function set_view_advanced(Pieform $form, $values) {
     global $view, $urlallowed, $new;
 
@@ -1090,8 +1188,8 @@ function set_view_advanced(Pieform $form, $values) {
 /**
  * Set sign-off and verify config for signing off and verifying pages
  *
- * @param  mixed $form
- * @param  mixed $values
+ * @param  Pieform $form
+ * @param  array $values
  * @return void
  */
 function set_signoff_verify(Pieform $form, $values) {
@@ -1124,7 +1222,7 @@ function add_view_coverimage($coverimageid) {
     }
 }
 
-function delete_view_coverimage($coverimageid=null) {
+function delete_view_coverimage($coverimageid = null) {
     global $view;
     if ($view) {
         $view->set('coverimage', 0);

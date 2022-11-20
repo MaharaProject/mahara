@@ -622,3 +622,6 @@ $string['removedverifynotification'] = 'The owner of the page %s has removed the
 $string['signoffviewupdated'] = 'Sign-off status updated';
 $string['verifyviewupdated'] = 'Verification status updated';
 $string['wrongsignoffviewrequest'] = 'You do not have permission to perform the requested action';
+
+// Activity page startdate
+$string['startdate_rule'] = 'Start date must be before completion date';

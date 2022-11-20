@@ -1991,6 +1991,41 @@ class View {
     }
 
     /**
+     * Update blocktype for installed viewtype
+     *
+     * We take page type e.g. 'activity' to look through the
+     * blocktypes installed and see if the blocktype can be used
+     * with the view type and if so make sure a row exists for it in the
+     * 'blocktype_installed_viewtype' table.
+     *
+     * Note: ensure that the new view_type has been added to the table 'view_type' first
+     *
+     * @param  string $view_type
+     * @return void
+     */
+    public static function update_blocktype_installed_viewtype(string $view_type) {
+        $all_view_types = get_column('view_type', 'type');
+
+        if (in_array($view_type, $all_view_types)) {
+            return;
+        }
+
+        $installed_blocktypes = get_column('blocktype_installed', 'name');
+        foreach ($installed_blocktypes as $blocktype) {
+            $classname = generate_class_name('blocktype', $blocktype);
+            if ($classname::get_viewtypes()) {
+                $viewtypes = $classname::get_viewtypes();
+                if (in_array($view_type, $viewtypes)) {
+                    $data = new stdClass();
+                    $data->blocktype = $blocktype;
+                    $data->viewtype = $view_type;
+                    insert_record('blocktype_installed_viewtype', $data, 'id', true);
+                }
+            }
+        }
+    }
+
+    /**
      * Gets the name of the first blocktype category for this View.
      *
      * This can change based on what blocktypes allow themselves to be in what
