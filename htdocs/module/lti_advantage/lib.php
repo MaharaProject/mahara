@@ -1007,7 +1007,10 @@ class PluginModuleLti_advantage extends PluginModule {
                                 $registry = get_record('oauth_server_registry', 'id', $registrationdb->connectionid);
                                 $institution = $registry->institution;
                                 $serviceid = $registry->id;
-                                $authinstanceid = get_field('auth_instance', 'id', 'authname', 'webservice', 'institution', $institution);
+                                $authinstanceid = get_field_sql("SELECT ai.id FROM {auth_instance} ai
+                                                                 JOIN {oauth_server_registry} sr ON sr.application_title = ai.instancename
+                                                                 WHERE ai.authname = ? AND sr.id = ? AND ai.institution = ?",
+                                                                array('webservice', $serviceid, $institution));
 
                                 foreach ($launch_users as $launch_user) {
                                     $userobj = PluginModuleLti_advantage::module_lti_advantage_ensure_user_exists($launch_user, $institution, $authinstanceid, $serviceid);
