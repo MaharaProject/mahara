@@ -1446,10 +1446,11 @@ class User {
         if ($group) {
             $this->reset_grouproles();
             $grouproles = $this->get('grouproles');
+            $view_type = $v->get('type');
             if (!isset($grouproles[$group])) {
                 return false;
             }
-            if (($v->get('type') == 'grouphomepage' || $v->get('locked')) && $grouproles[$group] != 'admin') {
+            if (($view_type == 'grouphomepage' || $v->get('locked')) && $grouproles[$group] != 'admin') {
                 return false;
             }
             require_once('group.php');

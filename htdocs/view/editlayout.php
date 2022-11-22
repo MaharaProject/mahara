@@ -50,6 +50,10 @@ if ($new && $id === false) {
             $values['group'] = $groupid;
         }
 
+        if ($view_type == 'activity') {
+            View::check_can_edit_activity_page_info($groupid);
+        }
+
         if (!empty($institutionname)) {
             $values['institution'] = $institutionname;
         }
@@ -105,6 +109,10 @@ $group = $view->get('group');
 $institution = $view->get('institution');
 $view->set_edit_nav();
 $view->set_user_theme();
+
+if ($view->get('type') == 'activity') {
+    View::check_can_edit_activity_page_info($group);
+}
 
 // Clean urls are only available for portfolio views owned by groups or users who already
 // have their own clean profiles or group homepages.

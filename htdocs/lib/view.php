@@ -480,6 +480,8 @@ class View {
             }
         }
 
+        $viewdata['type'] = $template->get('type');
+
         $view = self::_create($viewdata, $userid);
 
         // Set a default title if one wasn't set
@@ -4138,6 +4140,25 @@ class View {
 
     public function can_edit_title() {
         return self::can_remove_viewtype($this->type);
+    }
+
+    /**
+     * Check if current $USER can edit settings of the activity config of view
+     *
+     * @param  mixed $group_id
+     * @param  mixed $quiet whether to throw an exception or a boolean on fail
+     * @throws AccessDeniedException
+     */
+    public static function check_can_edit_activity_page_info(int $group_id, $quiet = false): bool {
+        global $USER;
+        $admin_tutor_ids = group_get_member_ids($group_id, array('admin', 'tutor'));
+        if (!in_array($USER->id, $admin_tutor_ids) || !is_outcomes_group($group_id)) {
+            if (!$quiet) {
+                throw new AccessDeniedException();
+            }
+            return false;
+        }
+        return true;
     }
 
     /**

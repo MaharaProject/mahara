@@ -392,6 +392,12 @@ $smarty->assign('accesssuspended', View::access_override_pending(array('id' => $
 $smarty->assign('viewtype', $viewtype);
 $smarty->assign('view', $view->get('id'));
 $smarty->assign('groupid', $group);
+
+$can_edit_page_settings = $group && $view->get('type') == 'activity'
+    ? View::check_can_edit_activity_page_info($group, true) : true;
+$smarty->assign('can_edit_page_settings', $can_edit_page_settings);
+
+
 if (isset($groupurl)) {
     $smarty->assign('groupurl', $groupurl);
 }

@@ -6,11 +6,9 @@
         <span>&nbsp;</span>
     {/if}
 
-    {if $selected != 'editlayout' && ($edittitle || $canuseskins) }
-        <button
-            class="btn btn-secondary first-of-group editviews editlayout {if $selected == 'editlayout'}active{/if}"
-            data-url="{$WWWROOT}view/editlayout.php?id={$viewid}"
-            title="{str tag=settings section=view}">
+    {if $selected != 'editlayout' && $can_edit_page_settings && ($edittitle || $canuseskins)}
+        <button class="btn btn-secondary first-of-group editviews editlayout {if $selected == 'editlayout'}active{/if}"
+            data-url="{$WWWROOT}view/editlayout.php?id={$viewid}" title="{str tag=settings section=view}">
             <span class="icon icon-cogs icon-lg"></span>
             <span class="btn-title visually-hidden">{str tag=settings section=view}</span>
         </button>
