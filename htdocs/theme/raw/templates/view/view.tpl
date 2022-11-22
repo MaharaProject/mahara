@@ -24,7 +24,7 @@
 <div id="view" class="view-container">
 {if $group}
 <button id="add_activity_button" class="btn btn-secondary" type="button"
-    data-bs-target="{$WWWROOT}view/editlayout.php?new=1{$urlparamsstr}&activity=1&group={$group}">
+    data-bs-target="{$WWWROOT}view/editlayout.php?new=1{$urlparamsstr}&group={$group}">
     <span class="icon icon-plus left" role="presentation" aria-hidden="true"></span>
     {str section=view tag='add_activity_button'}
 </button>

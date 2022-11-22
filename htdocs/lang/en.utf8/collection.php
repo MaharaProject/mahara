@@ -212,6 +212,11 @@ $string['progresspagedescription'] = 'Set up the default layout for the portfoli
 $string['progressportfolios'] = 'Portfolio count';
 $string['progressverifiers'] = 'Reviewer percentage';
 
+// Activity page
+$string['activitypage'] = 'Activity page';
+$string['progresspagedescription'] = 'Set up the default layout for an activity page for a group collection.';
+
+
 //Verification checkbox visually-hidden text
 $string['sharedviewverifiedunchecked'] = '%s by %s is not reviewed';
 $string['sharedviewverifiedchecked'] = '%s by %s has been reviewed';

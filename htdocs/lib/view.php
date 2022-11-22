@@ -5325,7 +5325,12 @@ class View {
 
         $result = self::view_search(
             $query, null, null, null, $limit, $offset,
-            true, $sort, array('portfolio', 'progress'), false, $accesstypes, $tag,
+            true,
+            $sort,
+            array('portfolio', 'progress', 'activity'),
+            false,
+            $accesstypes,
+            $tag,
             null, $userid, true
         );
 

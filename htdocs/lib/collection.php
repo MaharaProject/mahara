@@ -1350,7 +1350,6 @@ class Collection {
             $systemprogressviewid = get_field('view', 'id', 'institution', 'mahara', 'template', View::SITE_TEMPLATE, 'type', 'progress');
             $artefactcopies = array();
             list($view) = View::create_from_template($viewdata, $systemprogressviewid, $author, false, false, $artefactcopies);
-
             // Update any existing pages sortorder
             execute_sql("UPDATE {collection_view} SET displayorder = displayorder + 1 WHERE collection = ?", array($this->id));
             // Add progress page as first page of collection

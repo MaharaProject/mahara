@@ -1212,6 +1212,12 @@ function xmldb_core_upgrade($oldversion=0) {
     if ($oldversion < 2023012000) {
         log_debug('Add new "activity" page type to table "blocktype_installed_viewtype"');
         View::update_blocktype_installed_viewtype('activity');
+
+        // Create default activity template
+        set_field('usr', 'admin', 1, 'username', 'root');
+        install_system_activity_view();
+        set_field('usr', 'admin', 0, 'username', 'root');
+
     }
 
     return $status;

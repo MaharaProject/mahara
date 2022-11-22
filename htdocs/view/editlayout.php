@@ -54,10 +54,6 @@ if ($new && $id === false) {
             $values['institution'] = $institutionname;
         }
 
-        if (!empty($activity_view) && $groupid && is_outcomes_group($groupid)) {
-            $values['type'] = 'activity';
-        }
-
         list($view, $template, $copystatus) = View::create_from_template($values, $sitedefaultviewid, null, true, false, $artefactcopies);
         if (isset($copystatus['quotaexceeded'])) {
             $SESSION->add_error_msg(get_string('viewcreatewouldexceedquota', 'view'));

@@ -65,6 +65,7 @@ $string['templateprogress']       = 'Portfolio completion template';
 $string['templateportfolio']      = 'Page template';
 $string['templateportfoliotitle']       = 'Untitled';
 $string['templateportfoliodescription1'] = 'Set up the default layout for the pages that are created. You can also add blocks. Please note that any content you add to the default page will appear on every page that is created after you made the change.';
+$string['templateactivity']      = 'Activity page template';
 
 // my views
 $string['artefacts'] = 'Artefacts';

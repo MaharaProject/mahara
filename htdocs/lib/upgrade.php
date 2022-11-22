@@ -817,6 +817,7 @@ function core_install_lastcoredata_defaults() {
     require_once('view.php');
     install_system_portfolio_view();
     install_system_progress_view();
+    install_system_activity_view();
 
     require_once('license.php');
     install_licenses_default();
@@ -1078,8 +1079,6 @@ function core_install_firstcoredata_defaults() {
     }
     db_commit();
 
-    // need to add a function which takes in a parameter page type e.g. 'activity' to look through the blocktype installed and see if the blocktype_installed_viewtypes can go
-    // on the page with blocktype:get_viewtypes, and if it is allowed in the array, add it into the table.
 }
 
 

@@ -3093,6 +3093,35 @@ function install_system_dashboard_view() {
     return $view->get('id');
 }
 
+/**
+ * This function installs the site's default activity view for outcome collections in groups
+ *
+ * @throws SystemException if the system activity view is already installed
+ */
+function install_system_activity_view() {
+    require_once(get_config('libroot') . 'view.php');
+    $viewid = get_field('view', 'id', 'institution', 'mahara', 'template', View::SITE_TEMPLATE, 'type', 'activity');
+    if ($viewid) {
+        throw new SystemException('A system activity view already seems to be installed');
+    }
+    require_once(get_config('docroot') . 'blocktype/lib.php');
+    $view = View::create(array(
+        'type'        => 'activity',
+        'institution' => 'mahara',
+        'template'    => View::SITE_TEMPLATE,
+        'numrows'     => 1,
+        'ownerformat' => View::FORMAT_NAME_PREFERREDNAME,
+        'title'       => get_string('activitypage', 'collection'),
+        'description' => get_string('activitypagedescription'),
+        'lockblocks'  => 1,
+    ), 0);
+    $view->set_access(array(array(
+        'type' => 'loggedin'
+    )));
+    return $view->get('id');
+}
+
+
 
 /**
  * Return profile icon url for a user.  Use this to quickly get a url
