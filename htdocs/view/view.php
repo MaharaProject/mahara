@@ -933,6 +933,29 @@ $smarty->assign('linktext', $returnto['title']);
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('signoff_html', $signoff_html);
 $smarty->assign('group', $view->get('group'));
+$smarty->assign('signoff_html', $signoff_html);
+$smarty->assign('group', $view->get('group'));
+
+// Activity data form
+function activity_support_submit() {
+    redirect('/view/view.php?id=' . param_integer('id'));
+}
+
+if ($view->get('group') && $view->get('type') == 'activity') {
+    $activity_data = $view->get_view_activity_data();
+    $group = $view->get('group');
+    $smarty->assign('activity', $activity_data);
+    $smarty->assign('is_activity_page', $view->get('type') == 'activity');
+    $can_edit_layout = $group ? View::check_can_edit_activity_page_info($group, true) : true;
+    $smarty->assign('activity_support_form', $view->get_activity_support_form($can_edit_layout));
+    $smarty->assign('can_edit_layout', $can_edit_layout);
+    $smarty->assign('usercaneditview', $can_edit_layout);
+    if (!$can_edit_layout) {
+        $smarty->assign('editurl', false);
+    }
+}
+
+
 $smarty->display('view/view.tpl');
 
 mahara_touch_record('view', $viewid); // Update record 'atime'

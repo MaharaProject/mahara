@@ -20,7 +20,7 @@
     </fieldset>
 </div>
 {/if}
-
+{if $is_activity_page}{include file="view/activitysupport.tpl"}{/if}
 <div id="view" class="view-container">
     <div id="bottom-pane">
         <div id="column-container" class="user-page-content">

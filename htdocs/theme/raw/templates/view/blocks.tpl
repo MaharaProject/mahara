@@ -35,6 +35,7 @@
         </div>
         {include file="view/editviewpageactions.tpl" selected='content' ineditor=true}
     </form>
+{if $is_activity_page}{include file="view/activitysupport.tpl"}{/if}
 </div>
 <div class="view-container" selected='content'>
     <form action="{$formurl}" method="post" class="row">

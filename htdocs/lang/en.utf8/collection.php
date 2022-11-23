@@ -106,6 +106,7 @@ $string['shorttitledesc'] = 'Enter a short title for our outcome to be used as a
 $string['fulltitle'] = 'Full title';
 $string['outcometype'] = 'Outcome type';
 $string['outcometypedesc'] = 'Select the category for your outcome';
+$string['outcome'] = 'Outcome';
 $string['outcometitle'] = 'Outcome %s';
 $string['outcomesaveerror'] ='There was an error saving the outcomes';
 $string['outcomesavesuccess'] ='Outcomes saved successfully';

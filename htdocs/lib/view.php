@@ -1158,6 +1158,31 @@ class View {
         db_commit();
     }
 
+    public function get_view_activity_data() {
+        if (!$this->type == 'activity') {
+            return null;
+        }
+
+        if ($this->type == 'activity') {
+            $sql = "
+                SELECT
+                  va.*,
+                  o.short_title AS outcome,
+                  ot.abbreviation AS outcome_type,
+                  ot.styleclass
+                FROM
+                  {view_activity} va
+                  JOIN {outcome_view_activity} ov ON va.id = ov.activity
+                  JOIN {outcome} o ON o.id = ov.outcome
+                  JOIN {outcome_type} ot ON ot.id = o.outcome_type
+                  WHERE va.view = ?
+            ";
+
+            $activity_data = get_record_sql($sql, [$this->id]);
+            return $activity_data;
+        }
+    }
+
     /**
      * Delete activity pages and their references
      *
@@ -4162,6 +4187,132 @@ class View {
             return false;
         }
         return true;
+    }
+
+    private function activity_support_edit_element($activity, $type) {
+        $table = 'view_activity_support';
+        $fields = ['activity', 'type'];
+
+        $support = get_record($table, 'activity', $activity->id, 'type', $type . '_support');
+        $support_edited_by = '';
+        $support_value = '';
+
+        if ($support) {
+            $last_edit_time = date('d M Y, G:i', strtotime($support->mtime));
+            $last_edit_author = display_name($support->author, null, true);
+            $support_edited_by = get_string('last_edited', 'view', $last_edit_author, $last_edit_time);
+            $support_value = get_field(
+                'view_activity_support',
+                'value',
+                'activity',
+                $activity->id,
+                'type',
+                $type . '_support'
+            );
+        }
+        return array($support, $support_value, $support_edited_by);
+    }
+
+    private function get_activity_support_element_display($type, $supportvalue, $supportby) {
+        return array($type . '_support' => array(
+            'type'   => 'html',
+            'title'  => get_string($type . '_support', 'view'),
+            'value'  => $supportvalue . ' - ' . $supportby,
+        ));
+    }
+
+    private function get_activity_support_element_editing($type, $supportvalue, $supportby) {
+        $supportelement = array($type . '_support' => array(
+            'type'         => 'textarea',
+            'title'        => get_string($type . '_support', 'view'),
+            'description'  => get_string($type . '_support_desc', 'view') . ' ' . $supportby,
+            'defaultvalue' => $supportvalue,
+            'rows'         => 5,
+            'cols'         => 70,
+            'class'        => 'form-group-no-border'
+        ));
+        $supportsubmit = array($type . '_support_submit' => array(
+            'type'  => 'html',
+            'value' => '<div form-group>
+                           <label></label>
+                           <button id="' . $type . '_support" class="btn-secondary button btn activity_support">
+                           ' . get_string('save', 'mahara') . '
+                           </button>
+                        </div>',
+        ));
+        return array_merge($supportelement, $supportsubmit);
+    }
+
+    public function get_activity_support_edit_elems($activity, $edit = true) {
+        // Get info for form
+        $support_options = ['strategy', 'resources', 'learner'];
+        $display_elems = array();
+        $edit_elems = array();
+        foreach ($support_options as $option) {
+            list ($support, $supportvalue, $supportby) = $this->activity_support_edit_element($activity, $option);
+            $display_elems = array_merge($display_elems, $this->get_activity_support_element_display($option, $supportvalue, $supportby));
+            $edit_elems = array_merge($edit_elems, $this->get_activity_support_element_editing($option, $supportvalue, $supportby));
+        }
+
+        $edit_elems['new'] = array(
+            'type' => 'hidden',
+            'name' => 'group',
+            'value' => $activity->id
+        );
+
+        return $edit ? $edit_elems : $display_elems;
+    }
+
+    /**
+     * Get the pieform for the top of Activity page support form
+     *
+     * Visible to group admins/tutors
+     *
+     */
+    public function get_activity_support_form($edit = true): string {
+        $activity = $this->get_view_activity_data();
+
+        if (!$activity) {
+            return '';
+        }
+
+        $supervisor = display_name($activity->supervisor);
+        $start_date = $activity->start_date ? date('d M Y', strtotime($activity->start_date)) : '';
+        $end_date = $activity->end_date ? date('d M Y', strtotime($activity->end_date)) : '';
+        $timeframe = (string) $start_date . ' - ' . (string) $end_date;
+        $activity_subject = get_field('outcome_subject', 'title', 'id', $activity->subject); // TODO: title or abbreviation?
+
+        $support_form = array(
+            'name'       => 'activity_support',
+            // 'method'     => 'post',
+            'renderer'   => 'div',
+            // 'plugintype' => 'core',
+            // 'pluginname' => 'admin',
+            'elements'   => [
+                'supervisor' => array(
+                    'type' => 'html',
+                    'title' => get_string('activity_info_staff', 'view'),
+                    'value' => ' ' . $supervisor,
+                ),
+                'subject' => array(
+                    'type' => 'html',
+                    'title' => get_string('subject', 'view'),
+                    'value' => $activity_subject,
+                ),
+                'timeframe' => array(
+                    'type' => 'html',
+                    'title' => get_string('timeframe', 'view'),
+                    'value' => $timeframe,
+                ),
+            ]
+        );
+
+        // If editing, add textboxes
+        $support_form['elements'] = array_merge($support_form['elements'], $this->get_activity_support_edit_elems($activity, $edit));
+
+        $support_form = pieform($support_form);
+
+        return $support_form;
     }
 
     /**

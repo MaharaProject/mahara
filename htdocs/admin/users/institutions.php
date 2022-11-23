@@ -207,6 +207,7 @@ if ($institution || $add) {
             }
             delete_records('site_content_version', 'institution', $values['i']);
             delete_records('oauth_server_registry', 'institution', $values['i']);
+            // TODO: delete outcomes table reference to institution
             delete_records('institution', 'name', $values['i']);
             db_commit();
             clear_menu_cache();
