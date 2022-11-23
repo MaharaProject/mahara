@@ -39,7 +39,8 @@
                         <span class="icon icon-reply-all left" role="presentation" aria-hidden="true"></span>
                         {str tag='replyall'  section='module.multirecipientnotification'}
                     </a>
-                    {elseif $i->canreply}
+                    {/if}
+                    {if $i->canreply}
                         <a title="{str tag=reply section=module.multirecipientnotification}" href="{$WWWROOT}module/multirecipientnotification/sendmessage.php?id={$i->fromusr}{if !$i->startnewthread}&replyto={$i->id}{/if}&returnto=outbox" class="text-small">
                             <span class="icon icon icon-reply left" role="presentation" aria-hidden="true"></span>
                             {str tag='reply' section='module.multirecipientnotification'}
