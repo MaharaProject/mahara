@@ -2022,29 +2022,6 @@ class View {
     }
 
     /**
-     * Returns HTML for the blocktype list for a particular category
-     *
-     * @param string $category   The category to build the blocktype list for
-     * @param bool   $javascript Set to true if the caller is a json script,
-     *                           meaning that nothing for the standard HTML version
-     *                           alone should be output
-     */
-    public function build_blocktype_list($category, $javascript=false) {
-        require_once(get_config('docroot') . 'blocktype/lib.php');
-        $blocktypes = PluginBlocktype::get_blocktypes_for_category($category, $this);
-        $smarty = smarty_core();
-        $smarty->assign('blocktypes', $blocktypes);
-        $smarty->assign('javascript', $javascript);
-        $smarty->assign('accessible', $this->get('accessibleview'));
-        $smarty->assign('GS_DESKTOP_WIDTH', BlockInstance::GRIDSTACK_CONSTANTS['desktopWidth']);
-        $smarty->assign('GS_DEFAULT_HEIGHT', BlockInstance::GRIDSTACK_CONSTANTS['defaultHeight']);
-        $smarty->assign('GS_DRAG_HEIGHT', BlockInstance::GRIDSTACK_CONSTANTS['dragHeight']);
-        $smarty->assign('GS_DRAG_WIDTH', BlockInstance::GRIDSTACK_CONSTANTS['dragWidth']);
-
-        return $smarty->fetch('view/blocktypelist.tpl');
-    }
-
-    /**
      * Process view changes. This function is used both by the json stuff and
      * by normal posts
      */
