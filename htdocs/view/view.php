@@ -789,6 +789,9 @@ if ($collection) {
             if ($collection->has_progresscompletion()) {
                 array_unshift($viewnav, $collection->collection_nav_progresscompletion_option());
             }
+            if ($collection->has_outcomes()) {
+                array_unshift($viewnav, $collection->collection_nav_outcomes_option());
+            }
             $smarty->assign('collection', $viewnav);
         }
     }

@@ -1275,6 +1275,15 @@ class Collection {
     }
 
     /**
+     * Check that a collection has oucomes
+     *
+     * @return id of page or false
+     */
+    public function has_outcomes() {
+        return $this->outcomeportfolio && $this->outcomecategory;
+    }
+
+    /**
      * Check that a collection has progress completion enable
      * - The collection can have progress completion enabled
      * - It has progress completion enabled
@@ -1370,9 +1379,24 @@ class Collection {
         return $option;
     }
 
+    /**
+     * Get collection outcomes option for collection navigation
+     *
+     * @return object $option;
+     */
+    public function collection_nav_outcomes_option() {
+        $option = new stdClass();
+        $option->id = $this->id;
+        $option->title = get_string('Outcomes', 'group');
+        $option->outcomes = true;
+
+        $option->fullurl = self::get_outcomes_url($option);
+
+        return $option;
+    }
 
     /**
-     * Get collection framework option for collection navigation
+     * Get collection progress completion option for collection navigation
      *
      * @return object $option;
      */
@@ -1420,7 +1444,23 @@ class Collection {
     }
 
     /**
-     * Making the framework url
+     * Making the outcomes url
+     *
+     * @param object $data    Either a collection or standard object
+     * @param bool   $fullurl Return full url rather than relative one
+     *
+     * @return $url
+     */
+    public static function get_outcomes_url($data, $fullurl = true) {
+        $url = 'collection/outcomesoverview.php?id=' . $data->id;
+        if ($fullurl) {
+            return get_config('wwwroot') . $url;
+        }
+        return $url;
+    }
+
+    /**
+     * Making the progress completion url
      *
      * @param object $data    Either a collection or standard object
      * @param bool   $fullurl Return full url rather than relative one
@@ -1747,7 +1787,17 @@ class Collection {
 
         $views = $this->views();
         if (!empty($views)) {
-            if ($this->has_progresscompletion()) {
+            if ($this->has_outcomes()) {
+                if ($full) {
+                    $this->fullurl = Collection::get_outcomes_url($this);
+                    return $this->fullurl;
+                }
+                else {
+                    $this->outcomesurl = Collection::get_outcomes_url($this, false);
+                    return $this->outcomesurl;
+                }
+            }
+            else if ($this->has_progresscompletion()) {
                 if ($full) {
                     $this->fullurl = Collection::get_progresscompletion_url($this);
                     return $this->fullurl;
@@ -2256,6 +2306,13 @@ class Collection {
         }
         if ($numberofactions == 0) return false;
         return array(round(($numberofcompletedactions/$numberofactions)*100), $numberofactions);
+    }
+
+    public function get_outcomes_complete_percentage() {
+      $complete = get_column('outcome', 'complete', 'collection', $this->get('id'));
+      $outcomenumber = count($complete);
+      $completednumber = count(array_filter($complete));
+      return array(round(($completednumber/$outcomenumber)*100), $outcomenumber);
     }
 
     /**

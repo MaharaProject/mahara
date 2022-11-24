@@ -8,7 +8,8 @@
       <nav class="custom-dropdown dropdown" aria-label="{str tag="Collection" section="collection"}">
         {* Get the current page index *}
         {foreach from=$collection item=view name=page}
-            {if ($viewid && $view->view == $viewid) || ($view->progresscompletion && $progresscompletion && !$viewid) || ($view->framework && $framework && !$viewid)}
+            {if ($viewid && $view->view == $viewid) || ($view->progresscompletion && $progresscompletion && !$viewid) || ($view->framework && $framework && !$viewid) ||
+            ($view->outcomes && $outcomes && !$viewid)}
               {assign var="currentindex" value=$dwoo.foreach.page.index}
             {/if}
         {/foreach}

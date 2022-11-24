@@ -1,0 +1,32 @@
+a.outcome-state {
+    padding: 0 !important;
+    color: $green !important;
+    border: none !important;
+    &:focus {
+        outline: 0 !important;
+    }
+}
+
+div.outcome-progress-form {
+    label {
+        margin-bottom: 10px;
+    }
+    div.textarea-section {
+        min-width: 500px;
+        display: inline-block;
+    }
+    textarea {
+        height: 88px;
+        margin-bottom: 10px;
+    }
+}
+
+// need to update with type colors
+div.outcome-type {
+    display: inline-block;
+    span {
+        border: solid black 0.5px;
+        border-radius: 3px;
+        padding: 4px 8px;
+    }
+}

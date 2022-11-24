@@ -4332,6 +4332,9 @@ class View {
                     if ($collobj->has_progresscompletion()) {
                         $data['progresscompletion'] = $collobj->collection_nav_progresscompletion_option();
                     }
+                    if ($collobj->has_outcomes()) {
+                        $data['outcomes'] = $collobj->collection_nav_outcomes_option();
+                    }
                 }
 
                 $data['removable'] = self::can_remove_viewtype($data['type']);

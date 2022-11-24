@@ -56,6 +56,10 @@ class PluginBlocktypeNavigation extends MaharaCoreBlocktype {
                     $progresscompletion = $collection->collection_nav_progresscompletion_option();
                     array_unshift($views['views'], $progresscompletion);
                 }
+                if ($collection->has_outcomes()) {
+                     array_unshift($viewnav, $collection->collection_nav_outcomes_option());
+                }
+
                 $smarty->assign('views', $views['views']);
             }
         }

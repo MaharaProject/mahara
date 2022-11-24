@@ -2,21 +2,32 @@
 /**
  * Outcomes categories for select options
  * @param Collection $collection
- * @return array
+ * @return array|false
+ */
+function get_outcome_types($collection) {
+  $institution = get_field('group', 'institution', 'id', $collection->get('group'));
+
+  $sql = '
+    SELECT ot.*
+    FROM {outcome_category} oc
+        INNER JOIN {outcome_type} ot ON oc.id = ot.outcome_category
+    WHERE oc.institution = ?
+    AND oc.id = ?
+    ORDER BY ot.title ASC';
+
+  $values = array($institution, $collection->get('outcomecategory'));
+
+  $outcome_types = get_records_sql_assoc($sql, $values);
+
+  return $outcome_types;
+}
+
+/**
+ * Outcomes categories for select options format
+ * @param integer $groupid
  */
 function get_outcomes_type_options($collection) {
-    $institution = get_field('group', 'institution', 'id', $collection->get('group'));
-
-    $sql = '
-        SELECT
-            ot.id, ot.title
-        FROM {outcome_category} oc
-        INNER JOIN {outcome_type} ot ON oc.id = ot.outcome_category
-        WHERE oc.institution = ?
-        AND oc.id = ?
-        ORDER BY ot.title ASC';
-    $values = array($institution, $collection->get('outcomecategory'));
-    $outcome_types = get_records_sql_array($sql, $values);
+    $outcome_types = get_outcome_types($collection);
     $options = array( 0 => '');
     foreach($outcome_types as $type) {
         $options[$type->id] = $type->title;
