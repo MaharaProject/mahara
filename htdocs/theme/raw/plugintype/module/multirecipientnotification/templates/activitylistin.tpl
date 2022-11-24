@@ -72,22 +72,22 @@
         <div id="notification-{$item->table}-{$item->id}" class="collapse">
             {if $item->message}
             <div class="card-body {if !($item->canreply || $item->canreplyall)} no-footer{/if}">
-                {if ($item->fromusr != 0)}
+                {if $item->fromusr}
                 <p class="fromusers">
                     <strong>
                         {str section='module.multirecipientnotification' tag='fromuser'}:
                     </strong>
-                    {if ($item->fromusrlink)}
+                    {if $item->fromusrlink}
                     <span class="fromuser">
                         <a href="{$item->fromusrlink}">
-                            {/if}
-                            {$item->fromusr|display_name|truncate:$maxnamestrlength}
-                            {if ($item->fromusrlink)}
+                    {/if}
+                    {$item->fromusr|display_name|truncate:$maxnamestrlength}
+                    {if $item->fromusrlink}
                         </a>
                     </span>
                     {/if}
                 </p>
-                    {else}
+                {else}
                 <p class="fromusers">
                     <strong>
                         {str section='module.multirecipientnotification' tag='fromuser'}:
@@ -101,27 +101,23 @@
                     </strong>
                     {if $item->canreplyall}
                     <span class="tousers">
-                        {foreach from=$item->tousr item=tousr key=break}
-                        {if ($tousr['link'])}
-                        <a class="tousers" href="{$tousr['link']}">
-                            {/if}
+                        {foreach from=$item->tousr item=tousr name=key}
+                        {strip}
+                        {if ($tousr['link'])}<a class="tousers" href="{$tousr['link']}">{/if}
                             {$tousr['display']|truncate:$maxnamestrlength}
-                            {if ($tousr['link'])}
-                        </a>{/if}
-                    {/foreach}
+                        {if ($tousr['link'])}</a>{/if}
+                        {/strip}{if !$dwoo.foreach.key.last},{/if}
+                        {/foreach}
                     </span>
                     {else}
                     <span>
                         {assign var="tousr" value=$item->tousr[0]}
-                    </span>
-                    {if ($tousr['link'])}
-                    <a href="{$tousr['link']}">
-                        {/if}
-                        <span>
+                        {strip}
+                        {if ($tousr['link'])}<a href="{$tousr['link']}">{/if}
                             {$tousr['display']|truncate:$maxnamestrlength}
-                        </span>
-                        {if ($tousr['link'])}
-                    </a>{/if}
+                        {if ($tousr['link'])}</a>{/if}
+                        {/strip}
+                    </span>
                     {/if}
                 </p>
                 <p>
@@ -148,15 +144,20 @@
             <div class="actions card-footer">
                 <div class="url">
                     {if $item->canreply}
+                    {strip}
                     <a class="action" href="{$WWWROOT}module/multirecipientnotification/sendmessage.php?id={$item->fromusr}{if !$item->startnewthread}&replyto={$item->id}{/if}&returnto=outbox">
                         <span class="icon icon-reply left" role="presentation" aria-hidden="true"></span>
                         {str tag=reply section=module.multirecipientnotification}
                     </a>
+                    {/strip}
                     {/if}
                     {if $item->canreplyall}
+                    {strip}
                     <a class="action" href="{$WWWROOT}module/multirecipientnotification/sendmessage.php?replyto={$item->id}&returnto=outbox">
-                        <span class="icon icon-reply-all left" role="presentation" aria-hidden="true"></span> {str tag=replyall section=module.multirecipientnotification}
+                        <span class="icon icon-reply-all left" role="presentation" aria-hidden="true"></span>
+                        {str tag=replyall section=module.multirecipientnotification}
                     </a>
+                    {/strip}
                     {/if}
                 </div>
             </div>

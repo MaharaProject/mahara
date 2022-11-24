@@ -69,23 +69,26 @@
                         </strong>
                         {if is_array($item->tousr) && count($item->tousr) > 1}
                         <span>
-                            {foreach from=$item->tousr item=tousr key=break}
+                            {foreach from=$item->tousr item=tousr name=key}
+                            {strip}
                             {if ($tousr['link'])}<a href="{$tousr['link']}">{/if}
                                 <span class="touser">
                                 {$tousr['display']|truncate:$maxnamestrlength}
                                 </span>
                             {if ($tousr['link'])}</a>{/if}
-                            , {/foreach}
+                            {/strip}{if !$dwoo.foreach.key.last},{/if}
+                            {/foreach}
                         </span>
                         {else}
                         <span>
                             {assign var="tousr" value=$item->tousr[0]}
+                            {strip}
                             {if $tousr['link']}<a href="{$tousr['link']}">{/if}
                                 <span class="touser">
                                 {$tousr['display']|truncate:$maxnamestrlength}
                                 </span>
                             {if $tousr['link']}</a>{/if}
-                            ,
+                            {/strip}
                         </span>
                         {/if}
                 </p>

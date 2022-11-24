@@ -25,7 +25,10 @@ $string['cantsendemptysubject'] = 'Your subject is empty. Please enter a subject
 $string['cantsendemptytext']    = 'Your message is empty. Please enter a message.';
 $string['cantsendnorecipients'] = 'Please select at least one recipient.';
 $string['removeduserfromlist']  = 'A person that can\'t receive messages from you has been removed from the list of recipients.';
-$string['deleteduser']           = 'deleted account(s)';
+$string['deleteduser1'] = array(
+    0 => 'deleted account',
+    1 => 'deleted accounts'
+);
 $string['fromuser']             = 'From';
 $string['touser']               = 'To';
 

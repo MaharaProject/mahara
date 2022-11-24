@@ -10,17 +10,10 @@
                 <img src="{profile_icon_url user=$message->fromid maxwidth=60 maxheight=60}" alt="{$message->fromusrname}">
             </span>
             <a class="has-user-icon {if $dwoo.foreach.message.last}{else}collapsed{/if}" href="#message-{$message->id}" data-bs-toggle="collapse" aria-expanded="{if $dwoo.foreach.message.last}true{else}false{/if}" aria-controls="#message-{$message->id}">
-
-                {if ($message->fromusrlink != 0)}
-                <a href="{$message->fromusrlink}">
-                    <span class="accessible-hidden visually-hidden">
-                        {str tag='From' section='mahara'}
-                    </span>
-                    {$message->fromusrname}
-                </a>
-                {else}
-                    {$message->fromusrname}
-                {/if}
+                <span class="accessible-hidden visually-hidden">
+                    {str tag='From' section='mahara'}
+                </span>
+                {$message->fromusrname}
                 <span class="metadata">
                     - {$message->ctime|strtotime|format_date}
                 </span>
@@ -34,15 +27,25 @@
                     <strong>
                         {str tag='labelrecipients' section='module.multirecipientnotification'}
                     </strong>
-                    {foreach from=$message->tousrs item=recipient key="index"}
+                    {foreach from=$message->tousrs item=recipient name=key}
+                    {strip}
                     {if $recipient['link']}<a href="{$recipient['link']}">{/if}
                         <span>
-                        &nbsp;
                         {$recipient['display']}
-                        {if ($index + 1) < count($message->tousrs)}; {/if}
                         </span>
                     {if $recipient['link']}</a>{/if}
+                    {/strip}{if !$dwoo.foreach.key.last},{/if}
                     {/foreach}
+                </p>
+                <p class="sender">
+                    <strong>
+                        {str tag='From' section='mahara'}:
+                    </strong>
+                    {strip}
+                    {if $message->fromusrlink}<a href="{$message->fromusrlink}">{/if}
+                        {$message->fromusrname}
+                    {if $message->fromusrlink}</a>{/if}
+                    {/strip}
                 </p>
                 <p class="date">
                     <strong>

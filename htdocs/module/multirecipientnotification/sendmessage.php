@@ -119,7 +119,7 @@ if (!is_null($replytoid)) {
             $oldmessage->fromusrlink = profile_url($oldmessage->fromid);
         }
         if ($fromusr->deleted) {
-            $oldmessage->fromusrname = get_string('deleteduser1');
+            $oldmessage->fromusrname = get_string('deleteduser1', 'module.multirecipientnotification', 1);
         }
         else {
             $oldmessage->fromusrname = display_name($oldmessage->fromid);
@@ -143,7 +143,7 @@ if (!is_null($replytoid)) {
         }
         if ($countdeleted > 0) {
             $oldmessage->tousrs[] = array(
-                'display' => $countdeleted . ' ' . get_string('deleteduser1', 'module.multirecipientnotification'),
+                'display' => $countdeleted . ' ' . get_string('deleteduser1', 'module.multirecipientnotification', $countdeleted),
                 'link' => null,
             );
         }
