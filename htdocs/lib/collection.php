@@ -677,11 +677,11 @@ class Collection {
             }
         }
         // If there are views with framework evidence to re-map
-        if (!empty($evidenceviews)) {
-            // We need to get how the old views/artefacts/blocks/evidence fit together
-            if (!empty($artefactcopies)) {
-                $evidences = get_records_sql_array('
-                    SELECT va.view, va.artefact, va.block, fe.*
+        // We need to get how the old views/artefacts/blocks/evidence fit together
+        $evidences = array();
+        if (!empty($evidenceviews) && !empty($artefactcopies)) {
+            $evidences = get_records_sql_array('
+                    SELECT va.view, va.artefact, va.block, a.artefacttype, fe.*
                     FROM {view} v
                     JOIN {view_artefact} va ON va.view = v.id
                     JOIN {artefact} a ON a.id = va.artefact
@@ -689,12 +689,14 @@ class Collection {
                     WHERE v.id IN (' . join(',', array_keys($evidenceviews)) . ')
                     AND a.id IN (' . join(',', array_keys($artefactcopies)) . ')
                     AND fe.annotation = va.block', array());
-                $newartefactcopies = array();
-                foreach ($artefactcopies as $ac) {
-                    $newartefactcopies[$ac->newid] = 1;
-                }
-                // And get how the new views/artefacts/blocks fit together
-                $newblocks = get_records_sql_assoc('
+            $newartefactcopies = array();
+
+            foreach ($artefactcopies as $ac) {
+                $newartefactcopies[$ac->newid] = 1;
+            }
+
+            // Get how the new views/artefacts/blocks fit together
+            $new_annotation_blocks = get_records_sql_assoc('
                     SELECT va.artefact, va.view, va.block
                     FROM {view} v
                     JOIN {view_artefact} va ON va.view = v.id
@@ -702,23 +704,31 @@ class Collection {
                     WHERE v.id IN (' . join(',', array_values($evidenceviews)) . ')
                     AND a.id IN (' . join(',', array_keys($newartefactcopies)) . ')
                     AND artefacttype = ?', array('annotation'));
+        }
 
-                if (!empty($evidences)) {
-                    foreach ($evidences as $evidence) {
-                        if (key_exists($evidence->artefact, $artefactcopies) && key_exists($artefactcopies[$evidence->artefact]->newid, $newartefactcopies)) {
-                            $newartefact = $artefactcopies[$evidence->artefact]->newid;
-                            $newevidence = new stdClass();
-                            $newevidence->view = $newblocks[$newartefact]->view;
-                            $newevidence->artefact = $newartefact;
-                            $newevidence->annotation = $newblocks[$newartefact]->block;
-                            $newevidence->framework = $evidence->framework;
-                            $newevidence->element = $evidence->element;
-                            $newevidence->state = 0;
-                            $newevidence->reviewer = null;
-                            $newevidence->ctime = $evidence->ctime;
-                            $newevidence->mtime = $evidence->mtime;
-                            insert_record('framework_evidence', $newevidence);
-                        }
+        if (!empty($evidences)) { // annotation artefacts and collective file artefacts too
+            foreach ($evidences as $evidence) {
+                if (
+                    key_exists($evidence->artefact, $artefactcopies)
+                    && key_exists($artefactcopies[$evidence->artefact]->newid, $newartefactcopies)
+                ) {
+                    if ($evidence->artefacttype == 'annotation') {
+                        $newartefact = $artefactcopies[$evidence->artefact]->newid;
+
+                        $newevidence = new stdClass();
+                        $newevidence->artefact = $newartefact;
+                        $newevidence->annotation = $new_annotation_blocks[$newartefact]->block; //
+                        $newevidence->framework = $evidence->framework;
+                        $newevidence->element = $evidence->element;
+                        $newevidence->view = $new_annotation_blocks[$newartefact]->view;
+                        $newevidence->state = 0;
+                        $newevidence->reviewer = null;
+                        $newevidence->ctime = $evidence->ctime;
+                        $newevidence->mtime = $evidence->mtime;
+
+                        // Add the new annotation artefact/block - we don't need to copy files as
+                        // they'll still be owned by the same person
+                        insert_record('framework_evidence', $newevidence);
                     }
                 }
             }
