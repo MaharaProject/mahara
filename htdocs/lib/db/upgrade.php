@@ -995,8 +995,20 @@ function xmldb_core_upgrade($oldversion=0) {
                 $configdata = $block_instance->get('configdata');
                 $verify = in_array('verify', $configdata) && $configdata['verify'] ? 1 : 0;
                 set_field('view_signoff_verify', 'show_verify', $verify, 'view', $block_instance->get('view'));
-
-                execute_sql("DELETE FROM {watchlist_queue} WHERE block=?", [$signoff_block->id]);
+                if ($records = get_records_array('watchlist_queue', 'block', $block_instance->get('id'))) {
+                    foreach ($records as $record) {
+                        delete_records('watchlist_queue', 'block', $record->id);
+                        if (record_exists('usr_watchlist_view', 'view', $block_instance->get('view'))) {
+                            $whereobj = new stdClass();
+                            $whereobj->view = $block->get('view');
+                            $whereobj->block = null;
+                            $whereobj->usr = $record->usr;
+                            $dataobj = clone $whereobj;
+                            $dataobj->changed_on = date('Y-m-d H:i:s');
+                            ensure_record_exists('watchlist_queue', $whereobj, $dataobj);
+                        }
+                    }
+                }
                 $block_instance->delete();
             }
         }
