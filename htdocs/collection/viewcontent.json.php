@@ -58,7 +58,7 @@ $smarty->assign('tags', $alltags);
 $shownav = $collection->get('navigation');
 if ($shownav) {
     if ($views = $collection->get('views')) {
-        $smarty->assign('collection', $views['views']);
+        $smarty->assign('collectionnav', $views['views']);
     }
 }
 

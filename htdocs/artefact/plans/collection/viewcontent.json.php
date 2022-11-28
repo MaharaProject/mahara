@@ -54,7 +54,7 @@ $shownav = $collection->get('navigation');
 if ($shownav) {
     if ($views = $collection->get('views')) {
         if (count($views['views']) > 1) {
-            $smarty->assign('collection', array_chunk($views['views'], 5));
+            $smarty->assign('collectionnav', array_chunk($views['views'], 5));
         }
     }
 }

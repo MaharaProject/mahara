@@ -1,12 +1,19 @@
 <div class="pageactions">
     <div class="btn-group-vertical">
 
-        {if !$peerroleonly && !($headertype == "matrix" || $headertype == "progresscompletion")}
+        {if !$peerroleonly && !($headertype == "matrix" || $headertype == "progresscompletion" || $headertype == "outcomeoverview")}
         {* Assess button that will show/ hide comments and details in block-comments-details-header.tpl *}
         <button id="details-btn" type="button" class="btn btn-secondary" title="{str tag=detailslinkalt section=view}">
             <span class="icon icon-search-plus icon-lg left" role="presentation" aria-hidden="true" ></span>
             <span class="visually-hidden">{str tag=detailslinkalt section=view}</span>
         </button>
+        {/if}
+
+        {if $headertype == "outcomeoverview" && $showmanagebutton }
+          <button data-url="{$managaoutcomesurl}" type="button" class="btn btn-secondary" title="{str tag=configureoutcomes section=collection}">
+              <span class="icon icon-cogs icon-lg left" role="presentation" aria-hidden="true" ></span>
+              <span class="visually-hidden">{str tag=detailslinkalt section=view}</span>
+          </button>
         {/if}
 
         {if $editurl}{strip}
@@ -42,7 +49,7 @@
                 </li>
             {/strip}{/if}
 
-            {if $usercaneditview || $userisowner}
+            {if $usercaneditview || $userisowner || $actionsallowed}
                 <li class="dropdown-item with-icon">
                     <a id="" title="{str tag=manageaccess section=view}" href="{$accessurl}">
                         <span class="icon {if $viewlocked}icon-lock{else}icon-unlock{/if} left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=manageaccess section=view}</span>
@@ -59,7 +66,7 @@
 
             {if $LOGGEDIN}
                 {if !$userisowner}
-                    {if !($headertype == "matrix" || $headertype == "progresscompletion")}
+                    {if !($headertype == "matrix" || $headertype == "progresscompletion" || $headertype == "outcomeoverview")}
                     <li class="dropdown-item with-icon">
                         <a id="toggle_watchlist_link" class="watchlist" href="">
                         {if $viewbeingwatched}
@@ -72,7 +79,7 @@
                     {/if}
                     {if !($headertype == "matrix")}
                     <li class="dropdown-item with-icon">
-                        {if !($headertype == "matrix" || $headertype == "progresscompletion")}
+                        {if !($headertype == "matrix" || $headertype == "progresscompletion" || $headertype == "outcomeoverview")}
                             {if $objector}
                                 <span class="nolink">
                                     <span class="icon icon-flag text-danger left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=objectionablematerialreported}</span>
@@ -107,7 +114,7 @@
                     </a>
                 </li>
                 {/if}
-                {if ($userisowner || $canremove) && !($headertype == "matrix" || $headertype == "progresscompletion")}
+                {if ($userisowner || $canremove) && !($headertype == "matrix" || $headertype == "progresscompletion" || $headertype == "outcomeoverview")}
                 <li class="dropdown-item with-icon">
                     <a href="{$WWWROOT}view/delete.php?id={$viewid}" title="{str tag=deletethisview section=view}">
                         <span class="icon icon-trash-alt text-danger left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=deletethisview section=view}</span>
@@ -124,7 +131,7 @@
                   </a>
                 </li>
             {/if}
-            {if $userisowner && !($headertype == "matrix" || $headertype == "progresscompletion") }
+            {if $userisowner && !($headertype == "matrix" || $headertype == "progresscompletion" || $headertype == "outcomeoverview") }
                 <li class="dropdown-item with-icon">
                   <a href="{$createversionurl}">
                       <span class="icon icon-save left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=savetimeline section=view}</span>

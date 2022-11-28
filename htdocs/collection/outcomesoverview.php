@@ -17,12 +17,10 @@ define('PUBLIC', 1);
 define('INTERNAL', 1);
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'collection');
-define('SECTION_PAGE', 'progress');
+define('SECTION_PAGE', 'outcomeoverview');
 
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('collection.php');
-require_once(get_config('libroot') . 'objectionable.php');
-require_once(get_config('libroot'). 'revokemyaccess.php');
 require_once(dirname(dirname(__FILE__)). '/group/outcomes.php');
 
 $collectionid = param_integer('id');
@@ -40,7 +38,7 @@ if (!$collection || !$collection->get('outcomeportfolio') || !$collection->get('
 
 // Get the first view from the collection
 $firstview = $collection->first_view();
-if (!can_view_view($firstview->get('id'))) {
+if (isset($firstview) && !can_view_view($firstview->get('id'))) {
     throw new AccessDeniedException();
 }
 
@@ -109,7 +107,6 @@ if ($views) {
     else {
         $smarty->assign('author', $view->display_author());
     }
-
     // Collection top navigation.
     if ($collection->get('navigation')) {
         $viewnav = $views['views'];
@@ -122,10 +119,8 @@ if ($views) {
         if ($collection->has_outcomes()) {
             array_unshift($viewnav, $collection->collection_nav_outcomes_option());
         }
-        $smarty->assign('collection', $viewnav);
+        $smarty->assign('collectionnav', $viewnav);
     }
-
-    $smarty->assign('actionsallowed', $grouprole === 'admin' || $grouprole === 'tutor');
 
     $submittedgroup = (int)$view->get('submittedgroup');
     $can_edit = $USER->can_edit_view($view) && !$submittedgroup && !$view->is_submitted() && $USER->can_edit_collection($view->get_collection());
@@ -135,24 +130,27 @@ if ($views) {
     $smarty->assign('views', $views['views']);
     $smarty->assign('viewlocked', $view->get('locked'));
     $smarty->assign('collectiontitle', $collection->get('name'));
+    $smarty->assign('outcomeoverview', true);
 }
 
 if ($outcomes) {
+    $smarty->assign('actionsallowed', ($grouprole === 'admin' || $grouprole === 'tutor') ? 1 : 0);
+    $smarty->assign('showmanagebutton', $grouprole === 'admin');
+    $smarty->assign('managaoutcomesurl', get_config('wwwroot') . 'collection/manageoutcomes.php?id=' . $collectionid);
     // Progress bar.
     $smarty->assign('quotamessage', get_string('outcomesoverallcompletion', 'collection'));
     list($completedactionspercentage, $totalactions) = $collection->get_outcomes_complete_percentage();
     $smarty->assign('completedactionspercentage', $completedactionspercentage);
     $smarty->assign('totalactions', $totalactions);
 
+    $smarty->assign('collection', $collectionid);
     $smarty->assign('outcomes', $outcomes);
     $smarty->assign('outcometypes', $outcometypes);
 
     $smarty->assign('supportform', $supportform);
 }
 
-$returnto = $view->get_return_to_url_and_title();
-$smarty->assign('url', $returnto['url']);
-$smarty->assign('linktext', $returnto['title']);
+$smarty->assign('url', get_config('wwwroot') . 'view/groupviews.php?group=' . $collection->get('group'));
+$smarty->assign('linktext', get_string('returntogroupportfolios1', 'group'));
 
 $smarty->display('collection/outcomesoverview.tpl');
-

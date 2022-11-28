@@ -5,7 +5,7 @@
             <div class="col-md-12 main">
                 <div class="main-column{if $selected == 'content'} editcontent{/if}">
                     <div id="pageheader-column-container">
-                        {if $collection}
+                        {if $collectionnav}
                             {include file=collectionnav.tpl}
                         {/if}
 

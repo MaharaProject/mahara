@@ -1,6 +1,6 @@
 <?php
 /**
- * Outcomes categories for select options
+ * Returns outcome types
  * @param Collection $collection
  * @return array|false
  */

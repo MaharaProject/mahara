@@ -13,14 +13,26 @@ define('INTERNAL', 1);
 define('JSON', 1);
 
 require(dirname(dirname(__FILE__)) . '/init.php');
+require_once(get_config('docroot') . 'lib/collection.php');
 
 json_headers();
 
 $outcomeid = param_integer('outcomeid');
+$collectionid = param_integer('collectionid');
 $update_type = param_alpha('update_type', '');
 
 $progress = trim(param_variable('progress', ''));
 $support = param_boolean('support', null);
+
+
+$collection = new Collection($collectionid);
+// check if user admin or tutor
+if (!($collection->get('group') && (
+    group_user_access($collection->get('group')) === 'admin' ||
+    group_user_access($collection->get('group')) === 'tutor'
+  ))) {
+  throw new AccessDeniedException();
+}
 
 $record = new stdClass();
 $record->id = $outcomeid;
@@ -32,6 +44,16 @@ switch($update_type) {
     break;
   case 'support':
     $record->support = $support;
+    break;
+  case 'markcomplete':
+    $record->complete = 1;
+    $record->lastauthor = $USER->get('id');
+    $record->lastedit = db_format_timestamp(time());
+    break;
+  case 'markincomplete':
+    $record->complete = 0;
+    $record->lastauthor = $USER->get('id');
+    $record->lastedit = db_format_timestamp(time());
     break;
 }
 if ($outcomeid && update_record('outcome', $record, array('id' => $outcomeid))) {

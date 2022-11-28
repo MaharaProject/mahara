@@ -1,19 +1,36 @@
+.card.outcomeoverview {
+    width: 45%;
+}
+
+@media (max-width: 992px) {
+    .card.outcomeoverview {
+        width: 100%;
+    }
+}
+
 a.outcome-state {
     padding: 0 !important;
     color: $green !important;
     border: none !important;
+    & .icon.disabled {
+        cursor: not-allowed;
+        &.dot:before {
+            content: "\f068";
+        }
+    }
     &:focus {
         outline: 0 !important;
     }
 }
 
-div.outcome-progress-form {
+form.outcome-progress-form {
     label {
         margin-bottom: 10px;
     }
     div.textarea-section {
         min-width: 500px;
         display: inline-block;
+        max-width: 70%;
     }
     textarea {
         height: 88px;
@@ -29,4 +46,9 @@ div.outcome-type {
         border-radius: 3px;
         padding: 4px 8px;
     }
+}
+
+span.help {
+    float: none !important;
+    margin: 0 !important;
 }

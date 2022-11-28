@@ -1,0 +1,28 @@
+<!-- @license https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later -->
+<!-- @copyright For copyright information on Mahara, please see the README file distributed with this software. -->
+<h1>Outcome types</h1>
+<p>The following are all available outcome types.</p>
+<div id="type_help_file_content"></div>
+
+<script type="application/javascript">
+	$(function () {
+		const collection =
+			location.search != "" && location.search.split("?id=")[1];
+		if (collection) {
+			sendjsonrequest(
+				"gettypehelpfilecontent.json.php",
+				{ collectionid: collection },
+				"GET",
+				function (data) {
+					if (data) {
+						$("#type_help_file_content").html(data.data.html);
+					}
+				},
+				function (error) {
+					console.log(error);
+				},
+				true
+			);
+		}
+	});
+</script>

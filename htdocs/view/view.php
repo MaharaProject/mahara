@@ -792,7 +792,7 @@ if ($collection) {
             if ($collection->has_outcomes()) {
                 array_unshift($viewnav, $collection->collection_nav_outcomes_option());
             }
-            $smarty->assign('collection', $viewnav);
+            $smarty->assign('collectionnav', $viewnav);
         }
     }
     $smarty->assign('collectiontitle', $collection->get('name'));
