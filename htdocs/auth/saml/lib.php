@@ -494,7 +494,7 @@ class AuthSaml extends Auth {
                         if ($currentprincipalemail === $affiliationroles['email']) {
                             // our principal email was an affiliated one so we want to mark
                             // as principal again instead of the one passed in on 'email' variable
-                            set_user_primary_email($user->id, $affiliationroles['email']);
+                            $primaryemail = $currentprincipalemail;
                         }
                     }
                     unset($oldaffiliations[$affiliation]);
