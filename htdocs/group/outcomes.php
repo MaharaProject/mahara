@@ -29,8 +29,10 @@ function get_outcome_types($collection) {
 function get_outcomes_type_options($collection) {
     $outcome_types = get_outcome_types($collection);
     $options = array( 0 => '');
-    foreach($outcome_types as $type) {
-        $options[$type->id] = $type->title;
+    if ($outcome_types) {
+      foreach($outcome_types as $type) {
+          $options[$type->id] = $type->title;
+      }
     }
     return $options;
 }
@@ -62,6 +64,7 @@ function create_outcome_form($name, $title, $collection, $new=true, $outcome=nul
       'type'        => 'container',
       'title'       => $title,
       'isformgroup' => false,
+      'class'       => 'outcome-item',
       'elements'    => array(
         'id'          => array(
           'type'        => 'hidden',
@@ -73,6 +76,11 @@ function create_outcome_form($name, $title, $collection, $new=true, $outcome=nul
           'description' => get_string('shorttitledesc', 'collection'),
           'defaultvalue'=> $new ? null : $outcome->short_title,
           'size'        => 70,
+          'maxlength' => 70,
+          'rules' => array(
+            'required'  => true,
+            'maxlength' => 70,
+          ),
         ),
         'full_title'  => array(
           'type'        => 'textarea',
@@ -80,6 +88,10 @@ function create_outcome_form($name, $title, $collection, $new=true, $outcome=nul
           'defaultvalue'=> $new ? null : $outcome->full_title,
           'rows'        => 5,
           'cols'        => 30,
+          'maxlength' => 255,
+          'rules' => array(
+            'maxlength' => 255,
+          ),
         ),
         'outcome_type' => array(
           'type'         => 'select',

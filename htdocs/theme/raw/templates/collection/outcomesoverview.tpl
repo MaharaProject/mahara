@@ -55,7 +55,7 @@
             <div class="form-group last" id="outcome{$outcome->id}_type_container">
               <label for="outcometype-{$outcome->id}">{str tag="outcometype" section="collection"}</label>
               <div id="outcometype-{$outcome->id}" class="outcome-type">
-                <span>{$outcometypes[$outcome->outcome_type]->abbreviation}</span>
+                <span class="badge rounded-pill text-bg-{$outcometypes[$outcome->outcome_type]->styleclass}">{$outcometypes[$outcome->outcome_type]->abbreviation}</span>
               </div>
               {contextualhelp 
               plugintype='core' 
@@ -80,17 +80,17 @@
               <label class="pseudolabel" for="progress{$outcome->id}_textarea">{str tag="progress" section="collection"}</label>
               <div class="textarea-section" >
               {if $outcome->complete || !$actionsallowed}
-                <div class="text">
+                <div class="text progress-detail">
                   {$outcome->progress|safe}
                 </div>
                 {if $outcome->lastauthorprogress}
-                  <a href="{profile_url($outcome->lastauthorprogress)}" class="text-small">
+                  <a href="{profile_url($outcome->lastauthorprogress)}" class="text-small progress-author">
                     {display_name($outcome->lastauthorprogress, null, true)}
                   </a>{str tag='ondate' section='collection' arg1=$outcome->lasteditprogress|strtotime|format_date:'strftimedatetime'}
                 {/if}
               {else}
                 <div>
-                  <textarea id="progress{$outcome->id}_textarea" class="form-control resizable" tabindex="0" cols="180" rows="3" >{$outcome->progress|safe}</textarea>
+                  <textarea id="progress{$outcome->id}_textarea" class="form-control resizable" tabindex="0" cols="180" rows="3" maxlength="255">{$outcome->progress|safe}</textarea>
                 </div>
                 <button type="submit" id="progress{$outcome->id}_save" name="save" tabindex="0" class="btn btn-primary btn-sm outcome-progress-save">{str tag='save'}</button>
               {/if}
@@ -225,19 +225,20 @@ $(function() {
     const form = $(e.target).parents('.outcome-progress-form');
     const id = $(form).find('input[name="id"]').val();
     const text = $(form).find('textarea').val();
-    const data = {
-      'update_type': 'progress',
-      'outcomeid': id,
-      'collectionid': {$collection},
-      'progress': text
-    };
-    sendjsonrequest('{$WWWROOT}collection/updateoutcome.json.php', data, 'POST', function (data) {
-          const formid = $(form).attr('id');
-          formchangemanager.add(formid);
-        }, function(error) {
-          console.log(error);
-        });
-
+    if (text.length <= 255) {
+      const data = {
+        'update_type': 'progress',
+        'outcomeid': id,
+        'collectionid': {$collection},
+        'progress': text
+      };
+      sendjsonrequest('{$WWWROOT}collection/updateoutcome.json.php', data, 'POST', function (data) {
+            const formid = $(form).attr('id');
+            formchangemanager.add(formid);
+          }, function(error) {
+            console.log(error);
+      });
+    }
   })
 
   $('form.outcome-progress-form').map((i, form) => { 

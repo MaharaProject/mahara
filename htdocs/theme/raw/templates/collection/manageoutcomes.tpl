@@ -3,11 +3,15 @@
 <div id="outcome_forms" class="outcome-form-list">
   {foreach from=$outcomeforms item=form key=i}
     {if $i>0}
-      <span class="delete-outcome" style="float: right; margin-top: 8px">
-        <a href="#" title={str tag=delete}>
-          <span role="presentation" class="icon icon-trash-alt text-danger"></span>
-        </a>
-      </span>
+      <div class="delete-button-container">
+        <span class="btn-group btn-group-top">
+          <span class="delete-outcome deletebutton btn btn-secondary btn-sm">
+            <a href="#" title={str tag=delete}>
+              <span role="presentation" class="icon icon-trash-alt text-danger"></span>
+            </a>
+          </span>
+        </span>
+      </div>
     {/if}
     {$form|safe}
   {/foreach}

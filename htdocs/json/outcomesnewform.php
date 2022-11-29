@@ -23,11 +23,15 @@ $form = create_outcome_form($name, $title, $collection, true);
 $deletestring = get_string('delete');
 
 $deleteform = '
-<span class="delete-outcome" style="float: right; margin-top: 8px">
-  <a href="#" title="'. $deletestring . '">
-    <span role="presentation" class="icon icon-trash-alt text-danger"></span>
-  </a>
-</span>';
+<div class="delete-button-container">
+  <span class="btn-group btn-group-top">
+    <span class="delete-outcome deletebutton btn btn-secondary btn-sm">
+      <a href="#" title="'. $deletestring . '">
+        <span role="presentation" class="icon icon-trash-alt text-danger"></span>
+      </a>
+    </span>
+  </span>
+</div>';
 
 json_headers();
 json_reply(false, array( 'html' => $deleteform . $form));

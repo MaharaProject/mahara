@@ -123,6 +123,8 @@ $string['nooutcomesmessage'] = 'There are no outcomes defined for this portfolio
 $string['nooutcometypes'] = 'There are no outcome types for this institution';
 $string['configureoutcomes'] = 'Configure outcomes';
 $string['ondate'] = 'on %s';
+$string['manageoutcomesspecific'] = 'Manage outcomes in "%s"';
+$string['outcome_progress_description'] = 'Maximum of 255 characters.';
 
 $string['portfoliocompletion'] = 'Portfolio completion';
 $string['potentialviews'] = 'Potential pages';

@@ -99,13 +99,17 @@ if ($copy) {
 }
 else {
     $type = 'submitcancel';
-    if ($new) {
-        $submitstr = array('button' => get_string('next') . ': ' . get_string('editviews', 'collection'), 'cancel' => get_string('cancel'));
-        $confirm = array('cancel' => get_string('confirmcancelcreatingcollection','collection'));
+    if ($collection->get('group') && is_outcomes_group($collection->get('group'))) {
+      $submitstr = array('button' => get_string('save'), 'cancel' => get_string('cancel'));
+      $confirm = array('cancel' => get_string('confirmcancelcreatingcollection','collection'));
+    }
+    else if ($new) {
+      $submitstr = array('button' => get_string('next') . ': ' . get_string('editviews', 'collection'), 'cancel' => get_string('cancel'));
+      $confirm = array('cancel' => get_string('confirmcancelcreatingcollection','collection'));
     }
     else {
-        $submitstr = array(get_string('save'), get_string('cancel'));
-        $confirm = null;
+      $submitstr = array(get_string('save'), get_string('cancel'));
+      $confirm = null;
     }
     $class = 'btn-primary';
     $subclass = array('btn-primary');
@@ -268,7 +272,7 @@ function collectionedit_submit(Pieform $form, $values) {
     }
     $values['coverimage'] = (isset($values['coverimage']) ? $values['coverimage'] : null);
     $groupid = $collection->get('group');
-    $values['outcomeportfolio'] = (int)($groupid && is_outcomes_group($groupid));
+    $values['outcomeportfolio'] = (int)($groupid && is_outcomes_group($groupid) && $values['outcomeportfolio']);
     $collection = Collection::save($values);
 
     if (isset($values['progresscompletion'])) {

@@ -4074,16 +4074,16 @@ class View {
 
         $select = '
             SELECT v.id, v.id AS vid, v.title, v.title AS vtitle, v.description, v.type,  v.ctime as vctime, v.mtime as vmtime, v.atime as vatime,
-            v.owner, v.group, v.institution, v.locked, v.ownerformat, v.urlid, v.visits AS vvisits, 1 AS numviews, NULL AS lockedcoll, NULL AS collid, v.coverimage';
+            v.owner, v.group, v.institution, v.locked, v.ownerformat, v.urlid, v.visits AS vvisits, 1 AS numviews, NULL AS lockedcoll, NULL AS collid, v.coverimage, NULL as outcomeportfolio';
         $collselect = '
             UNION
             SELECT cvid.view AS id, null AS vid, c.name as title, c.name AS vtitle, c.description, null AS type, c.ctime AS vctime, c.mtime AS vmtime, c.mtime AS vatime,
             c.owner, c.group, c.institution, null AS locked, null AS ownerformat, null AS urlid, null AS vvisits,
-            numviews.numviews AS numviews, c.lock AS lockedcoll, c.id AS collid, c.coverimage';
+            numviews.numviews AS numviews, c.lock AS lockedcoll, c.id AS collid, c.coverimage, c.outcomeportfolio';
         $emptycollselect = '
             UNION
             SELECT null AS id, null AS vid, c.name AS title, c.name AS vtitle, c.description, null AS type, c.ctime AS vctime, c.mtime AS vmtime, c.mtime AS vatime,
-            c.owner, c.group, c.institution, null AS locked, null AS ownerformat, null AS urlid, null AS vvisits, 0 AS numviews, NULL AS lockedcoll, c.id AS collid, c.coverimage';
+            c.owner, c.group, c.institution, null AS locked, null AS ownerformat, null AS urlid, null AS vvisits, 0 AS numviews, NULL AS lockedcoll, c.id AS collid, c.coverimage, c.outcomeportfolio';
 
         $from = '
             FROM {view} v

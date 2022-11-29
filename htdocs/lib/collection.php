@@ -1703,7 +1703,13 @@ class Collection {
      */
     public function post_edit_redirect_url($new=false, $copy=false, $urlparams=null) {
         $redirecturl = get_config('wwwroot');
-        if ($new || $copy) {
+
+        // Group owned collection with outcomes
+        if ($this->get('group') && $this->get('outcomeportfolio')) {
+          $urlparams['id'] = $this->get('id');
+          $redirecturl .= 'collection/manageoutcomes.php';
+        }
+        else if ($new || $copy) {
             $urlparams['id'] = $this->get('id');
             $redirecturl .= 'collection/views.php';
         }

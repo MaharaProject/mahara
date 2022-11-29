@@ -54,7 +54,7 @@ try {
     }
   }
 }
-catch(Exception $e) {
-  print json_encode(get_string('outcomesaveerror', 'collection'));
+catch(SQLException $e) {
+  print json_reply(true, get_string('outcomesaveerror', 'collection'));
 }
-print json_encode(get_string('outcomesavesuccess', 'collection'));
+print json_reply(false, get_string('outcomesavesuccess', 'collection'));

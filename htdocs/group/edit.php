@@ -557,12 +557,20 @@ function editgroup_validate(Pieform $form, $values) {
             $form->set_error('request', get_string('membershipopenrequest', 'group'));
         }
     }
-    if ($values['grouptype'] === 'outcomes' && empty($values['controlled'])) {
-        $form->set_error('controlled', get_string('membershipoutcomesnotcontrolled', 'group'));
+    if ($values['grouptype'] === 'outcomes') {
+      if (empty($values['controlled'])) {
+          $form->set_error('controlled', get_string('membershipoutcomesnotcontrolled', 'group'));
+      }
+      if (!in_array($values['institution'], $instwithoutcomes)) {
+          $form->set_error('grouptype', get_string('institutionoutcomesnotallowed', 'group'));
+      }
     }
-    if ($values['grouptype'] === 'outcomes' && !in_array($values['institution'], $instwithoutcomes)) {
-        $form->set_error('grouptype', get_string('institutionoutcomesnotallowed', 'group'));
+    // don't allow to change the type to other than outcomes
+    // if there are still some collections with outcomesportfolio
+    if ($group_data->grouptype === 'outcomes' && $values['grouptype'] !== 'outcomes' && record_exists('collection', 'group', $group_data->id, 'outcomeportfolio', 1)) {
+      $form->set_error('grouptype', get_string('existingoutcomecollections', 'group'));
     }
+
     if (!empty($values['invitefriends']) && !empty($values['suggestfriends'])) {
         $form->set_error('invitefriends', get_string('suggestinvitefriends', 'group'));
     }

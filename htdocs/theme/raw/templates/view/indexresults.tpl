@@ -7,6 +7,8 @@
                             href="
                                 {if $view.template == $sitetemplate}
                                     {$WWWROOT}view/blocks.php?id={$view.id}
+                                {elseif isset($outcomesgroup) && $outcomesgroup && $view.collid && $view.outcomeportfolio}
+                                    {$WWWROOT}collection/outcomesoverview.php?id={$view.collid}
                                 {elseif isset($view.numviews) && $view.numviews == 0}
                                     {$WWWROOT}collection/views.php?id={$view.collid}
                                 {else}
@@ -123,10 +125,19 @@
                                 <ul class="dropdown-menu dropdown-menu-end" role="menu">
                                 {if $view.collid && !$view.submittedto && !$noedit && !$view.lockedcoll}
                                     <li class="dropdown-item with-icon">
+                                    {if $outcomesgroup && $view.collection->get('outcomeportfolio')}
+                                      {if $role === 'admin'}
+                                      <a href="{$WWWROOT}collection/manageoutcomes.php?id={$view.collid}" title="{str tag=manageoutcomes section=collection}" >
+                                        <span class="icon icon-list left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag="manage" section="collection"}</span>
+                                        <span class="visually-hidden">{str(tag=manageoutcomesspecific section=collection arg1=$view.displaytitle)|escape:html|safe}</span>
+                                      </a>
+                                      {/if}
+                                    {else}
                                         <a href="{$WWWROOT}collection/views.php?id={$view.collid}" title="{str tag=manageviews section=collection}">
                                             <span class="icon icon-list left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag="manage" section="collection"}</span>
                                             <span class="visually-hidden">{str(tag=manageviewsspecific section=collection arg1=$view.displaytitle)|escape:html|safe}</span>
                                         </a>
+                                    {/if}
                                     </li>
                                 {/if}
                                 {if !$view.submittedto && !$noedit && (!$view.locked || $editlocked) && !$view.lockedcoll && !($view.collid && $outcomesgroup && $role !== 'admin')}
@@ -183,6 +194,9 @@
                                 {if $view.framework}
                                     {assign var=fullnumviews value=$fullnumviews + 1}
                                 {/if}
+                                {if $view.outcomes}
+                                    {assign var=fullnumviews value=$fullnumviews + 1}
+                                {/if}
                                 <div class="collection-list" title="{str tag='numviewsincollection' section='collection' arg1='$fullnumviews'}">
                                     {if $view.numviews > 0}
                                     <a href="#" class="dropdown-toggle btn btn-link" data-bs-toggle="dropdown" aria-expanded="false">
@@ -205,6 +219,13 @@
                                     {/if}
                                     {if $view.collid && $view.collviews > 0}
                                     <ul class="dropdown-menu" role="menu">
+                                        {if $view.outcomes}
+                                        <li class="dropdown-item with-icon">
+                                            <a href="{$view.outcomes->fullurl}">
+                                                <span class="icon icon-clipboard-check left" role="presentation" aria-hidden="true"></span><span class="link-text">{$view.outcomes->title}</span>
+                                            </a>
+                                        </li>
+                                        {/if}
                                         {if $view.progresscompletion}
                                         <li class="dropdown-item with-icon">
                                             <a href="{$view.progresscompletion->fullurl}">

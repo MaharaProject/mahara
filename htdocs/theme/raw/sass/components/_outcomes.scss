@@ -1,54 +1,92 @@
+// Harcoded outcome type colors
+$outcome-type-color-1-bg: $indigo-100;
+$outcome-type-color-1-color: $indigo;
+$outcome-type-color-2-bg: $red-100;
+$outcome-type-color-2-color: $red;
+$outcome-type-color-3-bg: $yellow-100;
+$outcome-type-color-3-color: $yellow;
+$outcome-type-color-4-bg: $cyan-100;
+$outcome-type-color-4-color: $cyan;
+
 .card.outcomeoverview {
-    width: 45%;
+	width: 45%;
 }
 
 @media (max-width: 992px) {
-    .card.outcomeoverview {
-        width: 100%;
-    }
+	.card.outcomeoverview {
+		width: 100%;
+	}
 }
 
 a.outcome-state {
-    padding: 0 !important;
-    color: $green !important;
-    border: none !important;
-    & .icon.disabled {
-        cursor: not-allowed;
-        &.dot:before {
-            content: "\f068";
-        }
-    }
-    &:focus {
-        outline: 0 !important;
-    }
+	padding: 0 !important;
+	color: $green !important;
+	border: none !important;
+	& .icon.disabled {
+		cursor: not-allowed;
+		&.dot:before {
+			content: "\f068";
+		}
+	}
+	&:focus {
+		outline: 0 !important;
+	}
 }
 
 form.outcome-progress-form {
-    label {
-        margin-bottom: 10px;
-    }
-    div.textarea-section {
-        min-width: 500px;
-        display: inline-block;
-        max-width: 70%;
-    }
-    textarea {
-        height: 88px;
-        margin-bottom: 10px;
-    }
+	label {
+		margin-bottom: 10px;
+	}
+	div.textarea-section {
+		min-width: 500px;
+		display: inline-block;
+		max-width: 70%;
+		& .errmsg {
+			margin: 0;
+		}
+		& .progress-detail {
+			overflow-wrap: break-word;
+			margin-bottom: 16px;
+		}
+	}
+	textarea {
+		height: 88px;
+		margin-bottom: 10px;
+	}
 }
 
-// need to update with type colors
+// includes hardcoded outcome type classes for background and border color
 div.outcome-type {
-    display: inline-block;
-    span {
-        border: solid black 0.5px;
-        border-radius: 3px;
-        padding: 4px 8px;
-    }
+	display: inline-block;
+	span {
+		&.text-bg-outcome1 {
+			background-color: $outcome-type-color-1-bg;
+			color: $outcome-type-color-1-color;
+		}
+		&.text-bg-outcome2 {
+			background-color: $outcome-type-color-2-bg;
+			color: $outcome-type-color-2-color;
+		}
+		&.text-bg-outcome3 {
+			background-color: $outcome-type-color-3-bg;
+			color: $outcome-type-color-3-color;
+		}
+		&.text-bg-outcome4 {
+			background-color: $outcome-type-color-4-bg;
+			color: $outcome-type-color-4-color;
+		}
+	}
 }
 
 span.help {
-    float: none !important;
-    margin: 0 !important;
+	float: none !important;
+	margin: 0 !important;
+}
+
+.delete-button-container {
+	border-bottom: $list-group-border-width solid $list-group-border-color;
+}
+
+.outcome-form-section {
+	margin-top: 32px;
 }

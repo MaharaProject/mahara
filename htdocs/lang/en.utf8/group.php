@@ -80,6 +80,7 @@ $string['membershipopenoutcomes']  = 'Membership cannot be both open and have ou
 $string['membershipopenrequest']     = "Open membership groups do not accept membership requests.";
 $string['membershipoutcomesnotcontrolled']     = "Membership cannot have outcomes and not be controlled.";
 $string['institutionoutcomesnotallowed']     = "Cannot have 'Outcomes' group type on this institution";
+$string['existingoutcomecollections'] = 'Cannot change group type, there are still some outcome collections in the group';
 $string['requestmembership']         = 'Request membership';
 $string['pendingmembers']            = 'Pending members';
 $string['reason']                    = 'Reason';

@@ -30,6 +30,9 @@ $collection = new Collection($id);
 if (!$USER->can_edit_collection($collection)) {
     throw new AccessDeniedException(get_string('canteditcollection', 'collection'));
 }
+if ($collection->get('outcomeportfolio')) {
+  throw new AccessDeniedException(get_string('canteditcollection', 'collection'));
+}
 $sesskey = $USER->get('sesskey');
 $inlinejs = '';
 if ($accesschanged = $SESSION->get('pageaccesschanged')) {

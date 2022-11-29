@@ -56,6 +56,26 @@ $strings= get_outcome_lang_strings();
 $js = <<< EOJS
 {$strings}
 jQuery(function($) {
+
+    /**
+     * Prevent short title input element to submit form on 'enter' krey pressed
+     */
+    function removeSubmitOnEnter() {
+      $("#outcome_forms input[name='short_title']").on('keypress', function(e){
+        if (e.keyCode == 13) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      })
+    }
+
+    /**
+     * Set maxlength attribute on textareas
+     */
+    function setMaxlength() {
+      $("textarea").attr('maxlength', 255);
+    }
+
     /*
      * Validate short_title field not empty
      */
@@ -107,7 +127,7 @@ jQuery(function($) {
           data.push({
             "short_title": short_title,
             "full_title": full_title,
-            "outcome_type": outcome_type,
+            "outcome_type": outcome_type || '',
             "id": id,
           });
         });
@@ -117,17 +137,23 @@ jQuery(function($) {
           },
           "POST",
           function(data) {
+            formchangemanager.reset();
+            const id = new URL(location.href).searchParams.get('id');
+            window.location.href= config.wwwroot + 'collection/outcomesoverview.php?id=' + id;
             if (data) {
               $("#messages div").html(data);
             }
+          },
+          function(error) {
+            $("#messages")[0].scrollIntoView(true);
           }
         );
       }
     }
 
-  /**
-   * Gets a new outcome form to be added to the DOM
-   */
+    /**
+     * Gets a new outcome form to be added to the DOM
+     */
     function addOutcomeForm(e) {
       console.log("addOutcomeForm");
       e.preventDefault();
@@ -141,6 +167,9 @@ jQuery(function($) {
         function (data) {
           if (data.html) {
               $("#outcome_forms").append(data.html);
+              $("#outcome_forms .requiredmarkerdesc").remove();
+              removeSubmitOnEnter();
+              setMaxlength();
               $("#outcome_forms .delete-outcome a").last().on("click", removeForms);
               $("#outcome_buttons_container")[0].scrollIntoView({block: "end"});
           }
@@ -153,7 +182,7 @@ jQuery(function($) {
      */
     function deleteOutcome(e) {
       e.preventDefault();
-      const deleteform = $(e.target).parent().parent();
+      const deleteform = $(e.target).closest('div');
       const outcomeform = deleteform.next();
       // get hidden db id
       const id = outcomeform.find(`input[name="id"]`).val();
@@ -195,10 +224,14 @@ jQuery(function($) {
       }
     }
 
-    $("#submit_save").on("click",   saveOutcomesForm);
+    $("#submit_save").on("click", saveOutcomesForm);
     $("#add_outcome").on("click",   addOutcomeForm);
     $(".delete-outcome a").on("click", deleteOutcome);
-
+    $("#outcome_forms .requiredmarkerdesc").remove();
+    removeSubmitOnEnter();
+    // Somehow maxlength is not being set on the textareas
+    // need to add it using jquery
+    setMaxlength();
 });
 EOJS;
 $cancelredirecturl = get_config('wwwroot') . 'view/groupviews.php?group=' . $collection->get('group');
