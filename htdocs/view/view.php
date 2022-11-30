@@ -584,8 +584,9 @@ if ($showcomment) {
     $artefacttype = get_field('artefact', 'artefacttype', 'id', $showcomment);
     $classname = generate_artefact_class_name($artefacttype);
     $tmpcomment = new $classname($showcomment);
-    if ($tmpcomment->get('onartefact') && !$commentonartefact) {
-        redirect(get_config('wwwroot') . 'view/view.php?id=' . $viewid . '&showcomment=' . $showcomment . '&modal=1&artefact=' . $tmpcomment->get('onartefact'));
+    if (property_exists($tmpcomment, 'onartefact') && $tmpcomment->get('onartefact') && !$commentonartefact) {
+        redirect(get_config('wwwroot') . 'view/view.php?id=' . $viewid . '&showcomment=' .
+        $showcomment . '&modal=1&artefact=' . $tmpcomment->get('onartefact'));
     }
 }
 

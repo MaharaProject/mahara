@@ -197,6 +197,11 @@ a {
     &.js-add-comment-modal {
         margin: $spacing-base 0;
     }
+
+    &.js-checkpoint-modal,
+    &.js-add-comment-modal {
+        margin: $spacing-base 0;
+    }
 }
 
 img {

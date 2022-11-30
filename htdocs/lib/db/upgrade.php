@@ -1220,5 +1220,12 @@ function xmldb_core_upgrade($oldversion=0) {
 
     }
 
+    if ($oldversion < 2023012001) {
+        log_debug('Force install of checkpoint plugin');
+        if ($data = check_upgrades('artefact.checkpoint')) {
+            upgrade_plugin($data);
+        }
+    }
+
     return $status;
 }

@@ -632,17 +632,17 @@ EOF;
      * @return array            Array of blocktypes
      */
     public static function get_blocktypes_for_category($category, View $view, $blocktype = null) {
-        $sql = 'SELECT bti.name, bti.artefactplugin, btic.sortorder
-            FROM {blocktype_installed} bti
-            JOIN {blocktype_installed_category} btic ON btic.blocktype = bti.name
-            JOIN {blocktype_installed_viewtype} btiv ON btiv.blocktype = bti.name
-            WHERE btic.category = ? AND bti.active = 1 AND btiv.viewtype = ?';
+        $sql = 'SELECT bi.name, bi.artefactplugin, bc.sortorder
+            FROM {blocktype_installed} bi
+            JOIN {blocktype_installed_category} bc ON bc.blocktype = bi.name
+            JOIN {blocktype_installed_viewtype} bv ON bv.blocktype = bi.name
+            WHERE bc.category = ? AND bi.active = 1 AND bv.viewtype = ?';
         $where = array($category, $view->get('type'));
         if ($blocktype) {
-            $sql .= ' AND bti.name = ?';
+            $sql .= ' AND bi.name = ?';
             $where[] = $blocktype;
         }
-        $sql .= ' ORDER BY btic.sortorder, bti.name';
+        $sql .= ' ORDER BY bc.sortorder, bi.name';
         if (!$bts = get_records_sql_array($sql, $where)) {
             return false;
         }

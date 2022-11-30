@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XMLDB PATH="lib/db" VERSION="20100319" COMMENT="Checkpoint feedback table"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+    <TABLES>
+        <TABLE NAME="artefact_checkpoint_feedback">
+            <FIELDS>
+                <FIELD NAME="feedback" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="activity" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="block" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="author" TYPE="int" LENGTH="10" NOTNULL="true" />
+            </FIELDS>
+            <KEYS>
+                <KEY NAME="feedbackpk" TYPE="primary" FIELDS="feedback" />
+                <KEY NAME="feedbackfk" TYPE="foreign" FIELDS="feedback" REFTABLE="artefact" REFFIELDS="id" />
+                <KEY NAME="activityfk" TYPE="foreign" FIELDS="activity" REFTABLE="view_activity" REFFIELDS="id" />
+                <KEY NAME="blockfk" TYPE="foreign" FIELDS="block" REFTABLE="block_instance" REFFIELDS="id" />
+                <KEY NAME="authorfk" TYPE="foreign" FIELDS="author" REFTABLE="usr" REFFIELDS="id" />
+            </KEYS>
+        </TABLE>
+    </TABLES>
+</XMLDB>
