@@ -75,15 +75,15 @@ define('INSTALLER', 1);
 define('CLI', 1);
 
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
-require(get_config('libroot') . 'cli.php');
-require(get_config('docroot') . 'auth/ldap/lib.php');
+require_once(get_config('libroot') . 'cli.php');
+require_once(get_config('docroot') . 'auth/ldap/lib.php');
 
 // must be done before any output
 $USER->reanimate(1, 1);
 
-require(get_config('libroot') . 'institution.php');
-require(get_config('libroot') . 'group.php');
-require(get_config('libroot') . 'searchlib.php');
+require_once(get_config('libroot') . 'institution.php');
+require_once(get_config('libroot') . 'group.php');
+require_once(get_config('libroot') . 'searchlib.php');
 require_once(get_config('docroot') . 'auth/ldap/lib.php');
 require_once(dirname(dirname(__FILE__))) . '/lib.php';
 
