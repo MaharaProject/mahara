@@ -1649,7 +1649,7 @@ class HtmlExportOutputFilter {
                     return '';
                 }
                 $rootpath = ($this->exporter->get('exportingoneview')) ? $this->exporter->get_root_path(2) : $this->exporter->get_root_path(3);
-                return $rootpath . $this->get_export_path_for_file($icon, $options, $this->rootdir . '/static/profileicons/');
+                return $rootpath . $this->get_export_path_for_file($icon, $options, $this->exporter->get('rootdir') . '/static/profileicons/');
             default:
                 return '';
             }
