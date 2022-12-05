@@ -960,7 +960,10 @@ class PluginAuthXmlrpc extends PluginAuth {
         $peer->institution          = $values['institution'];
         if (isset($values['publickey'])) {
             $peer->publickey            = new PublicKey($values['publickey'], $peer->wwwroot);
-            $peer->publickeyexpires     = $peer->publickey->expires;
+            $peer->set('publickeyexpires', $peer->publickey->expires);
+        }
+        else {
+            $peer->set('publickeyexpires', $peer->publickey->credentials['validTo_time_t']);
         }
 
         /**
