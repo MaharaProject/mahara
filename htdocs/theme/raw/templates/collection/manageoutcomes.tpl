@@ -20,11 +20,11 @@
   <a id="add_outcome" class="add-outcome-link" href="#">+ {get_string('addoutcomelink', 'collection')}</a>
 </div>
 
-<div id="outcome_buttons_container" class="outcome-form-section">
-  <button id="submit_save" class="btn btn-primary submitcancel submit" type="submit" d>
+<div id="outcome_buttons_container" class="outcome-form-section submitcancel form-group">
+  <button id="submit_save" class="btn btn-primary submitcancel submit" type="submit">
     {str tag=save}
   </button>
-  <button id="submit_cancel" class="btn submitcancel cancel" type="submit" data-url="{$cancelredirecturl}">
+  <button id="submit_cancel" class="submitcancel cancel" type="submit" data-url="{$cancelredirecturl}">
     {str tag=cancel}
   </button>
 </div>

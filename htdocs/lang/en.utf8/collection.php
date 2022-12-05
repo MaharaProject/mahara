@@ -95,6 +95,8 @@ $string['noviews'] = 'No pages.';
 $string['overrideaccess'] = 'Override access';
 $string['onlyactivetemplatewarning'] = 'This is the only auto-copied template in this institution. By changing this setting, there will not be a template to copy into new accounts (and based on a cron job if such is configured) automatically.';
 $string['updatingautocopytemplatewarning'] = 'Only one collection can be the active automatically copied template for an institution. By setting this collection to be the auto-copied template for the institution "%s", the current auto-copied collection "%s" will be set to inactive. It will not be shared with the institution any more.';
+
+// Outcomes
 $string['manageoutcomes'] = 'Manage outcomes';
 $string['addoutcomelink'] = 'Add an outcome';
 $string['confirmdeleteoutcomedb'] = 'Are you sure you want to delete this outcome? This action cannot be reverted.';
@@ -125,6 +127,18 @@ $string['configureoutcomes'] = 'Configure outcomes';
 $string['ondate'] = 'on %s';
 $string['manageoutcomesspecific'] = 'Manage outcomes in "%s"';
 $string['outcome_progress_description'] = 'Maximum of 255 characters.';
+$string['activity'] = 'Activity';
+$string['tabledesc'] = 'TODO';
+$string['noactivities'] = 'This outcome does not have any activities yet.';
+$string['completeactivityaction'] = 'Remove sign off on activity \'%s\'';
+$string['incompleteactivityaction'] = 'Sign off activity \'%s\'';
+$string['completeactivity'] = 'Activity \'%s\' has been signed off';
+$string['incompleteactivity'] = 'Activity \'%s\' needs to be signed off';
+$string['activityupdated'] = 'Activity status has been updated';
+$string['activityeupdatefailed'] = 'Failed to update activity status';
+$string['activitysignoffundo'] =  'If you select "Yes", you will remove the signed off status from the activity.';
+$string['activitysignoff'] = 'Select "Yes" to sign off this activity.';
+
 
 $string['portfoliocompletion'] = 'Portfolio completion';
 $string['potentialviews'] = 'Potential pages';
@@ -163,6 +177,7 @@ $string['outcomeportfolio'] = 'Outcomes portfolio';
 $string['outcomeportfoliodesc'] = 'Creates a collection with outcomes that are managed in the collection.';
 $string['outcomecategory'] = 'Outcome category';
 $string['outcomecategorydesc'] = 'Select the category of outcomes that you want to use in this portfolio.';
+$string['outcomecategorymissing'] = '<div class="alert alert-warning">Outcome categories for the "%s" institution are missing. Please add outcome portfolios to the database to be used with this institution. They can be added via the "populate_outcome_tables.php" CLI script.</div>';
 $string['outcomes'] = 'Outcomes';
 $string['outcomesoverallcompletion'] = 'Overall completion of outcomes';
 

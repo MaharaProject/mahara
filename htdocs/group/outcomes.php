@@ -110,3 +110,51 @@ function create_outcome_form($name, $title, $collection, $new=true, $outcome=nul
     'elements' => $elements,
   ));
 }
+
+
+/**
+ * Get outcome activities from the DB grouped by outcome id
+ * @param int $collectionid
+ * @param int $activityid optional
+ */
+function get_outcome_activity_views($collectionid, $activityid=null) {
+  if ($collectionid) {
+    $sql = '
+      SELECT va.id, ova.outcome as outcome, v.id as view, v.title
+      FROM {view} v
+      INNER JOIN {view_activity} va
+        ON v.id = va.view
+      INNER JOIN {outcome_view_activity} ova
+        ON va.id = ova.activity
+    ';
+    $where = ' WHERE ova.outcome in (
+      SELECT o.id FROM {outcome} o
+      WHERE o.collection = ?
+    ) ';
+    $params = array($collectionid);
+    if ($activityid) {
+      $where .= ' AND va.id = ? ';
+      $params[] = $activityid;
+    }
+    $sql .= $where . ' ORDER BY ova.outcome, v.id';
+
+    $views = get_records_sql_array($sql, $params);
+
+    if ($activityid && $views) {
+      return $views[0];
+    }
+    else if ($views) {
+      $activities = [];
+      foreach($views as $view) {
+        if (!array_key_exists($view->outcome, $activities)) {
+          $activities[$view->outcome] = [];
+        }
+        $activities[$view->outcome][] = $view;
+      }
+      return $activities;
+    }
+  }
+  return false;
+}
+
+

@@ -931,6 +931,7 @@ $returnto = $view->get_return_to_url_and_title();
 $smarty->assign('url', $returnto['url']);
 $smarty->assign('linktext', $returnto['title']);
 $smarty->assign('viewid', $view->get('id'));
+$smarty->assign('signoff_html', $signoff_html);
 $smarty->assign('group', $view->get('group'));
 $smarty->display('view/view.tpl');
 

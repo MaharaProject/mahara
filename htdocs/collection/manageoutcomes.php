@@ -246,17 +246,17 @@ $smarty->display('collection/manageoutcomes.tpl');
 /**
  * Get all strings that will be needed on js script
  */
-function get_outcome_lang_strings(){
-  $jsstrings = array(
-    array('confirmdeleteoutcomedb', 'collection'),
-    array('confirmdeleteoutcome', 'collection'),
-    array('rule.required.required', 'pieforms'),
-    array("errorprocessingform", "mahara")
-  );
-  $strings = "var strings = [];\n";
-  foreach ($jsstrings as $stringdata) {
-    list($tag, $section) = $stringdata;
-    $strings .= '    strings["' . $tag . '"] = ' . json_encode(get_raw_string($tag, $section)) . ";\n";
-  }
-  return $strings;
+function get_outcome_lang_strings() {
+    $jsstrings = array(
+        array('confirmdeleteoutcomedb', 'collection'),
+        array('confirmdeleteoutcome', 'collection'),
+        array('rule.required.required', 'pieforms'),
+        array("errorprocessingform", "mahara")
+    );
+    $strings = '';
+    foreach ($jsstrings as $stringdata) {
+        list($tag, $section) = $stringdata;
+        $strings .= '    strings["' . $tag . '"] = ' . json_encode(get_raw_string($tag, $section)) . ";\n";
+    }
+    return $strings;
 }

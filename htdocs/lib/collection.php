@@ -968,7 +968,8 @@ class Collection {
                 'type'  => 'switchbox',
                 'title' => get_string('outcomeportfolio', 'collection'),
                 'description' => get_string('outcomeportfoliodesc', 'collection'),
-                'defaultvalue' => 1,
+                'defaultvalue' => empty($categories) ? 0 : 1,
+                'disabled' => empty($categories),
             );
             $options = [];
             if ($categories) {
@@ -982,6 +983,12 @@ class Collection {
                     'options' => $options,
                     'collapseifoneoption' => true,
                     'defaultvalue' => null,
+                );
+            }
+            else {
+                $elements['outcomecategory_html'] = array(
+                    'type' => 'html',
+                    'value' => get_string('outcomecategorymissing', 'collection', $institution),
                 );
             }
         }

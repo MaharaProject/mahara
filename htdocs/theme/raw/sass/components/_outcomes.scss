@@ -28,7 +28,8 @@ $outcome-type-colors: (
 	}
 }
 
-a.outcome-state {
+a.outcome-state,
+a.activity-state {
 	padding: 0 !important;
 	border: none !important;
 
@@ -45,6 +46,10 @@ a.outcome-state {
 		cursor: not-allowed;
 		color: scale-color($gray-300, $lightness: 28%) !important;
 		&.dot:before {
+	// text-decoration: none;
+	// .icon.disabled {
+	// 	cursor: not-allowed;
+	// 	&:before {
 			content: "\f068";
 		}
 	}

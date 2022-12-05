@@ -18,10 +18,14 @@
   {foreach $outcomes item=outcome}
     <div class="form-group collapsible-group">
       <fieldset class="pieform-fieldset collapsible">
+      {* <fieldset class="first last pieform-fieldset collapsible"> *}
+        {* Outcome header *}
         <legend>
           <button type="button" data-bs-target="#dropdown{$outcome->id}" data-bs-toggle="collapse" aria-expanded="false" aria-controls="dropdown{$outcome->id}" class="collapsed" >
             {$outcome->short_title|safe}
             <div class="d-flex right float-end">
+
+              {* Outcome status icon *}
               {if $actionsallowed}
                 {if $outcome->complete}
                   <a href="#" class="outcome-state outcome-complete " data-outcome={$outcome->id} title="{str tag='completeoutcomeaction' section='collection' arg1=$outcome->short_title|safe}" >
@@ -35,11 +39,11 @@
               {else}
                 {if $outcome->complete}
                   <a href="#" class="outcome-state" title="{str tag='completeoutcome' section='collection' arg1=$outcome->short_title|safe}" >
-                    <span class="icon icon-check-circle completed mt-1 px-4 disabled "></span>
+                    <span class="icon icon-check-circle completed mt-1 px-4 "></span>
                   </a>
                 {else}
                   <a href="#" class="outcome-state" title="{str tag='incompleteoutcome' section='collection' arg1=$outcome->short_title|safe}" >
-                    <span class="icon icon-circle dot icon-regular mt-1 px-4 disabled "></span>
+                    <span class="icon icon-circle dot mt-1 px-4 disabled "></span>
                   </a>
                 {/if}
               {/if}
@@ -47,10 +51,15 @@
             </div>
           </button>
         </legend>
+
+        {* Outcome collapsible panel *}
         <div class="fieldset-body collapse" id="dropdown{$outcome->id}">
 
           <div class="form-group form-group-no-border">{$outcome->full_title|safe}</div>
+          {* Outcome full title *}
+          {* <div class="form-group last">{$outcome->full_title|safe}</div> *}
 
+          {* Outcome type code *}
           {if $outcome->outcome_type}
             <div class="form-group form-group-no-border" id="outcome{$outcome->id}_type_container">
               <label for="outcometype-{$outcome->id}">{str tag="outcometype" section="collection"}</label>
@@ -66,15 +75,38 @@
             </div>
           {/if}
 
-          <br/>** Table goes here ** <br/><br/>
-          <button id="addactivity" class="btn btn-secondary btn-sm "
+          {* Outcome Activity table *}
+          {if !$activities }
+            <p>{str tag='noactivities' section='collection'}</p>
+          {else}
+          <table class="fullwidth table tablematrix progresscompletion" id="tablematrix">
+              <caption class="visually-hidden">{str tag="tabledesc" section="collection"}</caption>
+              <tr class="table-pager">
+                  <th>{str tag="activity" section='collection'}</th>
+                  <th class="userrole">{str tag="signoff" section="view"}</th>
+              </tr>
+              {foreach from=$activities[$outcome->id] item=activity}
+              <tr data-activity="{$activity->id}">
+                {* TODO: check if activity has been signed off *}
+                {include file="collection/activitytablerow.tpl" signedoff=false activityid=$activity->id viewid=$activity->view title=$activity->title}
+              </tr>
+              {/foreach}
+          </table>
+          {/if}
+
+          {* Add activity button *}
+          {if !$outcome->complete && $actionsallowed}
+            <button id="addactivity" class="btn btn-secondary btn-sm "
             data-bs-target="{$WWWROOT}view/editlayout.php?new=1{$urlparamsstr}&group={$group}&collection={$collection}&outcome={$outcome->id}">
             <span class="icon icon-plus left" role="presentation" aria-hidden="true"> </span>
             {str tag="addactivity" section="collection"}
           </button>
+          {/if}
 
+          {* Outcome support switchbox *}
           {$supportform[$outcome->id]|safe}
 
+          {* Outcome progress textarea *}
           <form class="outcome-progress-form" id="progress{$outcome->id}">
             <div class="form-group form-group-no-border">
               <label class="pseudolabel" for="progress{$outcome->id}_textarea">{str tag="progress" section="collection"}</label>
@@ -93,7 +125,7 @@
                 <div>
                   <textarea id="progress{$outcome->id}_textarea" class="form-control resizable" tabindex="0" cols="180" rows="3" maxlength="255">{$outcome->progress|safe}</textarea>
                 </div>
-                <button type="submit" id="progress{$outcome->id}_save" name="save" tabindex="0" class="btn btn-primary btn-sm outcome-progress-save">{str tag='save'}</button>
+                <button type="submit" id="progress{$outcome->id}_save" name="save" tabindex="0" class="btn btn-secondary btn-sm outcome-progress-save">{str tag='save'}</button>
               {/if}
               </div>
             </div>
@@ -106,155 +138,18 @@
 {else}
   {str tag="nooutcomesmessage" section="collection" }
 {/if}
-{* complete outcome modal form *}
-<div tabindex="0" class="modal fade" id="complete-confirm-form">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
-                <h1 class="modal-title">
-                    {str tag=markcomplete section=collection}
-                </h1>
-            </div>
-            <div class="modal-body">
-                <div class="btn-group">
-                    <button id="complete-yes-button" type="button" class="btn btn-secondary">{str tag="yes"}</button>
-                    <button id="complete-back-button" type="button" class="btn btn-secondary">{str tag="no"}</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
-{* incomplete outcome modal form *}
-<div tabindex="0" class="modal fade" id="incomplete-confirm-form">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
-                <h1 class="modal-title">
-                    {str tag=markincomplete section=collection}
-                </h1>
-            </div>
-            <div class="modal-body">
-                <div class="btn-group">
-                    <button id="incomplete-yes-button" type="button" class="btn btn-secondary">{str tag="yes"}</button>
-                    <button id="incomplete-back-button" type="button" class="btn btn-secondary">{str tag="no"}</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+{if $actionsallowed}
+  {include file='collection/outcomesoverviewmodals.tpl'}
+{/if}
 
-<script type="application/javascript">
-$(function() {
-
-  if ({$actionsallowed}) {
-
-    // Set complete
-    $("a.outcome-incomplete").on('click', function(e) {
-      e.stopPropagation();
-      e.preventDefault();
-      $("#complete-confirm-form").modal('show');
-      $("#complete-confirm-form").attr('outcomeid', $(this).attr('data-outcome'));
-    });
-
-    // click 'No' button on modals
-    $("#complete-back-button").on('click', function() {
-        $("#complete-confirm-form").modal('hide');
-    });
-
-    $('#complete-yes-button').on('click', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        var outcomeid = $("#complete-confirm-form").attr('outcomeid');
-        sendjsonrequest('{$WWWROOT}collection/updateoutcome.json.php', { 'update_type': 'markcomplete', 'outcomeid': outcomeid, 'collectionid': {$collection} }, 'POST', function (data) {
-          if (data) {
-            location.reload();
-          }
-        }, function(error) {
-          console.log(error);
-        });
-    });
-
-    // Set incomplete
-    $("a.outcome-complete").on('click', function(e) {
-      e.stopPropagation();
-      e.preventDefault();
-      $("#incomplete-confirm-form").modal('show');
-      $("#incomplete-confirm-form").attr('outcomeid', $(this).attr('data-outcome'));
-    });
-
-    // click 'No' button on modals
-    $("#incomplete-back-button").on('click', function() {
-        $("#incomplete-confirm-form").modal('hide');
-    });
-
-    $('#incomplete-yes-button').on('click', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        var outcomeid = $("#incomplete-confirm-form").attr('outcomeid');
-        sendjsonrequest('{$WWWROOT}collection/updateoutcome.json.php', { 'update_type': 'markincomplete', 'outcomeid': outcomeid, 'collectionid': {$collection} }, 'POST', function (data) {
-          if (data) {
-            location.reload();
-          }
-        }, function(error) {
-          console.log(error);
-        });
-    });
-  }
-
-  $('form.supportform input.switchbox').on('change', function(e) {
-    const id = $(e.target).parents('form').find('[name=id]').val();
-    const support = $(e.target).prop('checked');
-    const data = {
-      'update_type': 'support',
-      'outcomeid': id,
-      'collectionid': {$collection},
-      'support': support
-    };
-    sendjsonrequest(config.wwwroot + 'collection/updateoutcome.json.php', data, 'POST', function(data) {
-      console.log(data);
-    },
-    function(error) {
-      console.log(error);
-    })
-  });
-
-  $(".outcome-progress-save").on('click', function(e) {
-    e.preventDefault();
-    const form = $(e.target).parents('.outcome-progress-form');
-    const id = $(form).find('input[name="id"]').val();
-    const text = $(form).find('textarea').val();
-    if (text.length <= 255) {
-      const data = {
-        'update_type': 'progress',
-        'outcomeid': id,
-        'collectionid': {$collection},
-        'progress': text
-      };
-      sendjsonrequest('{$WWWROOT}collection/updateoutcome.json.php', data, 'POST', function (data) {
-            const formid = $(form).attr('id');
-            formchangemanager.add(formid);
-          }, function(error) {
-            console.log(error);
-      });
-    }
-  })
-
-  $('form.outcome-progress-form').map((i, form) => {
-    const formid = $(form).attr('id');
-    formchangemanager.add(formid);
-  })
-
+<script>
   var addurl = $j("#addactivity").attr('data-bs-target');
-
     $j("#addactivity").on('click', function() {
         // redirect to the special 'activity page'
         var url = addurl + '&type=activity';
         window.location = url;
     })
-
-});
 </script>
+
 {include file="footer.tpl"}

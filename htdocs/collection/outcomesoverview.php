@@ -130,6 +130,7 @@ if ($views) {
     $smarty->assign('views', $views['views']);
     $smarty->assign('viewlocked', $view->get('locked'));
     $smarty->assign('collectiontitle', $collection->get('name'));
+    $smarty->assign('collectionid', $collection->get('id'));
     $smarty->assign('outcomeoverview', true);
 }
 
@@ -149,6 +150,10 @@ if ($outcomes) {
     $smarty->assign('outcometypes', $outcometypes);
 
     $smarty->assign('supportform', $supportform);
+    $smarty->assign('querystring', get_querystring());
+
+    $activities = get_outcome_activity_views($collection->get('id'));
+    $smarty->assign('activities', $activities);
 }
 
 $smarty->assign('url', get_config('wwwroot') . 'view/groupviews.php?group=' . $collection->get('group'));

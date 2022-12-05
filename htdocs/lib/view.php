@@ -7070,11 +7070,12 @@ class View {
                 c.id AS cid, c.name AS cname, c.framework,
                 c.submittedgroup AS csubmitgroup, c.submittedhost AS csubmithost, " .
                 db_format_tsfield('c.submittedtime', 'csubmittime') . ", c.submittedstatus AS csubmitstatus,
-                c.progresscompletion, cv.displayorder
+                c.progresscompletion, cv.displayorder, c.outcomeportfolio
             FROM {view} v
                 LEFT JOIN {collection_view} cv ON v.id = cv.view
                 LEFT JOIN {collection} c ON cv.collection = c.id
             WHERE  v.type IN ('portfolio'";
+        $sql .= $group ? ", 'activity' " : '';
         $sql .= $includeprofile ? ", 'profile') " : ') ';
         $sql .= $excludelocked ? 'AND v.locked != 1 ' : '';
 
@@ -7166,6 +7167,12 @@ class View {
                         $coll = new stdClass();
                         $coll->id = $cid;
                         $collections[$cid]['url'] = Collection::get_framework_url($coll);
+                    }
+                    else if (!empty($r['outcomeportfolio'])) {
+                        require_once('collection.php');
+                        $coll = new stdClass();
+                        $coll->id = $cid;
+                        $collections[$cid]['url'] = Collection::get_outcomes_url($coll);
                     }
                 }
                 $collections[$cid]['views'][$vid] = $v;
