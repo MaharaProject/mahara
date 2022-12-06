@@ -813,6 +813,8 @@
                 <FIELD NAME="row" TYPE="int" LENGTH="2" DEFAULT="1" NOTNULL="false" />
                 <FIELD NAME="column" TYPE="int" LENGTH="2" NOTNULL="false" />
                 <FIELD NAME="order" TYPE="int" LENGTH="2" NOTNULL="false" />
+                <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
+                <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="primary" TYPE="primary" FIELDS="id" />

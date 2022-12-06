@@ -933,5 +933,43 @@ function xmldb_core_upgrade($oldversion=0) {
         execute_sql("UPDATE {artefact} SET license = REPLACE(license, 'https://www.gnu.org/', 'https://www.gnu.org/')");
     }
 
+    if ($oldversion < 2022120700) {
+        $table = new XMLDBTable('block_instance');
+        if (table_exists($table)) {
+            log_debug('Add ctime and mtime column to the block_instance table');
+            $fields =  [new XMLDBField('ctime'), new XMLDBField('mtime')];
+            foreach ($fields as $field) {
+                if (!field_exists($table, $field)) {
+                    $field->setAttributes(XMLDB_TYPE_DATETIME);
+                    add_field($table, $field);
+                }
+            }
+
+            // For all block instances, take the last mtime of the view to be the ctime and mtime
+            $sql_views = "SELECT mtime, id from {view}";
+            $views = get_records_sql_array($sql_views);
+            $count = 0;
+            $limit = 100;
+            $total = count($views);
+            foreach ($views as $view) {
+                $sql_update_blocks = "UPDATE {block_instance} SET ctime = ?, mtime = ? WHERE view = ?";
+                execute_sql($sql_update_blocks, [$view->mtime, $view->mtime, $view->id]);
+                $count++;
+                if (($count % $limit) == 0 || $count == $total) {
+                    log_debug("$count/$total");
+                    set_time_limit(30);
+                }
+            }
+
+            // Add not-null constraint back to the fields now that they are populated
+            foreach ($fields as $field) {
+                if (!field_exists($table, $field)) {
+                    $field->setAttributes(XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
+                    change_field_notnull($table, $field);
+                }
+            }
+        }
+    }
+
     return $status;
 }
