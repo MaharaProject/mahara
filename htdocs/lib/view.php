@@ -1169,12 +1169,14 @@ class View {
                   va.*,
                   o.short_title AS outcome,
                   ot.abbreviation AS outcome_type,
+                  os.abbreviation AS subject_name,
                   ot.styleclass
                 FROM
                   {view_activity} va
                   JOIN {outcome_view_activity} ov ON va.id = ov.activity
                   JOIN {outcome} o ON o.id = ov.outcome
                   JOIN {outcome_type} ot ON ot.id = o.outcome_type
+                  JOIN {outcome_subject} os ON os.id = va.subject
                   WHERE va.view = ?
             ";
 
@@ -4277,11 +4279,12 @@ class View {
         }
 
         $supervisor = display_name($activity->supervisor);
-        $start_date = $activity->start_date ? date('d M Y', strtotime($activity->start_date)) : '';
-        $end_date = $activity->end_date ? date('d M Y', strtotime($activity->end_date)) : '';
-        $timeframe = (string) $start_date . ' - ' . (string) $end_date;
-        $activity_subject = get_field('outcome_subject', 'title', 'id', $activity->subject); // TODO: title or abbreviation?
-
+        $timeframe = '';
+        if ($activity->start_date || $activity->end_date) {
+            $start_date = $activity->start_date ? date('d M Y', strtotime($activity->start_date)) : '';
+            $end_date = $activity->end_date ? date('d M Y', strtotime($activity->end_date)) : '';
+            $timeframe = (string) $start_date . ' - ' . (string) $end_date;
+        }
         $support_form = array(
             'name'       => 'activity_support',
             // 'method'     => 'post',
@@ -4297,7 +4300,7 @@ class View {
                 'subject' => array(
                     'type' => 'html',
                     'title' => get_string('subject', 'view'),
-                    'value' => $activity_subject,
+                    'value' => $activity->subject_name,
                 ),
                 'timeframe' => array(
                     'type' => 'html',

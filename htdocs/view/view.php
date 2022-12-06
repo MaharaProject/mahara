@@ -132,7 +132,19 @@ View::set_nav($groupid, $institution, false, false, false);
 // Comment list pagination requires limit/offset params
 $limit       = param_integer('limit', 10);
 $offset      = param_integer('offset', 0);
-$showcomment = param_integer('showcomment', null);
+$showcomment_context = '';
+$showcomment = param_integer('showcomment', null); // default
+
+// For other showassessment, showfeedback, as to not hit the wrong db table (i.e. comment)
+$show_comment_type = '';
+$show_comment_types = ['comment', 'feedback', 'assessment'];
+foreach ($show_comment_types as $type) {
+    $show_context = 'show' . $type;
+    if (param_integer($show_context, null) != null) {
+        $$show_context = param_integer($show_context, null);
+        $show_comment_type = $type;
+    }
+}
 
 // Create the "make comment private form" now if it's been submitted
 if (param_exists('make_public_submit')) {
@@ -579,14 +591,16 @@ $smarty = smarty(
 );
 
 $commentonartefact = param_integer('artefact', null);
+$show_comment_id = 0;
 // doublecheck it's a comment on  artefact in case is old email
-if ($showcomment) {
-    $artefacttype = get_field('artefact', 'artefacttype', 'id', $showcomment);
+if ($show_comment_type) {
+    $show_comment_id = ${'show' . $show_comment_type};
+    $artefacttype = get_field('artefact', 'artefacttype', 'id', $show_comment_id);
     $classname = generate_artefact_class_name($artefacttype);
-    $tmpcomment = new $classname($showcomment);
+    $tmpcomment = new $classname($show_comment_id);
     if (property_exists($tmpcomment, 'onartefact') && $tmpcomment->get('onartefact') && !$commentonartefact) {
-        redirect(get_config('wwwroot') . 'view/view.php?id=' . $viewid . '&showcomment=' .
-        $showcomment . '&modal=1&artefact=' . $tmpcomment->get('onartefact'));
+        redirect(get_config('wwwroot') . 'view/view.php?id=' . $viewid . '&show' . $show_comment_type . '=' .
+            $show_comment_id . '&modal=1&artefact=' . $tmpcomment->get('onartefact'));
     }
 }
 
@@ -594,7 +608,8 @@ $javascript = <<<EOF
 var viewid = {$viewid};
 var showmore = {$showmore};
 var commentonartefact = '{$commentonartefact}';
-var showcommentid = '{$showcomment}';
+var showcommentid = '{$show_comment_id}';
+let showCommentType = '{$show_comment_type}'
 
 jQuery(function () {
     paginator = {$feedback->pagination_js}
@@ -664,14 +679,25 @@ jQuery(window).on('blocksloaded', {}, function() {
  */
 function focusOnShowComment() {
     setTimeout(function() {
-        const commentIdString = 'comment' + showcommentid;
+        const commentIdString = showCommentType + showcommentid;
 
         // Identify the comment by focusing on the author link
-        $(".comment-container button.collapsed").trigger('click');
-
-        const author_link = $("#" + commentIdString + " a")[1];
-        author_link.focus();
-        scrollToComment(commentIdString);
+        // Open the page comments
+        if (showCommentType == 'comment') {
+            $(".comment-container button.collapsed").trigger('click');
+        }
+        let commentElements = $("#" + commentIdString + " a");
+        if (commentElements) {
+            let author_link = '';
+            if (commentElements.length > 1) {
+                author_link = commentElements[1];
+            }
+            else {
+                author_link = commentElements[0];
+            }
+            $(author_link).focus();
+            scrollToComment(commentIdString);
+        }
     }, 500);
 }
 
@@ -683,6 +709,9 @@ function focusOnShowComment() {
 function scrollToComment(commentIdString) {
     setTimeout(function() {
         const element = document.getElementById(commentIdString);
+        if (!element) {
+            return;
+        }
         const headerOffset = $('header').height();
         const sitemessagesOffset = $('.site-messages').height();
         // Scroll down for page comments
