@@ -28,6 +28,7 @@ $string['assessmentsubmitteddraft'] = 'Peer assessment saved as draft';
 $string['reallydeletethisassessment'] = 'Delete this peer assessment';
 $string['thisassessmentisprivate'] = 'Saved as draft';
 $string['assessmentremoved'] = 'Peer assessment deleted';
+$string['assessmentremovedfailed'] = 'Peer assessment failed to delete';
 
 // peer assessment notifications
 $string['deletednotificationsubject'] = 'Peer assessment on page "%s" deleted';

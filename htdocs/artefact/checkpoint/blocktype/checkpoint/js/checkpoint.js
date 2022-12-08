@@ -125,23 +125,23 @@ function addCheckpointFeedbackSuccess(form, data) {
         // checkpoint being submitted.
         tinyMCE.triggerSave();
         sendjsonrequest(config.wwwroot + 'artefact/checkpoint/checkpoint.json.php',
-            {
-                'block': jQuery('#' + formname + '_block').val(),
-                'limit': limit,
-                'offset': offset,
-            }, 'POST', function (data) {
-                var blockid = jQuery('#' + formname + '_block').val();
-                // Populate the div
-                (function ($) {
-                    var scope = $('#checkpointfeedbacktable' + blockid);
-                    scope.html(data.data.tablerows);
-                    var scopepagination = scope.parent().find('.pagination-wrapper');
-                    scopepagination.html(data.data.pagination);
-                    dock.init(scope);
-                    initTinyMCE(formname);
-                    configureModalOpen();
-                })(jQuery);
-            });
+        {
+            'block': jQuery('#' + formname + '_block').val(),
+            'limit': limit,
+            'offset': offset,
+        }, 'POST', function (data) {
+            var blockid = jQuery('#' + formname + '_block').val();
+            // Populate the div
+            (function ($) {
+                var scope = $('#checkpointfeedbacktable' + blockid);
+                scope.html(data.data.tablerows);
+                var scopepagination = scope.parent().find('.pagination-wrapper');
+                scopepagination.html(data.data.pagination);
+                dock.init(scope);
+                initTinyMCE(formname);
+                configureModalOpen();
+            })(jQuery);
+        });
     }
     dock.hide();
     // Clear TinyMCE

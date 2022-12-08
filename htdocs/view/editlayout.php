@@ -520,7 +520,7 @@ function get_achievement_levels_elements(int $activity_id = null): array {
             'defaultvalue' => $value != '' ? $value : $default_value,
             'disabled' => $level_type == $lowest_type ? 1 : 0,
             'labelhtml' =>
-            'Level  ' .
+            get_string('level_cap', 'artefact.checkpoint') .
             '
             <span aria-label="' . $level_type . '">
             <span class="icon-stack" style="vertical-align: centre;">

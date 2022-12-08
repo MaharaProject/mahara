@@ -101,24 +101,14 @@ class PluginArtefactCheckpoint extends PluginArtefact {
         return $artefacts;
     }
 
-    public static function exclude_artefacts_in_export($userid) {
-        // $sql = " SELECT a.id
-        //         FROM {artefact} a
-        //         JOIN {artefact_checkpoint_feedback} apa
-        //         ON a.id = apa.assessment
-        //         WHERE a.owner = ? AND a.artefacttype='checkpoint' AND apa.private = 1";
-        // $artefacts = get_column_sql($sql, array($userid));
-        // return $artefacts;
-    }
-
     public static function get_cron() {
-        // return array(
-        //   (object)array(
-        //     'callfunction' => 'clean_checkpoint_notifications',
-        //     'minute'       => '55',
-        //     'hour'         => '22',
-        //   ),
-        // );
+        return array(
+            (object)array(
+                'callfunction' => 'clean_checkpoint_notifications',
+                'minute'       => '55',
+                'hour'         => '22',
+            ),
+        );
     }
 
     public static function clean_checkpoint_notifications() {
@@ -127,76 +117,51 @@ class PluginArtefactCheckpoint extends PluginArtefact {
     }
 
     public static function progressbar_link($artefacttype) {
-        // switch ($artefacttype) {
-        //   case 'checkpoint':
-        //     return 'view/index.php';
-        //     break;
-        //   case 'verify':
-        //     return 'view/index.php';
-        //     break;
-        //   default:
-        //     return 'view/index.php';
-        // }
+        return 'group/index.php';
     }
 
     public static function progressbar_additional_items() {
         return array(
-            // (object)array(
-            //   'name' => 'checkpoint',
-            //   'title' => get_string('placeassessment', 'artefact.checkpoint'),
-            //   'plugin' => 'checkpoint',
-            //   'active' => get_field('blocktype_installed', 'active', 'name', 'checkpoint', 'artefactplugin', 'checkpoint'),
-            //   'iscountable' => true,
-            //   'is_metaartefact' => true,
-            // ),
-            // (object)array(
-            //   'name' => 'verify',
-            //   'title' => get_string('verifyassessment', 'artefact.checkpoint'),
-            //   'plugin' => 'checkpoint',
-            //   'active' => get_field('blocktype_installed', 'active', 'name', 'signoff', 'artefactplugin', 'checkpoint'),
-            //   'iscountable' => true,
-            //   'is_metaartefact' => true,
-            // )
+            (object)array(
+                'name' => 'checkpointfeedback',
+                'title' => get_string('checkpointfeedback', 'artefact.checkpoint'),
+                'plugin' => 'checkpoint',
+                'active' => get_field('blocktype_installed', 'active', 'name', 'checkpoint', 'artefactplugin', 'checkpoint'),
+                'iscountable' => true,
+                'is_metaartefact' => true,
+            )
         );
     }
 
     public static function progressbar_metaartefact_count($name) {
         global $USER;
-        // $meta = new stdClass();
-        // $meta->artefacttype = $name;
-        // $meta->completed = 0;
-        // switch ($name) {
-        //   case 'checkpoint':
-        //     $sql = "SELECT COUNT(*) AS completed
-        //                     FROM {artefact} a
-        //                     JOIN {artefact_checkpoint_feedback} ap ON ap.assessment = a.id
-        //                     WHERE a.artefacttype = 'checkpoint'
-        //                     AND a.owner <> ?
-        //                     AND ap.usr = ?";
-        //     $meta->completed = count_records_sql($sql, array($USER->get('id'), $USER->get('id')));
-        //     break;
-        //   case 'verify':
-        //     $sql = "SELECT COUNT(*) AS completed
-        //                     FROM {view} v
-        //                     JOIN {view_signoff_verify} vsv ON vsv.view = v.id
-        //                     WHERE v.owner <> ?
-        //                     AND vsv.verifier = ?";
-        //     $meta->completed = count_records_sql($sql, array($USER->get('id'), $USER->get('id')));
-        //     break;
-        //   default:
-        //     return false;
-        // }
-        // return $meta;
+
+        $meta = new stdClass();
+        $meta->artefacttype = $name;
+        $meta->completed = 0;
+        switch ($name) {
+            case 'checkpointfeedback':
+                $sql = "SELECT COUNT(*) AS completed
+                        FROM {artefact} a
+                        JOIN {artefact_checkpoint_feedback} ap ON ap.feedback = a.id
+                        WHERE a.artefacttype = 'checkpointfeedback'
+                        AND ap.author = ?";
+                $meta->completed = count_records_sql($sql, array($USER->get('id')));
+                break;
+            default:
+                return false;
+        }
+        return $meta;
     }
 }
 
 class ArtefactTypeCheckpointfeedback extends ArtefactType {
 
-    protected $feedback;       // artefact id of the feedback artefact.
+    protected $feedback;      // artefact id of the feedback artefact.
     protected $block;         // block id of the block this checkpoint feedback is linked to.
-    protected $author;           // author id of the user who added this checkpoint feedback.
-    protected $view;
-    protected $activity;          // view id of the view this checkpoint feedback is linked to.
+    protected $author;        // author id of the user who added this checkpoint feedback.
+    protected $view;          // view id of the view this checkpoint feedback is linked to.
+    protected $activity;      // activity id of the activity this checkpoint feedback is linked to.
     protected $view_obj;      // the view object based on the $view id.
     protected $private;       // Whether this assessment has been published by the user.
     // 0 = can be seen by author, page owner, manager (published)
@@ -209,8 +174,8 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
         $activity = get_record('view_activity', 'view', $view->get('id'));
         if ($activity) {
             $this->activity = $activity->id;
+            $this->view = $activity->view;
         }
-
 
         if ($this->id) {
             $existing_feedback = get_record('artefact_checkpoint_feedback', 'feedback', $this->id);
@@ -660,16 +625,11 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
         $authors = array();
         $lastcomment = self::last_feedback($data->view);
         $editableafter = time() - 60 * get_config_plugin('artefact', 'comment', 'commenteditabletime');
-        // $signedoff = null;
         $admintutorids = $view->get('group') ? group_get_member_ids($view->get('group'), array('admin', 'tutor')) : [];
         foreach ($data->data as &$item) {
             $candelete = ($data->canedit
                 && ($item->author == $USER->get('id')))
                 || in_array($USER->get('id'), $admintutorids);
-            // if ($signedoff === null) {
-            //     $view = new View($item->view);
-            //     $signedoff = self::is_signed_off($view);
-            // }
             $item->ts = strtotime($item->ctime);
             $timelapse = format_timelapse($item->ts);
             $item->date = ($timelapse) ? $timelapse : format_date($item->ts, 'strftimedatetime');
@@ -703,7 +663,7 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
                     ERROR_MULTIPLE
                 );
 
-                if (($candelete || ($item->isauthor && !$signedoff && !$is_export_preview))
+                if (($candelete || ($item->isauthor && !$is_export_preview))
                     && $submittedcheck->submittedstatus == View::UNSUBMITTED
                 ) {
                     $item->deleteform = pieform(
@@ -715,7 +675,7 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
                     $smarty->assign('id', $item->id);
                     $smarty->assign('block', $item->block);
                     $smarty->assign('title', $item->title);
-                    $item->editlink = $smarty->fetch('artefact:checkpoint:editlink.tpl');
+                    // $item->editlink = $smarty->fetch('artefact:checkpoint:editlink.tpl'); //TODO: Doris
                 }
             }
             if ($exporter) {
@@ -767,7 +727,7 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
             'limit' => $data->limit,
             'offset' => $data->offset,
             'forceoffset' => isset($data->forceoffset) ? $data->forceoffset : null,
-            'resultcounttext' => get_string('nassessments', 'artefact.checkpoint', $data->count),
+            'resultcounttext' => get_string('nfeedback', 'artefact.checkpoint', $data->count),
             'extradata' => $extradata,
         ));
         $data->pagination = $pagination['html'];
@@ -784,6 +744,76 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
 
     public function render_self($options) {
         return clean_html($this->get('description'));
+    }
+
+    public static function get_checkpoint_achievement_form($block_id = 0) {
+        global $USER;
+
+        $checkpoint_block = new BlockInstance($block_id);
+        $block_view = new View($checkpoint_block->get('view'));
+        $can_select_achievement = View::check_can_edit_activity_page_info($block_view->get('group'), true);
+        $achievement_levels = [];
+        $options = [];
+
+        if ($checkpoint_block) {
+            $activity = ArtefactTypeCheckpointfeedback::get_checkpoint_activity_id();
+            $achievement_levels = get_records_array('view_activity_achievement_levels', 'activity', $activity, 'type');
+        }
+
+        foreach ($achievement_levels as $level) {
+            $options[$level->type] =  get_string('level_cap', 'artefact.checkpoint') . ' ' . $level->type;
+        }
+
+        $form = array(
+            'name'            => 'achievement_form_block_' . $block_id,
+            'method'          => 'post',
+            'plugintype'      => 'artefact',
+            'pluginname'      => 'checkpoint',
+            'jsform'          => true,
+            'autofocus'       => false,
+            'elements'        => array(),
+            // 'successcallback'   => 'add_checkpoint_feedback_form_submit',
+            // 'validatecallback'  => 'add_checkpoint_feedback_form_validate',
+            'jssuccesscallback' => 'selectLevelSuccess',
+            'jserrorcallback'   => 'selectLevelError',
+        );
+
+        if ($can_select_achievement) {
+            $form['elements']['achievement_levels'] = array(
+                'type' => 'select',
+                'title' => get_string('achievementlevel', 'artefact.checkpoint'),
+                'collapseifoneoption' => false,
+                'options' => $options,
+                'defaultvalue' => key($options),
+            );
+
+            $form['elements']['submit'] = array(
+                'type' => 'submit',
+                'name' => 'level_submit',
+                'value' => 'Save',
+                'class' => 'btn-primary submit'
+            );
+        }
+        else {
+            $form['elements']['achievement_levels'] = array(
+                'type' => 'html',
+                'title' => get_string('achievementlevel', 'artefact.checkpoint'),
+                'value' =>
+                '
+                <span class="icon-stack" style="vertical-align: centre;">
+                    <i class="icon-solid icon-minus icon-stack-1x"></i>
+                    &nbsp;&nbsp;&nbsp;
+                </span>
+                '
+            );
+        }
+
+        $form['elements']['block'] = array(
+            'type' => 'hidden',
+            'value' => $block_id,
+        );
+
+        return $form;
     }
 
     public static function add_checkpoint_feedback_form($blockid = 0, $id = 0) {
@@ -821,22 +851,18 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
         $form['elements']['submit'] = array(
             'type' => 'multisubmit',
             'options' => array(
-                'submit' => 'publish',
+                'submit' => 'save',
                 'cancel' => 'cancel'
             ),
-            'primarychoice' => 'publish',
+            'primarychoice' => 'save',
             'classes' => array(
                 'submit' => 'btn-secondary',
                 'cancel' => 'btn-secondary submitcancel'
             ),
             'value' => array(
-                'submit' => get_string('publish', 'blocktype.checkpoint/checkpoint'),
+                'submit' => get_string('save', 'artefact.checkpoint'),
                 'cancel' => get_string('cancel')
             )
-        );
-        $form['elements']['helpnotes'] = array(
-            'type' => 'html',
-            'value' => get_string('savepublishhelp', 'blocktype.checkpoint/checkpoint'),
         );
         return $form;
     }
@@ -863,7 +889,7 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
                     'usebuttontag' => true,
                     'class' => 'btn-secondary btn-sm',
                     'value' => '<span class="icon icon-trash-alt text-danger" role="presentation" aria-hidden="true"></span> <span class="visually-hidden">' . get_string('delete') . '</span>',
-                    'confirm' => get_string('reallydeletethisassessment', 'artefact.checkpoint'),
+                    'confirm' => get_string('reallydeletethisfeedback', 'artefact.checkpoint'),
                     'name'  => 'delete_checkpoint_feedback_submit',
                 ),
             ),
@@ -958,7 +984,7 @@ function delete_checkpoint_feedback_submit(Pieform $form, $values) {
         $feedback_options->block = $blockid;
         $newlist = ArtefactTypeCheckpointfeedback::get_checkpoint_feedback($feedback_options);
         $form->reply(PIEFORM_OK, array(
-            'message' => get_string('assessmentremoved', 'artefact.checkpoint'),
+            'message' => get_string('feedbackremoved', 'artefact.checkpoint'),
             'goto' => $goto,
             'data' => $newlist,
         ));

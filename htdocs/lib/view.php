@@ -8031,7 +8031,7 @@ class View {
         }
 
         // We make a couple of dummy forms so we get pieform 'switchbox' markup but we don't want
-        // to submit via pieforms as the markup will be accessed via javascript
+        // to submit via pieforms as the markup will be accessed via javascript // TODO: Doris copy this but use Cecilia's logic
         $signoff_element['signoff'] = array(
             'type'         => 'switchbox',
             'title'        => '',

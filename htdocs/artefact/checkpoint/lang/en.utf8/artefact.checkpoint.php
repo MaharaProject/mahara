@@ -16,11 +16,25 @@ $string['pluginname'] = 'Checkpoint';
 $string['Feedback'] = 'Feedback';
 $string['feedback'] = 'feedback';
 $string['comments'] = 'comments';
-$string['nfeedbacks'] = array(
+$string['nfeedback'] = array(
     '%s comment',
-    '%s commentss'
+    '%s comments'
 );
 $string['attachfile'] = 'Attach file';
 $string['feedbacksubmitted'] = 'Checkpoint feedback saved';
-$string['reallydeletethisfeedback'] = 'Delete this checkpoint feedback';
+$string['reallydeletethisfeedback'] = 'Really delete this checkpoint feedback?';
 $string['feedbackremoved'] = 'Checkpoint feedback deleted';
+$string['assessmentremovedfailed'] = 'Checkpoint feedback failed to delete';
+
+$string['achievementlevel'] = 'Achievement level';
+$string['level'] = 'level';
+$string['level_cap'] = 'Level';
+$string['save'] = 'Save';
+
+// Profile completion
+$string['checkpointfeedback'] = 'Checkpoint feedback';
+$string['placeassessment'] = 'Place checkpoints';
+$string['progress_checkpointfeedback'] = array(
+    'Add 1 checkpoint feedback',
+    'Add %s checkpoint feedbacks',
+);

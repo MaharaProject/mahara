@@ -15,7 +15,7 @@
                         </div>
                     </span>
                 </li>
-                <li> <span class="btn">Placeholder for sign-off activity</span></li>
+                <li> <span class="btn">{$achievement_switch_form}</span></li>
             </ul>
         </h2>
 

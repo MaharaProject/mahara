@@ -18,4 +18,5 @@ $string['description'] = 'A block to display checkpoint feedback';
 $string['blockcontent'] = 'Instructions';
 $string['addcheckpointfeedback'] = 'Add checkpoint feedback';
 $string['publish'] = 'Publish checkpoint feedback';
-$string['savepublishhelp'] = '<p><strong>Publish:</strong> Everybody else who has access to the portfolio can see your feedback.</p>';
+$string['addcheckpointfeedback'] = 'Add comment';
+$string['save'] = 'Save';
