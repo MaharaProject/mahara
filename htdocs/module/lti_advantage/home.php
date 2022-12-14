@@ -10,7 +10,7 @@
  */
 use \IMSGlobal\LTI;
 define('INTERNAL', 1);
-define('PUBLIC', 1);
+define('PUBLIC_ACCESS', 1);
 
 require_once('lib/lti-1-3-php-library/lti/lti.php');
 require_once('database.php');

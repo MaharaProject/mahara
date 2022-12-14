@@ -9,7 +9,7 @@
  *
  */
 define('INTERNAL', 1);
-define('PUBLIC', 1);
+define('PUBLIC_ACCESS', 1);
 define('MENUITEM', 'userdashboard');
 // Technically these are lies, but we set them like this to hook in the right
 // plugin stylesheet. This file should be provided by artefact/internal anyway.

@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('PUBLIC', 1);
+define('PUBLIC_ACCESS', 1);
 require('init.php');
 
 $lang =  param_alphanumext('lang') === 'default' ?  get_accept_lang() : param_alphanumext('lang');

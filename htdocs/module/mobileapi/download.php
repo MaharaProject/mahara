@@ -29,7 +29,7 @@
 define('INTERNAL', 1);
 define('JSON', 1);
 define('NOSESSKEY', 1);
-define('PUBLIC', 1);
+define('PUBLIC_ACCESS', 1);
 require_once(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require_once($CFG->docroot . '/webservice/lib.php');
 

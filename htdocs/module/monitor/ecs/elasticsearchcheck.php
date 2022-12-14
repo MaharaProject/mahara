@@ -17,7 +17,7 @@
  *  - https://nagios-plugins.org/doc/guidelines.html#PLUGOUTPUT
  */
 
-define('PUBLIC', 1);
+define('PUBLIC_ACCESS', 1);
 define('INTERNAL',  1);
 
 $MAHARA_ROOT = dirname(dirname(dirname(dirname(__FILE__)))) . '/';

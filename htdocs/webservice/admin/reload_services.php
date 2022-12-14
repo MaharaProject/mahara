@@ -15,7 +15,7 @@ define('INTERNAL', 1);
 // disable the WSDL cache
 ini_set("soap.wsdl_cache_enabled", "0");
 
-define('PUBLIC', 1);
+define('PUBLIC_ACCESS', 1);
 
 // must be run from the command line
 if (isset($_SERVER['REMOTE_ADDR']) || isset($_SERVER['GATEWAY_INTERFACE'])) {
