@@ -22,8 +22,10 @@ safe_require('artefact', 'file');
 $id = param_integer('id', false);
 $new = param_boolean('new', false);
 $view_type = param_alpha('type', 'portfolio');
+$collection_to_add_view = param_integer('collection', false);
 
-// $outcome = ... link it to the outcome collection so we know where the page should live
+$outcome = param_integer('outcome', false);
+$view = null;
 
 
 if ($new && $id === false) {
@@ -52,6 +54,7 @@ if ($new && $id === false) {
 
         if ($view_type == 'activity') {
             View::check_can_edit_activity_page_info($groupid);
+            $values['outcome'] = $outcome;
         }
 
         if (!empty($institutionname)) {
@@ -66,6 +69,12 @@ if ($new && $id === false) {
     }
     else {
         throw new ConfigSanityException(get_string('viewtemplatenotfound', 'error'));
+    }
+
+    if ($collection_to_add_view) {
+        require_once(get_config('libroot') . 'collection.php');
+        $coll = new Collection($collection_to_add_view);
+        $num_pages = $coll->add_views(['view_' . $view->get('id') => $view]);
     }
 
     $goto = get_config('wwwroot') . 'view/editlayout.php?new=1&id=' . $view->get('id');
@@ -163,7 +172,7 @@ $smarty->assign('title', $returnto['title']);
 $smarty->display('view/editlayout.tpl');
 
 function create_settings_pieform() {
-    global $view, $pieformname, $issiteview, $issitetemplate,
+    global $view, $pieformname, $issiteview, $issitetemplate, $outcome,
         $canedittitle, $canuseskins;
     $inlinejavascript = '';
 
@@ -200,7 +209,7 @@ function create_settings_pieform() {
     $group = $view->get('group');
 
     if ($view->get('type') == 'activity' && $group && is_outcomes_group($group)) {
-        $activity_info_elements = get_view_activity_info_elements();
+        list($activity_info_elements, $hidden_activity_info_elems) = get_view_activity_info_elements($outcome);
     }
 
     //visible elements of the sections
@@ -265,6 +274,10 @@ function create_settings_pieform() {
 
     if ($canuseskins) {
         $hiddenelements = array_merge($hiddenelements, $hiddenskinelements);
+    }
+
+    if ($view->get('type') == 'activity') {
+        $hiddenelements = array_merge($hiddenelements, $hidden_activity_info_elems);
     }
 
     $elements = array_merge($formelements, $hiddenelements);
@@ -365,9 +378,8 @@ function get_basic_elements() {
  * Get pieform elements for activity config
  *
  * This will be part of 'page settings'
- *
  */
-function get_view_activity_info_elements(): array {
+function get_view_activity_info_elements(int $outcome_id): array {
     global $USER, $view, $group;
     require_once(get_config('docroot') . 'lib/pieforms/pieform/elements/container.php');
 
@@ -444,7 +456,15 @@ function get_view_activity_info_elements(): array {
         'legend' => get_string('activity_info_achievement_levels_desc', 'view'),
         'elements' => get_achievement_levels_elements($existing_activity->id ?? null),
     ];
-    return $elements;
+
+    $hidden_elements = array(
+        'outcome' => array(
+            'type' => 'hidden',
+            'value' =>  $outcome_id,
+        ),
+    );
+
+    return [$elements, $hidden_elements];
 }
 
 /**
@@ -1313,14 +1333,17 @@ function set_view_activity_info(Pieform $form, $values) {
     if (!$activity_id) {
         $view_activity->ctime = db_format_timestamp(time());
         $activity_id = insert_record('view_activity', $view_activity, 'id', true);
+
+        // link activity to outcome
+        $outcome_activity = new StdClass();
+        $outcome_activity->outcome = $values['outcome'];
+        $outcome_activity->activity = $activity_id;
+        insert_record('outcome_view_activity', $outcome_activity);
+
     }
     else {
         update_record('view_activity', $view_activity, array('view' => $view->get('id')));
     }
-    // Add reference to outcome_view_actitivy
-    $new_outcome_view_activity = new StdClass();
-    $new_outcome_view_activity->activity = $activity_id;
-    $new_outcome_view_activity->outcome = null; // TODO: Doris, replace null with outcome collection if applicable
 
     // Achivement levels done by type and value
     // Brand new activity + achievement levels

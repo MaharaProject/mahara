@@ -1188,6 +1188,9 @@ class View {
 
         // Delete activity feedback
         delete_records('view_activity_support', 'activity', $this->id);
+
+        // Delete outcome reference
+        delete_records('outcome_view_activity', 'activity', $this->id);
     }
 
     /* Only retrieve access records that the owner can edit on the

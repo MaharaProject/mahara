@@ -143,6 +143,7 @@ if ($outcomes) {
     $smarty->assign('completedactionspercentage', $completedactionspercentage);
     $smarty->assign('totalactions', $totalactions);
 
+    $smarty->assign('group', $collection->get('group'));
     $smarty->assign('collection', $collectionid);
     $smarty->assign('outcomes', $outcomes);
     $smarty->assign('outcometypes', $outcometypes);

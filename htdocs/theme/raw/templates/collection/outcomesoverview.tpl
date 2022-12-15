@@ -67,8 +67,8 @@
           {/if}
 
           <br/>** Table goes here ** <br/><br/>
-
-          <button class="btn btn-secondary btn-sm" >
+          <button id="addactivity" class="btn btn-secondary btn-sm "
+            data-bs-target="{$WWWROOT}view/editlayout.php?new=1{$urlparamsstr}&group={$group}&collection={$collection}&outcome={$outcome->id}">
             <span class="icon icon-plus left" role="presentation" aria-hidden="true"> </span>
             {str tag="addactivity" section="collection"}
           </button>
@@ -246,6 +246,15 @@ $(function() {
     const formid = $(form).attr('id');
     formchangemanager.add(formid);
   })
+
+  var addurl = $j("#addactivity").attr('data-bs-target');
+
+    $j("#addactivity").on('click', function() {
+        // redirect to the special 'activity page'
+        var url = addurl + '&type=activity';
+        window.location = url;
+    })
+
 });
 </script>
 {include file="footer.tpl"}
