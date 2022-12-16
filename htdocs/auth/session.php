@@ -67,9 +67,6 @@ class Session {
         if (version_compare(PHP_VERSION, '7.1.0') >= 0) {
             ini_set('session.sid_bits_per_character', 5);
         }
-        else {
-            ini_set('session.hash_bits_per_character', 4);
-        }
         ini_set('session.gc_divisor', 1000);
 
         if (get_config('session_timeout')) {
@@ -90,9 +87,6 @@ class Session {
         ini_set('session.use_trans_sid', false);
         if (version_compare(PHP_VERSION, '7.1.0') >= 0) {
             ini_set('session.sid_length', 32);
-        }
-        else {
-            ini_set('session.hash_function', 'sha256'); // stronger hash functions are sha384 and sha512
         }
         if (version_compare(PHP_VERSION, '5.5.2') > 0) {
             ini_set('session.use_strict_mode', true);

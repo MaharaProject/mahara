@@ -111,11 +111,6 @@ function ensure_sanity() {
         }
     }
 
-    if (ini_get_bool('magic_quotes_sybase')) {
-        // See above comment re. magic_quotes_runtime
-        @ini_set('magic_quotes_sybase', 0);
-    }
-
     if (ini_get_bool('safe_mode')) {
         // We don't run with safe mode
         throw new ConfigSanityException(get_string('safemodeon', 'error'));

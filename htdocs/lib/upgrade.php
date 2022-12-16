@@ -1471,9 +1471,6 @@ function site_warnings() {
     if (ini_get_bool('magic_quotes_runtime')) {
         $warnings[] = get_string('magicquotesruntime', 'error');
     }
-    if (ini_get_bool('magic_quotes_sybase')) {
-        $warnings[] = get_string('magicquotessybase', 'error');
-    }
 
     // Check if the host returns a usable value for the timezone identifier %z
     $tz_count_date = new DateTime();
