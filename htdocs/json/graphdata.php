@@ -58,7 +58,7 @@ if (!defined('CRON')) {
                     for ($i=0; $i < count($dataset->data) ; $i++) {
                         foreach ($dataset as $property => $values) {
                             if (preg_match('/^rgba\(/', $values[$i])) {
-                                $jsondata->datasets[$datasetkey]->$property[$i] = preg_replace('/\((.*\,)/', '(' . $colours[$x] . ',', $values[$i]);
+                                $jsondata->datasets[$datasetkey]->{$property}[$i] = preg_replace('/\((.*\,)/', '(' . $colours[$x] . ',', $values[$i]);
                             }
                         }
                         $x = empty($colours[$x+1]) ? 0 : $x + 1;
