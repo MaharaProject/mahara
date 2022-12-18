@@ -1199,6 +1199,20 @@ class BlockInstance {
     private $quietupdate = false;
 
     /**
+     * Time at creation of block
+     *
+     * @var mixed
+     */
+    private $ctime;
+
+    /**
+     * Time at of last modification to block
+     *
+     * @var mixed
+     */
+    private $mtime;
+
+    /**
      * Constructor for the block instance
      *
      * @param mixed $id   The id of the block instance to fetch. A '0' means make a new one
@@ -2288,6 +2302,7 @@ class BlockInstance {
         if (empty($this->dirty)) {
             return;
         }
+
         $fordb = new stdClass();
         foreach (get_object_vars($this) as $k => $v) {
             // The configdata is initially fetched from the database in string
@@ -2295,6 +2310,12 @@ class BlockInstance {
             // ensure that it is a string again here
             if ($k == 'configdata' && is_array($v)) {
                 $fordb->{$k} = serialize($v);
+            }
+            else if (strpos($k, 'time')) {
+                if ($k == 'ctime' && $v) {
+                    continue;
+                }
+                $fordb->{$k} = db_format_timestamp(time());
             }
             else {
                 $fordb->{$k} = $v;
