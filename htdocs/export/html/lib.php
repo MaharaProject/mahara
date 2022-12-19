@@ -933,7 +933,7 @@ class PluginExportHtml extends PluginExport {
 */
     private function get_resume_field_modals(&$idarray, BlockInstance $bi) {
         $configdata = $bi->get('configdata');
-        if (isset($configdata['artefactid'])) {
+        if (isset($configdata['artefactid']) && !empty($configdata['artefactid'])) {
             $field = $bi->get_artefact_instance($configdata['artefactid']);
             $attachmentids = array();
             if ($attachment = $field->get_attachments()) {
