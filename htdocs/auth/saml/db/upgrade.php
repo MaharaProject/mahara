@@ -89,5 +89,9 @@ function xmldb_auth_saml_upgrade($oldversion=0) {
         set_config_plugin('auth', 'saml', 'version', '1.19.5');
     }
 
+    if ($oldversion < 2022121200) {
+        set_config_plugin('auth', 'saml', 'version', '1.19.7');
+    }
+
     return $status;
 }
