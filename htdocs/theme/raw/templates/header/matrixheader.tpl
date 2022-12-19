@@ -3,10 +3,10 @@
         <div class="row">
             <div class="col-md-12 main">
 
-                {if $collection}
+                {if $collectionnav}
                     {include file=collectionnav.tpl}
                 {/if}
-                {if !($headertype == "matrix")}
+                {if !($headertype == "matrix" || $headertype == "outcomesoverview") }
                     {if $notrudeform}
                         <div class="alert alert-danger">
                             {$notrudeform|safe}

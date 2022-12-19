@@ -1,14 +1,18 @@
 {include file="header.tpl"}
     {if !$noedit}
     <div class="btn-top-right btn-group btn-group-top {if $GROUP} pagetabs{/if}">
+      {if !$outcomesgroup || $role === 'admin'}
         <button id="addview-button" class="btn btn-secondary" type="button" data-bs-target="{$WWWROOT}view/editlayout.php?new=1{$urlparamsstr}" >
-            <span class="icon icon-plus left" role="presentation" aria-hidden="true" ></span>
-            {str section=mahara tag=Create}
+        <span class="icon icon-plus left" role="presentation" aria-hidden="true" ></span>
+        {str section=mahara tag=Create}
         </button>
+      {/if}
+      {if !$outcomesgroup}
         <button id="copyview-button" class="btn btn-secondary" type="button" data-url="{$WWWROOT}view/choosetemplate.php?searchcollection=1{$urlparamsstr}">
-            <span class="icon icon-regular icon-copy left" role="presentation" aria-hidden="true"></span>
-            {str section=mahara tag=copy}
+        <span class="icon icon-regular icon-copy left" role="presentation" aria-hidden="true"></span>
+        {str section=mahara tag=copy}
         </button>
+      {/if}
     </div>
     {/if}
     {$searchform|safe}

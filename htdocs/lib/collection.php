@@ -162,6 +162,17 @@ class Collection {
      */
     private $frameworkurl;
 
+    /**
+     * @var boolean
+     */
+    private $outcomeportfolio;
+
+    /**
+     * @var integer
+     */
+    private $outcomecategory;
+
+
     const UNSUBMITTED = 0;
     const SUBMITTED = 1;
     const PENDING_RELEASE = 2;
@@ -578,6 +589,7 @@ class Collection {
         $data->submittedstatus = 0;
 
         $data->progresscompletion = $colltemplate->get('progresscompletion');
+        $data->outcomeportfolio = $colltemplate->get('outcomeportfolio');
         // If owner is copying a collection they own then the copy is made unlocked
         $data->lock = (isset($data->owner) && $data->owner == $colltemplate->owner) ? 0 : $colltemplate->get('lock');
         $data->autocopytemplate = 0;
@@ -946,6 +958,30 @@ class Collection {
                 'unselectcallback'   => 'delete_view_coverimage',
             ),
         );
+        if ($this->group && is_outcomes_group($this->group)) {
+            $institution = get_field('group', 'institution', 'id', $this->group);
+            $categories = get_records_select_array('outcome_category',  "institution = ?", array($institution));
+            $elements['outcomeportfolio'] = array(
+                'type'  => 'switchbox',
+                'title' => get_string('outcomeportfolio', 'collection'),
+                'description' => get_string('outcomeportfoliodesc', 'collection'),
+                'defaultvalue' => 1,
+            );
+            $options = [];
+            if ($categories) {
+                foreach($categories as $cat) {
+                    $options[$cat->id] = $cat->title;
+                }
+                $elements['outcomecategory'] = array(
+                    'type'  => 'select',
+                    'title' => get_string('outcomecategory','collection'),
+                    'description' => get_string('outcomecategorydesc','collection'),
+                    'options' => $options,
+                    'collapseifoneoption' => true,
+                    'defaultvalue' => null,
+                );
+            }
+        }
         if ($frameworks = $this->get_available_frameworks()) {
             $options = array('' => get_string('noframeworkselected', 'module.framework'));
             foreach ($frameworks as $framework) {
@@ -1239,6 +1275,15 @@ class Collection {
     }
 
     /**
+     * Check that a collection has oucomes
+     *
+     * @return id of page or false
+     */
+    public function has_outcomes() {
+        return $this->outcomeportfolio && $this->outcomecategory;
+    }
+
+    /**
      * Check that a collection has progress completion enable
      * - The collection can have progress completion enabled
      * - It has progress completion enabled
@@ -1334,9 +1379,24 @@ class Collection {
         return $option;
     }
 
+    /**
+     * Get collection outcomes option for collection navigation
+     *
+     * @return object $option;
+     */
+    public function collection_nav_outcomes_option() {
+        $option = new stdClass();
+        $option->id = $this->id;
+        $option->title = get_string('Outcomes', 'group');
+        $option->outcomes = true;
+
+        $option->fullurl = self::get_outcomes_url($option);
+
+        return $option;
+    }
 
     /**
-     * Get collection framework option for collection navigation
+     * Get collection progress completion option for collection navigation
      *
      * @return object $option;
      */
@@ -1384,7 +1444,23 @@ class Collection {
     }
 
     /**
-     * Making the framework url
+     * Making the outcomes url
+     *
+     * @param object $data    Either a collection or standard object
+     * @param bool   $fullurl Return full url rather than relative one
+     *
+     * @return $url
+     */
+    public static function get_outcomes_url($data, $fullurl = true) {
+        $url = 'collection/outcomesoverview.php?id=' . $data->id;
+        if ($fullurl) {
+            return get_config('wwwroot') . $url;
+        }
+        return $url;
+    }
+
+    /**
+     * Making the progress completion url
      *
      * @param object $data    Either a collection or standard object
      * @param bool   $fullurl Return full url rather than relative one
@@ -1627,7 +1703,13 @@ class Collection {
      */
     public function post_edit_redirect_url($new=false, $copy=false, $urlparams=null) {
         $redirecturl = get_config('wwwroot');
-        if ($new || $copy) {
+
+        // Group owned collection with outcomes
+        if ($this->get('group') && $this->get('outcomeportfolio')) {
+          $urlparams['id'] = $this->get('id');
+          $redirecturl .= 'collection/manageoutcomes.php';
+        }
+        else if ($new || $copy) {
             $urlparams['id'] = $this->get('id');
             $redirecturl .= 'collection/views.php';
         }
@@ -1711,7 +1793,17 @@ class Collection {
 
         $views = $this->views();
         if (!empty($views)) {
-            if ($this->has_progresscompletion()) {
+            if ($this->has_outcomes()) {
+                if ($full) {
+                    $this->fullurl = Collection::get_outcomes_url($this);
+                    return $this->fullurl;
+                }
+                else {
+                    $this->outcomesurl = Collection::get_outcomes_url($this, false);
+                    return $this->outcomesurl;
+                }
+            }
+            else if ($this->has_progresscompletion()) {
                 if ($full) {
                     $this->fullurl = Collection::get_progresscompletion_url($this);
                     return $this->fullurl;
@@ -2220,6 +2312,13 @@ class Collection {
         }
         if ($numberofactions == 0) return false;
         return array(round(($numberofcompletedactions/$numberofactions)*100), $numberofactions);
+    }
+
+    public function get_outcomes_complete_percentage() {
+      $complete = get_column('outcome', 'complete', 'collection', $this->get('id'));
+      $outcomenumber = count($complete);
+      $completednumber = count(array_filter($complete));
+      return array(round(($completednumber/$outcomenumber)*100), $outcomenumber);
     }
 
     /**

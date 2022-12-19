@@ -2222,7 +2222,7 @@ function group_get_menu_tabs() {
         'title' => get_string('Viewscollections1', 'view'),
         'weight' => 50,
     );
-    if (group_role_can_edit_views($group, $role)) {
+    if (group_role_can_edit_views($group, $role) && !(is_outcomes_group($group->id) && $role === 'member')) {
         $menu['share'] = array(
             'path' => 'groups/share',
             'url' => 'group/shareviews.php?group='.$group->id,
@@ -3883,4 +3883,31 @@ function group_external_group($group) {
         return true;
     }
     return false;
+}
+
+/**
+ * Check if a group is set as 'Outcomes' group
+ *
+ * @param string $id  The group ID
+ * @return boolean
+ */
+function is_outcomes_group($id) {
+    $id = (int)$id;
+    if ($id > 0) {
+        if ($group = get_record('group', 'id', $id)) {
+            return (boolean)($group->grouptype === 'outcomes');
+        }
+    }
+    return false;
+}
+
+
+function group_deny_access($group, $role) {
+  // Can't check so lets deny
+  if (!isset($group->id) || !isset($group->grouptype)) {
+    return true;
+  }
+  safe_require('grouptype', $group->grouptype);
+  $denyaccess = call_static_method('GroupType' . $group->grouptype, 'deny_access_for_role', $group, $role);
+  return $denyaccess;
 }

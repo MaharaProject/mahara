@@ -306,6 +306,12 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
                             'desc' => true
                     )
             );
+
+            // Don't show group homepage for outcomes groups
+            $type = null;
+            if (is_outcomes_group($group->id)) {
+                $type = array('portfolio');
+            }
             // Find out what order to sort them by (default is titles)
             if (!isset($configdata['sortgroupviewsby']) || $configdata['sortgroupviewsby'] == PluginBlocktypeGroupViews::SORTBY_TITLE) {
                 $sort[] = array('column' => 'title');
@@ -314,7 +320,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
                 $sort[] = array('column' => 'mtime', 'desc' => true);
             }
             $data['groupviews'] = View::view_search(null, null, (object) array('group' => $group->id),
-                                                    null, $limit, 0, true, $sort, null, false, null, null,
+                                                    null, $limit, 0, true, $sort, $type, false, null, null,
                                                     null, null, true);
             foreach ($data['groupviews']->data as &$view) {
                 if (empty($view['displaytitle'])) {

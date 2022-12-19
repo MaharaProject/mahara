@@ -13,9 +13,9 @@
 
 use Dwoo\Core;
 
-function PluginContextualhelp(Core $core, $plugintype, $pluginname, $form = null, $element = null, $section = null, $assign = null) {
+function PluginContextualhelp(Core $core, $plugintype, $pluginname, $form = null, $element = null, $section = null, $assign = null, $page = null) {
     $ret = call_user_func_array('get_help_icon', array(
-        $plugintype, $pluginname, $form, $element, null, $section));
+        $plugintype, $pluginname, $form, $element, $page, $section));
 
     // If there is an 'assign' parameter, place it into that instead.
     if ($assign) {

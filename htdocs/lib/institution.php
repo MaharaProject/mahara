@@ -61,6 +61,7 @@ class Institution {
         'skins' => 1,
         'tags' => 0,
         'progresscompletion' => 0,
+        'outcomeportfolio' => 0,
     );
 
     // This institution's config settings

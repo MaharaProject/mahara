@@ -509,7 +509,7 @@ class View {
         }
 
         // Lockblocks if set on template
-        $view->set('lockblocks', $template->get('lockblocks'));
+        $view->set('lockblocks', (int)($template->get('lockblocks') || $view->lockblocks));
 
         if ($template->get('locktemplate')) {
             $view->set('locktemplate', 0);
@@ -653,7 +653,7 @@ class View {
             'type'          => 'portfolio',
             'title'         => (array_key_exists('title', $viewdata)) ? $viewdata['title'] : self::new_title(get_string('Untitled', 'view'), (object)$viewdata),
             'anonymise'     => 0,
-            'lockblocks'    => 0,
+            'lockblocks'    => (int)(isset($viewdata['group']) && is_outcomes_group($viewdata['group'])),
         );
 
         $data = (object)array_merge($defaultdata, $viewdata);
@@ -4074,16 +4074,16 @@ class View {
 
         $select = '
             SELECT v.id, v.id AS vid, v.title, v.title AS vtitle, v.description, v.type,  v.ctime as vctime, v.mtime as vmtime, v.atime as vatime,
-            v.owner, v.group, v.institution, v.locked, v.ownerformat, v.urlid, v.visits AS vvisits, 1 AS numviews, NULL AS lockedcoll, NULL AS collid, v.coverimage';
+            v.owner, v.group, v.institution, v.locked, v.ownerformat, v.urlid, v.visits AS vvisits, 1 AS numviews, NULL AS lockedcoll, NULL AS collid, v.coverimage, NULL as outcomeportfolio';
         $collselect = '
             UNION
             SELECT cvid.view AS id, null AS vid, c.name as title, c.name AS vtitle, c.description, null AS type, c.ctime AS vctime, c.mtime AS vmtime, c.mtime AS vatime,
             c.owner, c.group, c.institution, null AS locked, null AS ownerformat, null AS urlid, null AS vvisits,
-            numviews.numviews AS numviews, c.lock AS lockedcoll, c.id AS collid, c.coverimage';
+            numviews.numviews AS numviews, c.lock AS lockedcoll, c.id AS collid, c.coverimage, c.outcomeportfolio';
         $emptycollselect = '
             UNION
             SELECT null AS id, null AS vid, c.name AS title, c.name AS vtitle, c.description, null AS type, c.ctime AS vctime, c.mtime AS vmtime, c.mtime AS vatime,
-            c.owner, c.group, c.institution, null AS locked, null AS ownerformat, null AS urlid, null AS vvisits, 0 AS numviews, NULL AS lockedcoll, c.id AS collid, c.coverimage';
+            c.owner, c.group, c.institution, null AS locked, null AS ownerformat, null AS urlid, null AS vvisits, 0 AS numviews, NULL AS lockedcoll, c.id AS collid, c.coverimage, c.outcomeportfolio';
 
         $from = '
             FROM {view} v
@@ -4331,6 +4331,9 @@ class View {
                     }
                     if ($collobj->has_progresscompletion()) {
                         $data['progresscompletion'] = $collobj->collection_nav_progresscompletion_option();
+                    }
+                    if ($collobj->has_outcomes()) {
+                        $data['outcomes'] = $collobj->collection_nav_outcomes_option();
                     }
                 }
 
@@ -6245,7 +6248,7 @@ class View {
 
     public function copy_contents($template, &$artefactcopies) {
 
-        $this->set('lockblocks', $template->get('lockblocks'));
+        $this->set('lockblocks', (int)($template->get('lockblocks') || $this->lockblocks));
         if ($template->get('template') == self::SITE_TEMPLATE
             && $template->get('type') == 'portfolio') {
             $this->set('description', '');

@@ -182,7 +182,10 @@ if ($collection) {
             array_unshift($viewnav, $collection->collection_nav_framework_option());
         }
         array_unshift($viewnav, $collection->collection_nav_progresscompletion_option());
-        $smarty->assign('collection', $viewnav);
+        if ($collection->has_outcomes()) {
+            array_unshift($viewnav, $collection->collection_nav_outcomes_option());
+        }
+        $smarty->assign('collectionnav', $viewnav);
     }
     $smarty->assign('collectiontitle', $collection->get('name'));
 }

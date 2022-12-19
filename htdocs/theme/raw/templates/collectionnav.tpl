@@ -7,19 +7,20 @@
     <span id="collectionbtns" class="collection-nav-btns">
       <nav class="custom-dropdown dropdown" aria-label="{str tag="Collection" section="collection"}">
         {* Get the current page index *}
-        {foreach from=$collection item=view name=page}
-            {if ($viewid && $view->view == $viewid) || ($view->progresscompletion && $progresscompletion && !$viewid) || ($view->framework && $framework && !$viewid)}
+        {foreach from=$collectionnav item=view name=page}
+            {if ($viewid && $view->view == $viewid) || ($view->progresscompletion && $progresscompletion && !$viewid) || ($view->framework && $framework && !$viewid) ||
+            ($view->outcomes && $outcomes && !$viewid)}
               {assign var="currentindex" value=$dwoo.foreach.page.index}
             {/if}
         {/foreach}
 
         <button class="picker form-control dropdown-toggle" type="button" id="currentindex" data-currentindex="{$currentindex}" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {* page title and page count *}
-          {str tag="viewingpage" section="collection"}{$currentindex + 1}/{count($collection)}
+          {str tag="viewingpage" section="collection"}{$currentindex + 1}/{count($collectionnav)}
         </button>
 
         <ul id="pagelist" class="dropdown-menu" aria-labelledby="collection navigation dropdown">
-          {foreach from=$collection item=view name=page}
+          {foreach from=$collectionnav item=view name=page}
             {if ($viewid && $view->view == $viewid)
             || ($view->progresscompletion && $progresscompletion && !$viewid)
             || ($view->framework && $framework && !$viewid)}
@@ -37,7 +38,7 @@
         </ul>
       </nav>
 
-      {if count($collection) > 1}
+      {if count($collectionnav) > 1}
         <button type="button" class="btn btn-secondary prevpage disabled" title='{str tag="prevpage"}'>
           <span class="icon left icon-chevron-left" role="presentation" aria-hidden="true"></span>
         </button>

@@ -68,6 +68,9 @@ if (!$can_edit) {
                 if ($collobj->has_progresscompletion()) {
                     $item['progresscompletion'] = $collobj->collection_nav_progresscompletion_option();
                 }
+                if ($collobj->has_outcomes()) {
+                    $item['outcomes'] = $collobj->collection_nav_outcomes_option();
+                }
             }
         }
     }
@@ -107,9 +110,11 @@ jQuery(function ($) {
 EOF;
 
 $urlparamsstr = '';
+$outcomesgroup = false;
 if (!empty($group->id)) {
     $urlparams['group'] = $group->id;
     $urlparamsstr = '&' . http_build_query($urlparams);
+    $outcomesgroup = is_outcomes_group($group->id);
 }
 
 $smarty = smarty(array('paginator'));
@@ -128,6 +133,8 @@ $smarty->assign('query', param_variable('query', null));
 $smarty->assign('querystring', get_querystring());
 $smarty->assign('sitetemplate', View::SITE_TEMPLATE);
 $smarty->assign('editlocked', $role == 'admin');
+$smarty->assign('role', $role);
+$smarty->assign('outcomesgroup', $outcomesgroup);
 $html = $smarty->fetch('view/indexresults.tpl');
 $smarty->assign('viewresults', $html);
 $smarty->assign('searchform', $searchform);

@@ -71,6 +71,9 @@ if (!empty($groupid)) {
                     if ($collobj->has_progresscompletion()) {
                         $item['progresscompletion'] = $collobj->collection_nav_progresscompletion_option();
                     }
+                    if ($collobj->has_outcomes()) {
+                        $item['outcomes'] = $collobj->collection_nav_outcomes_option();
+                    }
                 }
             }
         }

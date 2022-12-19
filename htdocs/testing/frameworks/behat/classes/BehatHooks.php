@@ -338,7 +338,7 @@ class BehatHooks extends BehatBase {
                     // if (!empty($CFG->behat_faildump_path)) {
                     $this->take_afterstep_screenshot($scope);
                     // }
-                    throw new \Exception('A non-fatal Call Stack was found on the page.');
+                    throw new \Exception('A non-fatal Call Stack was found on the page in feature ' . $scope->getFeature()->getFile());
                 }
             }
             catch (UnexpectedAlertOpen $e) {

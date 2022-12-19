@@ -49,7 +49,7 @@ class GroupTypeCourse extends GroupType {
     public static function can_be_created_by_user() {
         global $USER;
         return $USER->get('admin') || $USER->get('staff') || $USER->is_institutional_admin()
-            || $USER->is_institutional_staff();
+            || $USER->is_institutional_supportadmin() || $USER->is_institutional_staff();
     }
 
     public static function get_roles() {

@@ -32,6 +32,9 @@ $membership = group_user_access($groupid);
 if (!$membership && !$group->public) {
     throw new GroupAccessDeniedException(get_string('cantviewforums', 'interaction.forum'));
 }
+if (is_outcomes_group($group->id)) {
+  throw new AccessDeniedException();
+}
 
 define('TITLE', $group->name . ' - ' . get_string('nameplural', 'interaction.forum'));
 

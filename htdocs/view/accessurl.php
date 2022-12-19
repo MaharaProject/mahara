@@ -63,6 +63,13 @@ if ($view->get('template') == View::SITE_TEMPLATE) {
     throw new AccessDeniedException();
 }
 
+if ($group) {
+    $groupobj = get_group_by_id($group);
+    if (group_deny_access($groupobj, 'member')) {
+        throw new AccessDeniedException();
+    }
+}
+
 $form = array(
     'name' => 'accessurl',
     'renderer' => 'div',
@@ -126,7 +133,8 @@ $form['elements']['more'] = array(
             'type'         => 'switchbox',
             'title'        => get_string('allowcopying', 'view'),
             'description'  => get_string('templatedescriptionplural3', 'view'),
-            'defaultvalue' => $view->get('template'),
+            'defaultvalue' => !is_outcomes_group($group) && $view->get('template'),
+            'disabled'     => is_outcomes_group($group),
         ),
     ),
 );

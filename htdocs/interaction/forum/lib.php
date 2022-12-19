@@ -565,7 +565,7 @@ EOF;
             }
         }
         $menu = array();
-        if ($group->public || $role || ($hasobjectionable && $USER->get('admin'))) {
+        if (($group->public || $role || ($hasobjectionable && $USER->get('admin'))) && !is_outcomes_group($group->id)) {
             $menu['forums'] = array(// @todo: make forums an artefact plugin
                 'path' => 'groups/forums',
                 'url' => 'interaction/forum/index.php?group=' . $group->id,
