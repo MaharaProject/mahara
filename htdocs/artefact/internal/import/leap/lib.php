@@ -304,7 +304,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
                 if (count($artefactpluginelement) == 1) {
                     $artefactpluginelement = $artefactpluginelement[0];
 
-                    $maharaattributes = PluginImportLeap::get_attributes($artefactpluginelement, PluginImportLeap::NS_MAHARA);
+                    $maharaattributes = PluginImportLeap::get_attributes($artefactpluginelement, $importer->namespace_mahara);
                     if (isset($maharaattributes['type']) && in_array($maharaattributes['type'], $types)) {
                         $type = $maharaattributes['type'];
                         $title = PluginImportLeap::get_entry_content($entry, $importer);
@@ -702,7 +702,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
         // We've been given a 'website' field, but Mahara can have many profile
         // fields for website (including via socialprofile). So we need to examine
         // it deeper to establish which field it should import into
-        $maharaattributes = PluginImportLeap::get_attributes($item, PluginImportLeap::NS_MAHARA);
+        $maharaattributes = PluginImportLeap::get_attributes($item, $importer->namespace_mahara);
 
         if (isset($maharaattributes['artefactplugin'])
             && isset($maharaattributes['artefacttype'])
@@ -758,7 +758,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
         // We've been given a 'website' field, but Mahara can have many profile
         // fields for website (including via socialprofile). So we need to examine
         // it deeper to establish which field it should import into
-        $maharaattributes = PluginImportLeap::get_attributes($item, PluginImportLeap::NS_MAHARA);
+        $maharaattributes = PluginImportLeap::get_attributes($item, $importer->namespace_mahara);
 
         if (isset($maharaattributes['artefactplugin'])
             && isset($maharaattributes['artefacttype'])
@@ -797,7 +797,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
     private static function add_import_entry_request_persondata_other(PluginImportLeap $importer, $persondataid, SimpleXMLElement $item, array $leapattributes) {
         // The only 'other' field we can actually import is one we recognise as
         // 'student ID'
-        $maharaattributes = PluginImportLeap::get_attributes($item, PluginImportLeap::NS_MAHARA);
+        $maharaattributes = PluginImportLeap::get_attributes($item, $importer->namespace_mahara);
 
         if (isset($maharaattributes['artefactplugin'])
             && isset($maharaattributes['artefacttype'])
@@ -823,7 +823,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
     private static function import_persondata_other(PluginImportLeap $importer, SimpleXMLElement $item, array $leapattributes) {
         // The only 'other' field we can actually import is one we recognise as
         // 'student ID'
-        $maharaattributes = PluginImportLeap::get_attributes($item, PluginImportLeap::NS_MAHARA);
+        $maharaattributes = PluginImportLeap::get_attributes($item, $importer->namespace_mahara);
 
         if (isset($maharaattributes['artefactplugin'])
             && isset($maharaattributes['artefacttype'])
@@ -857,7 +857,7 @@ class LeapImportInternal extends LeapImportArtefactPlugin {
         $personaddress = '';
         $address = array();
         foreach ($addresslines as $addressline) {
-            $maharaattributes = PluginImportLeap::get_attributes($addressline, PluginImportLeap::NS_MAHARA);
+            $maharaattributes = PluginImportLeap::get_attributes($addressline, $importer->namespace_mahara);
 
             if (isset($maharaattributes['artefacttype'])) {
                 switch ($maharaattributes['artefacttype']) {

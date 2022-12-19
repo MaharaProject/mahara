@@ -349,7 +349,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                 if (count($artefactpluginelement) == 1) {
                     $artefactpluginelement = $artefactpluginelement[0];
 
-                    $maharaattributes = PluginImportLeap::get_attributes($artefactpluginelement, PluginImportLeap::NS_MAHARA);
+                    $maharaattributes = PluginImportLeap::get_attributes($artefactpluginelement, $importer->namespace_mahara);
                     if (isset($maharaattributes['type']) && in_array($maharaattributes['type'], $types)) {
                         $values = array(
                             'owner'   => $importer->get('usr'),
@@ -540,7 +540,7 @@ class LeapImportResume extends LeapImportArtefactPlugin {
                     }
                 }
 
-                $maharaattributes = PluginImportLeap::get_attributes($item, PluginImportLeap::NS_MAHARA);
+                $maharaattributes = PluginImportLeap::get_attributes($item, $importer->namespace_mahara);
 
                 if (isset($maharaattributes['field'])) {
                     if (in_array($maharaattributes['field'], array('placeofbirth', 'citizenship', 'visastatus', 'maritalstatus'))) {

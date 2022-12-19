@@ -35,6 +35,13 @@ class PluginImportLeap extends PluginImport {
     private $namespaces = array();
 
     /**
+     * The mahara namespace
+     *
+     * @var string
+     */
+    public $namespace_mahara;
+
+    /**
      * List of strategies for each artefact plugin
      *
      * An artefact plugin could provide several different possible "strategies"
@@ -192,10 +199,11 @@ class PluginImportLeap extends PluginImport {
     const NS_CATEGORIES_200903 = 'https://web.archive.org/web/20111027183853/http://wiki.cetis.ac.uk/2009-03/Leap2A_categories';
     const NS_LEAP              = 'https://web.archive.org/web/20100503000634/http://terms.leapspecs.org';
     const NS_CATEGORIES        = 'https://web.archive.org/web/20120819100914/http://wiki.leapspecs.org:80/2A/categories';
-    // NOTE: Even though this URL is no longer valid, it must not change because it is used as an identifier
-    // in existing XML files.
-    // (Correct current URL is https://wiki.mahara.org/wiki/Developer_Area/Import//Export/LEAP_Extensions# )
-    const NS_MAHARA     = 'https://wiki.mahara.org/wiki/Developer_Area/Import//Export/LEAP_Extensions';
+    // We try to identify which of the NS_MAHARA constants to use within read_leap2a_xml_file() based
+    // on the xmlns:mahara value. The NS_MAHARA_2022 is the option that became obsolete in 2022 and
+    // the NS_MAHARA is current option used in exports.
+    const NS_MAHARA      = 'https://wiki.mahara.org/wiki/Developer_Area/Import//Export/LEAP_Extensions';
+    const NS_MAHARA_2022 = 'http://wiki.mahara.org/Developer_Area/Import%2F%2FExport/LEAP_Extensions#';
 
     const XHTML_DIV       = '<div xmlns="http://www.w3.org/1999/xhtml">';
     const XHTML_DIV_EMPTY = '<div xmlns="http://www.w3.org/1999/xhtml"/>';
@@ -327,8 +335,24 @@ class PluginImportLeap extends PluginImport {
         }
         $this->xml = $sxe;
         libxml_after();
-
         $this->namespaces = array_flip($this->xml->getDocNamespaces());
+        if (in_array('leap2', $this->namespaces)) {
+            // Make sure the old and new leap2 namespaces are available
+            if (!isset($this->namespaces['https://web.archive.org/web/20100503000634/http://terms.leapspecs.org'])) {
+                $this->namespaces['https://web.archive.org/web/20100503000634/http://terms.leapspecs.org'] = 'leap2';
+            }
+            if (!isset($this->namespaces['http://terms.leapspecs.org/'])) {
+                $this->namespaces['http://terms.leapspecs.org/'] = 'leap2';
+            }
+            // Make sure the old and new leap2 categories namespaces are available
+            if (!isset($this->namespaces['https://web.archive.org/web/20120819100914/http://wiki.leapspecs.org:80/2A/categories'])) {
+                $this->namespaces['https://web.archive.org/web/20120819100914/http://wiki.leapspecs.org:80/2A/categories'] = 'categories';
+            }
+            if (!isset($this->namespaces['http://wiki.leapspecs.org/2A/categories/'])) {
+                $this->namespaces['http://wiki.leapspecs.org/2A/categories/'] = 'categories';
+            }
+        }
+        $this->namespace_mahara = isset($this->namespaces[PluginImportLeap::NS_MAHARA_2022]) ? PluginImportLeap::NS_MAHARA_2022 : PluginImportLeap::NS_MAHARA;
         $this->registerXpathNamespaces($this->xml);
         $this->trace("Document loaded, entries: " . count($this->xml->entry));
         $this->snapshot('loaded XML');
@@ -1434,7 +1458,7 @@ class PluginImportLeap extends PluginImport {
         $columnwidths = [];
         $viewelement = $entry->xpath('mahara:view[1]');
 
-        $maharaattributes = PluginImportLeap::get_attributes($viewelement[0], PluginImportLeap::NS_MAHARA);
+        $maharaattributes = PluginImportLeap::get_attributes($viewelement[0], $this->namespace_mahara);
 
         $gridlayout = isset($maharaattributes['newlayout']) && $maharaattributes['newlayout'];
 
@@ -1576,7 +1600,7 @@ class PluginImportLeap extends PluginImport {
                   $config['grid'][$rowindex][$colindex]['blocks'] = array();
                   $config['grid'][$rowindex][$colindex]['width'] = $columnwidths[$rowindex-1][$colindex-1];
                   foreach ($blockinstances as $blockinstance) {
-                      $attrs = self::get_attributes($blockinstance, PluginImportLeap::NS_MAHARA);
+                      $attrs = self::get_attributes($blockinstance, $this->namespace_mahara);
                       if (!isset($attrs['blocktype'])) {
                           $this->trace("  No mahara:blocktype attribute set for blockinstance at row $rowindex col $colindex, order $order: skipping");
                           continue;
@@ -1629,7 +1653,7 @@ class PluginImportLeap extends PluginImport {
         }
         else {
             foreach ($gridblocks as $blockinstance) {
-                $attrs = self::get_attributes($blockinstance, PluginImportLeap::NS_MAHARA);
+                $attrs = self::get_attributes($blockinstance, $this->namespace_mahara);
                 $row = $attrs['positiony'];
                 $col = $attrs['positionx'];
                 if (!isset($attrs['blocktype'])) {
@@ -2039,7 +2063,7 @@ class PluginImportLeap extends PluginImport {
     public function registerXpathNamespaces(SimpleXMLElement $element) {
         $element->registerXpathNamespace('a', PluginImportLeap::NS_ATOM);
         $element->registerXpathNamespace('rdf', PluginImportLeap::NS_RDF);
-        $element->registerXpathNamespace('mahara', PluginImportLeap::NS_MAHARA);
+        $element->registerXpathNamespace('mahara', $this->namespace_mahara);
     }
 
     /**
