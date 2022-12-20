@@ -113,14 +113,14 @@ $state-danger-border:                       scale-color($danger, $lightness: 50%
 $state-danger-link:                         scale-color($danger, $lightness: -30%) !default;
 
 $state-submitted-text:                      $theme-text-color !default;
-$state-submitted-bg:                        scale-color($yellow, $lightness: 90%) !default;
-$state-submitted-border:                    scale-color($yellow, $lightness: 50%) !default;
-$state-submitted-link:                      scale-color($yellow, $lightness: -30%) !default;
+$state-submitted-bg:                        #f6f3ef !default;
+$state-submitted-border:                    #ddd !default;
+$state-submitted-link:                      #9b5a21 !default;
 
 $state-released-text:                       $theme-text-color !default;
-$state-released-border:                     scale-color($teal, $lightness: 90%) !default;
-$state-released-bg:                         scale-color($teal, $lightness: 50%) !default;
-$state-released-link:                       scale-color($teal, $lightness: -30%) !default;
+$state-released-bg:                         #eff6f2 !default;
+$state-released-border:                     #ddd !default;
+$state-released-link:                       #166c44 !default;
 
 // Buttons + Forms
 $btn-font-family:                           $font-family-base !default;

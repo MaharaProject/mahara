@@ -160,7 +160,7 @@
             background-color: $state-submitted-bg;
         }
         .card-footer {
-            background-color: $card-footer-bg;
+            background-color: $state-submitted-bg;
             color: $state-submitted-text;
             &:hover,
             &:focus {
@@ -196,6 +196,7 @@
             background-color: $state-released-bg !important;
         }
         .card-footer {
+            background-color: $state-released-bg !important;
             color: $state-released-text !important;
             &:hover,
             &:focus {
