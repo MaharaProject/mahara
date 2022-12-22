@@ -17,7 +17,7 @@
 
   {foreach $outcomes item=outcome}
     <div class="form-group collapsible-group">
-      <fieldset class="first last pieform-fieldset collapsible">
+      <fieldset class="pieform-fieldset collapsible">
         <legend>
           <button type="button" data-bs-target="#dropdown{$outcome->id}" data-bs-toggle="collapse" aria-expanded="false" aria-controls="dropdown{$outcome->id}" class="collapsed" >
             {$outcome->short_title|safe}
@@ -49,16 +49,16 @@
         </legend>
         <div class="fieldset-body collapse" id="dropdown{$outcome->id}">
 
-          <div class="form-group last">{$outcome->full_title|safe}</div>
+          <div class="form-group form-group-no-border">{$outcome->full_title|safe}</div>
 
           {if $outcome->outcome_type}
-            <div class="form-group last" id="outcome{$outcome->id}_type_container">
+            <div class="form-group form-group-no-border" id="outcome{$outcome->id}_type_container">
               <label for="outcometype-{$outcome->id}">{str tag="outcometype" section="collection"}</label>
               <div id="outcometype-{$outcome->id}" class="outcome-type">
                 <span class="badge rounded-pill text-bg-{$outcometypes[$outcome->outcome_type]->styleclass}">{$outcometypes[$outcome->outcome_type]->abbreviation}</span>
               </div>
-              {contextualhelp 
-              plugintype='core' 
+              {contextualhelp
+              plugintype='core'
               pluginname='collection'
               form="outcome$outcome->id"
               element='type'
@@ -76,17 +76,18 @@
           {$supportform[$outcome->id]|safe}
 
           <form class="outcome-progress-form" id="progress{$outcome->id}">
-            <div class="form-group last">
+            <div class="form-group form-group-no-border">
               <label class="pseudolabel" for="progress{$outcome->id}_textarea">{str tag="progress" section="collection"}</label>
-              <div class="textarea-section" >
+              <div class="textarea-section">
               {if $outcome->complete || !$actionsallowed}
                 <div class="text progress-detail">
                   {$outcome->progress|safe}
                 </div>
                 {if $outcome->lastauthorprogress}
-                  <a href="{profile_url($outcome->lastauthorprogress)}" class="text-small progress-author">
+                  <div class="text-small postedon"><a href="{profile_url($outcome->lastauthorprogress)}" class="progress-author">
                     {display_name($outcome->lastauthorprogress, null, true)}
-                  </a>{str tag='ondate' section='collection' arg1=$outcome->lasteditprogress|strtotime|format_date:'strftimedatetime'}
+                    </a>{str tag='ondate' section='collection' arg1=$outcome->lasteditprogress|strtotime|format_date:'strftimedatetime'}
+                  </div>
                 {/if}
               {else}
                 <div>
@@ -241,7 +242,7 @@ $(function() {
     }
   })
 
-  $('form.outcome-progress-form').map((i, form) => { 
+  $('form.outcome-progress-form').map((i, form) => {
     const formid = $(form).attr('id');
     formchangemanager.add(formid);
   })

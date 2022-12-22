@@ -141,6 +141,9 @@
                 &.last {
                     border-bottom: 0;
                 }
+                &.form-group-no-border {
+                  border-bottom: 0;
+                }
             }
             &.with-formgroup {
                 margin-top: $spacing-lg;

@@ -1,18 +1,28 @@
-// Harcoded outcome type colors
-$outcome-type-color-1-bg: $indigo-100;
-$outcome-type-color-1-color: $indigo;
-$outcome-type-color-2-bg: $red-100;
-$outcome-type-color-2-color: $red;
-$outcome-type-color-3-bg: $yellow-100;
-$outcome-type-color-3-color: $yellow;
-$outcome-type-color-4-bg: $cyan-100;
-$outcome-type-color-4-color: $cyan;
+// Hardcoded outcome type colors
+$outcome-type-colors: (
+  outcome-type-color-1-bg: #264681,     // navy blue
+  outcome-type-color-1-color: #b2c1dc,  // light blue
+  outcome-type-color-2-bg: #940240,     // wine red
+  outcome-type-color-2-color: #e8c0c4,  // light red
+  outcome-type-color-3-bg: #166c44,     // forrest green
+  outcome-type-color-3-color: #d2e5db,  // light green
+  outcome-type-color-4-bg: #9b5a21,     // earth brown
+  outcome-type-color-4-color: #f4efe7,  // light yellow
+  outcome-type-color-5-bg: #515151,     // dark gray
+  outcome-type-color-5-color: #c9c9c9,  // light gray
+  outcome-type-color-6-bg: #136572,     // teal
+  outcome-type-color-6-color: #dbe7eb,  // light teal
+  outcome-type-color-7-bg: #721e69,     // maroon
+  outcome-type-color-7-color: #d6b8d3,  // light maroon
+  outcome-type-color-8-bg: #4c276a,     // dark lavender
+  outcome-type-color-8-color: #cdbfd8   // light lavender gray
+);
 
 .card.outcomeoverview {
 	width: 45%;
 }
 
-@media (max-width: 992px) {
+@include media-breakpoint-down(lg) {
 	.card.outcomeoverview {
 		width: 100%;
 	}
@@ -20,10 +30,20 @@ $outcome-type-color-4-color: $cyan;
 
 a.outcome-state {
 	padding: 0 !important;
-	color: $green !important;
 	border: none !important;
+
+	// complete icon
+	&.outcome-complete {
+		color: $progresscompletion-verified-color !important;
+		&:hover,
+		&:focus {
+			color: scale-color($progresscompletion-verified-color, $lightness: -15%) !important;
+		}
+	}
+
 	& .icon.disabled {
 		cursor: not-allowed;
+		color: scale-color($gray-300, $lightness: 28%) !important;
 		&.dot:before {
 			content: "\f068";
 		}
@@ -35,23 +55,20 @@ a.outcome-state {
 
 form.outcome-progress-form {
 	label {
-		margin-bottom: 10px;
+		margin-bottom: $spacing-base; // 10px
 	}
 	div.textarea-section {
-		min-width: 500px;
 		display: inline-block;
-		max-width: 70%;
 		& .errmsg {
 			margin: 0;
 		}
 		& .progress-detail {
 			overflow-wrap: break-word;
-			margin-bottom: 16px;
+			margin-bottom: $spacing-base; // 10px
 		}
 	}
 	textarea {
-		height: 88px;
-		margin-bottom: 10px;
+		margin-bottom: $spacing-base; // 10px
 	}
 }
 
@@ -59,21 +76,13 @@ form.outcome-progress-form {
 div.outcome-type {
 	display: inline-block;
 	span {
-		&.text-bg-outcome1 {
-			background-color: $outcome-type-color-1-bg;
-			color: $outcome-type-color-1-color;
-		}
-		&.text-bg-outcome2 {
-			background-color: $outcome-type-color-2-bg;
-			color: $outcome-type-color-2-color;
-		}
-		&.text-bg-outcome3 {
-			background-color: $outcome-type-color-3-bg;
-			color: $outcome-type-color-3-color;
-		}
-		&.text-bg-outcome4 {
-			background-color: $outcome-type-color-4-bg;
-			color: $outcome-type-color-4-color;
+        padding: 0.75rem 0.25rem; // makes the height 36px
+        min-width: 2.25rem; // 36px;
+        @for $i from 1 through 8 {
+            &.text-bg-outcome#{$i} {
+                background-color: map-get($outcome-type-colors, outcome-type-color-#{$i}-bg);
+                color: map-get($outcome-type-colors, outcome-type-color-#{$i}-color);
+            }
 		}
 	}
 }
@@ -88,5 +97,9 @@ span.help {
 }
 
 .outcome-form-section {
-	margin-top: 32px;
+	margin-top: 2rem; // 32px
+}
+
+.collapsible-group .pieform-fieldset.collapsible .pieform.supportform .form-group {
+	border-bottom: 0;
 }
