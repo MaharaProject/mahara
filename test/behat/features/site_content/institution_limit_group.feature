@@ -45,6 +45,7 @@ Scenario: Set group limit for an institution
     Given I log in as "UserA" with password "Kupuh1pa!"
     And I choose "Groups" in "Engage" from main menu
     And I click on "Create group"
+    Then I wait "1" seconds
     And I set the following fields to these values:
     | Group name        | GroupE                |
     | Group description | GroupE owned by UserA |
