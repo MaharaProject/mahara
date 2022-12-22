@@ -470,6 +470,7 @@ function edittopic_callback(form, data) {
 EOF;
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-regular icon-comment-dots');
 $smarty->assign('heading', $forum->groupname);
 $smarty->assign('subheading', $topictype);
 $smarty->assign('moderator', $moderator);

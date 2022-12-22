@@ -63,7 +63,7 @@ $form = ArtefactTypeTask::get_form($planId, $group);
 
 $smarty = smarty(['paginator', 'js/preview.js', 'artefact/plans/js/taskedit.js',
                   'js/gridstack/gridstack_modules/gridstack-h5.js', 'js/gridlayout.js']);
-
+setpageicon($smarty, 'icon-task');
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', $pageheading);
 $smarty->assign('SUBSECTIONHEADING', $subsectionheading);

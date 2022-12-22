@@ -60,6 +60,7 @@ define('TITLE', $title);
 $editform = ArtefactTypePlan::get_form($group, $plan);
 
 $smarty = smarty(['artefact/plans/js/planedit.js']);
+setpageicon($smarty, 'icon-clipboard-list');
 $smarty->assign('editform', $editform);
 $smarty->assign('PAGEHEADING', $pageheading);
 $smarty->assign('SUBSECTIONHEADING', $subsectionheading);

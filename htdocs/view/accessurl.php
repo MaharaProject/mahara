@@ -823,6 +823,7 @@ $smarty = smarty(
     array('sidebars' => false)
 );
 $smarty->assign('INLINEJAVASCRIPT', $js);
+setpageicon($smarty, 'icon-share-alt');
 $smarty->assign('form', $form);
 $smarty->assign('shareurl', $shareurl);
 $smarty->assign('group', $group);

@@ -815,6 +815,7 @@ jQuery(function($) {
 
 $smarty = smarty();
 $smarty->assign('form', $editgroup);
+setpageicon($smarty, 'icon-users-cog');
 $smarty->assign('PAGEHEADING', !empty($group_data->name) ? $group_data->name : TITLE);
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->display('form.tpl');

@@ -66,6 +66,7 @@ $form = ArtefactTypeTask::get_form($task->get('parent'), $group, $task);
 $smarty = smarty(['paginator', 'js/preview.js', 'artefact/plans/js/taskedit.js',
                   'js/gridstack/gridstack_modules/gridstack-h5.js', 'js/gridlayout.js']);
 $smarty->assign('editform', $form);
+setpageicon($smarty, 'icon-task');
 $smarty->assign('PAGEHEADING', $pageheading);
 $smarty->assign('SUBSECTIONHEADING', $subsectionheading);
 $smarty->assign('showassignedview', get_string('showassignedview', 'artefact.plans'));

@@ -3,13 +3,11 @@
 <ul class="nav nav-tabs">
     <li class="nav-item" aria-hidden="true">
         <a href="{$WWWROOT}admin/groups/archives.php" class="nav-link {$tabs->archivedclass}">
-            <span class="icon icon-compressed left" role="presentation" aria-hidden="true"></span>
             {str tag=archivedsubmissions section=admin}
         </a>
     </li>
     <li class="nav-item" aria-hidden="true">
         <a href="{$WWWROOT}admin/groups/archives.php?current=1" class="nav-link {$tabs->currentclass}">
-            <span class="icon icon-level-up left" role="presentation" aria-hidden="true"></span>
             {str tag=currentsubmissions section=admin}
         </a>
     </li>

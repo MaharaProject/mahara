@@ -147,6 +147,7 @@ $smarty = smarty(
     array('stylesheets' => array('style/views.css'))
 );
 $smarty->assign('INLINEJAVASCRIPT', $js);
+setpageicon($smarty, 'icon-layer-group');
 if (!empty($groupid)) {
     $smarty->assign('PAGESUBHEADING', $subtitle);
     $smarty->assign('PAGEHELPNAME', '0');

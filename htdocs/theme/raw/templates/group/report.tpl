@@ -8,17 +8,29 @@
 <table id="sharedviewsreport" class="fullwidth groupreport table table-striped">
     <thead>
         <tr>
-            <th class="sv {if $sort == title && $direction == asc}asc{elseif $sort == title}sorted{/if}">
-                <a href="{$baseurl}&sort=title{if $sort == title && $direction == asc}&direction=desc{/if}">{str tag=sharedtogroup section=view}</a>
+            <th class="sv sort-column {if $sort == title && $direction == asc}asc{elseif $sort == title}sorted{/if}">
+                <a href="{$baseurl}&sort=title{if $sort == title && $direction == asc}&direction=desc{/if}">
+                  <span>{str tag=sharedtogroup section=view}</span>
+                  {if $sort == title}<span class="accessible-hidden visually-hidden">({str tag=sortby} {if $sort == title && $direction == asc}{str tag=ascending}{elseif $sort == title}{str tag=descending}{/if})</span>{/if}
+                </a>
             </th>
-            <th class="sb {if $sort == owner && $direction == asc}asc{elseif $sort == owner}sorted{/if}">
-                <a href="{$baseurl}&sort=owner{if $sort == owner && $direction == asc}&direction=desc{/if}">{str tag=sharedby section=view}</a>
+            <th class="sb sort-column {if $sort == owner && $direction == asc}asc{elseif $sort == owner}sorted{/if}">
+                <a href="{$baseurl}&sort=owner{if $sort == owner && $direction == asc}&direction=desc{/if}">
+                  <span>{str tag=sharedby section=view}</span>
+                  {if $sort == owner}<span class="accessible-hidden visually-hidden">({str tag=sortby} {if $sort == owner && $direction == asc}{str tag=ascending}{elseif $sort == owner}{str tag=descending}{/if})</span>{/if}
+                </a>
             </th>
-            <th class="mc {if $sort == membercommentcount && $direction == asc}asc{elseif $sort == membercommentcount}sorted{/if}">
-                <a href="{$baseurl}&sort=membercommentcount{if $sort == membercommentcount && $direction == asc}&direction=desc{/if}">{str tag=membercommenters section=group}</a>
+            <th class="mc sort-column {if $sort == membercommentcount && $direction == asc}asc{elseif $sort == membercommentcount}sorted{/if}">
+                <a href="{$baseurl}&sort=membercommentcount{if $sort == membercommentcount && $direction == asc}&direction=desc{/if}">
+                  <span>{str tag=membercommenters section=group}</span>
+                  {if $sort == membercommentcount}<span class="accessible-hidden visually-hidden">({str tag=sortby} {if $sort == membercommentcount && $direction == asc}{str tag=ascending}{elseif $sort == membercommentcount}{str tag=descending}{/if})</span>{/if}
+                </a>
             </th>
-            <th class="ec {if $sort == nonmembercommentcount && $direction == asc}asc{elseif $sort == nonmembercommentcount}sorted{/if}">
-                <a href="{$baseurl}&sort=nonmembercommentcount{if $sort == nonmembercommentcount && $direction == asc}&direction=desc{/if}">{str tag=extcommenters section=group}</a>
+            <th class="ec sort-column {if $sort == nonmembercommentcount && $direction == asc}asc{elseif $sort == nonmembercommentcount}sorted{/if}">
+                <a href="{$baseurl}&sort=nonmembercommentcount{if $sort == nonmembercommentcount && $direction == asc}&direction=desc{/if}">
+                  <span>{str tag=extcommenters section=group}</span>
+                  {if $sort == nonmembercommentcount}<span class="accessible-hidden visually-hidden">({str tag=sortby} {if $sort == nonmembercommentcount && $direction == asc}{str tag=ascending}{elseif $sort == nonmembercommentcount}{str tag=descending}{/if})</span>{/if}
+                </a>
             </th>
         </tr>
     </thead>
@@ -43,18 +55,22 @@
 <table id="groupviewsreport" class="fullwidth groupreport table table-striped">
     <thead>
         <tr>
-            <th class="sv {if $sort == title && $direction == asc}asc{elseif $sort == title}sorted{/if}">
+            <th class="sv sort-column {if $sort == title && $direction == asc}asc{elseif $sort == title}sorted{/if}">
                 <a href="{$baseurl}&sort=title{if $sort == title && $direction == asc}&direction=desc{/if}">
-                    {str tag=ownedbygroup section=view}
+                    <span>{str tag=ownedbygroup section=view}</span>
+                    {if $sort == title}<span class="accessible-hidden visually-hidden">({str tag=sortby} {if $sort == title && $direction == asc}{str tag=ascending}{elseif $sort == title}{str tag=descending}{/if})</span>{/if}
                 </a>
             </th>
-            <th class="mc {if $sort == membercommentcount && $direction == asc}asc{elseif $sort == membercommentcount}sorted{/if}">
+            <th class="mc sort-column {if $sort == membercommentcount && $direction == asc}asc{elseif $sort == membercommentcount}sorted{/if}">
                 <a href="{$baseurl}&sort=membercommentcount{if $sort == membercommentcount && $direction == asc}&direction=desc{/if}">
-                    {str tag=membercommenters section=group}
+                    <span>{str tag=membercommenters section=group}</span>
+                    {if $sort == membercommentcount}<span class="accessible-hidden visually-hidden">({str tag=sortby} {if $sort == membercommentcount && $direction == asc}{str tag=ascending}{elseif $sort == membercommentcount}{str tag=descending}{/if})</span>{/if}
                 </a>
             </th>
-            <th class="ec {if $sort == nonmembercommentcount && $direction == asc}asc{elseif $sort == nonmembercommentcount}sorted{/if}">
-                <a href="{$baseurl}&sort=nonmembercommentcount{if $sort == nonmembercommentcount && $direction == asc}&direction=desc{/if}">{str tag=extcommenters section=group}
+            <th class="ec sort-column {if $sort == nonmembercommentcount && $direction == asc}asc{elseif $sort == nonmembercommentcount}sorted{/if}">
+                <a href="{$baseurl}&sort=nonmembercommentcount{if $sort == nonmembercommentcount && $direction == asc}&direction=desc{/if}">
+                    <span>{str tag=extcommenters section=group}</span>
+                    {if $sort == nonmembercommentcount}<span class="accessible-hidden visually-hidden">({str tag=sortby} {if $sort == nonmembercommentcount && $direction == asc}{str tag=ascending}{elseif $sort == nonmembercommentcount}{str tag=descending}{/if})</span>{/if}
                 </a>
             </th>
         </tr>

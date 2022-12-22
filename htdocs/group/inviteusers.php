@@ -63,6 +63,7 @@ $form = pieform(array(
 ));
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-user');
 $smarty->assign('subheading', get_string('sendinvitations', 'group'));
 $smarty->assign('form', $form);
 $smarty->display('group/form.tpl');

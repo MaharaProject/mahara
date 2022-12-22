@@ -45,7 +45,7 @@
     content: fa-content($fa-var-film);
 }
 .icon-blog:before {
-    content: fa-content($fa-var-pen);
+    content: fa-content($fa-var-book);
 }
 
 .icon-general:before,
@@ -94,7 +94,8 @@
 .icon-view:before,
 .icon-myviews:before,
 .icon-groupviews:before {
-    content: fa-content($fa-var-file);
+    @include fonttype(regular);
+    content: fa-content($fa-var-file-alt);
 }
 
 .icon-personalskill:before,
@@ -137,10 +138,11 @@
     content: fa-content($fa-var-bullhorn);
 }
 
+.icon-plan:before,
 .icon-plans:before {
-    content: fa-content($fa-var-tasks);
+    content: fa-content($fa-var-clipboard-list);
 }
-
+.icon-task:before,
 .icon-tasks:before {
     content: fa-content($fa-var-tasks);
 }
@@ -191,10 +193,12 @@
 }
 
 .icon-externalvideo:before {
+    @include fonttype(brands);
     content: fa-content($fa-var-youtube);
 }
 
 .icon-googleapps:before {
+    @include fonttype(brands);
     content: fa-content($fa-var-google);
 }
 
@@ -204,14 +208,6 @@
 
 .icon-audio:before {
     content: fa-content($fa-var-music);
-}
-
-.icon-task:before {
-    content: fa-content($fa-var-tasks);
-}
-
-.icon-plan:before {
-    content: fa-content($fa-var-calendar-check);
 }
 
 .icon-collection:before {
@@ -264,6 +260,10 @@
 }
 .icon-refresh:before {
     content: fa-content($fa-var-sync);
+}
+
+.icon-check-to-slot:before {
+    content: fa-content($fa-var-check-to-slot);
 }
 
 .icon-on-hover {

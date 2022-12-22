@@ -16,6 +16,7 @@ define('MENUITEM', 'groups');
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('docroot') . 'interaction/lib.php');
 require_once('group.php');
+define('SUBSECTIONHEADING', get_string('nameplural', 'interaction.forum'));
 
 $id = param_integer('id');
 
@@ -65,6 +66,7 @@ $form = pieform(array(
 
 $smarty = smarty(array('tablerenderer'));
 $smarty->assign('form', $form);
+setpageicon($smarty, 'icon-regular icon-comment-dots');
 $smarty->assign('heading', $group->name);
 $smarty->assign('subheading', TITLE);
 $smarty->assign('landingpagenote', $landingpagenote);

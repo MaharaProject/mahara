@@ -636,6 +636,7 @@ $smarty = smarty(
     ),
     array('sidebars' => false)
 );
+setpageicon($smarty, 'icon-share-alt');
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('form', $form);
 $smarty->assign('shareurl', $shareurl);
