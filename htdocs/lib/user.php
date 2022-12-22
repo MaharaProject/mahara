@@ -1713,6 +1713,7 @@ function delete_user($userid) {
     delete_records('usr_institution_request', 'usr', $userid);
     delete_records('usr_password_request', 'usr', $userid);
     delete_records('usr_watchlist_view', 'usr', $userid);
+    delete_records('watchlist_queue', 'usr', $userid);
     delete_records('view_access', 'usr', $userid);
     delete_records('usr_roles', 'usr', $userid);
     delete_records('usr_login_data', 'usr', $userid);
