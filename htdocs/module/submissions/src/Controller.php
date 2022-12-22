@@ -318,6 +318,12 @@ class Controller {
                 }
                 $this->setRatingIconOptions($options);
                 $piertables_js = file_exists(get_config('wwwroot') . 'local/theme/piertables.js') ? get_config('wwwroot') . 'local/theme/piertables.js' : get_config('wwwroot') . 'module/submissions/js/piertables.js';
+                if (get_config('wwwroot') === '/') {
+                    // Remove the first character from $piertables_js.  If
+                    // wwwroot is '/', then the first character will be a slash
+                    // which result in a '//' in the template.
+                    $piertables_js = substr($piertables_js, 1);
+                }
                 $js = [
                     'js/preview.js',
                     //'js/export.js',
