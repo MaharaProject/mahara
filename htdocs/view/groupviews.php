@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('PUBLIC', 1);
+define('PUBLIC_ACCESS', 1);
 define('MENUITEM', 'engage/index');
 define('MENUITEM_SUBPAGE', 'views');
 define('SECTION_PLUGINTYPE', 'core');

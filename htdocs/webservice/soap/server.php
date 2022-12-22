@@ -26,7 +26,7 @@
 
 // Catch anything that goes wrong in init.php
 define('INTERNAL', 1);
-define('PUBLIC', 1);
+define('PUBLIC_ACCESS', 1);
 define('SOAP', 1);
 define('TITLE', '');
 

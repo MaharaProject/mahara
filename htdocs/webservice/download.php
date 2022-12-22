@@ -1,7 +1,7 @@
 <?php
 
 define('INTERNAL', 1);
-define('PUBLIC', 1);
+define('PUBLIC_ACCESS', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once('file.php');
 require_once(get_config('docroot') . 'webservice/rest/lib.php');

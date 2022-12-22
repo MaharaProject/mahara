@@ -32,8 +32,6 @@ $string['magicquotesgpc'] = 'You have dangerous PHP settings: magic_quotes_gpc i
 php_flag magic_quotes_gpc off';
 $string['magicquotesruntime'] = 'You have dangerous PHP settings: magic_quotes_runtime is on. Mahara is trying to work around this, but you should really fix it. If you are using shared hosting and your host allows for it, you should include the following line in your .htaccess file:
 php_flag magic_quotes_runtime off';
-$string['magicquotessybase'] = 'You have dangerous PHP settings: magic_quotes_sybase is on. Mahara is trying to work around this, but you should really fix it. If you are using shared hosting and your host allows for it, you should include the following line in your .htaccess file:
-php_flag magic_quotes_sybase off';
 
 $string['safemodeon'] = 'Your server appears to be running safe mode. Mahara does not support running in safe mode. You must turn this off in either the php.ini file or in your apache config for the site.
 

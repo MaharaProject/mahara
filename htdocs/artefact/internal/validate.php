@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('PUBLIC', 1);
+define('PUBLIC_ACCESS', 1);
 define('SECTION_PLUGINTYPE', 'artefact');
 define('SECTION_PLUGINNAME', 'internal');
 define('SECTION_PAGE', 'validate');

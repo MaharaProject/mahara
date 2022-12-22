@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('PUBLIC', 1);
+define('PUBLIC_ACCESS', 1);
 define('MENUITEM', 'configextensions/pluginadminwebservices');
 define('SECTION_PAGE', 'webservice');
 require(dirname(dirname(__FILE__)) . '/init.php');

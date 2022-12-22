@@ -26,7 +26,7 @@
 // 6013     Networking is not available at this address. You can access this service at get_config('wwwroot')api/xmlrpc/server.php'
 
 define('INTERNAL', 1);
-define('PUBLIC', 1);
+define('PUBLIC_ACCESS', 1);
 define('XMLRPC', 1);
 define('TITLE', '');
 require(dirname(__FILE__).'/lib.php');

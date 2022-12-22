@@ -11,7 +11,7 @@
  */
 
 define('INTERNAL', 1);
-define('PUBLIC', 1);
+define('PUBLIC_ACCESS', 1);
 define('CRON', 1);
 define('TITLE', '');
 

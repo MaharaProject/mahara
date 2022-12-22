@@ -31,7 +31,7 @@
  */
 
 define('INTERNAL', 1);
-define('PUBLIC', 1);
+define('PUBLIC_ACCESS', 1);
 global $CFG, $USER, $SESSION;
 require(dirname(dirname(dirname(dirname(__FILE__)))) . '/init.php');
 require_once(get_config('docroot') . 'auth/saml/lib.php');

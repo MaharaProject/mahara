@@ -579,7 +579,7 @@ function auth_setup () {
 
         // If the page the user is viewing is public, inform them that they can
         // log in again
-        if (defined('PUBLIC')) {
+        if (defined('PUBLIC_ACCESS')) {
             // @todo this links to ?login - later it should do magic to make
             // sure that whatever GET string is made it includes the old data
             // correctly
@@ -608,7 +608,7 @@ function auth_setup () {
         }
 
         // Check if the page is public or the site is configured to be public.
-        if (defined('PUBLIC') && !param_exists('login')) {
+        if (defined('PUBLIC_ACCESS') && !param_exists('login')) {
             return;
         }
 

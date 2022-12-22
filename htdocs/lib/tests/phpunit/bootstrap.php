@@ -11,7 +11,7 @@
  */
 define('TESTSRUNNING', 1);
 define('INTERNAL', 1);
-define('PUBLIC', 1);
+define('PUBLIC_ACCESS', 1);
 
 // necessary since we're running in a limited scope
 global $CFG, $db, $SESSION, $USER, $THEME;

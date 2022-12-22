@@ -763,8 +763,8 @@ EOF;
     if (isset($sitetop)) {
         $smarty->assign('SITETOP', $sitetop);
     }
-    if (defined('PUBLIC')) {
-        $smarty->assign('PUBLIC', true);
+    if (defined('PUBLIC_ACCESS')) {
+        $smarty->assign('PUBLIC_ACCESS', true);
     }
     if (defined('ADMIN')) {
         $smarty->assign('ADMIN', true);

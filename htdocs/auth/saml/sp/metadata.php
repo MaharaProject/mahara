@@ -31,7 +31,7 @@
  */
 
 define('INTERNAL', 1);
-define('PUBLIC', 1);
+define('PUBLIC_ACCESS', 1);
 define('IGNOREMAINTENANCE', 1);
 define('XMLRPC', 1);
 define('TITLE', '');

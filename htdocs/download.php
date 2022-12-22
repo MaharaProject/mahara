@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('PUBLIC', 1);
+define('PUBLIC_ACCESS', 1);
 require('init.php');
 require_once('file.php');
 

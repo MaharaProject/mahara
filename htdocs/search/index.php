@@ -13,7 +13,7 @@
 
 define('INTERNAL', 1);
 define('MENUITEM', '');
-define('PUBLIC', 1);
+define('PUBLIC_ACCESS', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('libroot') . 'searchlib.php');
 // To get the license select list.

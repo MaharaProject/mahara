@@ -10,7 +10,7 @@
  */
 
 define('INTERNAL', 1);
-define('PUBLIC', 1);
+define('PUBLIC_ACCESS', 1);
 define('NOCHECKREQUIREDFIELDS', 1);
 if ($_GET['type'] == 'logobyid') {
     // Allow site logo show in maintenance mode when logged out

@@ -26,7 +26,7 @@ $can_edit = false;
 $role = '';
 
 if (!empty($groupid)) {
-    define('PUBLIC', 1);
+    define('PUBLIC_ACCESS', 1);
     define('GROUP', param_integer('group'));
     require_once(get_config('docroot') . 'lib/group.php');
     $group = group_current_group();

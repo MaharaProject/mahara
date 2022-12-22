@@ -16,7 +16,7 @@
  */
 
 define('INTERNAL',  1);
-define('PUBLIC', 1);
+define('PUBLIC_ACCESS', 1);
 
 $MAHARA_ROOT = dirname(dirname(dirname(dirname(__FILE__)))) . '/';
 
