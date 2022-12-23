@@ -11,7 +11,8 @@
     width: 100%;
     padding-left: 4.0625rem; // 65px;
     .date,
-    .recipients {
+    .recipients,
+    .sender {
         margin-bottom: 0;
     }
     .subject {
@@ -21,6 +22,7 @@
     }
     .date,
     .recipients,
+    .sender,
     .subject {
         color: $theme-text-midtone-color;
         font-size: $font-size-sm;
