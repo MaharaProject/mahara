@@ -270,7 +270,7 @@ function activitylistin_html($type='all', $limit=10, $offset=0) {
                 $record->fromusr = $record->fromid;
                 $fromuser = get_user($record->fromid);
                 $record->fromusrlink = false;
-                if ($fromuser->deleted === '0') {
+                if (empty($fromuser->deleted)) {
                     $record->canreply = true;
                     $record->fromusrlink = profile_url($record->fromid);
                 }

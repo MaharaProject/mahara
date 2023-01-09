@@ -72,15 +72,14 @@ if (!is_null($replytoid)) {
     if (null === $message) {
         throw new AccessDeniedException(get_string('cantviewmessage', 'group'));
     }
-
     if (0 === count($users)) {
         foreach ($message->userids as $userrelid) {
             if ($USER->get('id') === $userrelid) {
                 continue;
             }
             $deleted = get_field('usr', 'deleted', 'id', $userrelid);
-            if (($deleted === '0') && can_send_message($USER->to_stdclass(), $userrelid) &&
-                    $USER->id != $userrelid) {
+            if (empty($deleted) && can_send_message($USER->get('id'), $userrelid) &&
+                    $USER->get('id') != $userrelid) {
                 $users[] = $userrelid;
             }
             else {
@@ -90,8 +89,8 @@ if (!is_null($replytoid)) {
 
         if ($USER->get('id') !== $message->fromid) {
             $deleted = get_field('usr', 'deleted', 'id', $message->fromid);
-            if (($deleted === '0') && can_send_message($USER->to_stdclass(), $message->fromid) &&
-                    $USER->id != $message->fromid) {
+            if (empty($deleted) && can_send_message($USER->get('id'), $message->fromid) &&
+                    $USER->get('id') != $message->fromid) {
                 $users[] = $message->fromid;
             }
             else {
@@ -156,7 +155,7 @@ if (!is_null($replytoid)) {
     }
     // just in case, someone calls with replyto and returnto=view, which shouldn't
     // happen anyway. But in that case, proceed to first user in recipient-list
-    if (sizeof($users) > 1) {
+    if (count($users) > 1) {
         $user = $users[0];
     }
 }
