@@ -217,6 +217,7 @@ $smarty = smarty(array(), array(), array(), array(
         image_filebrowser: "editpost_filebrowser",
     ',
 ));
+setpageicon($smarty, 'icon-book');
 $smarty->assign('INLINEJAVASCRIPT', $javascript);
 $smarty->assign('form', $form);
 $smarty->display('artefact:blog:editpost.tpl');

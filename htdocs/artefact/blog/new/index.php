@@ -109,6 +109,7 @@ $form['elements']['group'] = array('type' => 'hidden', 'value' => ($groupid) ? $
 $form = pieform($form);
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-book');
 $smarty->assign('form', $form);
 $smarty->display('form.tpl');
 exit;

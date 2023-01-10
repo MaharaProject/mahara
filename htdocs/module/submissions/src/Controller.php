@@ -169,7 +169,7 @@ class Controller {
         $headers[] = '<link rel="stylesheet" type="text/css" href="' . $piertables_css . '">';
         $pagestrings = array('module.submissions' => array('quickfilter', 'quickfiltertooltip'));
         $smarty = smarty($js, $headers, $pagestrings);
-        setpageicon($smarty, 'icon-hand-holding');
+        setpageicon($smarty, 'icon-check-to-slot');
         $smarty->assign('language', strstr(current_language(), '.', true));
         $smarty->assign('options', $options);
         $smarty->assign('SIDEBLOCKS', []);

@@ -151,7 +151,7 @@ $jsscripts = [
 ];
 
 $smarty = smarty($jsscripts, array(), array('ascending' => 'mahara', 'descending' => 'mahara'));
-setpageicon($smarty, 'icon-archive');
+setpageicon($smarty, 'icon-check-to-slot');
 $smarty->assign('tabs', $tabs);
 $smarty->assign('search', $search);
 $smarty->assign('searchtypecurrent', $searchtypecurrent);

@@ -45,6 +45,7 @@ $smarty = smarty(
         'sideblocks' => array(quota_sideblock(true))
     )
 );
+setpageicon($smarty, 'icon-regular icon-file-image');
 $smarty->assign('heading', $group->name);
 $smarty->assign('headingclass', 'page-header');
 $smarty->assign('form', $form);

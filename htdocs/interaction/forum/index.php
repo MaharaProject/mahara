@@ -124,6 +124,7 @@ $smarty = smarty(array(), $headers);
 $smarty->assign('groupid', $groupid);
 $smarty->assign('publicgroup', $group->public);
 $smarty->assign('feedlink', $feedlink);
+setpageicon($smarty, 'icon-regular icon-comment-dots');
 $smarty->assign('heading', $group->name);
 $smarty->assign('headingclass', 'page-header');
 $smarty->assign('rsswithtitle', true);

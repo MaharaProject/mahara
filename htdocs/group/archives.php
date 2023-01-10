@@ -52,6 +52,7 @@ EOF;
 
 $smarty = smarty(array('adminusersearch', 'adminexportqueue','paginator'), array(), array('ascending' => 'mahara', 'descending' => 'mahara'));
 $smarty->assign('search', $search);
+setpageicon($smarty, 'icon-box-archive');
 $smarty->assign('query', trim(param_variable('query', '')));
 $smarty->assign('limit', $limit);
 $smarty->assign('group', $group->id);

@@ -172,7 +172,7 @@ if ($available = Collection::available_views($owner, $groupid, $institutionname)
 }
 
 $smarty = smarty(array('jquery','js/jquery/jquery-ui/js/jquery-ui.min.js','js/jquery/jquery-ui/js/jquery-ui.touch-punch.min.js', 'manage-collection-pages'));
-setpageicon($smarty, 'icon-folder-open');
+
 
 $smarty->assign('id', $id);
 $smarty->assign('INLINEJAVASCRIPT', $inlinejs);

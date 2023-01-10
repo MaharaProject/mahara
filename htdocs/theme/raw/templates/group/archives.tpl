@@ -15,7 +15,7 @@
             <label class="visually-hidden" for="query">{str tag='usersearch' section='admin'}</label>
             <input placeholder="{str tag='usersearch' section='admin'}" class="text form-control" type="text" name="query" id="query"{if $search->query} value="{$search->query}"{/if}>
             <div class="input-group-append button">
-                <button id="query-button" class="btn-search btn btn-primary " type="submit">
+                <button id="query-button" class="btn-search btn btn-secondary " type="submit">
                 {str tag="search"}
                 </button>
             </div>

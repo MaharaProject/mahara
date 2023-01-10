@@ -90,6 +90,7 @@ $smarty = smarty(['paginator', 'js/preview.js', 'artefact/plans/js/planview.js',
                   'js/gridstack/gridstack_modules/gridstack-h5.js',
                   'js/gridlayout.js'], null, $pagestrings);
 
+setpageicon($smarty, 'icon-clipboard-list');
 $smarty->assign('tasks', $tasks);
 //$smarty->assign('plan', $id);
 $smarty->assign('tags', $plan->get('tags'));

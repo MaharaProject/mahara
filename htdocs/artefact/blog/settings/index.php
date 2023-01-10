@@ -111,6 +111,7 @@ if (!$institutionname && !$groupid) {
     }
 }
 
+setpageicon($smarty, 'icon-book');
 $smarty->assign('editform', $form);
 $smarty->assign('blog', $blog);
 $smarty->display('artefact:blog:settings.tpl');

@@ -320,6 +320,7 @@ if ($publicgroup) {
 }
 
 $smarty = smarty(array(), $headers);
+setpageicon($smarty, 'icon-regular icon-comment-dots');
 $smarty->assign('heading', $forum->groupname);
 $smarty->assign('subheading', $forum->title);
 $smarty->assign('headingclass', 'page-header');

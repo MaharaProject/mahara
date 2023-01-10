@@ -247,6 +247,7 @@ if ($publicgroup) {
 
 
 $smarty = smarty(array(), $headers);
+setpageicon($smarty, 'icon-regular icon-comment-dots');
 $smarty->assign('topic', $topic);
 $smarty->assign('membership', $membership);
 $smarty->assign('moderator', $moderator);

@@ -72,6 +72,7 @@ $form = pieform(array(
 $smarty = smarty(array('tablerenderer'));
 $smarty->assign('form', $form);
 $smarty->assign('INLINEJAVASCRIPT', $js);
+setpageicon($smarty, 'icon-regular icon-comment-dots');
 $smarty->assign('heading', $group->name);
 $smarty->assign('subheading', TITLE);
 $smarty->display('interaction/edit.tpl');

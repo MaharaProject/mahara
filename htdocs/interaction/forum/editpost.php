@@ -478,6 +478,7 @@ function editpost_callback(form, data) {
 EOF;
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-regular icon-comment-dots');
 $smarty->assign('deleteduser', $poster->get('deleted'));
 $smarty->assign('poster', $poster);
 $smarty->assign('editform', $editform);

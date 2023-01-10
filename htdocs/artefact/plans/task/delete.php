@@ -75,6 +75,7 @@ $deleteform = [
 $form = pieform($deleteform);
 
 $smarty = smarty();
+setpageicon($smarty, 'icon-task');
 $smarty->assign('form', $form);
 $smarty->assign('PAGEHEADING', $pageheading);
 $smarty->assign('subheading', get_string('deletethistask','artefact.plans',$todelete->get('title')));
