@@ -1158,6 +1158,32 @@ class View {
         db_commit();
     }
 
+    function get_activity_signoff() {
+        $activity = $this->get_view_activity_data();
+
+        $smarty = smarty_core();
+        $smarty->assign('WWWROOT', get_config('wwwroot'));
+        $smarty->assign('view', $this->get('id'));
+        // Signoff option
+        $smarty->assign('signable', true);
+        // $smarty->assign('signoff', ArtefactTypePeerassessment::is_signjed_off($this));
+
+
+        // We make a couple of dummy forms so we get pieform 'switchbox' markup but we don't want
+        // to submit via pieforms as the markup will be accessed via javascript // TODO: Doris copy this but use Cecilia's logic
+        $signoff_element['achieved'] = array(
+            'type'         => 'switchbox',
+            'title'        => 'Achieved',
+            'defaultvalue' => get_field('view_activity', 'achieved', 'id', $activity->id),
+            // 'readonly'     => !$signable
+        );
+
+        $form = array('name' => 'dummy_activity_form', 'elements' => $signoff_element);
+        $form = pieform_instance($form);
+        // return $form->build(false);
+        return $form->build();
+    }
+
     public function get_view_activity_data() {
         if (!$this->type == 'activity') {
             return null;
@@ -2102,6 +2128,9 @@ class View {
                     else {
                         insert_record('blocktype_installed_viewtype', $data);
                     }
+                }
+                else {
+                    log_debug($blocktype . ' is not used with activity views');
                 }
             }
         }
@@ -6509,10 +6538,12 @@ class View {
 
 
     public function copy_contents($template, &$artefactcopies) {
+        $clean_description_templates = ['portfolio', 'activity'];
 
         $this->set('lockblocks', (int)($template->get('lockblocks') || $this->lockblocks));
         if ($template->get('template') == self::SITE_TEMPLATE
-            && $template->get('type') == 'portfolio') {
+            &&  in_array($template->get('type'), $clean_description_templates)
+        ) {
             $this->set('description', '');
             $this->set('instructions', '');
         }

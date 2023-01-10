@@ -87,8 +87,7 @@
               </tr>
               {foreach from=$activities[$outcome->id] item=activity}
               <tr data-activity="{$activity->id}">
-                {* TODO: check if activity has been signed off *}
-                {include file="collection/activitytablerow.tpl" signedoff=false activityid=$activity->id viewid=$activity->view title=$activity->title}
+                {include file="collection/activitytablerow.tpl" signedoff=$activity->achieved activityid=$activity->id viewid=$activity->view title=$activity->title}
               </tr>
               {/foreach}
           </table>
@@ -96,7 +95,7 @@
 
           {* Add activity button *}
           {if !$outcome->complete && $actionsallowed}
-            <button id="addactivity" class="btn btn-secondary btn-sm "
+            <button id="addactivity" class="addactivity btn btn-secondary btn-sm "
             data-bs-target="{$WWWROOT}view/editlayout.php?new=1{$urlparamsstr}&group={$group}&collection={$collection}&outcome={$outcome->id}">
             <span class="icon icon-plus left" role="presentation" aria-hidden="true"> </span>
             {str tag="addactivity" section="collection"}
@@ -144,10 +143,10 @@
 {/if}
 
 <script>
-  var addurl = $j("#addactivity").attr('data-bs-target');
-    $j("#addactivity").on('click', function() {
+    $j(".addactivity").on('click', function() {
         // redirect to the special 'activity page'
-        var url = addurl + '&type=activity';
+        let addurl = $j(this).attr('data-bs-target');
+        let url = addurl + '&type=activity';
         window.location = url;
     })
 </script>

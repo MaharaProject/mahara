@@ -28,12 +28,13 @@ $actionsallowed = ($grouprole === 'admin' || $grouprole === 'tutor');
 
 if ($actionsallowed) {
   $record = new stdClass();
+  $result = null;
   switch($update_type) {
     case 'signoff':
-
+      $result = set_field('view_activity', 'achieved', 1, 'id', $activityid);
       break;
     case 'unsignoff':
-
+      $result = set_field('view_activity', 'achieved', 0, 'id', $activityid);
       break;
   }
   // Should update record on DB here
@@ -48,7 +49,8 @@ if ($actionsallowed) {
     $smarty->assign('viewid', $activity->view);
     $smarty->assign('title', $activity->title);
     // TODO get signoff from DB
-    $smarty->assign('signedoff', true);
+    $activity_achieved = get_field('view_activity', 'achieved', 'id', $activityid);
+    $smarty->assign('signedoff', $activity_achieved);
     $html = $smarty->fetch('collection/activitytablerow.tpl');
     $data = array(
       'html' => $html,

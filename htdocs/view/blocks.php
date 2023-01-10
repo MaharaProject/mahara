@@ -402,6 +402,9 @@ if ($view->get('type') == 'activity' && $view->get('group')) {
     $can_edit_activity = $group ? View::check_can_edit_activity_page_info($group, true) : true;
     $smarty->assign('activity_support_form', $view->get_activity_support_form($can_edit_activity));
     $smarty->assign('can_edit_page_settings', $can_edit_activity);
+    // pass in dummyform for sign-off-like functionality
+    // Prepare the signoff verify form in advance - used to be a block
+    // $smarty->assign('achievement_switch_html', $view->get_activity_signoff());
 }
 else {
     $smarty->assign('can_edit_page_settings', true);

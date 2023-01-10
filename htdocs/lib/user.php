@@ -3095,14 +3095,14 @@ function install_system_dashboard_view() {
 
 /**
  * This function installs the site's default activity view for outcome collections in groups
- *
- * @throws SystemException if the system activity view is already installed
+ * @return int view ID
  */
 function install_system_activity_view() {
     require_once(get_config('libroot') . 'view.php');
     $viewid = get_field('view', 'id', 'institution', 'mahara', 'template', View::SITE_TEMPLATE, 'type', 'activity');
     if ($viewid) {
-        throw new SystemException('A system activity view already seems to be installed');
+        log_debug('A system activity view already seems to be installed');
+        return $viewid;
     }
     require_once(get_config('docroot') . 'blocktype/lib.php');
     $view = View::create(array(

@@ -129,6 +129,7 @@ $(function() {
         event.preventDefault();
         event.stopPropagation();
         var outcomeid = $("#incomplete-confirm-form").attr('outcomeid');
+// what is the difference between $collection and $collectionid?
         sendjsonrequest('{$WWWROOT}collection/updateoutcome.json.php', { 'update_type': 'markincomplete', 'outcomeid': outcomeid, 'collectionid': {$collection} }, 'POST', function (data) {
           if (data) {
             location.reload();

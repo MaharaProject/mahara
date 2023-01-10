@@ -199,13 +199,6 @@
 
 <script type="application/javascript">
 
-    $j("#add_activity_button").on('click', function() {
-        // redirect to the special 'activity page'
-        var url = addurl + '&type=activity';
-        console.log(url)
-        window.location = url;
-    });
-
     // Activity page checkpoint blocks achievement level interaction logic
     $(function() {
     let achievement_forms = $('.block');

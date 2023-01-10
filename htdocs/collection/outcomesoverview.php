@@ -150,7 +150,11 @@ if ($outcomes) {
     $smarty->assign('outcometypes', $outcometypes);
 
     $smarty->assign('supportform', $supportform);
-    $smarty->assign('querystring', get_querystring());
+    // Because the 'id' in the query is for collection we want to remove that and set id directly in template
+    // to be either view or collection 'id' where needed
+    $querystring = get_querystring();
+    $querystring = preg_replace('/\bid=\d+\b/', '', $querystring);
+    $smarty->assign('querystring', $querystring);
 
     $activities = get_outcome_activity_views($collection->get('id'));
     $smarty->assign('activities', $activities);

@@ -74,6 +74,7 @@ if ($new && $id === false) {
     if ($collection_to_add_view) {
         require_once(get_config('libroot') . 'collection.php');
         $coll = new Collection($collection_to_add_view);
+        // If view is activity -> set db default values here too
         $num_pages = $coll->add_views(['view_' . $view->get('id') => $view]);
     }
 
@@ -454,7 +455,7 @@ function get_view_activity_info_elements(int $outcome_id): array {
         'type' => 'fieldset',
         'columns' => get_string('activity_info_achievement_levels_desc', 'view'),
         'legend' => get_string('activity_info_achievement_levels_desc', 'view'),
-        'elements' => get_achievement_levels_elements($existing_activity->id ?? null),
+        'elements' => get_achievement_levels_elements($activity->id ?? null),
     ];
 
     $hidden_elements = array(
