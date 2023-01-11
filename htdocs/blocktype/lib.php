@@ -2307,7 +2307,7 @@ class BlockInstance {
                 $fordb->{$k} = serialize($v);
             }
             else if (strpos($k, 'time')) {
-                if ($k == 'ctime' && $v) {
+                if ($k == 'ctime' && $v && !empty($this->id)) {
                     continue;
                 }
                 $fordb->{$k} = db_format_timestamp(time());
