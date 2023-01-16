@@ -1567,6 +1567,24 @@ $string['cli_portfolio_export_zipout'] = 'Exported %s account(s) to %s';
 $string['cli_param_dryrun_export'] = 'Dry run to indicate what will happen. This is set to "true" by default. Set -d=false to actually run the export.';
 $string['cli_time_elapsed'] = 'Time taken: %s';
 
+// Outcomes tables data import
+$string['cli_outcomes_delete_description'] = 'Delete data from outcome related tables if they are not already linked to an existing outcome';
+$string['cli_outcomes_typefile_description'] = 'Path to readable CSV file that contains outcome types table data, e.g. /tmp/outcome_types_tables.csv';
+$string['cli_outcomes_subjectfile_description'] = 'Path to readable CSV file that contains outcome subjects table data, e.g. /tmp/outcomes_subjects_tables.csv';
+$string['cli_outcomes_institution_description'] = 'Used in conjunction with "delete" so it will only delete items from the specified institution, e.g. mahara';
+$string['cli_outcomes_institutionnotfound'] = 'Institution "%s" not found.';
+$string['cli_outcomes_info'] = 'Populate the outcome related tables "outcome_category", "outcome_type", "outcome_subject_category", and "outcome_subject". The institution specified needs to have "outcomesportfolio" setting set to true.';
+$string['cli_outcomes_bad_institution'] = '%s institution should exists and outcome setting should be true';
+$string['cli_outcomes_type_headers_error'] = 'Check headers in your file, they should be: Outcome category | Institution | Outcome type | Outcome type abbreviation | CSS class';
+$string['cli_outcomes_subject_headers_error'] = 'Check headers in your file, they should be: Outcome subject category | Institution | Subject | Subject abbreviation';
+$string['cli_outcomes_subject_added'] = 'Subject data added to database.';
+$string['cli_outcomes_no_subject_added'] = 'No subject data was added to the database. Tables could be already populated.';
+$string['cli_outcomes_type_added'] = 'Type data added to database.';
+$string['cli_outcomes_no_type_added'] = 'No type data was added to the database. Tables could be already populated.';
+$string['cli_outcomes_deleteing'] = 'Deleting un-used outcome related data ...';
+$string['cli_outcomes_deleted'] = 'Deleted %s rows from the table "%s"';
+$string['cli_outcomes_nothing_deleted'] = 'Nothing to delete';
+
 // Behat variables script
 $string['behatvariables'] = 'Behat steps';
 $string['behatvariablesdesc'] = 'Tool to find available Behat steps quickly';
