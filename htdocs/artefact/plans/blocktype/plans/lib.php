@@ -180,6 +180,7 @@ class PluginBlocktypePlans extends MaharaCoreBlocktype {
                 'title' => get_string('taskstodisplay', 'blocktype.plans/plans'),
                 'defaultvalue' => isset($configdata['count']) ? $configdata['count'] : 10,
                 'size' => 3,
+                'rules' => array('integer' => true, 'minvalue' => 1, 'maxvalue' => 100),
             );
         }
         else {

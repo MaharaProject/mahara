@@ -142,9 +142,7 @@ class PluginBlocktypeMyGroups extends MaharaCoreBlocktype {
                 'description' => get_string('limittodesc', 'blocktype.mygroups'),
                 'size' => 3,
                 'defaultvalue' => isset($configdata['limitto']) ? $configdata['limitto'] : 20,
-                'rules' => array(
-                    'maxlength' => 4,
-                ),
+                'rules' => array('integer' => true, 'minvalue' => 1, 'maxvalue' => 100),
             ),
             'grouplabels' => array(
                 'type'          => 'autocomplete',
