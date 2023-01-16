@@ -1804,6 +1804,18 @@ function safe_require_plugin($plugintype, $pluginname, $filename='lib.php', $fun
 }
 
 /**
+ * Check to see if a particular plugin is installed by plugin name
+ *
+ * @param   string $pluginname Name of plugin
+ * @param   string $type       Name of plugin type
+ * @return  bool
+ */
+function is_plugin_installed($pluginname, $type) {
+    $plugins_by_type = plugins_installed($type, true);
+    return isset($plugins_by_type[$pluginname]);
+}
+
+/**
  * Check to see if a particular plugin is installed and is active by plugin name
  *
  * @param   string $pluginname Name of plugin
