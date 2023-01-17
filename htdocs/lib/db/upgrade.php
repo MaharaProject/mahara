@@ -1193,5 +1193,21 @@ function xmldb_core_upgrade($oldversion=0) {
         );
     }
 
+    if ($oldversion < 2023011700) {
+        log_debug('Make sure all LTI/LTI Advantage instances have their correct webservice');
+        if ($records = get_records_sql_array("SELECT * FROM {oauth_server_registry}")) {
+            foreach ($records as $record) {
+                $data = new stdClass();
+                $data->instancename = $record->application_title;
+                $data->institution = $record->institution;
+                $data->authname = 'webservice';
+                $where = clone $data;
+                $data->priority = get_field('auth_instance', 'MAX(priority)', 'institution', $record->institution) + 1;
+                $data->active = 1;
+                ensure_record_exists('auth_instance', $where, $data);
+            }
+        }
+    }
+
     return $status;
 }
