@@ -29,9 +29,20 @@ function pieform_element_viewacl(Pieform $form, $element) {
 
     // Look for the presets and split them into two groups
     require_once(get_config('libroot') . 'antispam.php');
+
+    $viewid = $form->get_property('viewid');
+    $view = new View($viewid);
     $public = false;
     if (is_probationary_user()) {
         $public = false;
+    }
+    else if ($USER->get('admin') && $view->get('institution')) {
+        if ($view->get('institution') == 'mahara' && get_config('allowpublicviews')) {
+            $public = true;
+        }
+        else if (get_config_institution($view->get('institution'), 'allowinstitutionpublicviews')) {
+            $public = true;
+        }
     }
     else if (get_config('allowpublicviews') && $USER->institution_allows_public_views()) {
         $public = true;
@@ -99,8 +110,6 @@ function pieform_element_viewacl(Pieform $form, $element) {
 
     $defaultaccesslist = ($accesslist) ? 0 : 1;
     $myinstitutions = array();
-    $viewid = $form->get_property('viewid');
-    $view = new View($viewid);
     if ($USER->get('admin') && $view->get('institution')) {
         $institutions = array();
         // Allow site admins to choose to share with the institution
