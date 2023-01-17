@@ -206,8 +206,7 @@ class PluginBlocktypeExternalfeed extends MaharaCoreBlocktype {
                 'description' => get_string('itemstoshowdescription', 'blocktype.externalfeed'),
                 'defaultvalue' => isset($configdata['count']) ? $configdata['count'] : 10,
                 'size' => 3,
-                'minvalue' => 1,
-                'maxvalue' => 20,
+                'rules' => array('integer' => true, 'minvalue' => 1, 'maxvalue' => 20),
             ),
             'full' => array(
                 'type'         => 'switchbox',

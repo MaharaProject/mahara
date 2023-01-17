@@ -196,8 +196,7 @@ class PluginBlocktypeRecentForumPosts extends MaharaCoreBlocktype {
                 'description' => get_string('poststoshowdescription', 'blocktype.recentforumposts'),
                 'defaultvalue' => (isset($configdata['limit'])) ? intval($configdata['limit']) : 5,
                 'size' => 3,
-                'minvalue' => 1,
-                'maxvalue' => 100,
+                'rules' => array('integer' => true, 'minvalue' => 1, 'maxvalue' => 100),
             );
         }
         else {

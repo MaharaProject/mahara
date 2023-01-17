@@ -123,10 +123,7 @@ class PluginBlocktypeInbox extends MaharaCoreBlocktype {
             'title' => get_string('maxitems', 'blocktype.inbox'),
             'description' => get_string('maxitemsdescription', 'blocktype.inbox'),
             'defaultvalue' => isset($configdata['maxitems']) ? $configdata['maxitems'] : 5,
-            'rules' => array(
-                'minvalue' => 1,
-                'maxvalue' => 100,
-            ),
+            'rules' => array('integer' => true, 'minvalue' => 1, 'maxvalue' => 100),
         );
 
         return $elements;

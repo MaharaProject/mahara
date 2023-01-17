@@ -180,6 +180,7 @@ class PluginBlocktypeBlog extends MaharaCoreBlocktype {
                 'title' => get_string('postsperpage', 'blocktype.blog/blog'),
                 'defaultvalue' => isset($configdata['count']) ? $configdata['count'] : 5,
                 'size' => 3,
+                'rules' => array('integer' => true, 'minvalue' => 1, 'maxvalue' => 100),
             );
             $elements[] = PluginArtefactBlog::block_advanced_options_element($configdata, 'blog');
         }
