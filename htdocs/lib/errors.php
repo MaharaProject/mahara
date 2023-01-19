@@ -140,6 +140,7 @@ function log_message ($message, $loglevel, $escape, $backtrace, $file=null, $lin
     }
 
     // Get nice backtrace information if required
+    // phpcs:ignore
     $trace = ($trace) ? $trace : debug_backtrace();
     // If the last caller was the 'error' function then it came from a PHP warning
     if (!is_null($file)) {

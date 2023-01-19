@@ -2674,7 +2674,7 @@ abstract class Plugin implements IPlugin {
                                                 'stream_context' => webservice_create_context($c->url),));
                         //when function return null
                         $wsseSoapClient = new webservice_soap_client_wsse($client->wsdlfile);
-                        $wsseSoapClient->__setUsernameToken($c->username, $c->password);
+                        $wsseSoapClient->___setUsernameToken($c->username, $c->password);
                         $client->setSoapClient($wsseSoapClient);
                     }
                     else {
