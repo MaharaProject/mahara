@@ -1483,6 +1483,7 @@ function site_warnings() {
     }
 
     // Check for low security (i.e. not random enough) session IDs
+    // phpcs:ignore
     if (version_compare(PHP_VERSION, '7.1.0') < 0 && (int)ini_get('session.entropy_length') < 16) {
         $warnings[] = get_string('notenoughsessionentropy', 'error');
     }
