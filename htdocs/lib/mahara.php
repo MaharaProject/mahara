@@ -180,6 +180,7 @@ function ensure_install_sanity() {
     if (is_postgres() && !postgres_create_language('plpgsql')) {
         throw new ConfigSanityException(get_string('plpgsqlnotavailable', 'error'));
     }
+    // phpcs:ignore
     if (is_mysql() && !mysql_has_trigger_privilege()) {
         throw new ConfigSanityException(get_string('mysqlnotriggerprivilege', 'error'));
     }
@@ -199,6 +200,7 @@ function ensure_upgrade_sanity() {
                 throw new ConfigSanityException(get_string('dbcollationmismatch', 'admin'));
             }
         }
+        // phpcs:ignore
         if (!mysql_has_trigger_privilege()) {
             throw new ConfigSanityException(get_string('mysqlnotriggerprivilege', 'error'));
         }
@@ -3689,7 +3691,12 @@ function artefact_in_view_version($artefact, $view) {
                                           obj->'configdata'->>'artefactid' = ?)
                                    AND view = ?", array($artefact->get('id'), $artefact->get('id'), $view));
     }
-    else if (is_mysql() && mysql_get_type() == 'mysql' && version_compare($db_version, '8.0.0', '>=')) {
+    else if (
+        is_mysql() &&
+        // phpcs:ignore
+        mysql_get_type() == 'mysql' &&
+        version_compare($db_version, '8.0.0', '>=')
+        ) {
         // Note: we can't translate the array string to an array yet so we need to do a regexp match instead
         $mysqlregex = '\\\[' . $artefact->get('id') . ',|\\\s' . $artefact->get('id') . ',|\\\s' . $artefact->get('id') . '\\\]';
         return get_records_Sql_array("SELECT id FROM {view_versioning} v WHERE view = ?

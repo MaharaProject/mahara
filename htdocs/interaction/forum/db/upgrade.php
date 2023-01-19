@@ -93,6 +93,7 @@ function xmldb_interaction_forum_upgrade($oldversion=0) {
         $lastid = 0;
         $pwcount = count_records('interaction_forum_post');
         if (is_mysql()) {
+            // phpcs:ignore
             $mp = mysql_get_variable('max_allowed_packet');
             $limit = ($mp && is_numeric($mp) && $mp > 1048576) ? ($mp / 8192) : 100;
         }
