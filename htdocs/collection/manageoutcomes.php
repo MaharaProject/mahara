@@ -10,7 +10,7 @@
  *
  */
 
-define('PUBLIC', 1);
+define('PUBLIC_ACCESS', 1);
 define('INTERNAL', 1);
 define('SECTION_PLUGINTYPE', 'core');
 define('SECTION_PLUGINNAME', 'collection');
