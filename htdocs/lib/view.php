@@ -534,6 +534,12 @@ class View {
 
         $view->commit();
 
+        // Some templates have additional config fields that need to be saved in advance
+        // in case the save button is not pressed in the editlayout/page settings screen.
+        if ($view->get('type') == 'activity') {
+            save_activity_data([], $viewdata['outcome'], $view->get('id'));
+        }
+
         $blocks = get_records_array('block_instance', 'view', $view->get('id'));
         if ($blocks) {
             foreach ($blocks as $b) {
