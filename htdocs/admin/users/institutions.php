@@ -207,7 +207,30 @@ if ($institution || $add) {
             }
             delete_records('site_content_version', 'institution', $values['i']);
             delete_records('oauth_server_registry', 'institution', $values['i']);
-            // TODO: delete outcomes table reference to institution
+            if (db_table_exists('outcome')) {
+                if ($outcome_categories = get_column('outcome_category', 'id', 'institution', $values['i'])) {
+                    foreach ($outcome_categories as $category) {
+                        if ($outcome_collections = get_column_sql("SELECT id FROM {collection} WHERE outcomecategory = ?", array($category))) {
+                            foreach ($outcome_collections as $oc_ids) {
+                                $collection = new Collection($oc_ids);
+                                $collection->delete();
+                            }
+                        }
+                        if ($outcome_types = get_column('outcome_type', 'id', 'outcome_category', $category)) {
+                            foreach ($outcome_types as $type) {
+                                delete_records('outcome_type', 'id', $type);
+                            }
+                        }
+                        delete_records('outcome_category', 'id', $category);
+                    }
+                }
+                if ($outcome_subjects = get_column('outcome_subject_category', 'id', 'institution', $values['i'])) {
+                    foreach ($outcome_subjects as $subject) {
+                        delete_records('outcome_subject', 'outcome_subject_category', $subject);
+                        delete_records('outcome_subject_category', 'id', $subject);
+                    }
+                }
+            }
             delete_records('institution', 'name', $values['i']);
             db_commit();
             clear_menu_cache();
