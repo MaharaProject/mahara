@@ -1235,5 +1235,31 @@ function xmldb_core_upgrade($oldversion=0) {
         add_field($table, $field);
     }
 
+    if ($oldversion < 2023012003) {
+        log_debug('Increase limit of text for support text, activity description, and achievement values');
+        $v_activity_table = new XMLDBTable('view_activity');
+        $achieved_field = new XMLDBField('description');
+        $achieved_field->setAttributes(XMLDB_TYPE_TEXT, 'medium', null, XMLDB_NOTNULL);
+        change_field_type($v_activity_table, $achieved_field);
+
+        $view_activity_support_table = new XMLDBTable('view_activity_support');
+        $support_value_field = new XMLDBField('value');
+        $support_value_field->setAttributes(XMLDB_TYPE_TEXT, 'medium', null, XMLDB_NOTNULL);
+        change_field_type($view_activity_support_table, $support_value_field);
+
+        $view_activity_achievement_levels_table = new XMLDBTable('view_activity_achievement_levels');
+        $achievement_value_field = new XMLDBField('value');
+        $achievement_value_field->setAttributes(XMLDB_TYPE_CHAR, 255, null, XMLDB_NOTNULL);
+        change_field_type($view_activity_achievement_levels_table, $achievement_value_field);
+        $achievement_type_field = new XMLDBField('type');
+        $achievement_type_field->setAttributes(XMLDB_TYPE_INTEGER, 5, null, true);
+        change_field_type($view_activity_achievement_levels_table, $achievement_type_field);
+
+        $outcome_table = new XMLDBTable('outcome');
+        $outcome_progress_field = new XMLDBField('progress');
+        $outcome_progress_field->setAttributes(XMLDB_TYPE_TEXT, 'medium', null);
+        change_field_type($outcome_table, $outcome_progress_field);
+    }
+
     return $status;
 }

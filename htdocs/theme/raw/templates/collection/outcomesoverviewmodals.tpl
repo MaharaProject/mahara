@@ -235,7 +235,7 @@ $(function() {
     const form = $(e.target).parents('.outcome-progress-form');
     const id = $(form).find('input[name="id"]').val();
     const text = $(form).find('textarea').val();
-    if (text.length <= 255) {
+    if (text.length <= 16777216) {
       const data = {
         'update_type': 'progress',
         'outcomeid': id,

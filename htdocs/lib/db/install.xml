@@ -1602,11 +1602,11 @@
         <TABLE NAME="outcome">
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
-                <FIELD NAME="outcome_type" TYPE="int" LENGTH="10" NOTNULL="false"/>
+                <FIELD NAME="outcome_type" TYPE="int" LENGTH="10" NOTNULL="false" />
                 <FIELD NAME="short_title" TYPE="char" LENGTH="70" NOTNULL="true" />
                 <FIELD NAME="full_title" TYPE="char" LENGTH="255" NOTNULL="false" />
-                <FIELD NAME="support" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
-                <FIELD NAME="progress" TYPE="char" LENGTH="255" NOTNULL="false"/>
+                <FIELD NAME="support" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
+                <FIELD NAME="progress" TYPE="text" LENGTH="medium" NOTNULL="false" />
                 <FIELD NAME="collection" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="lastedit" TYPE="datetime" NOTNULL="false"/>
                 <FIELD NAME="lastauthor" TYPE="int" LENGTH="10" NOTNULL="false" />
@@ -1626,7 +1626,7 @@
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="view" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="description" TYPE="char" LENGTH="255" NOTNULL="true" />
+                <FIELD NAME="description" TYPE="text" LENGTH="medium" NOTNULL="true" />
                 <FIELD NAME="subject" TYPE="int" NOTNULL="true" />
                 <FIELD NAME="supervisor" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="achieved" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
@@ -1656,8 +1656,9 @@
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="activity" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="type" TYPE="char" LENGTH="50" NOTNULL="true" COMMENT="level: e.g. '1', '2', '3'" />
-                <FIELD NAME="value" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="E.g. Not demonstrated, Achieved, Merit, and Excellence" />
+                <FIELD NAME="type" TYPE="int" LENGTH="5" NOTNULL="true" COMMENT="level e.g. 1,2,3" />
+                <FIELD NAME="value" TYPE="char" LENGTH="255" NOTNULL="true"
+                    COMMENT="E.g. N/A, Achieved, Merit, and Excellence" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="activityfk" TYPE="foreign" FIELDS="activity" REFTABLE="view_activity" REFFIELDS="id" />
@@ -1668,8 +1669,9 @@
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" />
                 <FIELD NAME="activity" TYPE="int" LENGTH="10" NOTNULL="true" />
-                <FIELD NAME="type" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Type of feedback: e.g. Strategies and support" />
-                <FIELD NAME="value" TYPE="char" LENGTH="255" NOTNULL="true" COMMENT="Feedback" />
+                <FIELD NAME="type" TYPE="char" LENGTH="255" NOTNULL="true"
+                    COMMENT="Type of feedback: e.g. Strategies and support" />
+                <FIELD NAME="value" TYPE="text" LENGTH="medium" NOTNULL="true" COMMENT="Feedback" />
                 <FIELD NAME="author" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />
                 <FIELD NAME="mtime" TYPE="datetime" NOTNULL="true" />
