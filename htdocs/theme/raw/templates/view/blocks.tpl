@@ -90,7 +90,4 @@
     </div>
 </div>
 
-<script type="application/javascript">
-    connectCheckpointBlocks();
-</script>
 {include file="footer.tpl"}

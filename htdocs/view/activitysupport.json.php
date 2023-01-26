@@ -63,7 +63,7 @@ if ($actionsallowed) {
 
     $data = array(
         'error'    => false,
-        'message'  => 'Support updated!',
+        'message'  => get_string('supportupdatedfor', 'view', get_string($activity_support_type, 'view')),
         'supportData' => $activity_support_data
     );
     json_reply(false, $data);

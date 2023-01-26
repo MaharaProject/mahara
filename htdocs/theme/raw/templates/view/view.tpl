@@ -197,9 +197,4 @@
     {include file=objectionreview.tpl}
 {/if}
 
-<script type="application/javascript">
-
-connectCheckpointBlocks();
-
-</script>
 {include file="footer.tpl"}

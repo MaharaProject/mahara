@@ -338,25 +338,18 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
     }
 
     /**
-     * Get checkpoint feedback object for a given feedback_id
+     * Get checkpoint activity id for view
      *
-     * @param  mixed $feedback_id
      * @return int|false
      */
-    public static function get_checkpoint_activity_id(int $feedback_id = 0) {
+    public static function get_checkpoint_activity_id() {
         global $view;
-
-        if ($feedback_id) {
-            $checkpoint_feedback =  get_record('artefact_checkpoint_feedback', 'feedback', $feedback_id);
-            if ($checkpoint_feedback) {
-                return $checkpoint_feedback->id;
-            }
-        }
 
         $view_activity = get_record('view_activity', 'view', $view->get('id'));
         if ($view_activity) {
             return $view_activity->id;
         }
+        return false;
     }
 
     /**

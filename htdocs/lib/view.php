@@ -668,7 +668,7 @@ class View {
             'type'          => 'portfolio',
             'title'         => (array_key_exists('title', $viewdata)) ? $viewdata['title'] : self::new_title(get_string('Untitled', 'view'), (object)$viewdata),
             'anonymise'     => 0,
-            'lockblocks'    => (int)(isset($viewdata['group']) && is_outcomes_group($viewdata['group'])),
+            'lockblocks'    => (int)(isset($viewdata['type']) && $viewdata['type'] == 'activity'),
         );
 
         $data = (object)array_merge($defaultdata, $viewdata);

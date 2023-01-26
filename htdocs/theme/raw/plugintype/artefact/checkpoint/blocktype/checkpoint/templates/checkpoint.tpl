@@ -1,14 +1,18 @@
-<form id="checkpoint_levels_{$blockid}"
-class="form-pagination js-pagination form-inline pagination-page-limit dropdown">
-    {include file="blocktype:checkpoint:achievement_levels_dropdown.tpl"}
-    {include file="blocktype:checkpoint:display_achievement_level.tpl"}
-</form>
-<p class="editor-description">{$noassessment}</p>
-        <a id="add_checkpoint_feedback_link" class="js-checkpoint-modal feedback link-blocktype" href="#"
-            data-bs-toggle="modal-docked" data-bs-target="#checkpoint_{$blockid}" data-blockid="{$blockid}">
-            <span class="icon icon-plus" role="presentation" aria-hidden="true"></span>
-            {str tag=addcheckpointfeedback section=blocktype.checkpoint/checkpoint}
-</a>
+{if $sitetemplate}
+    {str tag=checkpointsitetemplate section=blocktype.checkpoint/checkpoint}
+{else}
+    <form id="checkpoint_levels_{$blockid}"
+    class="form-pagination js-pagination form-inline pagination-page-limit dropdown">
+        {include file="blocktype:checkpoint:achievement_levels_dropdown.tpl"}
+        {include file="blocktype:checkpoint:display_achievement_level.tpl"}
+    </form>
+    <p class="editor-description">{$noassessment}</p>
+    <a id="add_checkpoint_feedback_link" class="js-checkpoint-modal feedback link-blocktype" href="#"
+        data-bs-toggle="modal-docked" data-bs-target="#checkpoint_{$blockid}" data-blockid="{$blockid}">
+        <span class="icon icon-plus" role="presentation" aria-hidden="true"></span>
+        {str tag=addcheckpointfeedback section=blocktype.checkpoint/checkpoint}
+    </a>
+{/if}
 {* Do not change the id because it is used by paginator.js *}
 <div id="checkpointfeedbacktable{$blockid}" class="feedbacktable js-feedbackblock fullwidth">
     {if $feedback}

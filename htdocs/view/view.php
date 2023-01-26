@@ -967,8 +967,6 @@ $smarty->assign('linktext', $returnto['title']);
 $smarty->assign('viewid', $view->get('id'));
 $smarty->assign('signoff_html', $signoff_html);
 $smarty->assign('group', $view->get('group'));
-$smarty->assign('signoff_html', $signoff_html);
-$smarty->assign('group', $view->get('group'));
 
 // Activity data form
 function activity_support_submit() {

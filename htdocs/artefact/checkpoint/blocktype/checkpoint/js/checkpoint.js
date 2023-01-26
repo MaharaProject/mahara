@@ -26,11 +26,13 @@ function checkpointBlockInit() {
     configureAssessmentCancel();
     configureModalOpen();
     connectCheckpointBlocks();
+    dock.init(jQuery(document));
 };
 
 jQuery(window).on('pageupdated', {}, function () {
     configureAssessmentCancel();
     configureModalOpen();
+    dock.init(jQuery(document));
 });
 
 function configureModalOpen() {
@@ -58,6 +60,7 @@ function configureModalOpen() {
         }
         else {
             $('#' + formname + '_checkpoint').val(0);
+            initTinyMCE(formname);
             modifyTinyMCEContent(formname, null, '');
         }
     });

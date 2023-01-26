@@ -20,3 +20,4 @@ $string['addcheckpointfeedback'] = 'Add checkpoint feedback';
 $string['publish'] = 'Publish checkpoint feedback';
 $string['addcheckpointfeedback'] = 'Add comment';
 $string['save'] = 'Save';
+$string['checkpointsitetemplate'] = 'The content for this checkpoint will display correctly with in the group it belongs to.';

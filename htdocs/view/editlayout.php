@@ -401,11 +401,12 @@ function get_view_activity_info_elements(int $outcome_id): array {
         && (trim($activity->description)) ? $activity->description : '',
     );
 
-    $outcome_subjects = get_records_array('outcome_subject');
+    $outcome_subjects = get_records_sql_array("SELECT os.*, osc.name FROM {outcome_subject} os
+                                               JOIN {outcome_subject_category} osc ON os.outcome_subject_category = osc.id");
     $subjects_ids = $subjects_names = array();
     foreach ($outcome_subjects as $subject) {
         $subjects_ids[] = $subject->id;
-        $subjects_names[] = $subject->title;
+        $subjects_names[] = $subject->name . ' - ' . $subject->title;
     }
     $subjects_options =  array_combine($subjects_ids, $subjects_names);
 
@@ -515,7 +516,7 @@ function get_achievement_levels_elements(int $activity_id = null): array {
 
     // Construct the pieform for achievement levels
     $achievement_levels_elements = [];
-    $lowest_type = array_key_last($achievement_levels);
+    $lowest_type = array_keys($achievement_levels)[count($achievement_levels)-1]; // get array key last
     foreach ($achievement_levels as $level_type => $value) {
         $default_value = $level_type === $lowest_type ? 'Not demonstrated' : '';
         $achievement_levels_elements[$level_type] = [

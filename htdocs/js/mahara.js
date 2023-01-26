@@ -462,7 +462,10 @@ function contextualHelp(formName, helpName, pluginType, pluginName, page, sectio
         'plugintype': pluginType,
         'pluginname': pluginName
     };
-
+    // We may need to allow overflow on the gridstack item to see the contextual help file
+    if (jQuery(ref).closest('.grid-stack-item-content').length) {
+        jQuery(ref).closest('.grid-stack-item-content')[0].style.setProperty('overflow', 'visible', 'important');
+    }
     contextualHelpLink = jQuery(ref);
 
     // deduce the key

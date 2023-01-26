@@ -697,3 +697,4 @@ $string['activity_support_submit_button'] = '
         Save
     </button>
 ';
+$string['supportupdatedfor'] = 'Support updated for %s';
