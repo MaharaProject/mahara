@@ -14,7 +14,7 @@ parameters:
         - htdocs/lib/dwoo/
         - htdocs/lib/elasticsearch/
         - htdocs/lib/htmlpurifier/
-        - htdocs/lib/phpmailer/
+        - htdocs/vendor/phpmailer/phpmailer/
         - htdocs/vendor/google/recaptcha/
         - htdocs/lib/tests/phpunit/
         - htdocs/lib/xmldb/
@@ -55,8 +55,8 @@ parameters:
         - htdocs/lib/license.php
         - htdocs/lib/mahara.php
         - htdocs/lib/objectionable.php
-        - htdocs/lib/phpmailer/src/Exception.php
-        - htdocs/lib/phpmailer/src/PHPMailer.php
+        - htdocs/vendor/phpmailer/phpmailer/src/Exception.php
+        - htdocs/vendor/phpmailer/phpmailer/src/PHPMailer.php
         - htdocs/lib/pieforms/pieform.php
         - htdocs/lib/redis/sentinel.php
         - htdocs/lib/xmldb/classes/XMLDBConstants.php
@@ -89,7 +89,7 @@ parameters:
         - htdocs/lib/elasticsearch/*
         - htdocs/lib/form/elements/captcha.php
         - htdocs/lib/htmlpurifier/*
-        - htdocs/lib/phpmailer/*
+        - htdocs/vendor/phpmailer/phpmailer/*
         - htdocs/lib/phpunit.php
         - htdocs/vendor/*
         - htdocs/lib/redis/sentinel.php
@@ -102,10 +102,12 @@ parameters:
         - htdocs/webservice/tests/exampleclients/lib/*
         - htdocs/webservice/tests/phpunit/*
         - htdocs/webservice/xmlrpc/*
+        - htdocs/auth/saml/extlib/simplesamlphp/lib/SimpleSAML/Auth/Simple.php
+        - htdocs/auth/saml/extlib/simplesamlphp/lib/SimpleSAML/Configuration.php
     ignoreErrors:
         # PhpStan cannot see that we're pulling the init.php and so the following globals are seen as undefined
         - '#Variable \$CFG might not be defined#'
         - '#Variable \$SESSION might not be defined#'
         - '#Variable \$THEME might not be defined.#'
         - '#Variable \$USER might not be defined#'
-
+            

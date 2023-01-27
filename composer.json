@@ -7,11 +7,17 @@
     "config": {
         "vendor-dir": "htdocs/vendor",
         "allow-plugins": {
-            "cweagans/composer-patches": true
+            "cweagans/composer-patches": true,
+            "dg/composer-cleaner": true,
+            "phpro/grumphp-shim": true
         }
     },
     "extra": {
         "patches": {
         }
+    },
+    "require-dev": {
+        "phpro/grumphp-shim": "^1.13",
+        "phpstan/phpstan": "^1.10"
     }
 }

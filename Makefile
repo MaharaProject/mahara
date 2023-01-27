@@ -138,11 +138,17 @@ else
 	@curl -sS https://getcomposer.org/installer | php -- --install-dir=external
 endif
 
+initcomposerdev: installcomposer
+	@echo "Updating external dependencies with Composer for development..."
+	@php external/composer.phar --working-dir=external update
+	@echo "Installing third-party dependencies with Composer for development..."
+	@php external/composer.phar install
+
 initcomposer: installcomposer
 	@echo "Updating external dependencies with Composer..."
 	@php external/composer.phar --working-dir=external update
 	@echo "Installing third-party dependencies with Composer..."
-	@php external/composer.phar install
+	@php external/composer.phar install --no-dev
 
 simplesamlphp := $(shell ls -d htdocs/auth/saml/extlib/simplesamlphp 2>/dev/null)
 
