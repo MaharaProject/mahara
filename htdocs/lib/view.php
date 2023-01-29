@@ -453,7 +453,6 @@ class View {
             $userid = $USER->get('id');
         }
 
-        // Viewdata need to have 'type' = 'activity'
         $user = new User();
         $user->find_by_id($userid);
 
@@ -521,6 +520,12 @@ class View {
 
         // Check for signoff/verify page settings exist
         $template_signoff = get_record('view_signoff_verify', 'view', $templateid);
+        // If activity page then we need to set signoff to be true by default and we
+        // do this by ensuring the verify is false for this page
+        if ($viewdata['type'] == 'activity') {
+            $template_signoff = new stdClass();
+            $template_signoff->show_verify = 0;
+        }
         if ($template_signoff) {
             $dataobj = (object) [
                 'view' => $view->get('id'),

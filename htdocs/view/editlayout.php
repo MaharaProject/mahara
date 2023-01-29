@@ -120,7 +120,7 @@ $institution = $view->get('institution');
 $view->set_edit_nav();
 $view->set_user_theme();
 
-if ($view->get('type') == 'activity') {
+if ($view->get('type') == 'activity' && !$issitetemplate) {
     View::check_can_edit_activity_page_info($group);
 }
 
@@ -208,7 +208,7 @@ function create_settings_pieform() {
 
     // Only allow activity pages as part of group portfolios
     $group = $view->get('group');
-
+    $hidden_activity_info_elems = array();
     if ($view->get('type') == 'activity' && $group && is_outcomes_group($group)) {
         list($activity_info_elements, $hidden_activity_info_elems) = get_view_activity_info_elements($outcome);
     }
@@ -972,7 +972,7 @@ function settings_submit(Pieform $form, $values) {
         }
     }
 
-    if ($view->get('type') == 'activity') {
+    if ($view->get('type') == 'activity' && !$issitetemplate) {
         set_view_activity_info($form, $values);
     }
 
