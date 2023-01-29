@@ -81,9 +81,9 @@ $string['rule.email.email'] = 'Email address is invalid';
 
 $string['rule.integer.integer'] = 'The field must be an integer';
 $string['rule.float.float'] = 'This field only accepts decimal number values';
-$string['rule.maxlength.maxlength'] = 'This field must be at most %d characters long. Please revise it or try splitting this over multiple instances.';
+$string['rule.maxlength.maxlength'] = 'This field can have at most %d characters. Please revise it.';
 
-$string['rule.minlength.minlength'] = 'This field must be at least %d characters long.';
+$string['rule.minlength.minlength'] = 'This field must have at least %d characters.';
 
 $string['rule.minvalue.minvalue'] = 'This value cannot be smaller than %d.';
 

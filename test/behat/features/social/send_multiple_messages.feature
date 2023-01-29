@@ -27,7 +27,7 @@ Scenario: Sending messages between people and admin (Bug 1426983)
    #Sending a friend request with more than 255 characters (Bug 1373670)
    And I fill in the following:
    | Message   | I shot an arrow into the air, it fell to earth, I knew not where; For, so swiftly it flew, the sight could not follow it in its flight. Long, long afterward, in an oak I found the arrow, still unbroke; And the song, from beginning to end, I found again in the heart of a friend. |
-   Then I should see "This field must be at most 255 characters long"
+   Then I should see "This field can have at most 255 characters"
    And I fill in the following:
    | Message   | Written with a pen, sealed with a kiss, if you are my friend, please answer me this |
    And I click on "Request friendship"

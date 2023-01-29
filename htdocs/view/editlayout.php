@@ -429,6 +429,7 @@ function get_view_activity_info_elements(int $outcome_id): array {
     $elements['supervisor'] = array(
         'type' => 'select',
         'title' => get_string('activity_info_supervisor', 'view'),
+        'description' => get_string('activity_info_activity_info_supervisor_desc', 'view'),
         'options' => $supervisor_options,
         'defaultvalue' => property_exists($activity, 'supervisor') ? $activity->supervisor : $USER->id
     );
@@ -465,7 +466,8 @@ function get_view_activity_info_elements(int $outcome_id): array {
     $hidden_elements = array(
         'outcome' => array(
             'type' => 'hidden',
-            'value' =>  $outcome_id ?? get_field('outcome_view_activity', 'outcome', 'activity', $activity->id),
+            'value' =>  $outcome_id > 0 ? $outcome_id
+                : get_field('outcome_view_activity', 'outcome', 'activity', $activity->id),
         ),
     );
 
@@ -893,7 +895,7 @@ function get_signoff_elements(): array {
         'verify' => array(
             'type' => 'switchbox',
             'title' => get_string('verify', 'view'),
-            'description' => get_string('verifydesc', 'view'),
+            'description' => get_string('verifydesc1', 'view'),
             'defaultvalue' => $show_verify ?: 0,
             'disabled' => !$signoff_record || $is_from_template,
         ),
