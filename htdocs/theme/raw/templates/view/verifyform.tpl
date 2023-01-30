@@ -1,16 +1,16 @@
-<div id="verifyform" class="toolbarhtml view-signoff">
-    <div>
+<div id="verifyform" class="toolbarhtml view-signoff {if $activitypage}activity-page{/if}">
+    <div class="signoff-wrapper">
         <div class="signoff-title">
             {str tag=signedoff section=view}
         </div>
         {if $signable}
-        <a href="#" id="signoff">
+            <a href="#" id="signoff">
             {$signoffbutton|safe}
             <span class="visually-hidden">{str tag=updatesignoff section=view}</span>
-        </a>
-        {if !$signoff}
-        <div class="progress-help text-small">{str tag=signoffhelppage section=view}</div>
-        {/if}
+            </a>
+            {if !$signoff && !$activitypage}
+            <div class="progress-help text-small">{str tag=signoffhelppage section=view}</div>
+            {/if}
         {elseif $signoff}
         {$signoffbutton|safe}
         {else}
@@ -34,13 +34,14 @@
         {/if}
     </div>
     {/if}
-
+    {if !$activitypage}
     <div class="help">
         <a href="#" id="signoff-info-icon" class="hidden" title="{str tag=viewsignoffdetails section=view}">
             <span class="icon icon-info-circle"></span>
             <span class="visually-hidden">{str tag=viewsignoffdetails section=view}</span>
         </a>
     </div>
+    {/if}
 </div>
 
 {* signoff modal form *}
@@ -135,7 +136,8 @@
             $("#verify-confirm-form").modal('hide');
             event.preventDefault();
             event.stopPropagation();
-            sendjsonrequest('{$WWWROOT}artefact/peerassessment/completion.json.php', { 'view': '{$view}', 'signoff': 1 }, 'POST', function (data) {
+            let requesturl = '{$WWWROOT}{if $activitypage}collection/updateactivity.json.php{else}artefact/peerassessment/completion.json.php{/if}';
+            sendjsonrequest(requesturl, { 'view': '{$view}', 'signoff': 1 }, 'POST', function (data) {
                 if (data.data) {
                     if (data.data.signoff_newstate) {
                         $('#dummyform_signoff').prop('checked', true);

@@ -207,8 +207,11 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
         );
     }
 
-    public function get_view_url($viewid, $showcomment = true, $full = true) {
+    public function get_view_url($viewid, $showcomment = true, $full = true, $editing = false) {
         $url = 'view/view.php?id=' . $viewid;
+        if ($editing) {
+            $url = 'view/blocks.php?id=' . $viewid;
+        }
         if ($showcomment) {
             $url .= '&showfeedback=' . $this->get('id');
         }
@@ -619,10 +622,8 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
         $lastcomment = self::last_feedback($data->view);
         $editableafter = time() - 60 * get_config_plugin('artefact', 'comment', 'commenteditabletime');
         $admintutorids = $view->get('group') ? group_get_member_ids($view->get('group'), array('admin', 'tutor')) : [];
-        foreach ($data->data as &$item) {
-            $candelete = ($data->canedit
-                && ($item->author == $USER->get('id')))
-                || in_array($USER->get('id'), $admintutorids);
+        foreach ($data->data as $key => &$item) {
+            $candelete = in_array($USER->get('id'), $admintutorids);
             $item->ts = strtotime($item->ctime);
             $timelapse = format_timelapse($item->ts);
             $item->date = ($timelapse) ? $timelapse : format_date($item->ts, 'strftimedatetime');
@@ -640,7 +641,7 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
             // Feedback authors can edit recent feedback if they're within editable timeframe.
             if (
                 $data->canedit &&
-                ($item->isauthor && !$is_export_preview && $item->ts > $editableafter
+                ($item->isauthor && !$is_export_preview && $item->ts > $editableafter && $item->id == $lastcomment->id
                 )
             ) {
                 $item->canedit = 1;
@@ -656,7 +657,7 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
                     ERROR_MULTIPLE
                 );
 
-                if (($candelete || ($item->isauthor && !$is_export_preview))
+                if ($candelete && !$is_export_preview
                     && $submittedcheck->submittedstatus == View::UNSUBMITTED
                 ) {
                     $item->deleteform = pieform(
@@ -668,7 +669,7 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
                     $smarty->assign('id', $item->id);
                     $smarty->assign('block', $item->block);
                     $smarty->assign('title', $item->title);
-                    // $item->editlink = $smarty->fetch('artefact:checkpoint:editlink.tpl'); //TODO: Doris
+                    $item->editlink = $smarty->fetch('artefact:checkpoint:editlink.tpl');
                 }
             }
             if ($exporter) {
@@ -765,8 +766,6 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
             'jsform'          => true,
             'autofocus'       => false,
             'elements'        => array(),
-            // 'successcallback'   => 'add_checkpoint_feedback_form_submit',
-            // 'validatecallback'  => 'add_checkpoint_feedback_form_validate',
             'jssuccesscallback' => 'selectLevelSuccess',
             'jserrorcallback'   => 'selectLevelError',
         );
@@ -809,7 +808,7 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
         return $form;
     }
 
-    public static function add_checkpoint_feedback_form($blockid = 0, $id = 0) {
+    public static function add_checkpoint_feedback_form($blockid = 0, $id = 0, $editing = false) {
         global $USER;
         $form = array(
             'name'            => 'add_checkpoint_feedback_form_' . $blockid,
@@ -836,6 +835,10 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
             'type' => 'hidden',
             'value' => $blockid,
         );
+        $form['elements']['editing'] = array(
+            'type' => 'hidden',
+            'value' => $editing,
+        );
         $form['elements']['feedback'] = array(
             'type' => 'text',
             'defaultvalue' => $id,
@@ -860,7 +863,7 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
         return $form;
     }
 
-    public static function delete_checkpoint_feedback_form($id, $viewid, $blockid) {
+    public static function delete_checkpoint_feedback_form($id, $viewid, $blockid, $editing = false) {
         global $THEME;
         return array(
             'name'     => 'delete_checkpoint_feedback_' . $id,
@@ -877,6 +880,7 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
                 'feedback' => array('type' => 'hidden', 'value' => $id),
                 'view' => array('type' => 'hidden', 'value' => $viewid),
                 'block' => array('type' => 'hidden', 'value' => $blockid),
+                'editing' => array('type' => 'hidden', 'value' => $editing),
                 'submit'  => array(
                     'type'  => 'button',
                     'usebuttontag' => true,
@@ -905,7 +909,7 @@ function delete_checkpoint_feedback_submit(Pieform $form, $values) {
     $view = $checkpoint_feedback->get_view();
     $viewid = $values['view'];
     $blockid = $checkpoint_feedback->get('block');
-    $url = $view->get_url(false);
+    $url = !empty($values['editing']) ? 'view/blocks.php?id=' . $viewid : $view->get_url(false);
     $goto = get_config('wwwroot') . $url;
     // If this page is being marked, make assessments un-deletable until released
     // unless it is the last assessment still with in the editable timeframe
@@ -1031,7 +1035,8 @@ function add_checkpoint_feedback_form_submit(Pieform $form, $values) {
         update_record('artefact', $updated, 'id');
     }
 
-    $url = $checkpoint_feedback->get_view_url($view->get('id'), true, false);
+    $url = $checkpoint_feedback->get_view_url($view->get('id'), true, false, $values['editing']);
+
     $goto = get_config('wwwroot') . $url;
 
     // If the checkpoint feedback is published we send a notification to page owner

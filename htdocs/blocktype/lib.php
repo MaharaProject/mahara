@@ -1669,7 +1669,20 @@ class BlockInstance {
         $smarty->assign('strconfigtitletexttooltip', get_string('configureblock3', 'view'));
         $smarty->assign('strremovetitletext', $title == '' ? get_string('removethisblock1', 'view', $id) : get_string('removeblock1', 'view', "'$title'", $id));
         $smarty->assign('strremovetitletexttooltip', get_string('removeblock2', 'view'));
-        $smarty->assign('lockblocks', ($this->get_view()->get('lockblocks') && ($this->get_view()->get('owner') || $this->get_view()->get('group')))); // Only lock blocks for user's portfolio and group pages
+        // Only lock blocks if 'lockblocks' is turned on and page is owned by a user or is an activity group page
+        $lockblocks = ($this->get_view()->get('lockblocks') &&
+                       ($this->get_view()->get('owner') ||
+                        ($this->get_view()->get('group') && $this->get_view()->get('type') == 'activity')
+                       )
+                      );
+        // But also lock blocks if the block itself is a 'checkpoint' block on a group activity page and the person viewing it is a only a group member
+        if (!$lockblocks && $this->get('blocktype') == 'checkpoint' && $this->get_view()->get('group') && $this->get_view()->get('type') == 'activity') {
+            $grouprole = get_field('group_member', 'role', 'group', $this->get_view()->get('group'), 'member', $USER->get('id'));
+            if ($grouprole == 'member') {
+                $lockblocks = true;
+            }
+        }
+        $smarty->assign('lockblocks', $lockblocks);
         $smarty->assign('cssicontype', $blocktypeclass::get_css_icon_type($this->get('blocktype')));
         $smarty->assign('cssicon', $blocktypeclass::get_css_icon($this->get('blocktype')));
         $smarty->assign('blocktypename', $blocktypeclass::get_title());

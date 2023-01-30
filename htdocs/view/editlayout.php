@@ -1395,7 +1395,7 @@ function save_activity_data($values = [], $outcome = 0, $view_id = 0) {
         update_record('view_activity', $view_activity, array('view' => $view->get('id')));
     }
 
-    // Achivement levels done by type and value
+    // Achievement levels done by type and value
     // Brand new activity + achievement levels
     // If there are more achievement levels than 4,
     // their string needs to be created/and existing ones overwritten if don't want to say 'Level 1'
@@ -1436,6 +1436,13 @@ function get_levels(array $values) {
         if (is_int($type) !== false) {
             $levels[$type] = $value;
         }
+    }
+    if (empty($levels)) {
+        // no levels supplied so we use the default ones
+        $levels = array(1 => get_string('activity_info_achievement_level', 'view', 1),
+                        2 => get_string('activity_info_achievement_level', 'view', 2),
+                        3 => get_string('activity_info_achievement_level', 'view', 3),
+                        4 => get_string('activity_info_achievement_level_0', 'view'));
     }
     return $levels;
 }

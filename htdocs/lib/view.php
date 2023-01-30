@@ -1169,32 +1169,6 @@ class View {
         db_commit();
     }
 
-    function get_activity_signoff() {
-        $activity = $this->get_view_activity_data();
-
-        $smarty = smarty_core();
-        $smarty->assign('WWWROOT', get_config('wwwroot'));
-        $smarty->assign('view', $this->get('id'));
-        // Signoff option
-        $smarty->assign('signable', true);
-        // $smarty->assign('signoff', ArtefactTypePeerassessment::is_signjed_off($this));
-
-
-        // We make a couple of dummy forms so we get pieform 'switchbox' markup but we don't want
-        // to submit via pieforms as the markup will be accessed via javascript // TODO: Doris copy this but use Cecilia's logic
-        $signoff_element['achieved'] = array(
-            'type'         => 'switchbox',
-            'title'        => 'Achieved',
-            'defaultvalue' => get_field('view_activity', 'achieved', 'id', $activity->id),
-            // 'readonly'     => !$signable
-        );
-
-        $form = array('name' => 'dummy_activity_form', 'elements' => $signoff_element);
-        $form = pieform_instance($form);
-        // return $form->build(false);
-        return $form->build();
-    }
-
     public function get_view_activity_data() {
         if (!$this->type == 'activity') {
             return null;
@@ -8101,7 +8075,7 @@ class View {
         $form = array('name' => 'dummyform', 'elements' => $verify_element);
         $form = pieform_instance($form);
         $smarty->assign('verifybutton', $form->build(false));
-
+        $smarty->assign('activitypage', ($this->type == 'activity'));
         $html = $smarty->fetch('view/verifyform.tpl');
         return $html;
     }
@@ -8196,6 +8170,9 @@ class ProgressAction {
         else if ($USER->is_manager($view)) {
             $this->view_as = 'manager';
         }
+        else if ($view->get('group')) {
+            $this->view_as = get_field('group_member', 'role', 'group', $view->get('group'), 'member', $USER->get('id'));
+        }
 
         $has_signoff = $view->has_signoff();
         $is_signedoff = ArtefactTypePeerassessment::is_signed_off($view);
@@ -8207,12 +8184,16 @@ class ProgressAction {
             if ($column == 'owner') {
                 if ($is_signedoff) {
                     $this->status = self::STATUS_COMPLETED;
-                    if ($this->view_as == 'owner') {
+                    if (($this->view_as == 'owner') ||
+                        ($this->view_as == 'admin' || $this->view_as == 'tutor')   // for group admins/tutors
+                    ) {
                         $this->action = self::ACTION_UNSIGNOFF;
                     }
                 }
                 else {
-                    if ($this->view_as == 'owner' && $view->get('submittedstatus') == View::UNSUBMITTED) {
+                    if (($this->view_as == 'owner' && $view->get('submittedstatus') == View::UNSUBMITTED) ||
+                        (($this->view_as == 'admin' || $this->view_as == 'tutor') && $view->get('submittedstatus') == View::UNSUBMITTED)  // for group admins/tutors
+                        ) {
                         $this->status = self::STATUS_NEEDSACTION;
                         $this->action = self::ACTION_SIGNOFF;
                     }

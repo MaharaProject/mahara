@@ -74,7 +74,8 @@ class PluginBlocktypeCheckpoint extends MaharaCoreBlocktype {
             pieform(ArtefactTypeCheckpointfeedback::delete_checkpoint_feedback_form(
                 param_integer('feedback'),
                 param_integer('view'),
-                param_integer('block')
+                param_integer('block'),
+                $editing
             ));
         }
         $view = new View($instance->get('view'));
@@ -96,7 +97,7 @@ class PluginBlocktypeCheckpoint extends MaharaCoreBlocktype {
         }
         else {
             $feedback = ArtefactTypeCheckpointfeedback::get_checkpoint_feedback($options, $versioning, $exporter);
-            $feedbackform = ArtefactTypeCheckpointfeedback::add_checkpoint_feedback_form($instance->get('id'), 0);
+            $feedbackform = ArtefactTypeCheckpointfeedback::add_checkpoint_feedback_form($instance->get('id'), 0, $editing);
             $feedbackform = pieform($feedbackform);
             $smarty->assign('allowfeedback', $feedback->canedit && !$versioning);
             $smarty->assign('addcheckpointfeedbackform', $feedbackform);

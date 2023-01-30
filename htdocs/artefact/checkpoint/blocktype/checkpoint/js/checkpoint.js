@@ -26,7 +26,10 @@ function checkpointBlockInit() {
     configureAssessmentCancel();
     configureModalOpen();
     connectCheckpointBlocks();
-    dock.init(jQuery(document));
+    // for adding a new block on the page
+    if (typeof dock.init === "function") {
+        dock.init(jQuery(document));
+    }
 };
 
 jQuery(window).on('pageupdated', {}, function () {
@@ -189,14 +192,12 @@ function addCheckpointFeedbackError(form, data) {
  * Connect checkpoint blocks to the dropdown achievement submit form
  */
 function connectCheckpointBlocks() {
-    console.log('connect')
     // Activity page checkpoint blocks achievement level interaction logic
     let achievement_forms = $('.block');
     let select_submit_pairs = [];
     let submit_btns = $(achievement_forms).find('.submit input[id^="achievement_form"]');
     let select_elems = $(achievement_forms).find('select');
     let num_of_checkpoints = submit_btns.length;
-    console.log(num_of_checkpoints)
 
     // Collect up the block, submit button, and select for each checkpoint block
     for (let i = 0; i < num_of_checkpoints; i++) {

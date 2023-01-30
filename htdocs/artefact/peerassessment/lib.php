@@ -573,10 +573,10 @@ class ArtefactTypePeerassessment extends ArtefactType {
     }
 
     public static function is_signed_off(View $view) {
-        if (!$view->get('owner')) {
-            return false;
+        if ($view->get('owner') || ($view->get('group') && $view->get('type') == 'activity')) {
+            return (bool)get_field_sql("SELECT signoff FROM {view_signoff_verify} WHERE view = ? LIMIT 1", array($view->get('id')));
         }
-        return (bool)get_field_sql("SELECT signoff FROM {view_signoff_verify} WHERE view = ? LIMIT 1", array($view->get('id')));
+        return false;
     }
 
     /*
