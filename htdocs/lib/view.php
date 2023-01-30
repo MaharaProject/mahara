@@ -4197,19 +4197,18 @@ class View {
     private function activity_support_edit_element($activity, $type) {
         $db_table = 'view_activity_support';
         $support = get_record($db_table, 'activity', $activity->id, 'type', $type . '_support');
-        $support_edited_by = '';
+        $support_edited_by_html = '';
         $support_value = '';
 
         if ($support) {
             $last_edit_time = date('d M Y, G:i', strtotime($support->mtime));
             $last_edit_author = display_name($support->author, null, true);
-            $support_edited_by = get_string(
-                'last_edited',
-                'view',
-                profile_url($support->author),
-                $last_edit_author,
-                $last_edit_time
-            );
+
+            $smarty = smarty_core();
+            $smarty->assign('profile_url', profile_url($support->author));
+            $smarty->assign('author', $last_edit_author);
+            $smarty->assign('date', $last_edit_time);
+            $support_edited_by_html =  $smarty->fetch('view/activitysupporteditedby.tpl');
             $support_value = get_field(
                 'view_activity_support',
                 'value',
@@ -4219,7 +4218,7 @@ class View {
                 $type . '_support'
             );
         }
-        return array($support_value, $support_edited_by);
+        return array($support_value, $support_edited_by_html);
     }
 
     private function get_activity_support_element_display($type, $supportvalue, $supportby) {
@@ -4231,19 +4230,23 @@ class View {
     }
 
     private function get_activity_support_element_editing($type, $supportvalue, $supportby) {
+        $smarty = smarty();
+        $smarty->assign('description', get_string($type . '_support_desc', 'view'));
+        $html = $smarty->fetch('view/activitysupportdesc.tpl');
+
         $supportelement = array($type . '_support' => array(
             'type'         => 'textarea',
             'title'        => get_string($type . '_support', 'view'),
-            'description'  => get_string($type . '_support_desc', 'view'),
+            'description'  => $html,
             'defaultvalue' => $supportvalue,
             'rows'         => 5,
             'cols'         => 70,
             'class'        => 'form-group-no-border'
         ));
-        $supportsubmit = array($type . '_support_submit' => array(
-            'type'  => 'html',
-            'value' => get_string('activity_support_submit_button', 'view', $type),
-        ));
+
+        $smarty->assign('type', $type);
+        $html = $smarty->fetch('view/activitysupportsubmitbutton.tpl');
+        $supportsubmit = array($type . '_support_submit' => ['type' => 'html', 'value' => $html]);
         return array_merge($supportelement, $supportsubmit);
     }
 
@@ -4253,15 +4256,15 @@ class View {
         $display_elems = array();
         $edit_elems = array();
         foreach ($support_types as $support_type) {
-            list($supportvalue, $supportby) = $this->activity_support_edit_element($activity, $support_type);
+            list($supportvalue, $supportby_html) = $this->activity_support_edit_element($activity, $support_type);
             $display_elems = array_merge(
                 $display_elems,
-                $this->get_activity_support_element_display($support_type, $supportvalue, $supportby)
+                $this->get_activity_support_element_display($support_type, $supportvalue, $supportby_html)
             );
 
             $edit_elems = array_merge(
                 $edit_elems,
-                $this->get_activity_support_element_editing($support_type, $supportvalue, $supportby)
+                $this->get_activity_support_element_editing($support_type, $supportvalue, $supportby_html)
             );
         }
 
@@ -8030,7 +8033,7 @@ class View {
      */
     public function get_signoff_verify_form($export = false) {
         safe_require('artefact', 'peerassessment');
-        $show_verify = ArtefactTypePeerAssessment::is_verify_enabled($this);
+        $show_verify = ArtefactTypePeerassessment::is_verify_enabled($this);
         $owneraction = $this->get_progress_action('owner');
         $manageraction = $this->get_progress_action('manager');
         $signable = (bool)$owneraction->get_action();
@@ -8057,7 +8060,7 @@ class View {
         $signoff_element['signoff'] = array(
             'type'         => 'switchbox',
             'title'        => '',
-            'defaultvalue' => ArtefactTypePeerassessment::is_signed_off($this, false),
+            'defaultvalue' => ArtefactTypePeerassessment::is_signed_off($this),
             'readonly'     => !$signable
         );
 
@@ -8068,8 +8071,8 @@ class View {
         $verify_element['verify'] = array(
             'type'         => 'switchbox',
             'title'        => '',
-            'defaultvalue' => ArtefactTypePeerassessment::is_verified($this, false),
-            'readonly'     => ArtefactTypePeerassessment::is_verified($this, false)
+            'defaultvalue' => ArtefactTypePeerassessment::is_verified($this),
+            'readonly'     => ArtefactTypePeerassessment::is_verified($this)
         );
 
         $form = array('name' => 'dummyform', 'elements' => $verify_element);
