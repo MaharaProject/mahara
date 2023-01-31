@@ -237,7 +237,7 @@ This list must take into account the sort option chosen in the block config (Bug
     And I click on "Edit" in "Collection UserA_06" card menu
     And I fill in "Collection description" with "Collection 06 (updated)"
     And I scroll to the base of id "edit_submitform"
-    And I click on "Save"
+    And I click on "Continue"
     # Check if it is now in the first page of the list of shared collections
     And I choose "Groups" in "Engage" from main menu
     And I scroll to the center of id "findgroups"

@@ -401,8 +401,11 @@ if ($view->get('type') == 'activity' && $view->get('group')) {
     $activity_data = $view->get_view_activity_data();
     $group = $view->get('group');
     $smarty->assign('activity', $activity_data);
-    $can_edit_activity = (View::check_can_edit_activity_page_info($group, true) && !$activity_data->achieved);
-    $smarty->assign('activity_support_form', $view->get_activity_support_form($can_edit_activity));
+    $can_edit_activity = View::check_can_edit_activity_page_info($group, true);
+    $smarty->assign(
+        'activity_support',
+        $view->get_activity_support_display_edit_form($can_edit_activity && !$activity_data->achieved)
+    );
     $smarty->assign('can_edit_page_settings', $can_edit_activity);
     $smarty->assign('activity_signoff_html', $signoff_html);
 }

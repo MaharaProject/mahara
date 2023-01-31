@@ -15,7 +15,7 @@
             </div>
         </h2>
         <div class="block collapse hide" id="target" aria-expanded="true">
-            {$activity_support_form|safe}
+            {$activity_support|safe}
         </div>
     </div>
 {/if}

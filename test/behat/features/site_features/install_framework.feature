@@ -63,7 +63,7 @@ Scenario: Installing framework module and activating for an institution
  And I choose "Portfolios" in "Create" from main menu
  And I click on "Edit" in "Collection admin_01" card menu
  And I select "Title of your framework" from "SmartEvidence framework"
- And I click on "Save"
+ And I click on "Continue"
  Then I should see "Collection saved successfully."
 
  # Testing the collection navigation and matrix carousel
