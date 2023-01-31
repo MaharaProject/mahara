@@ -2714,7 +2714,7 @@ function group_can_create_groups() {
     if ($creators == 'all') {
         return true;
     }
-    if ($USER->get('admin') || $USER->is_institutional_admin()) {
+    if ($USER->get('admin') || $USER->is_institutional_admin() || $USER->is_institutional_supportadmin()) {
         return true;
     }
     return $creators == 'staff' && ($USER->get('staff') || $USER->is_institutional_staff());

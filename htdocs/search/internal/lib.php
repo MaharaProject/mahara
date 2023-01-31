@@ -911,9 +911,12 @@ class PluginSearchInternal extends PluginSearch {
                     SELECT usr FROM {usr_institution} WHERE institution = \'' . $userinst . '\'
                 )';
         }
-        if (get_config('owngroupsonly') && !$is_admin) {
+        $institution = get_field('group', 'institution', 'id', $group);
+        $is_institution_admin = $USER->is_institutional_admin($institution) || $USER->is_institutional_supportadmin($institution) || $USER->is_institutional_staff($institution);
+        if (get_config('owngroupsonly') && !$is_admin && !$is_institution_admin) {
             // in search results only include users that are members of the same groups
             // site admin and site staff users are excluded
+            // institution admin / supportadmin / staff users are excluded
             $usergroups = get_column('group_member', 'group', 'member', $USER->get('id'));
             $membergroups = get_column_sql('SELECT member FROM {group_member} WHERE "group" IN (' . implode(',', $usergroups) . ') AND member != ?', array($USER->get('id')));
             if ($membergroups) {
