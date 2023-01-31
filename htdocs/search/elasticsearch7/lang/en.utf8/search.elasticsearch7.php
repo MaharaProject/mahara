@@ -82,6 +82,7 @@ $string['none'] = 'none';
 $string['noticeenabled'] = 'The Elasticsearch 7 plugin is currently active. To deactivate it, deselect it in the <a href="%s" class="elasticsearch-status">"Search settings"</a>.';
 $string['noticenotactive'] = 'The Elasticsearch 7 server is unreachable on host %s and port %s. Please make sure it is running.';
 $string['noticenotenabled'] = 'The Elasticsearch 7 plugin is not currently enabled. To activate it, select it in the <a href="%s">"Search settings"</a>.';
+$string['ownedbygroup'] = 'Created by group %s';
 $string['owner'] = 'Owner';
 $string['page'] = 'Page';
 $string['pages'] = 'Pages';

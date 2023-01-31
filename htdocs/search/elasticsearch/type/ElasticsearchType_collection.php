@@ -144,7 +144,7 @@ class ElasticsearchType_collection extends ElasticsearchType {
         return $record;
     }
     public static function getRecordDataById($type, $id) {
-        $sql = 'SELECT c.id, c.name, c.ctime, c.description, cv.view AS viewid, c.owner
+        $sql = 'SELECT c.id, c.name, c.ctime, c.description, cv.view AS viewid, c.owner, c.group
         FROM {collection} c
         LEFT OUTER JOIN {collection_view} cv ON cv.collection = c.id
         WHERE c.id = ?
@@ -172,6 +172,12 @@ class ElasticsearchType_collection extends ElasticsearchType {
         if (intval ( $record->owner ) > 0) {
             $record->createdby = get_record ( 'usr', 'id', $record->owner );
             $record->createdbyname = display_name ( $record->createdby );
+        }
+
+        // Owned by group
+        if (intval ( $record->group ) > 0) {
+            $record->ownedbygroupurl = get_config('wwwroot') . 'group/view.php?id=' . $record->group;
+            $record->ownedbygroupname = get_field('group', 'name', 'id', $record->group);
         }
 
         // Get all views included in that collection

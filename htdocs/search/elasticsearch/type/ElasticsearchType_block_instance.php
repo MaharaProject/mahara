@@ -142,7 +142,7 @@ class ElasticsearchType_block_instance extends ElasticsearchType {
     public static function getRecordDataById($type, $id) {
         global $USER;
 
-        $sql = 'SELECT bi.id, bi.view AS view_id, bi.title, bi.configdata, v.owner, v.institution, v.group, v.ctime
+        $sql = 'SELECT bi.id, bi.view AS view_id, bi.title, bi.configdata, bi.blocktype, v.owner, v.institution, v.group, v.ctime
         FROM {block_instance} bi
         JOIN {view} v ON v.id = bi.view
         WHERE bi.id = ?';
@@ -157,11 +157,23 @@ class ElasticsearchType_block_instance extends ElasticsearchType {
         require_once( get_config ( 'docroot' ) . 'blocktype/lib.php' );
         $bi = new BlockInstance ( $id );
         $configdata = $bi->get ( 'configdata' );
-        $record->title = str_replace ( array (
-                "\r\n",
-                "\n",
-                "\r"
-        ), ' ', strip_tags ( $record->title ) );
+        if (!empty($record->title)) {
+            $record->title = str_replace ( array (
+                    "\r\n",
+                    "\n",
+                    "\r"
+            ), ' ', strip_tags ( $record->title ) );
+        }
+        else {
+            safe_require('blocktype', $bi->get('blocktype'));
+            $record->title = $bi->get_title();
+        }
+
+        // Sanity check.
+        if (empty($record->title)) {
+            $record->title = get_string('notitle', 'view');
+        }
+
         if (is_array ( $configdata ) && array_key_exists('text', $configdata)) {
            // We can only deal with blocktypes that have a 'text' configdata for description at this point
             $record->description = str_replace ( array (

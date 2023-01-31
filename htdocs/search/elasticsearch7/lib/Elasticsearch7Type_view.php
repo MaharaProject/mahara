@@ -112,6 +112,10 @@ class Elasticsearch7Type_view extends Elasticsearch7Type {
             $record->createdby = get_record('usr', 'id', $record->owner);
             $record->createdbyname = display_name($record->createdby);
         }
+
+        // Add group info.
+        parent::add_group_name_for_record($record);
+
         // Add Tags.
         $tags = get_column('tag', 'tag', 'resourcetype', 'view', 'resourceid', $id);
         if ($tags != false) {
