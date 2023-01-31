@@ -163,7 +163,10 @@ else if ($typefile) {
                 $cli->cli_exit(get_string('cli_outcomes_bad_institution', 'admin', $data['Institution']), false);
             }
             $outcome_category_id =  ensure_type_category_exists($data['Outcome category'], $data['Institution']);
-            $dataadded = ensure_type_exists($data['Outcome type'], $data['Outcome type abbreviation'], $data['CSS class'], $outcome_category_id);
+            $thisdataadded = ensure_type_exists($data['Outcome type'], $data['Outcome type abbreviation'], $data['CSS class'], $outcome_category_id);
+            if ($thisdataadded) {
+                $dataadded = true;
+            }
         }
     }
     if ($dataadded) {
@@ -190,7 +193,10 @@ else if ($subjectfile) {
                 $cli->cli_exit(get_string('cli_outcomes_bad_institution', 'admin', $data['Institution']), false);
             }
             $outcome_subject_category_id = ensure_subject_category_exists($data['Outcome subject category'], $data['Institution']);
-            $dataadded = ensure_subject_exists($data['Subject'], $data['Subject abbreviation'], $outcome_subject_category_id);
+            $thisdataadded = ensure_subject_exists($data['Subject'], $data['Subject abbreviation'], $outcome_subject_category_id);
+            if ($thisdataadded) {
+                $dataadded = true;
+            }
         }
     }
     if ($dataadded) {

@@ -79,6 +79,7 @@ class PluginBlocktypeCheckpoint extends MaharaCoreBlocktype {
         }
         $view = new View($instance->get('view'));
         safe_require('artefact', 'checkpoint');
+
         $options = ArtefactTypeCheckpointfeedback::get_checkpoint_feedback_options();
         $options->limit = $limit;
         $options->offset = $offset;
@@ -89,21 +90,34 @@ class PluginBlocktypeCheckpoint extends MaharaCoreBlocktype {
         $feedback = ArtefactTypeCheckpointfeedback::get_checkpoint_feedback($options, $versioning, $exporter);
         $feedbackform = ArtefactTypeCheckpointfeedback::add_checkpoint_feedback_form($instance->get('id'), 0);
         $feedbackform = pieform($feedbackform);
+
         $smarty = smarty_core();
         $smarty->assign('blockid', $instance->get('id'));
         $smarty->assign('exporter', ($exporter ? true : false));
-        $smarty->assign('instructions', $instructions);
         $smarty->assign('allowfeedback', $feedback->canedit && !$versioning);
         $smarty->assign('addcheckpointfeedbackform', $feedbackform);
-        if ($feedback && !$editing) {
+
+        // Display achievement level if one exists, otherwise provide dropdown
+        if (array_key_exists('level', $configdata)) {
+            $smarty->assign('saved_achievement_level', $configdata['level']);
+        }
+        else {
+            $achievementform = ArtefactTypeCheckpointfeedback::get_checkpoint_achievement_form($instance->get('id'));
+            $achievementform = pieform($achievementform);
+            $smarty->assign('select_achievement_form', $achievementform);
+        }
+        if ($feedback) {
             $smarty->assign('feedback', $feedback);
         }
         else {
-            $smarty->assign('editing', $editing);
             if ($feedback->count = 0) {
                 $smarty->assign('noassessment', get_string('nopeerassessment', 'blocktype.checkpoint/checkpoint'));
             }
         }
+
+        $can_edit_activity = View::check_can_edit_activity_page_info($view->get('group'), true);
+        $smarty->assign('can_edit_activity', $can_edit_activity);
+
         $html = $smarty->fetch('blocktype:checkpoint:checkpoint.tpl');
         return $html;
     }
@@ -123,8 +137,6 @@ class PluginBlocktypeCheckpoint extends MaharaCoreBlocktype {
         $sql_get_blocks = "SELECT id, ctime FROM {block_instance} WHERE blocktype = ? AND view = ? ORDER BY ctime";
         $blocks = get_records_sql_array($sql_get_blocks, [$block_title, $instance->get('view')]);
 
-        $order = null;
-
         for ($i = 0; $i < count($blocks); $i++) {
             if ($blocks[$i]->id == $instance->get('id')) {
                 return get_string('title', 'blocktype.checkpoint/checkpoint') . ' ' . ($i + 1);
@@ -133,6 +145,11 @@ class PluginBlocktypeCheckpoint extends MaharaCoreBlocktype {
     }
 
     public static function instance_config_save($values, $instance) {
+        // must set min height to see help modal
+        if ($instance->get('height') < 30) {
+            $instance->set('height', 35);
+            $instance->commit();
+        };
         return $values;
     }
 

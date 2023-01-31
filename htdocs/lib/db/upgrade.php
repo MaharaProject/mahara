@@ -1128,11 +1128,11 @@ function xmldb_core_upgrade($oldversion=0) {
             $view_activity->addFieldInfo('description', XMLDB_TYPE_CHAR, 225, null, XMLDB_NOTNULL);
             $view_activity->addFieldInfo('subject', XMLDB_TYPE_INTEGER, 10, null, XMLDB_NOTNULL);
             $view_activity->addFieldInfo('supervisor', XMLDB_TYPE_INTEGER, 10, false, XMLDB_NOTNULL);
+            $view_activity->addFieldInfo('achieved', XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
             $view_activity->addFieldInfo('start_date', XMLDB_TYPE_DATETIME);
             $view_activity->addFieldInfo('end_date', XMLDB_TYPE_DATETIME);
             $view_activity->addFieldInfo('ctime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
             $view_activity->addFieldInfo('mtime', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL);
-
             $view_activity->addKeyInfo('activitypk', XMLDB_KEY_PRIMARY, array('id'));
             $view_activity->addKeyInfo('viewfk', XMLDB_KEY_FOREIGN, array('view'), 'view', array('id'));
             $view_activity->addKeyInfo('supervisorfk', XMLDB_KEY_FOREIGN, array('supervisor'), 'usr', array('id'));
@@ -1225,6 +1225,14 @@ function xmldb_core_upgrade($oldversion=0) {
         if ($data = check_upgrades('artefact.checkpoint')) {
             upgrade_plugin($data);
         }
+    }
+
+    if ($oldversion < 2023012002) {
+        log_debug('Add "achieved" field into view_activity');
+        $table = new XMLDBTable('view_activity');
+        $field = new XMLDBField('achieved');
+        $field->setAttributes(XMLDB_TYPE_INTEGER, 1, null, XMLDB_NOTNULL, null, null, null, 0);
+        add_field($table, $field);
     }
 
     return $status;

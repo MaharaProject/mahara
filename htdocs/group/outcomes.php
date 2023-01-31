@@ -120,7 +120,7 @@ function create_outcome_form($name, $title, $collection, $new=true, $outcome=nul
 function get_outcome_activity_views($collectionid, $activityid=null) {
   if ($collectionid) {
     $sql = '
-      SELECT va.id, ova.outcome as outcome, v.id as view, v.title
+      SELECT va.id, va.achieved, ova.outcome as outcome, v.id as view, v.title
       FROM {view} v
       INNER JOIN {view_activity} va
         ON v.id = va.view

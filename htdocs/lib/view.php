@@ -534,6 +534,12 @@ class View {
 
         $view->commit();
 
+        // Some templates have additional config fields that need to be saved in advance
+        // in case the save button is not pressed in the editlayout/page settings screen.
+        if ($view->get('type') == 'activity') {
+            save_activity_data([], $viewdata['outcome'], $view->get('id'));
+        }
+
         $blocks = get_records_array('block_instance', 'view', $view->get('id'));
         if ($blocks) {
             foreach ($blocks as $b) {
@@ -1156,6 +1162,32 @@ class View {
         handle_event('deleteview', $eventdata);
         $this->deleted = true;
         db_commit();
+    }
+
+    function get_activity_signoff() {
+        $activity = $this->get_view_activity_data();
+
+        $smarty = smarty_core();
+        $smarty->assign('WWWROOT', get_config('wwwroot'));
+        $smarty->assign('view', $this->get('id'));
+        // Signoff option
+        $smarty->assign('signable', true);
+        // $smarty->assign('signoff', ArtefactTypePeerassessment::is_signjed_off($this));
+
+
+        // We make a couple of dummy forms so we get pieform 'switchbox' markup but we don't want
+        // to submit via pieforms as the markup will be accessed via javascript // TODO: Doris copy this but use Cecilia's logic
+        $signoff_element['achieved'] = array(
+            'type'         => 'switchbox',
+            'title'        => 'Achieved',
+            'defaultvalue' => get_field('view_activity', 'achieved', 'id', $activity->id),
+            // 'readonly'     => !$signable
+        );
+
+        $form = array('name' => 'dummy_activity_form', 'elements' => $signoff_element);
+        $form = pieform_instance($form);
+        // return $form->build(false);
+        return $form->build();
     }
 
     public function get_view_activity_data() {
@@ -2102,6 +2134,9 @@ class View {
                     else {
                         insert_record('blocktype_installed_viewtype', $data);
                     }
+                }
+                else {
+                    log_debug($blocktype . ' is not used with activity views');
                 }
             }
         }
@@ -6509,10 +6544,12 @@ class View {
 
 
     public function copy_contents($template, &$artefactcopies) {
+        $clean_description_templates = ['portfolio', 'activity'];
 
         $this->set('lockblocks', (int)($template->get('lockblocks') || $this->lockblocks));
         if ($template->get('template') == self::SITE_TEMPLATE
-            && $template->get('type') == 'portfolio') {
+            &&  in_array($template->get('type'), $clean_description_templates)
+        ) {
             $this->set('description', '');
             $this->set('instructions', '');
         }
@@ -8031,7 +8068,7 @@ class View {
         }
 
         // We make a couple of dummy forms so we get pieform 'switchbox' markup but we don't want
-        // to submit via pieforms as the markup will be accessed via javascript
+        // to submit via pieforms as the markup will be accessed via javascript // TODO: Doris copy this but use Cecilia's logic
         $signoff_element['signoff'] = array(
             'type'         => 'switchbox',
             'title'        => '',

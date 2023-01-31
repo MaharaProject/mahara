@@ -55,7 +55,7 @@ args
   {else}
     <td class="progresstitle">
       <div>
-        <a href="{$WWWROOT}view/blocks.php?{$querystring}">{$title}</a>
+        <a href="{$WWWROOT}view/blocks.php?id={$viewid}&{$querystring}">{$title}</a>
       </div>
     </td>
     <td>

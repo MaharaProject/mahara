@@ -74,6 +74,7 @@ if ($new && $id === false) {
     if ($collection_to_add_view) {
         require_once(get_config('libroot') . 'collection.php');
         $coll = new Collection($collection_to_add_view);
+        // If view is activity -> set db default values here too
         $num_pages = $coll->add_views(['view_' . $view->get('id') => $view]);
     }
 
@@ -396,7 +397,8 @@ function get_view_activity_info_elements(int $outcome_id): array {
         'rows'         => 5,
         'cols'         => 70,
         'rules'        => array('maxlength' => 1000000, 'required' => true),
-        'defaultvalue' => property_exists($activity, 'description') ? $activity->description : '',
+        'defaultvalue' => property_exists($activity, 'description')
+        && (trim($activity->description)) ? $activity->description : '',
     );
 
     $outcome_subjects = get_records_array('outcome_subject');
@@ -454,13 +456,15 @@ function get_view_activity_info_elements(int $outcome_id): array {
         'type' => 'fieldset',
         'columns' => get_string('activity_info_achievement_levels_desc', 'view'),
         'legend' => get_string('activity_info_achievement_levels_desc', 'view'),
-        'elements' => get_achievement_levels_elements($existing_activity->id ?? null),
+        'elements' => get_achievement_levels_elements($activity->id ?? null),
     ];
 
+    // Outcome ID first comes in when we click 'Add activity' passed in as an argument, but after the
+    // activity is created, we get the outcome through the activity in the db.
     $hidden_elements = array(
         'outcome' => array(
             'type' => 'hidden',
-            'value' =>  $outcome_id,
+            'value' =>  $outcome_id ?? get_field('outcome_view_activity', 'outcome', 'activity', $activity->id),
         ),
     );
 
@@ -520,7 +524,7 @@ function get_achievement_levels_elements(int $activity_id = null): array {
             'defaultvalue' => $value != '' ? $value : $default_value,
             'disabled' => $level_type == $lowest_type ? 1 : 0,
             'labelhtml' =>
-            'Level  ' .
+            get_string('level_cap', 'artefact.checkpoint') .
             '
             <span aria-label="' . $level_type . '">
             <span class="icon-stack" style="vertical-align: centre;">
@@ -1318,6 +1322,7 @@ function validate_view_activity_info(Pieform $form, $values) {
  */
 function set_view_activity_info(Pieform $form, $values) {
     global $view;
+    // Required function for pieform
 
     $view_activity = new StdClass();
     $view_activity->description = $values['activity_description'];
@@ -1325,6 +1330,50 @@ function set_view_activity_info(Pieform $form, $values) {
     $view_activity->supervisor = $values['supervisor'];
     $view_activity->start_date =  !is_null($values['startdate']) ? db_format_timestamp($values['startdate']) : null;
     $view_activity->end_date = !is_null($values['enddate']) ? db_format_timestamp($values['enddate']) : null;
+    $view_activity->view = $view->get('id');
+    $view_activity->mtime = db_format_timestamp(time());
+
+    save_activity_data($values);
+}
+
+/**
+ * Save activity data
+ *
+ * @param  mixed $values from form
+ * @return void
+ */
+function save_activity_data($values = [], $outcome = 0, $view_id = 0) {
+    global $view, $USER;
+
+    if (!$view && $view_id) {
+        $view = new View($view_id);
+    }
+
+    // Default values for pre-saving activity
+    $admin_tutor_ids = group_get_member_ids($view->get('group'), array('admin', 'tutor'));
+    $outcome_subjects = get_records_array('outcome_subject');
+    $subjects_ids = array();
+    foreach ($outcome_subjects as $subject) {
+        $subjects_ids[] = $subject->id;
+    }
+
+    $view_activity = (object) array(
+        'description' => ' ',
+        'subject' => $subjects_ids[0],
+        'supervisor' => in_array($USER->id, $admin_tutor_ids) ? $USER->id : $admin_tutor_ids[0],
+        'start_date' => null,
+        'end_date' => null
+
+    );
+
+    if ($values) {
+        $view_activity->description = $values['activity_description'];
+        $view_activity->subject = $values['subject'];
+        $view_activity->supervisor = $values['supervisor'];
+        $view_activity->start_date =  !is_null($values['startdate']) ? db_format_timestamp($values['startdate']) : null;
+        $view_activity->end_date = !is_null($values['enddate']) ? db_format_timestamp($values['enddate']) : null;
+    }
+
     $view_activity->view = $view->get('id');
     $view_activity->mtime = db_format_timestamp(time());
 
@@ -1336,7 +1385,7 @@ function set_view_activity_info(Pieform $form, $values) {
 
         // link activity to outcome
         $outcome_activity = new StdClass();
-        $outcome_activity->outcome = $values['outcome'];
+        $outcome_activity->outcome = $values['outcome'] ?? $outcome;
         $outcome_activity->activity = $activity_id;
         insert_record('outcome_view_activity', $outcome_activity);
 

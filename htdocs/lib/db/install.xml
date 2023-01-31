@@ -1629,6 +1629,7 @@
                 <FIELD NAME="description" TYPE="char" LENGTH="255" NOTNULL="true" />
                 <FIELD NAME="subject" TYPE="int" NOTNULL="true" />
                 <FIELD NAME="supervisor" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="achieved" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" />
                 <FIELD NAME="start_date" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="end_date" TYPE="datetime" NOTNULL="false" />
                 <FIELD NAME="ctime" TYPE="datetime" NOTNULL="true" />

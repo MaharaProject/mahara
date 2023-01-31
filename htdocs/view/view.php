@@ -127,6 +127,17 @@ if ($blockid = param_integer('blockconfig', 0)) {
 // Prepare the signoff verify form in advance - used to be a block
 $signoff_html = $view->has_signoff() ? $view->get_signoff_verify_form() : '';
 
+$owner    = $view->get('owner');
+$viewtype = $view->get('type');
+
+if ($viewtype == 'profile' || $viewtype == 'dashboard' || $viewtype == 'grouphomepage') {
+    redirect($view->get_url());
+}
+
+// Prepare the achieved switch in advance
+if ($viewtype == 'activity') {
+    $achieved_switch = $view->get_activity_signoff();
+}
 $institution = $view->get('institution');
 View::set_nav($groupid, $institution, false, false, false);
 // Comment list pagination requires limit/offset params
@@ -152,13 +163,6 @@ if (param_exists('make_public_submit')) {
 }
 else if (param_exists('delete_comment_submit')) {
     pieform(ArtefactTypeComment::delete_comment_form(param_integer('comment'), param_integer('blockid', null), param_integer('artefactid', null), param_integer('threaded', null)));
-}
-
-$owner    = $view->get('owner');
-$viewtype = $view->get('type');
-
-if ($viewtype == 'profile' || $viewtype == 'dashboard' || $viewtype == 'grouphomepage') {
-    redirect($view->get_url());
 }
 
 //pass down the artefact id of the artefact that was just commented on via the modal pieform
@@ -977,14 +981,17 @@ if ($view->get('group') && $view->get('type') == 'activity') {
     $smarty->assign('activity', $activity_data);
     $smarty->assign('is_activity_page', $view->get('type') == 'activity');
     $can_edit_layout = $group ? View::check_can_edit_activity_page_info($group, true) : true;
-    $smarty->assign('activity_support_form', $view->get_activity_support_form($can_edit_layout));
+    $smarty->assign('activity_support_form', $view->get_activity_support_form( $can_edit_layout));
     $smarty->assign('can_edit_layout', $can_edit_layout);
     $smarty->assign('usercaneditview', $can_edit_layout);
-    if (!$can_edit_layout) {
-        $smarty->assign('editurl', false);
-    }
-}
 
+    // pass in dummyform for sign-off-like functionality
+    // Prepare the signoff verify form in advance - used to be a block
+    $smarty->assign('activity_achieved_switch', $achieved_switch);
+    $smarty->assign('collection', $view->get_collection()->get('id'));
+    $smarty->assign('collectionid', $view->get_collection()->get('id'));
+
+}
 
 $smarty->display('view/view.tpl');
 
