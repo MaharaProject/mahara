@@ -17,7 +17,7 @@ class="form-pagination js-pagination form-inline pagination-page-limit dropdown"
         {if $feedback->pagination_js}
         <script type="application/javascript">
             jQuery(function() {
-                checkpointpaginator{$blockid} = {$feedback->pagination_js|safe}
+                var checkpointpaginator{$blockid} = {$feedback->pagination_js|safe}
                 });
         </script>
     {/if}

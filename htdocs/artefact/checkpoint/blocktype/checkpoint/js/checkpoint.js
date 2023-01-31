@@ -25,6 +25,7 @@ function initTinyMCE(formname) {
 function checkpointBlockInit() {
     configureAssessmentCancel();
     configureModalOpen();
+    connectCheckpointBlocks();
 };
 
 jQuery(window).on('pageupdated', {}, function () {
@@ -179,4 +180,50 @@ function addCheckpointFeedbackError(form, data) {
     }
     configureAssessmentCancel();
     formError(form, data);
+}
+
+/**
+ * Connect checkpoint blocks to the dropdown achievement submit form
+ */
+function connectCheckpointBlocks() {
+    console.log('connect')
+    // Activity page checkpoint blocks achievement level interaction logic
+    let achievement_forms = $('.block');
+    let select_submit_pairs = [];
+    let submit_btns = $(achievement_forms).find('.submit input[id^="achievement_form"]');
+    let select_elems = $(achievement_forms).find('select');
+    let num_of_checkpoints = submit_btns.length;
+    console.log(num_of_checkpoints)
+
+    // Collect up the block, submit button, and select for each checkpoint block
+    for (let i = 0; i < num_of_checkpoints; i++) {
+        select_submit_pairs.push({
+            blockId: submit_btns[i].id.match(/\d+/)[0],
+            submit: submit_btns[i],
+            select: select_elems[i]
+        });
+    };
+
+    // Figure out the click interaction
+    select_submit_pairs.forEach(checkpoint => {
+        $(checkpoint.submit).on('click', function (event) {
+            let level = $(checkpoint.select).find('option:selected').val();
+            let form = $(checkpoint.submit).parents().find('form');
+            let block_id = $(form).find('input[name="block"]')
+            event.preventDefault();
+            event.stopPropagation();
+
+            sendjsonrequest(
+                config.wwwroot + 'artefact/checkpoint/updatecheckpoint.json.php',
+                {
+                    'level': level,
+                    'blockid': checkpoint.blockId
+                },
+                'POST', data => {
+                    $('#checkpoint_levels_' + checkpoint.blockId).html(data.html);
+                }, function (error) {
+                    console.log(error);
+                });
+        });
+    });
 }

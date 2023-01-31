@@ -653,9 +653,47 @@ $string['activity_info_staff'] = 'Responsible staff';
 $string['timeframe'] = 'Time frame';
 $string['subject'] =  'Subject'; // Can be pulled from outcomes
 $string['strategy_support']  = 'Strategies and support';
-$string['strategy_support_desc'] = 'Outline the strategies and support recommendations you are taking to support the learner.';
+$string['strategy_support_desc'] = '
+    <div class="html form-group">
+        <span class="pseudolabel"></span>
+        <span class="text-small postedon">
+            Outline the strategies and support recommendations you are taking to support the learner.
+        </span>
+    </div>
+';
 $string['resources_support'] = 'Resources';
-$string['resources_support_desc'] = 'Describe the resources used and how they support the learner.';
+
+$string['resources_support_desc'] = '
+    <div class="html form-group">
+        <span class="pseudolabel"></span>
+        <span class="text-small postedon">
+            Describe the resources used and how they support the learner.
+        </span>
+    </div>
+';
 $string['learner_support'] = 'Learner support';
-$string['learner_support_desc'] = 'Describe how the learner was supported to achieve the activity (personal outcome).';
-$string['last_edited'] = 'Last edited by %s, on %s.';
+
+$string['learner_support_desc'] = '
+    <div class="html form-group">
+        <span class="pseudolabel"></span>
+        <span class="text-small postedon">
+            Describe how the learner was supported to achieve the activity (personal outcome).
+        </span>
+    </div>
+';
+
+$string['last_edited'] = '
+    <div class="html form-group">
+        <span class="pseudolabel"></span>
+        <span class="text-small postedon">
+            <a href="%s">%s</a>, on %s
+        </span>
+    </div>
+';
+
+$string['activity_support_submit_button'] = '
+    <span class="pseudolabel"></span>
+    <button id="%s_support" class="btn-secondary button btn activity_support">
+        Save
+    </button>
+';

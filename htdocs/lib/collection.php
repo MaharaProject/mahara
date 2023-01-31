@@ -345,6 +345,14 @@ class Collection {
                 execute_sql("DELETE FROM {module_submissions} WHERE id IN (" . join(',', $submissionids) . ")");
             }
         }
+        if (db_table_exists('outcome')) {
+            if ($outcomes = get_column('outcome', 'id', 'collection', $this->id)) {
+                foreach ($outcomes as $outcomeid) {
+                    delete_records('outcome_view_activity', 'outcome', $outcomeid);
+                }
+                delete_records('outcome', 'collection', $this->id);
+            }
+        }
         delete_records('collection', 'id', $this->id);
         // Secret url records belong to the collection, so remove them from the view.
         // @todo: add user message to whatever calls this.

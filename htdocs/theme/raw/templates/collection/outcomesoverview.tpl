@@ -122,7 +122,7 @@
                 {/if}
               {else}
                 <div>
-                  <textarea id="progress{$outcome->id}_textarea" class="form-control resizable" tabindex="0" cols="180" rows="3" maxlength="255">{$outcome->progress|safe}</textarea>
+                  <textarea id="progress{$outcome->id}_textarea" class="form-control resizable" tabindex="0" cols="180" rows="3" maxlength="16777216">{$outcome->progress|safe}</textarea>
                 </div>
                 <button type="submit" id="progress{$outcome->id}_save" name="save" tabindex="0" class="btn btn-secondary btn-sm outcome-progress-save">{str tag='save'}</button>
               {/if}

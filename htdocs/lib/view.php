@@ -4216,17 +4216,21 @@ class View {
     }
 
     private function activity_support_edit_element($activity, $type) {
-        $table = 'view_activity_support';
-        $fields = ['activity', 'type'];
-
-        $support = get_record($table, 'activity', $activity->id, 'type', $type . '_support');
+        $db_table = 'view_activity_support';
+        $support = get_record($db_table, 'activity', $activity->id, 'type', $type . '_support');
         $support_edited_by = '';
         $support_value = '';
 
         if ($support) {
             $last_edit_time = date('d M Y, G:i', strtotime($support->mtime));
             $last_edit_author = display_name($support->author, null, true);
-            $support_edited_by = get_string('last_edited', 'view', $last_edit_author, $last_edit_time);
+            $support_edited_by = get_string(
+                'last_edited',
+                'view',
+                profile_url($support->author),
+                $last_edit_author,
+                $last_edit_time
+            );
             $support_value = get_field(
                 'view_activity_support',
                 'value',
@@ -4236,14 +4240,14 @@ class View {
                 $type . '_support'
             );
         }
-        return array($support, $support_value, $support_edited_by);
+        return array($support_value, $support_edited_by);
     }
 
     private function get_activity_support_element_display($type, $supportvalue, $supportby) {
         return array($type . '_support' => array(
             'type'   => 'html',
             'title'  => get_string($type . '_support', 'view'),
-            'value'  => $supportvalue . ' - ' . $supportby,
+            'value'  => $supportvalue . $supportby,
         ));
     }
 
@@ -4251,7 +4255,7 @@ class View {
         $supportelement = array($type . '_support' => array(
             'type'         => 'textarea',
             'title'        => get_string($type . '_support', 'view'),
-            'description'  => get_string($type . '_support_desc', 'view') . ' ' . $supportby,
+            'description'  => get_string($type . '_support_desc', 'view'),
             'defaultvalue' => $supportvalue,
             'rows'         => 5,
             'cols'         => 70,
@@ -4259,25 +4263,27 @@ class View {
         ));
         $supportsubmit = array($type . '_support_submit' => array(
             'type'  => 'html',
-            'value' => '<div form-group>
-                           <label></label>
-                           <button id="' . $type . '_support" class="btn-secondary button btn activity_support">
-                           ' . get_string('save', 'mahara') . '
-                           </button>
-                        </div>',
+            'value' => get_string('activity_support_submit_button', 'view', $type),
         ));
         return array_merge($supportelement, $supportsubmit);
     }
 
     public function get_activity_support_edit_elems($activity, $edit = true) {
         // Get info for form
-        $support_options = ['strategy', 'resources', 'learner'];
+        $support_types = ['strategy', 'resources', 'learner'];
         $display_elems = array();
         $edit_elems = array();
-        foreach ($support_options as $option) {
-            list ($support, $supportvalue, $supportby) = $this->activity_support_edit_element($activity, $option);
-            $display_elems = array_merge($display_elems, $this->get_activity_support_element_display($option, $supportvalue, $supportby));
-            $edit_elems = array_merge($edit_elems, $this->get_activity_support_element_editing($option, $supportvalue, $supportby));
+        foreach ($support_types as $support_type) {
+            list($supportvalue, $supportby) = $this->activity_support_edit_element($activity, $support_type);
+            $display_elems = array_merge(
+                $display_elems,
+                $this->get_activity_support_element_display($support_type, $supportvalue, $supportby)
+            );
+
+            $edit_elems = array_merge(
+                $edit_elems,
+                $this->get_activity_support_element_editing($support_type, $supportvalue, $supportby)
+            );
         }
 
         $edit_elems['new'] = array(

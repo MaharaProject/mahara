@@ -50,12 +50,21 @@ if ($actionsallowed) {
     }
     else {
         $record->ctime =  db_format_timestamp(time());
-        insert_record('view_activity_support', $record);
+        insert_record('view_activity_support', $record, 'id', true);
     }
+
+    $activity_support_data = get_records_assoc(
+        'view_activity_support',
+        'activity',
+        $activity_id,
+        'type',
+        'type, value'
+    );
 
     $data = array(
         'error'    => false,
         'message'  => 'Support updated!',
+        'supportData' => $activity_support_data
     );
     json_reply(false, $data);
 }

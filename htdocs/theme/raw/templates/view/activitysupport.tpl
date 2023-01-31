@@ -74,9 +74,10 @@
         e.preventDefault();
         e.stopPropagation();
 
-        const supportText = $('textarea#activity_support_' + this.id)[0].value;
+        const supportType = this.id;
+        const supportText = $('textarea#activity_support_' + supportType)[0].value;
         const postData = {
-            supportType: this.id,
+            supportType: supportType,
             supportText: supportText,
             activityId: {$activity->id},
             viewId: {$activity->view}
@@ -85,7 +86,33 @@
         sendjsonrequest(
             '{$WWWROOT}view/activitysupport.json.php',
             postData,
-            'POST', data => data,
+            'POST', data => {
+                let savedSupportData = data.supportData;
+                let dirtyForm = false;
+
+                // Check support text field values against DB to decide if warning pop-up is shown when leaving page
+                if (savedSupportData) {
+                    let dataTypes = Object.keys(savedSupportData);
+
+                    dataTypes.forEach(type => {
+                        let savedValue = Object.getOwnPropertyDescriptor(savedSupportData, type).value.value;
+                        let formValue = $('textarea#activity_support_' + type)[0].value;
+
+                        if (formValue != savedValue) {
+                            dirtyForm = true;
+                            return false;
+                        }
+                    });
+
+                    // if all field values match the values in the DB, reset the formchanger to allow leaving the
+                    // page without a warning pop-up
+                    if (dirtyForm === false) {
+                        if (typeof formchangemanager !== 'undefined') {
+                            formchangemanager.setFormStateById('activity_support', FORM_INIT);
+                        }
+                    }
+                }
+            },
             function(error) {
                 console.log(error);
             });
