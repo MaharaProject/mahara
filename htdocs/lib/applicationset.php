@@ -46,7 +46,8 @@ class ApplicationSet implements Iterator {
         return current($this->resultset);
     }
 
-    public function key(): mixed {
+    #[\ReturnTypeWillChange]
+    public function key() {
         return key($this->resultset);
     }
 
