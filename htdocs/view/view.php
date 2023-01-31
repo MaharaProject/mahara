@@ -973,7 +973,7 @@ if ($view->get('group') && $view->get('type') == 'activity') {
     $group = $view->get('group');
     $smarty->assign('activity', $activity_data);
     $smarty->assign('is_activity_page', $view->get('type') == 'activity');
-    $can_edit_layout = $group ? View::check_can_edit_activity_page_info($group, true) : true;
+    $can_edit_layout = (View::check_can_edit_activity_page_info($group, true) && !$activity_data->achieved);
     $smarty->assign('activity_support_form', $view->get_activity_support_form( $can_edit_layout));
     $smarty->assign('can_edit_layout', $can_edit_layout);
     $smarty->assign('usercaneditview', $can_edit_layout);

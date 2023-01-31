@@ -156,6 +156,10 @@
                     }
                 }
                 $("#signoff-confirm-form").modal('hide');
+                {if $activitypage}
+                    // We need to reload the page
+                     location.reload();
+                {/if}
             });
         });
 
