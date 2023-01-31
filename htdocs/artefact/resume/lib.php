@@ -981,7 +981,8 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume implements
         }
 
         // Give the artefact type a chance to format the data how it sees fit
-        $data = call_static_method(generate_artefact_class_name($type), 'format_render_self_data', $data);
+        $classname = generate_artefact_class_name($type);
+        $data = $classname::format_render_self_data($data);
 
         // Add artefact attachments it there are any
         $datawithattachments = array();
@@ -1062,11 +1063,8 @@ abstract class ArtefactTypeResumeComposite extends ArtefactTypeResume implements
     public static function get_js(array $compositetypes) {
         $js = self::get_common_js();
         foreach ($compositetypes as $compositetype) {
-            $js .= call_static_method(
-                generate_artefact_class_name($compositetype),
-                'get_artefacttype_js',
-                $compositetype
-            );
+            $classname = generate_artefact_class_name($compositetype);
+            $js .= $classname::get_artefacttype_js($compositetype);
         }
         return $js;
     }
@@ -1213,7 +1211,8 @@ EOF;
 
     static function get_artefacttype_js($compositetype) {
         global $THEME;
-        $titlestring = call_static_method(generate_artefact_class_name($compositetype), 'get_tablerenderer_title_js_string');
+        $classname = generate_artefact_class_name($compositetype);
+        $titlestring = $classname::get_tablerenderer_title_js_string();
         $editstr = json_encode(get_string('edit'));
         $delstr = json_encode(get_string('delete'));
         $editjsstr = json_encode(get_string('editspecific', 'mahara', '%s')) . ".replace('%s', {$titlestring})";
@@ -1224,7 +1223,7 @@ EOF;
         $downstr = get_string('movedown', 'artefact.resume');
         $downjsstr = json_encode(get_string('movedownspecific', 'artefact.resume', '%s')) . ".replace('%s', {$titlestring})";
 
-        $js = call_static_method(generate_artefact_class_name($compositetype), 'get_composite_js');
+        $js = $classname::get_composite_js();
 
         $js .= <<<EOF
 tableRenderers.{$compositetype} = new TableRenderer(
@@ -1266,7 +1265,7 @@ EOF;
         },
 EOF;
 
-        $js .= call_static_method(generate_artefact_class_name($compositetype), 'get_tablerenderer_js');
+        $js .= $classname::get_tablerenderer_js();
 
         $js .= <<<EOF
         function (row, data) {
@@ -1370,7 +1369,8 @@ EOF;
     static function get_forms(array $compositetypes) {
         $compositeforms = array();
         foreach ($compositetypes as $compositetype) {
-            $elements = call_static_method(generate_artefact_class_name($compositetype), 'get_addform_elements');
+            $classname = generate_artefact_class_name($compositetype);
+            $elements = $classname::get_addform_elements();
             $elements['submit'] = array(
                 'type' => 'submit',
                 'name' => 'submitbtn',
@@ -2404,8 +2404,8 @@ function compositeform_validate(Pieform $form, $values) {
 function compositeform_submit(Pieform $form, $values) {
     $result = array();
     try {
-        $result = call_static_method(generate_artefact_class_name($values['compositetype']),
-            'process_compositeform', $form, $values);
+        $classname = generate_artefact_class_name($values['compositetype']);
+        $result = $classname::process_compositeform($form, $values);
     }
     catch (Exception $e) {
         $form->json_reply(PIEFORM_ERR, $e->getMessage());
@@ -2428,8 +2428,8 @@ function compositeformedit_submit(Pieform $form, $values) {
     }
 
     try {
-        call_static_method(generate_artefact_class_name($values['compositetype']),
-            'process_compositeform', $form, $values);
+        $classname = generate_artefact_class_name($values['compositetype']);
+        $classname::process_compositeform($form, $values);
     }
     catch (Exception $e) {
         $SESSION->add_error_msg(get_string('compositesavefailed', 'artefact.resume'));

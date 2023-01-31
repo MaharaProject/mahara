@@ -24,25 +24,25 @@ define('SECTION_PAGE', $plugintype);
 require_once(get_config('docroot') . $plugintype . '/lib.php');
 $classname = 'Plugin' . ucfirst($plugintype);
 
-if (!call_static_method($classname, 'has_base_config')) {
+if (!$classname::has_base_config()) {
     throw new InvalidArgumentException("$classname doesn't have config options available");
 }
 
 if (method_exists($classname, 'get_base_config_options_css')) {
-    $formcss = call_static_method($classname, 'get_base_config_options_css');
+    $formcss = $classname::get_base_config_options_css();
 }
 else {
     $formcss = array();
 }
 
 if (method_exists($classname, 'get_base_config_options_js')) {
-    $formjs = call_static_method($classname, 'get_base_config_options_js');
+    $formjs = $classname::get_base_config_options_js();
 }
 else {
     $formjs = '';
 }
 
-$form = call_static_method($classname, 'get_base_config_options');
+$form = $classname::get_base_config_options();
 if (!array_key_exists('class', $form)) {
     $form['class'] = 'card card-body';
 }
@@ -82,7 +82,7 @@ function plugintypeconfig_submit(Pieform $form, $values) {
     if (is_callable($classname . '::save_base_config_options')) {
         $success = false;
         try {
-            call_static_method($classname, 'save_base_config_options', $form, $values);
+            $classname::save_base_config_options($form, $values);
             $success = true;
         }
         catch (Exception $e) {
@@ -101,6 +101,6 @@ function plugintypeconfig_submit(Pieform $form, $values) {
 function plugintypeconfig_validate(PieForm $form, $values) {
     global $plugintype, $classname;
     if (is_callable($classname . '::validate_base_config_options')) {
-        call_static_method($classname, 'validate_base_config_options', $form, $values);
+        $classname::validate_base_config_options($form, $values);
     }
 }

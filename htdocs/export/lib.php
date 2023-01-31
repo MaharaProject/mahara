@@ -349,7 +349,7 @@ abstract class PluginExport extends Plugin implements IPluginExport {
             safe_require('artefact', $plugin->name);
             $classname = generate_class_name('artefact', $plugin->name);
             if (is_callable($classname . '::exclude_artefacts_in_export')) {
-                if ($artefacts = call_static_method($classname, 'exclude_artefacts_in_export', $userid)) {
+                if ($artefacts = $classname::exclude_artefacts_in_export($userid)) {
                     $artefactsnotincluded = array_unique(array_merge($artefactsnotincluded, $artefacts));
                 }
             }
@@ -495,7 +495,7 @@ abstract class PluginExport extends Plugin implements IPluginExport {
             safe_require('artefact', $plugin->name);
             $classname = generate_class_name('artefact', $plugin->name);
             if (is_callable($classname . '::view_export_extra_artefacts')) {
-                if ($artefacts = call_static_method($classname, 'view_export_extra_artefacts', array_keys($this->views))) {
+                if ($artefacts = $classname::view_export_extra_artefacts(array_keys($this->views))) {
                     $extra = array_unique(array_merge($extra, $artefacts));
                 }
             }
@@ -521,7 +521,7 @@ abstract class PluginExport extends Plugin implements IPluginExport {
             safe_require('artefact', $plugin->name);
             $classname = generate_class_name('artefact', $plugin->name);
             if (is_callable($classname . '::artefact_export_extra_artefacts')) {
-                if ($artefacts = call_static_method($classname, 'artefact_export_extra_artefacts', $artefactids)) {
+                if ($artefacts = $classname::artefact_export_extra_artefacts($artefactids)) {
                     $extra = array_unique(array_merge($extra, $artefacts));
                 }
             }

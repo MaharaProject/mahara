@@ -48,7 +48,7 @@ foreach ($services as $service) {
         safe_require_plugin($moduletype, $module);
         $classname = generate_class_name($moduletype, $module);
         if (is_callable(array($classname, 'disable_webservice_fields'))) {
-            $disabledopts[$service->id] = call_static_method($classname, 'disable_webservice_fields');
+            $disabledopts[$service->id] = $classname::disable_webservice_fields();
         }
     }
 }
@@ -64,16 +64,16 @@ else if (!empty($dbserver)) {
     safe_require_plugin($moduletype, $module);
     $classname = generate_class_name($moduletype, $module);
     if (is_callable(array($classname, 'disable_webservice_fields'))) {
-        $disabled = call_static_method($classname, 'disable_webservice_fields');
+        $disabled = $classname::disable_webservice_fields();
     }
     if (is_callable(array($classname, 'hide_webservice_fields'))) {
-        $hidden = call_static_method($classname, 'hide_webservice_fields');
+        $hidden = $classname::hide_webservice_fields();
     }
     if (is_callable(array($classname, 'extra_webservice_fields'))) {
-        $extra = call_static_method($classname, 'extra_webservice_fields', $dbserver);
+        $extra = $classname::extra_webservice_fields($dbserver);
     }
     if (is_callable(array($classname, 'info_webservice_fields'))) {
-        $info = call_static_method($classname, 'info_webservice_fields');
+        $info = $classname::info_webservice_fields();
     }
     $form = webservice_server_edit_form($dbserver, $sopts, $iopts, $disabled, $hidden, $extra, $info);
 }
@@ -106,7 +106,7 @@ function webservices_add_application_submit(Pieform $form, $values) {
     $classname = generate_class_name($moduletype, $module);
 
     if (is_callable(array($classname, 'create_new_app'))) {
-        $new_app = call_static_method($classname, 'create_new_app', $values, $dbuser);
+        $new_app = $classname::create_new_app($values, $dbuser);
     }
     else {
 
@@ -125,7 +125,7 @@ function webservices_add_application_submit(Pieform $form, $values) {
                 safe_require_plugin($moduletype, $module);
                 $classname = generate_class_name($moduletype, $module);
                 if (is_callable(array($classname, 'add_application'))) {
-                    $new_app = call_static_method($classname, 'add_application', $new_app);
+                    $new_app = $classname::add_application($new_app);
                 }
             }
         }
@@ -193,7 +193,7 @@ function webservices_server_submit(Pieform $form, $values) {
             $classname = generate_class_name($moduletype, $module);
 
             if (is_callable(array($classname, 'webservices_server_submit'))) {
-                call_static_method($classname, 'webservices_server_submit', $form, $values);
+                $classname::webservices_server_submit($form, $values);
             }
 
             delete_records_sql('
@@ -246,7 +246,7 @@ function webservice_oauth_server_validate(Pieform $form, $values) {
     $classname = generate_class_name($moduletype, $module);
 
     if (is_callable(array($classname, 'webservice_oauth_server_validate'))) {
-        return call_static_method($classname, 'webservice_oauth_server_validate', $form, $values);
+        return $classname::webservice_oauth_server_validate($form, $values);
     }
 }
 
@@ -268,7 +268,7 @@ function webservice_oauth_server_submit(Pieform $form, $values) {
         $classname = generate_class_name($moduletype, $module);
 
         if (is_callable(array($classname, 'get_app_values'))) {
-            $app = call_static_method($classname, 'get_app_values', $values, $dbserver);
+            $app = $classname::get_app_values($values, $dbserver);
         }
         else {
             $app = array(
@@ -296,7 +296,7 @@ function webservice_oauth_server_submit(Pieform $form, $values) {
         $c = (object) $store->getConsumer($key, $USER->get('id'), true);
 
         if (is_callable(array($classname, 'webservice_oauth_server_submit'))) {
-            call_static_method($classname, 'webservice_oauth_server_submit', $form, $values);
+            $classname::webservice_oauth_server_submit($form, $values);
         }
 
         if (empty($c)) {
@@ -728,7 +728,7 @@ function webservice_server_list_form($sopts, $iopts) {
                         if (safe_require_plugin($moduletype, $module)) {
                             $classname = generate_class_name($moduletype, $module);
                             if (is_callable(array($classname, 'has_oauth_service_config'))) {
-                                $hasconfig = call_static_method($classname, 'has_oauth_service_config');
+                                $hasconfig = $classname::has_oauth_service_config();
                             }
                         }
 
@@ -839,8 +839,8 @@ function webservice_server_config_form($serverid) {
 
     $form = array();
     if (safe_require_plugin($moduletype, $module)) {
-
-        $elements = call_static_method(generate_class_name($moduletype, $module), 'get_oauth_service_config_options', $serverid);
+        $classname = generate_class_name($moduletype, $module);
+        $elements = $classname::get_oauth_service_config_options($serverid);
 
         $elements['submit'] = array(
             'type'  => 'submitcancel',
@@ -897,8 +897,8 @@ function webservice_server_config_submit(Pieform $form, $values) {
     list($moduletype, $module) = get_module_from_serverid($serverid);
 
     if (safe_require_plugin($moduletype, $module)) {
-
-        call_static_method(generate_class_name($moduletype, $module), 'save_oauth_service_config_options', $serverid, $values);
+        $classname = generate_class_name($moduletype, $module);
+        $classname::save_oauth_service_config_options($serverid, $values);
         redirect(get_config('wwwroot') . 'webservice/admin/oauthv1sregister.php');
     }
 

@@ -55,7 +55,8 @@ if ($postattachments = get_records_sql_array("
         WHERE pa.post = ?", array($postid))) {
     safe_require('artefact', 'file');
     foreach ($postattachments as $file) {
-        $file->icon = call_static_method(generate_artefact_class_name($file->artefacttype), 'get_icon', array('id' => $file->id, 'post' => $postid));
+        $classname = generate_artefact_class_name($file->artefacttype);
+        $file->icon = $classname::get_icon(array('id' => $file->id, 'post' => $postid));
     }
 }
 $post->attachments = $postattachments;

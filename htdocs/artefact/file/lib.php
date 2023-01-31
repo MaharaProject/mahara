@@ -663,9 +663,10 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
                 $item->allowcomments = (bool) $item->allowcomments;
                 $item->isdecorative = (bool) $item->isdecorative;
                 $item->altiscaption = (bool) $item->altiscaption;
-                $item->icon = call_static_method(generate_artefact_class_name($item->artefacttype), 'get_icon', array('id' => $item->id,
-                                                                                                                      'group' => $item->group,
-                                                                                                                      'institution' => $item->institution));
+                $classname = generate_artefact_class_name($item->artefacttype);
+                $item->icon = $classname::get_icon(array('id' => $item->id,
+                                                         'group' => $item->group,
+                                                         'institution' => $item->institution));
                 if ($item->size) { // Doing this here now for non-js users
                     $item->size = ArtefactTypeFile::short_size($item->size, true);
                 }
@@ -864,7 +865,8 @@ abstract class ArtefactTypeFileBase extends ArtefactType {
     }
 
     public static function artefactchooser_get_file_data($artefact) {
-        $artefact->icon = call_static_method(generate_artefact_class_name($artefact->artefacttype), 'get_icon', array('id' => $artefact->id));
+        $classname = generate_artefact_class_name($artefact->artefacttype);
+        $artefact->icon = $classname::get_icon(array('id' => $artefact->id));
         if ($artefact->artefacttype == 'profileicon') {
             $artefact->hovertitle  =  $artefact->note;
             if ($artefact->title) {
@@ -2247,7 +2249,8 @@ class ArtefactTypeFolder extends ArtefactTypeFileBase {
                 $child->size = $c->describe_size();
                 $child->title = $child->hovertitle = $c->get('title');
                 $child->date = format_date(strtotime($child->mtime), 'strftimedaydatetime');
-                $child->iconsrc = call_static_method(generate_artefact_class_name($child->artefacttype), 'get_icon', array('id' => $child->id, 'viewid' => isset($options['viewid']) ? $options['viewid'] : 0));
+                $classname = generate_artefact_class_name($child->artefacttype);
+                $child->iconsrc = $classname::get_icon(array('id' => $child->id, 'viewid' => isset($options['viewid']) ? $options['viewid'] : 0));
                 if (!empty($options['exportfiledir'])) {
                     if ($child->artefacttype == 'folder' && $options['exporttype'] == 'pdf') {
                         $child->title = $child->title . ' [' . $options['exportfiledir'] . $this->get('title') . '/' . $child->title . ']';

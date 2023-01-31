@@ -2695,7 +2695,7 @@ function admin_nav() {
         if ($plugins = plugins_installed($plugintype)) {
             foreach ($plugins as &$plugin) {
                 if (safe_require_plugin($plugintype, $plugin->name)) {
-                    $classname = generate_class_name($plugintype,$plugin->name);
+                    $classname = generate_class_name($plugintype, $plugin->name);
                     $plugin_menu = $classname::admin_menu_items();
                     $menu = array_merge($menu, $plugin_menu);
                 }
@@ -2890,7 +2890,7 @@ function institutional_admin_nav() {
         if ($plugins = plugins_installed($plugintype)) {
             foreach ($plugins as &$plugin) {
                 if (safe_require_plugin($plugintype, $plugin->name)) {
-                    $classname = generate_class_name($plugintype,$plugin->name);
+                    $classname = generate_class_name($plugintype, $plugin->name);
                     $plugin_menu = $classname::institution_menu_items();
                     $ret = array_merge($ret, $plugin_menu);
                 }
@@ -2932,7 +2932,7 @@ function staff_nav() {
         if ($plugins = plugins_installed($plugintype)) {
             foreach ($plugins as &$plugin) {
                 if (safe_require_plugin($plugintype, $plugin->name)) {
-                    $classname = generate_class_name($plugintype,$plugin->name);
+                    $classname = generate_class_name($plugintype, $plugin->name);
                     $plugin_menu = $classname::institution_staff_menu_items();
                     $menu = array_merge($menu, $plugin_menu);
                 }
@@ -3138,7 +3138,7 @@ function main_nav($type = null) {
             if ($plugins = plugins_installed($plugintype)) {
                 foreach ($plugins as &$plugin) {
                     if (safe_require_plugin($plugintype, $plugin->name)) {
-                        $classname = generate_class_name($plugintype,$plugin->name);
+                        $classname = generate_class_name($plugintype, $plugin->name);
                         $plugin_menu = $classname::menu_items();
                         $menu = array_merge($menu, $plugin_menu);
                     }

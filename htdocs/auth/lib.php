@@ -452,7 +452,7 @@ function install_auth_default() {
         $classname = 'PluginAuth' . ucfirst(strtolower($value->name));
         $methodname = 'install_auth_default';
         if (method_exists($classname, $methodname)) {
-            call_static_method($classname, $methodname);
+            $classname::{$methodname}();
         }
     }
 }
@@ -1215,7 +1215,8 @@ function auth_get_available_auth_types($institution=null) {
         if (!isset($row->externalapp)) {
             $row->title       = get_string('title', 'auth.' . $row->name);
             safe_require('auth', $row->name);
-            if ($row->is_usable = call_static_method('PluginAuth' . $row->name, 'is_usable')) {
+            $classname = 'PluginAuth' . $row->name;
+            if ($row->is_usable = $classname::is_usable()) {
                 $row->description = get_string('description', 'auth.' . $row->name);
             }
             else {
@@ -1472,7 +1473,7 @@ function auth_check_required_fields() {
         // If profile field saves it's data somewhere different to normal
         $classname = 'ArtefactType' . ucfirst($field);
         if (is_callable(array($classname, 'defaultoption'))) {
-            $option = call_static_method($classname, 'defaultoption');
+            $option = $classname::defaultoption();
             if (!empty($option)) {
                 continue;
             }
@@ -1521,11 +1522,11 @@ function auth_check_required_fields() {
             $elements[$field]['defaultvalue'] = get_config('country') ? get_config('country') : 'nz';
         }
         if (is_callable(array($classname, 'getoptions'))) {
-            $options = call_static_method($classname, 'getoptions');
+            $options = $classname::getoptions();
             $elements[$field]['options'] = $options;
         }
         if (is_callable(array($classname, 'defaultoption'))) {
-            $defaultoption = call_static_method($classname, 'defaultoption');
+            $defaultoption = $classname::defaultoption();
             $elements[$field]['defaultvalue'] = $defaultoption;
         }
 
@@ -2024,11 +2025,11 @@ function auth_get_login_form_elements() {
     $authplugins = auth_get_enabled_auth_plugins();
     foreach ($authplugins as $plugin) {
         $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
-        $pluginelements = call_static_method($classname, 'login_form_elements');
+        $pluginelements = $classname::login_form_elements();
         if (!empty($pluginelements)) {
             $extraelements = array_merge($extraelements, $pluginelements);
         }
-        if (call_static_method($classname, 'need_basic_login_form')) {
+        if ($classname::need_basic_login_form()) {
             $showbasicform = true;
         }
     }
@@ -2093,7 +2094,7 @@ EOF;
     $authplugins = auth_get_enabled_auth_plugins();
     foreach ($authplugins as $plugin) {
         $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
-        $pluginjs = call_static_method($classname, 'login_form_js');
+        $pluginjs = $classname::login_form_js();
         if (!empty($pluginjs)) {
             $js .= $pluginjs;
         }
@@ -2134,7 +2135,7 @@ function auth_get_enabled_auth_plugins() {
     foreach ($authplugins as $plugin) {
         safe_require('auth', strtolower($plugin));
         $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
-        if (call_static_method($classname, 'is_usable')) {
+        if ($classname::is_usable()) {
             $usableplugins[] = $plugin;
         }
     }
@@ -3112,7 +3113,8 @@ function auth_generate_registration_form($formname, $authname='internal', $goto=
         'value' => $htmlend,
     );
 
-    if (call_static_method('Auth'.ucfirst($authname), 'can_use_registration_captcha')) {
+    $classname = 'Auth' . ucfirst($authname);
+    if ($classname::can_use_registration_captcha()) {
         $elements['captcha'] = array(
                 'type' => 'captcha',
         );

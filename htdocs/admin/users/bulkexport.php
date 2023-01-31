@@ -24,7 +24,8 @@ if (!$exportplugins) {
 
 foreach ($exportplugins as $plugin) {
     safe_require('export', $plugin->name);
-    $exportoptions[$plugin->name] = call_static_method(generate_class_name('export', $plugin->name), 'get_title');
+    $classname = generate_class_name('export', $plugin->name);
+    $exportoptions[$plugin->name] = $classname::get_title();
 }
 $pdfrun = 'multi';
 

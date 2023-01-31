@@ -72,11 +72,11 @@ $sso = false;
 $basic = false;
 foreach ($authplugins as $plugin) {
     $classname = 'PluginAuth' . ucfirst(strtolower($plugin));
-    $pluginelements = call_static_method($classname, 'login_form_elements');
+    $pluginelements = $classname::login_form_elements();
     if (!empty($pluginelements)) {
         $sso = true;
     }
-    if (call_static_method($classname, 'need_basic_login_form')) {
+    if ($classname::need_basic_login_form()) {
         $basic = true;
     }
 }

@@ -41,9 +41,9 @@ foreach ($blocks as $block) {
     safe_require('blocktype', $block->name);
     $classname = generate_class_name('blocktype', $namespaced);
     $types[] = array('name' => $block->name,
-                     'title' => call_static_method($classname, 'get_title'),
-                     'cssicon' => call_static_method($classname, 'get_css_icon', $block->name),
-                     'cssicontype' => call_static_method($classname, 'get_css_icon_type', $block->name),
+                     'title' => $classname::get_title(),
+                     'cssicon' => $classname::get_css_icon($block->name),
+                     'cssicontype' => $classname::get_css_icon_type($block->name),
                      'count' => $block->blockcount,
                      );
 }

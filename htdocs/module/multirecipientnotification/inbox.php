@@ -209,7 +209,7 @@ function delete_all_notifications_submit() {
 
             foreach ($plugins as $plugin) {
                 $classname = generate_class_name($plugin->plugintype, $plugin->name);
-                call_static_method($classname, 'notification_delete', $msgids, $userid, 'module_multirecipient_notification');
+                $classname::notification_delete($msgids, $userid, 'module_multirecipient_notification');
             }
         }
         $count = count($msgids);
@@ -257,7 +257,7 @@ function delete_all_notifications_submit() {
         // And make sure any plugins that want to handle it can do so.
         foreach ($plugins as $plugin) {
             $classname = generate_class_name($plugin->plugintype, $plugin->name);
-            call_static_method($classname, 'notification_delete', $ids, $userid, 'notification_internal_activity');
+            $classname::notification_delete($ids, $userid, 'notification_internal_activity');
         }
     }
 

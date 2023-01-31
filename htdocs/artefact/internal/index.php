@@ -110,15 +110,15 @@ foreach ( $element_list as $element => $type ) {
     }
     $classname = 'ArtefactType' . ucfirst($element);
     if (is_callable(array($classname, 'getoptions'))) {
-        $options = call_static_method($classname, 'getoptions');
+        $options = $classname::getoptions();
         $items[$element]['options'] = $options;
     }
     if (is_callable(array($classname, 'defaultoption'))) {
-        $defaultoption = call_static_method($classname, 'defaultoption');
+        $defaultoption = $classname::defaultoption();
         $items[$element]['defaultvalue'] = $defaultoption;
     }
     if ($type == 'html' && is_callable(array($classname, 'defaulthtml'))) {
-        $defaultvalue = call_static_method($classname, 'defaulthtml');
+        $defaultvalue = $classname::defaulthtml();
         $items[$element]['value'] = $defaultvalue;
     }
     if ($element == 'socialprofile') {
@@ -225,7 +225,7 @@ function get_desired_fields(&$allfields, $section) {
     $desiredfields = $about_array + $contact_array + $social_array;
 
     if (is_callable(array('ArtefactTypeProfileLocal', 'get_desired_fields'))) {
-        $localfields = call_static_method('ArtefactTypeProfileLocal', 'get_desired_fields');
+        $localfields = ArtefactTypeProfileLocal::get_desired_fields();
         foreach ($localfields as $k => $v) {
             foreach ($v as $k2 => $v2) {
                 array_splice($desiredfields[$k], $k2, 0, array($v2));

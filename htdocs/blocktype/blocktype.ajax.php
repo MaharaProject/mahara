@@ -27,4 +27,5 @@ if (!can_view_view($block->get('view'))) {
 }
 
 safe_require_plugin('blocktype', $block->get('blocktype'));
-echo call_static_method(generate_class_name('blocktype', $block->get('blocktype')), 'render_instance', $block);
+$classname = generate_class_name('blocktype', $block->get('blocktype'));
+echo $classname::render_instance($block);

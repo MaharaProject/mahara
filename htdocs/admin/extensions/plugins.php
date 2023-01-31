@@ -46,11 +46,11 @@ foreach (array_keys($plugins) as $plugin) {
                 $classname = generate_class_name($plugin, $key);
                 $plugins[$plugin]['installed'][$key] = array(
                     'active' => $i->active,
-                    'disableable' => call_static_method($classname, 'can_be_disabled'),
-                    'deprecated' => call_static_method($classname, 'is_deprecated'),
-                    'name' => call_static_method($classname, 'get_plugin_display_name'),
-                    'dependencies' => call_static_method($classname, 'has_plugin_dependencies'),
-                    'enableable' => call_static_method($classname, 'is_usable'),
+                    'disableable' => $classname::can_be_disabled(),
+                    'deprecated' => $classname::is_deprecated(),
+                    'name' => $classname::get_plugin_display_name(),
+                    'dependencies' => $classname::has_plugin_dependencies(),
+                    'enableable' => $classname::is_usable(),
                     'version' => $i->version
                 );
                 if (
@@ -62,28 +62,29 @@ foreach (array_keys($plugins) as $plugin) {
                 if ($plugin == 'artefact') {
                     $plugins[$plugin]['installed'][$key]['types'] = array();
                     safe_require('artefact', $key);
-                    if ($types = call_static_method(generate_class_name('artefact', $i->name), 'get_artefact_types')) {
+                    $artefactclassname = generate_class_name('artefact', $i->name);
+                    if ($types = $artefactclassname::get_artefact_types()) {
                         $hasconfigbuttons = 0;
                         $hasconfigbuttonscollapsed = 0;
                         foreach ($types as $t) {
                             $classname = generate_artefact_class_name($t);
-                            if ($collapseto = call_static_method($classname, 'collapse_config')) {
+                            if ($collapseto = $classname::collapse_config()) {
                                 $plugins[$plugin]['installed'][$key]['types'][$collapseto]['config'] = true;
                                 $hasconfigbuttonscollapsed = 1;
                             }
                             else {
-                                $hasconfig = call_static_method($classname, 'has_config');
+                                $hasconfig = $classname::has_config();
                                 $plugins[$plugin]['installed'][$key]['types'][$t]['config'] = $hasconfig;
                                 if ($hasconfig) {
                                     $hasconfigbuttons ++;
                                 }
                             }
-                            if ($collapseto = call_static_method($classname, 'collapse_config_info')) {
+                            if ($collapseto = $classname::collapse_config_info()) {
                                 $plugins[$plugin]['installed'][$key]['types'][$collapseto]['info'] = true;
                                 $hasconfigbuttonscollapsed = 1;
                             }
                             else {
-                                $hasinfo = call_static_method($classname, 'has_config_info');
+                                $hasinfo = $classname::has_config_info();
                                 $plugins[$plugin]['installed'][$key]['types'][$t]['info'] = $hasinfo;
                                 if ($hasinfo) {
                                     $hasconfigbuttons ++;
@@ -96,10 +97,10 @@ foreach (array_keys($plugins) as $plugin) {
                 else {
                     $classname = generate_class_name($plugin, $i->name);
                     safe_require($plugin, $key);
-                    if (call_static_method($classname, 'has_config')) {
+                    if ($classname::has_config()) {
                         $plugins[$plugin]['installed'][$key]['config'] = true;
                     }
-                    if (call_static_method($classname, 'has_config_info')) {
+                    if ($classname::has_config_info()) {
                         $plugins[$plugin]['installed'][$key]['info'] = true;
                     }
                 }
@@ -129,8 +130,8 @@ foreach (array_keys($plugins) as $plugin) {
                     validate_plugin($plugin, $dir);
                     $classname = generate_class_name($plugin, $dir);
                     $classname::sanity_check();
-                    $plugins[$plugin]['notinstalled'][$dir]['name'] = call_static_method($classname, 'get_plugin_display_name');
-                    $plugins[$plugin]['notinstalled'][$dir]['dependencies'] = call_static_method($classname, 'has_plugin_dependencies');
+                    $plugins[$plugin]['notinstalled'][$dir]['name'] = $classname::get_plugin_display_name();
+                    $plugins[$plugin]['notinstalled'][$dir]['dependencies'] = $classname::has_plugin_dependencies();
                 }
                 catch (InstallationException $e) {
                     $plugins[$plugin]['notinstalled'][$dir]['notinstallable'] = $e->GetMessage();

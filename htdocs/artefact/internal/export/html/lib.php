@@ -49,7 +49,7 @@ class HtmlExportInternal extends HtmlExportArtefactPlugin {
             'social' => array(),
             'general' => array(),
         );
-        $elementlist = call_static_method('ArtefactTypeProfile', 'get_all_fields');
+        $elementlist = ArtefactTypeProfile::get_all_fields();
         $elementlistlookup = array_flip(array_keys($elementlist));
         // Export all profile fields except 'socialprofile'
         unset($elementlist['socialprofile']);

@@ -2153,12 +2153,13 @@ class View {
             if (!safe_require_plugin('blocktype', $blocktypecategory->blocktype)) {
                 continue;
             }
-            if (call_static_method(generate_class_name("blocktype", $blocktypecategory->blocktype), "allowed_in_view", $this)) {
+            $classname = generate_class_name('blocktype', $blocktypecategory->blocktype);
+            if ($classname::allowed_in_view($this)) {
                 if (!isset($categories[$blocktypecategory->sort])) {
                     $categories[$blocktypecategory->sort] = array(
                         'name'  => $blocktypecategory->category,
-                        'title' => call_static_method("PluginBlocktype", "category_title_from_name", $blocktypecategory->category),
-                        'description' => call_static_method("PluginBlocktype", "category_description_from_name", $blocktypecategory->category),
+                        'title' => PluginBlocktype::category_title_from_name($blocktypecategory->category),
+                        'description' => PluginBlocktype::category_description_from_name($blocktypecategory->category),
                     );
                 }
             }
@@ -2453,7 +2454,7 @@ class View {
             // this will happen when the block content in edit mode is different from
             // the block content in view mode
             $classname = generate_class_name('blocktype', $blockinstance->get('blocktype'));
-            if (call_static_method($classname, 'set_block_height_on_load', $blockinstance)) {
+            if ($classname::set_block_height_on_load($blockinstance)) {
                 $block['height'] = 1;
             }
             else {
@@ -2687,21 +2688,22 @@ class View {
         }
 
         safe_require('blocktype', $values['blocktype']);
-        if (!call_static_method(generate_class_name('blocktype', $values['blocktype']), 'allowed_in_view', $this)) {
+        $classname = generate_class_name('blocktype', $values['blocktype']);
+        if (!$classname::allowed_in_view($this)) {
             throw new UserException(get_string('cannotputblocktypeintoview', 'error', $values['blocktype']));
         }
 
-        if (call_static_method(generate_class_name('blocktype', $values['blocktype']), 'single_only', $this)) {
+        if ($classname::single_only($this)) {
             $count = count_records_select('block_instance', '"view" = ? AND blocktype = ?',
                                           array($this->id, $values['blocktype']));
             if ($count > 0) {
-                $blocktitle = call_static_method(generate_class_name('blocktype', $values['blocktype']), 'get_title', $this);
+                $blocktitle = $classname::get_title($this);
                 throw new UserException(get_string('onlyoneblocktypeperview', 'error', $blocktitle));
             }
         }
 
         $blocktypeclass = generate_class_name('blocktype', $values['blocktype']);
-        $newtitle = method_exists($blocktypeclass, 'get_instance_title') ? '' : call_static_method($blocktypeclass, 'get_title');
+        $newtitle = method_exists($blocktypeclass, 'get_instance_title') ? '' : $blocktypeclass::get_title();
         if ($values['gridonecolumn']) {
             // We need to add the new block at the default width
             $values['width'] = 4; // Default gridstack block width for desktop
@@ -2743,7 +2745,7 @@ class View {
             $result = array(
                 'display' => $display,
             );
-            if (call_static_method(generate_class_name('blocktype', $values['blocktype']), 'has_instance_config', $bi)) {
+            if ($classname::has_instance_config($bi)) {
                 $result['configure'] = $bi->render_editing(true, true);
             }
             return $result;
@@ -2808,21 +2810,22 @@ class View {
         }
 
         safe_require('blocktype', $values['blocktype']);
-        if (!call_static_method(generate_class_name('blocktype', $values['blocktype']), 'allowed_in_view', $this)) {
+        $classname = generate_class_name('blocktype', $values['blocktype']);
+        if (!$classname::allowed_in_view($this)) {
             throw new UserException(get_string('cannotputblocktypeintoview', 'error', $values['blocktype']));
         }
 
-        if (call_static_method(generate_class_name('blocktype', $values['blocktype']), 'single_only', $this)) {
+        if ($classname::single_only($this)) {
             $count = count_records_select('block_instance', '"view" = ? AND blocktype = ?',
                                           array($this->id, $values['blocktype']));
             if ($count > 0) {
-                $blocktitle = call_static_method(generate_class_name('blocktype', $values['blocktype']), 'get_title', $this);
+                $blocktitle = $classname::get_title($this);
                 throw new UserException(get_string('onlyoneblocktypeperview', 'error', $blocktitle));
             }
         }
 
         $blocktypeclass = generate_class_name('blocktype', $values['blocktype']);
-        $newtitle = method_exists($blocktypeclass, 'get_instance_title') ? '' : call_static_method($blocktypeclass, 'get_title');
+        $newtitle = method_exists($blocktypeclass, 'get_instance_title') ? '' : $blocktypeclass::get_title();
 
         if (!empty($values['title'])) {
             $newtitle = hsc(urldecode($values['title']));
@@ -2846,7 +2849,7 @@ class View {
         if ($currentblocktags) {
             // We need to decide what to do with placeholder block tags
             $droptags = true;
-            $cform = method_exists($blocktypeclass, 'has_instance_config') ? call_static_method($blocktypeclass, 'instance_config_form', $bi) : false;
+            $cform = method_exists($blocktypeclass, 'has_instance_config') ? $blocktypeclass::instance_config_form($bi) : false;
             if ($cform) {
                 foreach ($cform as $element) {
                     if ($element['type'] == 'tags') {
@@ -2871,7 +2874,8 @@ class View {
             // Return new block rendered in both configure mode and (editing) display mode
             $isnew = (bool)$values['new'];
             $result['display'] = $bi->render_editing(false, $isnew);
-            if (call_static_method(generate_class_name('blocktype', $values['blocktype']), 'has_instance_config', $bi)) {
+            $classname = generate_class_name('blocktype', $values['blocktype']);
+            if ($classname::has_instance_config($bi)) {
                 $result['configure'] = $bi->render_editing(true, $isnew);
             }
             else {
@@ -3046,11 +3050,7 @@ class View {
                   continue;
                 }
                 $classname = generate_class_name('blocktype', $pluginname);
-                $instancejs = call_static_method(
-                  $classname,
-                  'get_instance_javascript',
-                  $blockinstance
-                );
+                $instancejs = $classname::get_instance_javascript($blockinstance);
                 foreach($instancejs as $jsfile) {
                   if (is_array($jsfile) && isset($jsfile['file'])) {
                     if (!empty($jsfile['file'])) {
@@ -3070,7 +3070,7 @@ class View {
                   }
                 }
                 // Check to see if we need to include the block Ajax file.
-                if (!$loadajax && $CFG->ajaxifyblocks && call_static_method($classname, 'should_ajaxify')) {
+                if (!$loadajax && $CFG->ajaxifyblocks && $classname::should_ajaxify()) {
                   $loadajax = true;
                 }
             }
@@ -3104,11 +3104,7 @@ class View {
                   continue;
                 }
                 $classname = generate_class_name('blocktype', $pluginname);
-                $instanceinfo = call_static_method(
-                  $classname,
-                  'get_instance_toolbars',
-                  $blockinstance
-                );
+                $instanceinfo = $classname::get_instance_toolbars($blockinstance);
                 foreach($instanceinfo as $info) {
                   if (is_array($info)) {
                     if (isset($info['buttons'])) {
@@ -3154,11 +3150,7 @@ class View {
                 $hrefs = $THEME->get_url('style/style.css', true, $artefactdir . 'blocktype/' . $pluginname);
                 $hrefs = array_reverse($hrefs);
                 $classname = generate_class_name('blocktype', $pluginname);
-                $instancecss = call_static_method(
-                  $classname,
-                  'get_instance_css',
-                  $blockinstance
-                );
+                $instancecss = $classname::get_instance_css($blockinstance);
                 $hrefs = array_merge($hrefs, $instancecss);
                 foreach ($hrefs as $href) {
                   $cssfiles[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number($href) . '">';
@@ -3198,11 +3190,8 @@ class View {
             foreach ($blockinstances as $blockinstance) {
                 $pluginname = $blockinstance->get('blocktype');
                 safe_require('blocktype', $pluginname);
-                $instancejs = call_static_method(
-                  generate_class_name('blocktype', $pluginname),
-                  'get_instance_javascript',
-                  $blockinstance
-                );
+                $classname = generate_class_name('blocktype', $pluginname);
+                $instancejs = $classname::get_instance_javascript($blockinstance);
                 foreach($instancejs as &$jsfile) {
                   if (stripos($jsfile, 'http://') === false && stripos($jsfile, 'https://') === false) {
                     if ($artefactplugin = get_field('blocktype_installed', 'artefactplugin', 'name', $pluginname)) {
@@ -3469,7 +3458,7 @@ class View {
                     'id' => $bi->get('id'),
                     'blocktype' => $bi->get('blocktype'),
                     'title'     => $bi->get('title'),
-                    'config'    => call_static_method($classname, $method, $bi),
+                    'config'    => $classname::{$method}($bi),
                   );
                 }
               } // cols
@@ -3495,7 +3484,7 @@ class View {
                     'positiony' => $bi->get('positiony'),
                     'height'    => $bi->get('height'),
                     'width'     => $bi->get('width'),
-                    'config'    => call_static_method($classname, $method, $bi),
+                    'config'    => $classname::{$method}($bi),
                 );
             }
         }
@@ -3569,7 +3558,7 @@ class View {
                 if (method_exists($classname, $method . "_$format")) {
                     $method .= "_$format";
                 }
-                $bi = call_static_method($classname, $method, $blockinstance, $config);
+                $bi = $classname::{$method}($blockinstance, $config);
                 if ($bi) {
                     $bi->set('title',  $blockinstance['title']);
                     $bi->set('positionx', $blockinstance['positionx']);
@@ -3692,7 +3681,7 @@ class View {
 
         $data['sortorder'] = array(array('fieldname' => 'title', 'order' => 'ASC'));
         if (method_exists($blocktypeclass, 'artefactchooser_get_sort_order')) {
-            $data['sortorder'] = call_static_method($blocktypeclass, 'artefactchooser_get_sort_order');
+            $data['sortorder'] = $blocktypeclass::artefactchooser_get_sort_order();
         }
 
         list($artefacts, $totalartefacts) = self::get_artefactchooser_artefacts($data, $USER, $group, $institution);
@@ -3726,7 +3715,7 @@ class View {
                 safe_require('artefact', get_field('artefact_installed_type', 'plugin', 'name', $artefact->artefacttype));
 
                 if (method_exists($blocktypeclass, 'artefactchooser_get_element_data')) {
-                    $artefact = call_static_method($blocktypeclass, 'artefactchooser_get_element_data', $artefact);
+                    $artefact = $blocktypeclass::artefactchooser_get_element_data($artefact);
                 }
 
                 $artefact->blockcount = 0;
@@ -4125,7 +4114,7 @@ class View {
         foreach ($artefacttypes as $type) {
             $classname = 'ArtefactType' . ucfirst($type);
             if (is_callable(array($classname, 'get_special_data'))) {
-                $customprofile = call_static_method($classname, 'get_special_data', $user);
+                $customprofile = $classname::get_special_data($user);
                 if ($customprofile) {
                     $customprofile->artefacttype = $type;
                     $customprofile->title = $customprofile->{$type};

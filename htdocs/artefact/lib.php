@@ -796,7 +796,7 @@ abstract class ArtefactType implements IArtefactType {
         // Delete non-containers grouped by artefacttype
         foreach ($leaves as $artefacttype => $ids) {
             $classname = generate_artefact_class_name($artefacttype);
-            call_static_method($classname, 'bulk_delete', $ids);
+            $classname::bulk_delete($ids);
         }
 
         // Delete containers grouped by artefacttype
@@ -805,7 +805,7 @@ abstract class ArtefactType implements IArtefactType {
             if (is_mysql()) {
                 set_field_select('artefact', 'parent', null, 'id IN (' . join(',', $ids) . ')', array());
             }
-            call_static_method($classname, 'bulk_delete', $ids);
+            $classname::bulk_delete($ids);
         }
         $logdata = array_merge($containers, $leaves);
         handle_event('deleteartefacts', $logdata);
@@ -1267,7 +1267,8 @@ abstract class ArtefactType implements IArtefactType {
         safe_require('artefact', 'file');
         foreach ($attachments as &$file) {
             $options['id'] = $file->attachment;
-            $file->icon = call_static_method(generate_artefact_class_name($file->artefacttype), 'get_icon', $options);
+            $classname = generate_artefact_class_name($file->artefacttype);
+            $file->icon = $classname::get_icon($options);
         }
 
         return $attachments;
@@ -1637,7 +1638,7 @@ function artefact_check_plugin_sanity($pluginname) {
     if (!is_callable(array($classname, 'get_block_types'))) {
         throw new InstallationException(get_string('artefactpluginmethodmissing', 'error', $classname, 'get_block_types'));
     }
-    $types = call_static_method($classname, 'get_artefact_types');
+    $types = $classname::get_artefact_types();
     foreach ($types as $type) {
         $typeclassname = generate_artefact_class_name($type);
         if (get_config('installed')) {
@@ -1646,7 +1647,7 @@ function artefact_check_plugin_sanity($pluginname) {
                 // Check the other plugin's code in case the duplicate type is being removed from it at the same time
                 $otherclass = generate_class_name('artefact', $taken->plugin);
                 safe_require('artefact', $taken->plugin);
-                if (in_array($type, call_static_method($otherclass, 'get_artefact_types'))) {
+                if (in_array($type, $otherclass::get_artefact_types())) {
                     throw new InstallationException(get_string('artefacttypenametaken', 'error', $type, $taken->plugin));
                 }
             }
@@ -1655,7 +1656,7 @@ function artefact_check_plugin_sanity($pluginname) {
             throw new InstallationException(get_string('classmissing', 'error', $typeclassname, $type, $pluginname));
         }
     }
-    $types = call_static_method($classname, 'get_block_types');
+    $types = $classname::get_block_types();
     foreach ($types as $type) {
         $pluginclassname = generate_class_name('blocktype', $type);
         if (get_config('installed')) {
@@ -1688,7 +1689,7 @@ function artefact_get_attachment_types() {
             if (!is_callable($classname . '::get_attachment_types')) {
                 continue;
             }
-            $artefacttypes = array_merge($artefacttypes, call_static_method($classname, 'get_attachment_types'));
+            $artefacttypes = array_merge($artefacttypes, $classname::get_attachment_types());
         }
     }
     return $artefacttypes;
@@ -1740,7 +1741,8 @@ function artefact_get_parents_for_cache($artefactids, &$parentids=false) {
 }
 
 function artefact_can_render_to($type, $format) {
-    return in_array($format, call_static_method(generate_artefact_class_name($type), 'get_render_list'));
+    $classname = generate_artefact_class_name($type);
+    return in_array($format, $classname::get_render_list());
 }
 
 /**
@@ -1862,7 +1864,8 @@ function artefact_instance_from_type($artefact_type, $user_id=null) {
         return new $classname($id);
     }
     else {
-        if (!call_static_method(generate_artefact_class_name($artefact_type), 'is_singular')) {
+        $classname = generate_artefact_class_name($artefact_type);
+        if (!$classname::is_singular()) {
             throw new ArtefactNotFoundException("This artefact type is not a 'singular' artefact type");
         }
         $sql = 'SELECT a.*, i.plugin
@@ -2037,7 +2040,7 @@ function artefact_get_types_from_filter($filter) {
             if (!is_callable($classname . '::get_artefact_type_content_types')) {
                 continue;
             }
-            $artefacttypetypes = call_static_method($classname, 'get_artefact_type_content_types');
+            $artefacttypetypes = $classname::get_artefact_type_content_types();
             foreach ($artefacttypetypes as $artefacttype => $contenttypes) {
                 if (!empty($contenttypes)) {
                     foreach ($contenttypes as $ct) {
@@ -2124,34 +2127,35 @@ function artefact_get_progressbar_items($onlythese = false) {
         }
         safe_require('artefact', $plugin->name);
         $pluginclassname = generate_class_name('artefact', $plugin->name);
-        if (!call_static_method($pluginclassname, 'has_progressbar_options')) {
+        if (!$pluginclassname::has_progressbar_options()) {
             continue;
         }
 
         $artefactoptions = array();
-        $names = call_static_method($pluginclassname, 'get_artefact_types');
+        $names = $pluginclassname::get_artefact_types();
         foreach ($names as $name) {
+            $classname = 'ArtefactType' . ucfirst($name);
             if ($onlythese !== false && empty($onlytheseplugins[$plugin->name][$name])) {
                 continue;
             }
             // check if any of the artefact types want to opt out
-            if (call_static_method('ArtefactType' . ucfirst($name), 'is_allowed_in_progressbar') == false) {
+            if ($classname::is_allowed_in_progressbar() == false) {
                 continue;
             }
             $record = new stdClass();
             $record->name = $name;
-            $record->title = call_static_method('ArtefactType' . ucfirst($name), 'get_title_progressbar');
+            $record->title = $classname::get_title_progressbar();
             if (!$record->title) {
                 $record->title = ucfirst(get_string($name, 'artefact.' . $plugin->name));
             }
-            $record->plugin = call_static_method($pluginclassname, 'get_plugin_name');
-            $record->active = (method_exists($pluginclassname, 'is_active')) ? call_static_method($pluginclassname, 'is_active') : true;
-            $record->iscountable = call_static_method('ArtefactType' . ucfirst($name), 'is_countable_progressbar');
-            $record->ismeta = call_static_method('ArtefactType' . ucfirst($name), 'is_metaartefact');
+            $record->plugin = $pluginclassname::get_plugin_name();
+            $record->active = (method_exists($pluginclassname, 'is_active')) ? $pluginclassname::is_active() : true;
+            $record->iscountable = $classname::is_countable_progressbar();
+            $record->ismeta = $classname::is_metaartefact();
             $artefactoptions[$name] = $record;
         }
         // add any special cases
-        if (is_array($specials = call_static_method($pluginclassname, 'progressbar_additional_items'))) {
+        if (is_array($specials = $pluginclassname::progressbar_additional_items())) {
             foreach ($specials as $special) {
                 if ($onlythese !== false && empty($onlytheseplugins[$plugin->name][$special->name])) {
                     continue;
@@ -2224,17 +2228,18 @@ function artefact_get_progressbar_items($onlythese = false) {
 function artefact_get_progressbar_metaartefacts($plugin, $onlythese = false) {
 
     $results = array();
-    $classname = generate_class_name('artefact', $plugin);
+    $pluginclassname = generate_class_name('artefact', $plugin);
 
     // Check the artefacttypes to see if they have a special metaartefact count
-    $names = call_static_method($classname, 'get_artefact_types');
+    $names = $pluginclassname::get_artefact_types();
     foreach ($names as $name) {
         if (!array_key_exists($name, $onlythese)) {
             continue;
         }
-        $is_metaartefact = call_static_method('ArtefactType' . ucfirst($name), 'is_metaartefact');
+        $classname = 'ArtefactType' . ucfirst($name);
+        $is_metaartefact = $classname::is_metaartefact();
         if ($is_metaartefact) {
-            $meta = call_user_func($classname . '::progressbar_metaartefact_count', $name);
+            $meta = $pluginclassname::progressbar_metaartefact_count($name);
             if (is_object($meta)) {
                 array_push($results, $meta);
             }
@@ -2242,18 +2247,18 @@ function artefact_get_progressbar_metaartefacts($plugin, $onlythese = false) {
     }
 
     // Also check the special artefacts
-    if (is_array($specials = call_static_method($classname, 'progressbar_additional_items'))) {
+    if (is_array($specials = $pluginclassname::progressbar_additional_items())) {
         foreach ($specials as $special) {
             if (!array_key_exists($special->name, $onlythese)) {
                 continue;
             }
             if (empty($special->is_metaartefact)) {
                 // check to see if it can have mataartefact count
-                $special->is_metaartefact = call_static_method('ArtefactType' . ucfirst($special->name), 'is_metaartefact');
+                $special->is_metaartefact = $classname::is_metaartefact();
             }
             if (!empty($special->is_metaartefact)) {
                 // Now check if they have a special metaartefact count
-                $meta = call_user_func($classname . '::progressbar_metaartefact_count', $special->name);
+                $meta = $pluginclassname::progressbar_metaartefact_count($special->name);
                 if (is_object($meta)) {
                     array_push($results, $meta);
                 }

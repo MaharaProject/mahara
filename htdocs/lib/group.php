@@ -235,7 +235,8 @@ function group_role_can_moderate_views($group, $role) {
     if (!isset($moderatingroles[$group])) {
         $grouptype = get_field('group', 'grouptype', 'id', $group);
         safe_require('grouptype', $grouptype);
-        $moderatingroles[$group] = call_static_method('GroupType' . ucfirst($grouptype), 'get_view_moderating_roles');
+        $classname = 'GroupType' . ucfirst($grouptype);
+        $moderatingroles[$group] = $classname::get_view_moderating_roles();
     }
 
     return in_array($role, $moderatingroles[$group]);
@@ -814,7 +815,8 @@ function group_update($new, $create=false) {
 
     // When the group type changes, make sure everyone has a valid role.
     safe_require('grouptype', $new->grouptype);
-    $allowedroles = call_static_method('GroupType' . ucfirst($new->grouptype), 'get_roles');
+    $classname = 'GroupType' . ucfirst($new->grouptype);
+    $allowedroles = $classname::get_roles();
     set_field_select(
         'group_member', 'role', 'member',
         '"group" = ? AND NOT role IN (' . join(',', array_fill(0, count($allowedroles), '?')) . ')',
@@ -2123,9 +2125,11 @@ function group_get_grouptype_options($currentgrouptype=null) {
     }
     foreach ($grouptypes as $grouptype) {
         safe_require('grouptype', $grouptype);
-        if (call_static_method('GroupType' . $grouptype, 'can_be_created_by_user')) {
+        $classname = 'GroupType' . ucfirst($grouptype);
+        if ($classname::can_be_created_by_user()) {
             $roles = array();
-            foreach (call_static_method('GroupType' . $grouptype, 'get_roles') as $role) {
+            $grouptyperoles = $classname::get_roles();
+            foreach ($grouptyperoles as $role) {
                 $roles[] = get_string($role, 'grouptype.' . $grouptype);
             }
             $groupoptions[$grouptype] = get_string('name', 'grouptype.' . $grouptype) . ': ' . join(', ', $roles);
@@ -2209,7 +2213,8 @@ function group_get_menu_tabs() {
     if ($interactionplugins = plugins_installed('interaction')) {
         foreach ($interactionplugins as $plugin) {
             safe_require('interaction', $plugin->name);
-            $plugin_menu = call_static_method(generate_class_name('interaction', $plugin->name), 'group_menu_items', $group);
+            $classname = generate_class_name('interaction', $plugin->name);
+            $plugin_menu = $classname::group_menu_items($group);
             $menu = array_merge($menu, $plugin_menu);
         }
     }
@@ -2234,13 +2239,9 @@ function group_get_menu_tabs() {
     foreach (plugin_types_installed() as $plugin_type_installed) {
         foreach (plugins_installed($plugin_type_installed) as $plugin) {
             safe_require($plugin_type_installed, $plugin->name);
-            if (method_exists(generate_class_name($plugin_type_installed, $plugin->name),'group_tabs')) {
-                $plugin_menu = call_static_method(
-                      generate_class_name($plugin_type_installed, $plugin->name),
-                      'group_tabs',
-                      $group->id,
-                      $role
-                );
+            $classname = generate_class_name($plugin_type_installed, $plugin->name);
+            if (method_exists($classname,'group_tabs')) {
+                $plugin_menu = $classname::group_tabs($group->id, $role);
                 $menu = array_merge($menu, $plugin_menu);
             }
         }
@@ -3903,11 +3904,12 @@ function is_outcomes_group($id) {
 
 
 function group_deny_access($group, $role) {
-  // Can't check so lets deny
-  if (!isset($group->id) || !isset($group->grouptype)) {
-    return true;
-  }
-  safe_require('grouptype', $group->grouptype);
-  $denyaccess = call_static_method('GroupType' . $group->grouptype, 'deny_access_for_role', $group, $role);
-  return $denyaccess;
+    // Can't check so lets deny
+    if (!isset($group->id) || !isset($group->grouptype)) {
+        return true;
+    }
+    safe_require('grouptype', $group->grouptype);
+    $classname = 'GroupType' . ucfirst($group->grouptype);
+    $denyaccess = $classname::deny_access_for_role($group, $role);
+    return $denyaccess;
 }

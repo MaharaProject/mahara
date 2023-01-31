@@ -1936,12 +1936,11 @@ function plugin_all_installed($all=false) {
 }
 
 /**
- * Helper to call a static method when you do not know the name of the class
- * you want to call the method on. (PHP 5.0-5.2 did not support $class::method())
+ * DEPRECATED: Helper to call a static method when you do not know the name of the class
  *
- * @deprecated In PHP 5.3+, you can do $class::$method, $class::method(), or class::$method
- * See: http://php.net/ChangeLog-5.php#5.3.0
- * "Added support for dynamic access of static members using $foo::myFunc()."
+ * Please do not use, this function will be removed in a later version of Mahara.
+ *
+ * @deprecated In PHP 5.3+, you can do $class::$method, $class::method(), $class::{$object->variable}(), or class::$method
  */
 function call_static_method($class, $method) {
     $args = func_get_args();
@@ -2277,7 +2276,7 @@ function handle_event($event, $data, $ignorefields = array()) {
                 $classname = 'Plugin' . ucfirst($name) . ucfirst($sub->plugin);
                 try {
                     if (method_exists($classname, $sub->callfunction)) {
-                        call_static_method($classname, $sub->callfunction, $event, $data);
+                        $classname::{$sub->callfunction}($event, $data);
                     }
                 }
                 catch (Exception $e) {
@@ -4666,7 +4665,7 @@ function recalculate_quota() {
         safe_require('artefact', $plugin->name);
         $classname = generate_class_name('artefact', $plugin->name);
         if (is_callable($classname . '::recalculate_quota')) {
-            $pluginuserquotas = call_static_method($classname, 'recalculate_quota');
+            $pluginuserquotas = $classname::recalculate_quota();
             foreach ($pluginuserquotas as $userid => $usage) {
                 if (!isset($userquotas[$userid])) {
                     $userquotas[$userid] = $usage;
@@ -4677,7 +4676,7 @@ function recalculate_quota() {
             }
         }
         if (is_callable($classname . '::recalculate_group_quota')) {
-            $plugingroupquotas = call_static_method($classname, 'recalculate_group_quota');
+            $plugingroupquotas = $classname::recalculate_group_quota();
             foreach ($plugingroupquotas as $groupid => $usage) {
                 if (!isset($groupquotas[$groupid])) {
                     $groupquotas[$groupid] = $usage;
@@ -5149,7 +5148,7 @@ function build_portfolio_search_html(&$data) {
             // Get the correct css icon
             $namespaced = blocktype_single_to_namespaced($item->artefacttype, $bi->get('artefactplugin'));
             $classname = generate_class_name('blocktype', $namespaced);
-            $item->typestr = call_static_method($classname, 'get_css_icon', $item->artefacttype);
+            $item->typestr = $classname::get_css_icon($item->artefacttype);
             $parentartefact = get_field('blocktype_installed', 'artefactplugin', 'name', $item->artefacttype);
             if ($parentartefact) {
                 $item->typelabel = get_string('title', 'blocktype.' . $parentartefact . '/' . $item->artefacttype);
@@ -5160,7 +5159,8 @@ function build_portfolio_search_html(&$data) {
         }
         else { // artefact
             safe_require('artefact', $artefacttypes[$item->artefacttype]->plugin);
-            $links = call_static_method(generate_artefact_class_name($item->artefacttype), 'get_links', $item->id);
+            $classname = generate_artefact_class_name($item->artefacttype);
+            $links = $classname::get_links($item->id);
             $item->url     = $links['_default'];
             $item->typestr = isset($item->specialtype) ? $item->specialtype : $item->artefacttype;
             if ($item->artefacttype == 'task') {

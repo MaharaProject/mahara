@@ -119,7 +119,8 @@ class PluginBlocktypeRecentForumPosts extends MaharaCoreBlocktype {
                             $f->filecount = count($f->attachments);
                             safe_require('artefact', 'file');
                             foreach ($f->attachments as $file) {
-                                $file->icon = call_static_method(generate_artefact_class_name($file->artefacttype), 'get_icon', array('id' => $file->id, 'post' => $f->id));
+                                $classname = generate_artefact_class_name($file->artefacttype);
+                                $file->icon = $classname::get_icon(array('id' => $file->id, 'post' => $f->id));
                             }
                         }
                     }

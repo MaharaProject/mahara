@@ -108,7 +108,7 @@ class PluginExportLeap extends PluginExport {
             $plugin = $plugin->name;
             if (safe_require('export', 'leap/' . $plugin, 'lib.php', 'require_once', true)) {
                 $classname = 'LeapExport' . ucfirst($plugin);
-                if (class_exists($classname) && call_static_method($classname, 'override_entire_export')) {
+                if (class_exists($classname) && $classname::override_entire_export()) {
                     $this->specialcases[$plugin] = array();
                 }
             }

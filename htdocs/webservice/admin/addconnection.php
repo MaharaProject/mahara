@@ -246,7 +246,8 @@ function allocate_client_connection_submit(Pieform $form, $values) {
     }
 
     if (method_exists($clientconnection->class, 'define_webservice_connections')) {
-        if ($conns = call_static_method($clientconnection->class, 'define_webservice_connections')) {
+        $classname = $clientconnection->class;
+        if ($conns = $classname::define_webservice_connections()) {
             foreach ($conns as $k => $conn) {
                 if (!empty($conn['config_fields'])) {
                     foreach ($conn['config_fields'] as $fk => $fv) {
@@ -527,7 +528,7 @@ $connection_details['elements']['isfatal'] = array(
 );
 
 if (method_exists($classname, 'define_webservice_connections')) {
-    if ($conns = call_static_method($classname, 'define_webservice_connections')) {
+    if ($conns = $classname::define_webservice_connections()) {
         foreach ($conns as $k => $conn) {
             if (!empty($conn['config_fields'])) {
                 $connection_details['elements']['custom'] = array(

@@ -288,7 +288,7 @@ abstract class PluginImport extends Plugin implements IPluginImport {
         else {
             safe_require('artefact', $plugin);
             $classname = generate_artefact_class_name($entrydata['type']);
-            if ($duplicatedartefactids = call_static_method($classname, 'get_duplicated_artefacts', $entrydata)) {
+            if ($duplicatedartefactids = $classname::get_duplicated_artefacts($entrydata)) {
                 $decision = PluginImport::DECISION_IGNORE;
             }
             // If the import entry comes with a defaultdecision filled in,
@@ -298,8 +298,8 @@ abstract class PluginImport extends Plugin implements IPluginImport {
                 $decision = $entrydata['defaultdecision'];
             }
             else {
-                $existingartefactids = call_static_method($classname, 'get_existing_artefacts', $entrydata);
-                if (call_static_method($classname, 'is_singular')
+                $existingartefactids = $classname::get_existing_artefacts($entrydata);
+                if ($classname::is_singular()
                     && !empty($existingartefactids)) {
                     if ($entrydata['type'] == 'email') {
                         $decision = PluginImport::DECISION_ADDNEW;
