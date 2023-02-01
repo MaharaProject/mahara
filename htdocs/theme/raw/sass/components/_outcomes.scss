@@ -80,6 +80,7 @@ form.outcome-progress-form {
 // includes hardcoded outcome type classes for background and border color
 div.outcome-type {
 	display: inline-block;
+	padding-top: 4px;
 	span {
         padding: 0.75rem 0.25rem; // makes the height 36px
         min-width: 2.25rem; // 36px;
@@ -114,7 +115,7 @@ div.activity-outcome-line {
     font-size: 1rem;
     align-items: center;
     & div.outcome-text {
-        padding-right: 10px;
+        padding-right: 20px;
     }
     & .signoff-wrapper {
         display: inline-flex;
@@ -126,9 +127,23 @@ div.activity-outcome-line {
     }
     & .activity-outcome-signoff {
         margin-left: auto;
+		.view-signoff {
+			margin-top: 1.313rem;
+		}
     }
 }
 
-.bt-checkpoint form {
-    padding-top: 5px;
+.bt-checkpoint form.form-pagination {
+    margin-top: 0.75rem;
+
+	span {
+		label {
+			padding-top: 10px;
+			padding-right: 0;
+		}
+		
+		.icon-stack {
+			margin-top: -3px;
+		}
+	}
 }

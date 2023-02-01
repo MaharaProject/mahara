@@ -229,7 +229,6 @@ function create_settings_pieform() {
         if ($view->get('type') == 'activity' && $group && is_outcomes_group($group)) {
             $formelements['activityinfo'] = array(
                 'type'        => 'fieldset',
-                'class'       => 'first',
                 'collapsible' => true,
                 'collapsed'   => false,
                 'legend'      => get_string('activity_info_fieldset', 'view'),
