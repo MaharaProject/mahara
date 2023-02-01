@@ -144,7 +144,7 @@ function bulkexport_submit(Pieform $form, $values) {
         else if ($exporttype == 'htmllite') {
             $exporter = new PluginExportHtmlLite($user, PluginExport::EXPORT_ALL_VIEWS_COLLECTIONS, PluginExport::EXPORT_ALL_ARTEFACTS, 'export_bulk_progress_handler', $exportcount+1, $num_users);
         }
-        else if ($exporttype == 'pdf' || $exporttype = 'pdflite') {
+        else if ($exporttype == 'pdf' || $exporttype == 'pdflite') {
             if ($exportcount === 0 && $num_users === 1) {
                 $pdfrun = 'all';
             }
