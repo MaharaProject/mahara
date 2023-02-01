@@ -237,3 +237,10 @@
 .has-attachment .card-header::before {
     display: none;
 }
+
+// outcomes block at the top outside of columns
+.bt-activitysupport.card.card-secondary {
+    > .card-header, .card-header-nested {
+        background-color: scale-color($theme-primary-color, $lightness: -10%);
+    }
+}

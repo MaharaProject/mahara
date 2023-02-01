@@ -80,7 +80,7 @@ form.outcome-progress-form {
 // includes hardcoded outcome type classes for background and border color
 div.outcome-type {
 	display: inline-block;
-	padding-top: 4px;
+	padding-top: 0.25rem; // 4px;
 	span {
         padding: 0.75rem 0.25rem; // makes the height 36px
         min-width: 2.25rem; // 36px;
@@ -114,8 +114,28 @@ div.activity-outcome-line {
     display: flex;
     font-size: 1rem;
     align-items: center;
+
+	@include media-breakpoint-down(md) {
+		display: block;
+		position: relative;
+
+		div.outcome-text {
+			width: 60%;
+			
+			&:first-child {
+				margin-top: 1.5rem;
+			}
+		}
+		
+		.activity-outcome-signoff {
+			position: absolute;
+			top: 0;
+			right: 0;
+		}
+	}
+
     & div.outcome-text {
-        padding-right: 20px;
+        padding-right: 1.25rem;// 20px;
     }
     & .signoff-wrapper {
         display: inline-flex;
@@ -128,22 +148,29 @@ div.activity-outcome-line {
     & .activity-outcome-signoff {
         margin-left: auto;
 		.view-signoff {
-			margin-top: 1.313rem;
+			margin-top: 1.25rem;// 20px;
 		}
     }
 }
 
-.bt-checkpoint form.form-pagination {
-    margin-top: 0.75rem;
+.bt-checkpoint-editor,
+.bt-checkpoint {
+	form.form-pagination {
+		margin-top: 0.75rem; // 12px
 
-	span {
-		label {
-			padding-top: 10px;
-			padding-right: 0;
+		span {
+			label {
+				padding-top: 0.625rem; // 10px;
+				padding-right: 0;
+			}
+			
+			.icon-stack {
+				margin-top: -0.1875rem; // -3px;
+			}
 		}
-		
-		.icon-stack {
-			margin-top: -3px;
+
+		&.form-inline > .form-group {
+			width: auto;
 		}
 	}
 }
