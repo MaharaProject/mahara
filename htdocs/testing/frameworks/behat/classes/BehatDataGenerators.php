@@ -102,6 +102,7 @@ class BehatDataGenerators extends BehatBase {
               'expiry'                     => 'text',
               'allowinstitutionpublicviews'=> 'bool',
               'progresscompletion'         => 'bool',
+              'commentsortorder'           => 'text',
               'commentthreaded'            => 'bool',
               'members'                    => 'text',
               'staff'                      => 'text',
@@ -146,6 +147,9 @@ class BehatDataGenerators extends BehatBase {
                 'pages'              => 'text',
                 'lock'               => 'bool',
                 'progresscompletion' => 'bool',
+                'outcomeportfolio'   => 'bool',
+                'outcomecategory'    => 'text',
+
             ),
             'required' => array('title', 'ownertype', 'ownername')
         ),
@@ -394,7 +398,36 @@ class BehatDataGenerators extends BehatBase {
             'group'                    => 'text' // compulsory for comments on group pages
           ),
           'required' => array('user', 'comment', 'page')
-        )
+    ),
+    'outcometypes' => [
+      'datagenerator' => 'outcome_type',
+      'available' => [
+        'abbreviation' => 'text',
+        'title'        => 'text',
+        'styleclass'   => 'text',
+        'outcome_category' => 'text',
+        'institution' => 'text',
+        'css_colour' => 'text'
+      ],
+      'required' => [
+        'abbreviation',
+        'title',
+        'styleclass',
+        'outcome_category',
+        'institution',
+        'abbreviation',
+      ]
+    ],
+    'outcomesubjects' => [
+      'datagenerator' => 'outcome_subject',
+      'available' => [
+        'abbreviation' => 'text',
+        'title'        => 'text',
+        'subject_category' => 'text',
+        'institution' => 'text'
+      ],
+      'required' => ['abbreviation', 'title', 'subject_category', 'institution']
+    ]
       );
 
 

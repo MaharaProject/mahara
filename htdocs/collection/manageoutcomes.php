@@ -174,8 +174,19 @@ jQuery(function($) {
                 $("#outcome_forms .delete-outcome a").last().on("click", removeForms);
                 $("#outcome_buttons_container")[0].scrollIntoView({block: "end"});
             }
-        }
-        );
+        });
+    }
+
+    /**
+     * Update the outcome numbering
+     */
+    function updateoutcomenumbering() {
+        // reset form outcome numbers on DOM
+        $("#outcome_forms div h3").map((i,heading) => {
+            const id = i+1;
+            const title = get_string('outcome') + ' ' + id;
+            $(heading).html(title);
+        });
     }
 
     /*
@@ -196,19 +207,11 @@ jQuery(function($) {
             },
             'POST',
             (data) => {
-                console.log(data);
                 // remove form element from DOM on successful deletion
-            deleteform.remove();
-            outcomeform.remove();
-
-            // reset form outcome numbers on DOM
-            $("#outcome_forms div h3").map((i,heading) => {
-                const id = i+1;
-                const title = 'Outcome ' + id;
-                $(heading).html(title);
-            })
-            }
-            );
+                deleteform.remove();
+                outcomeform.remove();
+                updateoutcomenumbering();
+            });
         }
     }
 
@@ -219,10 +222,11 @@ jQuery(function($) {
     function removeForms(e) {
         e.preventDefault();
         if (confirm(get_string('confirmdeleteoutcome', 'collection'))) {
-            const deleteform = $(e.target).parent().parent();
+            const deleteform = $(e.target).closest('div');
             const outcomeform = deleteform.next();
             deleteform.remove();
             outcomeform.remove();
+            updateoutcomenumbering();
         }
     }
 
@@ -253,7 +257,8 @@ function get_outcome_lang_strings() {
         array('confirmdeleteoutcomedb', 'collection'),
         array('confirmdeleteoutcome', 'collection'),
         array('rule.required.required', 'pieforms'),
-        array("errorprocessingform", "mahara")
+        array("errorprocessingform", "mahara"),
+        array('outcome', 'collection')
     );
     $strings = '';
     foreach ($jsstrings as $stringdata) {

@@ -791,8 +791,8 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
             $form['elements']['submit'] = array(
                 'type' => 'submit',
                 'name' => 'level_submit',
-                'value' => 'Save',
-                'class' => 'btn-primary submit'
+                'value' => get_string('save'),
+                'class' => 'btn-primary',
             );
         }
         else {
@@ -855,6 +855,7 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
         );
         $form['elements']['submit'] = array(
             'type' => 'multisubmit',
+            'name' => 'checkpoint_comment',
             'options' => array(
                 'submit' => 'save',
                 'cancel' => 'cancel'

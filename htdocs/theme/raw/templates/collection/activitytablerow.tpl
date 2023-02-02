@@ -1,4 +1,4 @@
-{* 
+{*
 args
   activityid
   title
@@ -47,7 +47,7 @@ args
     </td>
     <td>
       <span
-          class="icon icon-check-circle completed mt-1 px-4" role="presentation" 
+          class="icon icon-check-circle completed mt-1 px-4" role="presentation"
           title="{str tag='completeactivity' section='collection' arg1=$title|safe}" >
       </span>
       </a>
@@ -61,7 +61,7 @@ args
     <td>
       <span
         class="icon icon-circle dot disabled mt-1 px-4"
-        title="{str tag='incompleteactivity' section='collection' arg1=$title|safe}">
+        title="{str tag='incompleteactivitydisabled' section='collection' arg1=$title|safe}">
       </span>
     </td>
   {/if}

@@ -91,6 +91,25 @@ class BehatForms extends BehatBase {
     }
 
     /**
+     * Sets the specified value to the field found in element.
+     *
+     * @Given I set the field :field in :container :containertype to :value
+     * @throws ElementNotFoundException Thrown by BehatBase::find
+     * @param string $field
+     * @param string $container
+     * @param string $containertype
+     * @param string $value
+     * @return void
+     */
+    public function i_set_the_field_in_to($field, $value, $container, $containertype) {
+        $fieldlocator = $this->unescapeDoubleQuotes($field);
+        $value = $this->escapeDoubleQuotes($value);
+        $fieldnode = $this->get_node_in_container('field', $field, $containertype, $container);
+        $field = BehatFieldManager::get_form_field($fieldnode, $this->getSession());
+        $field->set_value($value);
+    }
+
+    /**
      * Fills in Select2 field with specified
      *
      * @When /^(?:|I )set the select2 field "(?P<field>(?:[^"]|\\")*)" to "(?P<textValues>(?:[^"]|\\")*)"$/

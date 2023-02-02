@@ -439,32 +439,56 @@ EOD;
      */
     public function create_group($record) {
         // Data validation
+        $ids = [];
         $record['name'] = trim($record['name']);
-        if ($ids = get_records_sql_array('SELECT id FROM {group} WHERE LOWER(TRIM(name)) = ?', array(strtolower($record['name'])))) {
-                throw new SystemException("Invalid group name '" . $record['name'] . "'. " . get_string('groupalreadyexists', 'group'));
+        if ($ids = get_records_sql_array(
+            'SELECT id FROM {group} WHERE LOWER(TRIM(name)) = ?',
+            array(strtolower($record['name']))
+        )) {
+            throw new SystemException(
+                "Invalid group name '" . $record['name'] . "'. " . get_string(
+                    'groupalreadyexists',
+                    'group'
+                )
+            );
         }
         $record['owner'] = trim($record['owner']);
-        $ids = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower($record['owner'])));
+        $ids = get_records_sql_array(
+            'SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?',
+            array(strtolower($record['owner']))
+        );
         if (!$ids || count($ids) > 1) {
-            throw new SystemException("Invalid group owner '" . $record['owner'] . "'. The username does not exist or duplicated");
+            throw new SystemException(
+                "Invalid group owner '" . $record['owner'] . "'. The username does not exist or duplicated"
+            );
         }
         $members = array($ids[0]->id => 'admin');
         if (!empty($record['members'])) {
             foreach (explode(',', $record['members']) as $membername) {
-                $ids = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower(trim($membername))));
+                $ids = get_records_sql_array(
+                    'SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?',
+                    array(strtolower(trim($membername)))
+                );
                 if (!$ids || count($ids) > 1) {
-                    throw new SystemException("Invalid group member '" . $membername . "'. The username does not exist or duplicated");
+                    throw new SystemException(
+                        "Invalid group member '" . $membername . "'. The username does not exist or duplicated"
+                    );
                 }
                 $members[$ids[0]->id] = 'member';
             }
         }
         if (!empty($record['staff']) && !empty($record['grouptype'])) {
             foreach (explode(',', $record['staff']) as $membername) {
-                $ids = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower(trim($membername))));
+                $ids = get_records_sql_array(
+                    'SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?',
+                    array(strtolower(trim($membername)))
+                );
                 if (!$ids || count($ids) > 1) {
-                    throw new SystemException("Invalid group staff '" . $membername . "'. The username does not exist or duplicated");
+                    throw new SystemException(
+                        "Invalid group staff '" . $membername . "'. The username does not exist or duplicated"
+                    );
                 }
-                if ($record['grouptype'] == 'course') {
+                if (in_array($record['grouptype'], ['course', 'outcomes'])) {
                     $members[$ids[0]->id] = 'tutor';
                 }
                 else {
@@ -474,43 +498,64 @@ EOD;
         }
         if (!empty($record['admins'])) {
             foreach (explode(',', $record['admins']) as $membername) {
-                $ids = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower(trim($membername))));
+                $ids = get_records_sql_array(
+                    'SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?',
+                    array(strtolower(trim($membername)))
+                );
                 if (!$ids || count($ids) > 1) {
-                    throw new SystemException("Invalid group admin '" . $membername . "'. The username does not exist or duplicated");
+                    throw new SystemException(
+                        "Invalid group admin '" . $membername . "'. The username does not exist or duplicated"
+                    );
                 }
                 $members[$ids[0]->id] = 'admin';
             }
         }
         $availablegrouptypes = group_get_grouptypes();
         if (!in_array($record['grouptype'], $availablegrouptypes)) {
-            throw new SystemException("Invalid grouptype '" . $record['grouptype'] . "'. This grouptype does not exist.\n"
+            throw new SystemException(
+                "Invalid grouptype '" . $record['grouptype'] . "'. This grouptype does not exist.\n"
                             . "The available grouptypes are " . join(', ', $availablegrouptypes));
         }
         $availablegroupeditroles = array_keys(group_get_editroles_options());
         if (!in_array($record['editroles'], $availablegroupeditroles)) {
-            throw new SystemException("Invalid group editroles '" . $record['editroles'] . "'. This edit role does not exist.\n"
-                            . "The available group editroles are " . join(', ', $availablegroupeditroles));
+            throw new SystemException(
+                "Invalid group editroles '" . $record['editroles'] . "'. This edit role does not exist.\n"
+                . "The available group editroles are " . join(', ', $availablegroupeditroles)
+            );
         }
         if (!empty($record['open'])) {
             if (!empty($record['controlled'])) {
-                throw new SystemException('Invalid group membership setting. ' . get_string('membershipopencontrolled', 'group'));
+                throw new SystemException(
+                    'Invalid group membership setting. ' . get_string('membershipopencontrolled', 'group')
+                );
             }
             if (!empty($record['request'])) {
-                throw new SystemException('Invalid group membership setting. ' . get_string('membershipopenrequest', 'group'));
+                throw new SystemException(
+                    'Invalid group membership setting. ' . get_string('membershipopenrequest', 'group')
+                );
             }
         }
         if (!empty($record['invitefriends']) && !empty($record['suggestfriends'])) {
-            throw new SystemException('Invalid friend invitation setting. ' . get_string('suggestinvitefriends', 'group'));
+            throw new SystemException(
+                'Invalid friend invitation setting. ' . get_string('suggestinvitefriends', 'group')
+            );
         }
         if (!empty($record['suggestfriends']) && empty($record['open']) && empty($record['request'])) {
-            throw new SystemException('Invalid friend invitation setting. ' . get_string('suggestfriendsrequesterror', 'group'));
+            throw new SystemException(
+                'Invalid friend invitation setting. ' . get_string('suggestfriendsrequesterror', 'group')
+            );
         }
-        if (!empty($record['editwindowstart']) && !empty($record['editwindowend']) && ($record['editwindowstart'] >= $record['editwindowend'])) {
+        if (
+            !empty($record['editwindowstart']) && !empty($record['editwindowend'])
+            && ($record['editwindowstart'] >= $record['editwindowend'])
+        ) {
             throw new SystemException('Invalid group editability setting. ' . get_string('editwindowendbeforestart', 'group'));
         }
         if (!empty($record['institution'])) {
             if (!get_field('institution', 'id', 'name', $record['institution'])) {
-                throw new SystemException('Invalid institution for group - Institution with short name "' . $record['institution'] . '" does not exist');
+                throw new SystemException(
+                    'Invalid institution for group - Institution with short name "' . $record['institution'] . '" does not exist'
+                );
             }
         }
         $group_data = array(
@@ -683,6 +728,10 @@ EOD;
 
         if (isset($record['commentthreaded'])) {
             set_config_institution($newinstitution->name, 'commentthreaded', (bool) $record['commentthreaded']);
+        }
+        if (isset($record['commentsortorder'])) {
+            $sortorder = $record['commentsortorder'] == 'latest' ? 'latest' : 'earliest';
+            set_config_institution($newinstitution->name, 'commentsortorder', $sortorder);
         }
 
         db_commit();
@@ -2105,10 +2154,16 @@ EOD;
         $data->outcomeportfolio = isset($record['outcomeportfolio']) && $record['outcomeportfolio'] ? 1 : 0;
         $data->outcomecategory = !empty($record['outcomecategory']) ? $record['outcomecategory'] : null;
         $institution = null;
-        if ($data->progresscompletion && $record['ownertype'] === 'group') {
+        if ($record['ownertype'] === 'group') {
             $institution = get_field('group', 'institution', 'id', $groupid);
             $institution = new Institution($institution);
-            $data->progresscompletion = $institution->progresscompletion ? 1 : 0;
+            if ($data->progresscompletion) {
+                $data->progresscompletion = $institution->progresscompletion ? 1 : 0;
+            }
+            if ($data->outcomecategory) {
+                $category_id = ensure_type_category_exists($data->outcomecategory, $institution->name);
+                $data->outcomecategory = $category_id;
+            }
         }
         $data->autocopytemplate = 0;
         $data->template = 0;
@@ -2423,7 +2478,7 @@ EOD;
             if (!empty($userid)) {
                 $artefactid = self::process_attachment($file, 'user', $userid);
             }
-            else if (!empty($groupid)) {
+            else if (!$groupid) {
                 $artefactid = self::process_attachment($file, 'group', $groupid);
             }
             if (!empty($artefactid)) {
@@ -2450,14 +2505,14 @@ EOD;
       $record['to'] = trim($record['to']);
       $to = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower($record['to'])));
       if (!$to || count($to) > 1) {
-        throw new SystemException("Invalid user '" . $record['to'] . "'. The username does not exist or duplicated");
+            throw new SystemException("Invalid user '" . $record['to'] . "'. The username does not exist or duplicated");
       }
       $to = $to[0]->id;
       $from = null;
       if (strtolower($record['from']) != 'system') {
         $from = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower($record['from'])));
         if (!$from || count($from) > 1) {
-          throw new SystemException("Invalid user '" . $record['from'] . "'. The username does not exist or duplicated");
+                throw new SystemException("Invalid user '" . $record['from'] . "'. The username does not exist or duplicated");
         }
         $from = $from[0]->id;
       }
@@ -2576,7 +2631,7 @@ EOD;
           case 'user':
           $ids = get_records_sql_array('SELECT id FROM {usr} WHERE LOWER(TRIM(username)) = ?', array(strtolower(trim($record['accessname']))));
           if (!$ids || count($ids) > 1) {
-            throw new SystemException("Invalid access user '" . $record['accessname'] . "'. The username does not exist or duplicated");
+                        throw new SystemException("Invalid access user '" . $record['accessname'] . "'. The username does not exist or duplicated");
           }
           $id = $ids[0]->id;
           $type = 'user';
@@ -3143,5 +3198,69 @@ EOD;
       if (!$owner) {
           throw new SystemException("Invalid owner. The owner needs to be a username or group/institution display name");
       }
+    }
+
+    /**
+     * Create outcome types
+     *
+     * Creates:
+     * - outcomes categories
+     * - outcome types
+     *
+     * outcome categories -> outcome<type>
+     *
+     * Note: Subjects and Outcomes have their own respective categories
+     */
+    public function create_outcome_type($record_type) {
+        require_once(get_config('libroot') . 'outcomes.php');
+        $dataadded = false;
+        $data = [
+            'Outcome category' => $record_type['outcome_category'],
+            'Institution' => $record_type['institution'],
+            'Outcome type' => $record_type['title'],
+            'Outcome type abbreviation' => $record_type['abbreviation'],
+            'CSS class' => $record_type['styleclass']
+        ];
+
+        $outcome_category_id =  ensure_type_category_exists($data['Outcome category'], $data['Institution']);
+        $typedataadded = ensure_type_exists(
+            $data['Outcome type'],
+            $data['Outcome type abbreviation'],
+            $data['CSS class'],
+            $outcome_category_id
+        );
+    }
+
+    /**
+     * Create outcome subjects for outcome categories
+     *
+     * Creates under outcomes:
+     * - outcome subjects
+     * - subject categories
+     *
+     * outcome<type>, outcome subject<category>
+     *
+     * Note: Subjects and Outcomes have their own respective categories
+     */
+    public function create_outcome_subject($record_subject) {
+        require_once(get_config('libroot') . 'outcomes.php');
+        $dataadded = false;
+
+        $data = [
+            'Outcome subject category' => $record_subject['subject_category'],
+            'Institution' => $record_subject['institution'],
+            'Subject' => $record_subject['title'],
+            'Subject abbreviation' => $record_subject['abbreviation']
+        ];
+
+        $outcome_subject_category_id = ensure_subject_category_exists(
+            $data['Outcome subject category'],
+            $data['Institution']
+        );
+        $subjectdataadded = ensure_subject_exists(
+            $data['Subject'],
+            $data['Subject abbreviation'],
+            $outcome_subject_category_id
+        );
     }
 }
