@@ -54,6 +54,7 @@ if ($new && $id === false) {
 
         if ($view_type == 'activity') {
             View::check_can_edit_activity_page_info($groupid);
+            View::check_group_outcome_collection($groupid, $outcome, $collection_to_add_view);
             $values['outcome'] = $outcome;
         }
 

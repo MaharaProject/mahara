@@ -204,6 +204,7 @@ $(function() {
           $('tr[data-activity=' + activityid + ']').html(data.html);
           // link modal to icon
           $('tr[data-activity=' + activityid + '] a.activity-incomplete').map((_, link)=> incomplete_activity_click_event(link));
+          set_icon_states();
         }
       }, function(error) {
         console.log(error);
@@ -257,4 +258,21 @@ $(function() {
     formchangemanager.add(formid);
   })
 
+function set_icon_states() {
+    $('.activity-state.activity-incomplete span').off();
+    $('.outcome-state.outcome-incomplete span').off();
+    $('.activity-state.activity-incomplete span').on('mouseover', function() {
+        $(this).removeClass('icon-circle').addClass('icon-dot-circle');
+    });
+    $('.activity-state.activity-incomplete span').on('mouseout', function() {
+        $(this).removeClass('icon-dot-circle').addClass('icon-circle');
+    });
+    $('.outcome-state.outcome-incomplete span').on('mouseover', function() {
+        $(this).removeClass('icon-check-circle').addClass('icon-dot-circle');
+    });
+    $('.outcome-state.outcome-incomplete span').on('mouseout', function() {
+        $(this).removeClass('icon-dot-circle').addClass('icon-circle');
+    });
+}
+set_icon_states();
 </script>

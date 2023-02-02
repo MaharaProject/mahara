@@ -7,11 +7,13 @@
         </h2>
         <div class="activity-outcome-line">
             <div class="outcome-text">{str tag="outcome" section="collection"}: {$activity->outcome}</div>
+            {if $activity->outcome_type}
             <div class="outcome-text">{str tag="outcometype" section="collection"}:
                 <div id="outcometype-{$outcome->id}" class="outcome-type">
                     <span class="badge rounded-pill text-bg-{$activity->styleclass}">{$activity->outcome_type}</span>
                 </div>
             </div>
+            {/if}
             <div class="activity-outcome-signoff">{$activity_signoff_html|safe}</div>
         </div>
         <div class="block collapse hide" id="target" aria-expanded="true">

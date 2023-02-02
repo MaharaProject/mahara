@@ -1186,8 +1186,8 @@ class View {
                   {view_activity} va
                   JOIN {outcome_view_activity} ov ON va.id = ov.activity
                   JOIN {outcome} o ON o.id = ov.outcome
-                  JOIN {outcome_type} ot ON ot.id = o.outcome_type
                   JOIN {outcome_subject} os ON os.id = va.subject
+                  LEFT JOIN {outcome_type} ot ON ot.id = o.outcome_type
                   WHERE va.view = ?
             ";
 
@@ -4195,6 +4195,23 @@ class View {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Check if the outcome and collection exist for the group
+     *
+     * @param  mixed $groupid
+     * @param  mixed $outcomeid
+     * @param  mixed $collectionid
+     * @throws AccessDeniedException
+     */
+    public static function check_group_outcome_collection($groupid, $outcomeid, $collectionid): bool {
+        if (get_record_sql("SELECT o.id FROM {collection} c
+                            JOIN {outcome} o ON o.collection = c.id
+                            WHERE c.group = ? AND o.collection = ? AND o.id = ?", array($groupid, $collectionid, $outcomeid))) {
+            return true;
+        }
+        throw new AccessDeniedException();
     }
 
     /**
