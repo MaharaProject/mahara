@@ -115,9 +115,12 @@
                   {$outcome->progress|safe}
                 </div>
                 {if $outcome->lastauthorprogress}
-                  <div class="text-small postedon"><a href="{profile_url($outcome->lastauthorprogress)}" class="progress-author">
+                  <div class="text-small postedon">
+                    {strip}
+                    <a href="{profile_url($outcome->lastauthorprogress)}" class="progress-author">
                     {display_name($outcome->lastauthorprogress, null, true)}
-                    </a>{str tag='ondate' section='collection' arg1=$outcome->lasteditprogress|strtotime|format_date:'strftimedatetime'}
+                    </a>, {str tag='ondate' section='collection' arg1=$outcome->lasteditprogress|strtotime|format_date:'strftimedatetime'}
+                    {/strip}
                   </div>
                 {/if}
               {else}
