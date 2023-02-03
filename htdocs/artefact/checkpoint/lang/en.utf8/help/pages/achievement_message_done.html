@@ -1,0 +1,31 @@
+<!-- @license https://www.gnu.org/licenses/gpl-3.0.html GNU GPL version 3 or later -->
+<!-- @copyright For copyright information on Mahara, please see the README file distributed with this software. -->
+<h1>Achievement level obtained</h1>
+
+<div id="achievement_level_info"></div>
+
+<script type="application/javascript">
+  $(function () {
+    const params = new URLSearchParams(location.search);
+    const view = params.get('id');
+    const block = $(contextualHelpLink).closest('form').prop('id');
+    const blockid = block.match(/(\d+)/)[0];
+    if (view) {
+      sendjsonrequest(
+        config.wwwroot + "artefact/checkpoint/get_achievement_result.json.php",
+        { id: view,
+          block: blockid },
+        "GET",
+        function (data) {
+          if (data) {
+            $("#achievement_level_info").html(data.data.html);
+          }
+        },
+        function (error) {
+          console.log(error);
+        },
+        true
+      );
+    }
+  });
+</script>
