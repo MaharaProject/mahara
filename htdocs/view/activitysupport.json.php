@@ -25,6 +25,12 @@ $view = new View($view_id);
 if (!can_view_view($view_id)) {
     json_reply('local', get_string('noaccesstoview', 'view'));
 }
+if ($view->has_signoff()) {
+    $signedoff = get_field('view_signoff_verify', 'signoff', 'view', $view_id);
+    if (!empty($signedoff)) {
+        json_reply('local', get_string('cannoteditaftersignoff', 'view', get_string($activity_support_type, 'view')));
+    }
+}
 $grouprole = group_user_access($view->get('group'));
 $actionsallowed = ($grouprole === 'admin' || $grouprole === 'tutor');
 if ($actionsallowed) {
@@ -63,7 +69,7 @@ if ($actionsallowed) {
 
     $data = array(
         'error'    => false,
-        'message'  => 'Support updated!',
+        'message'  => get_string('supportupdatedfor', 'view', get_string($activity_support_type, 'view')),
         'supportData' => $activity_support_data
     );
     json_reply(false, $data);

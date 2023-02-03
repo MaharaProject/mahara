@@ -120,7 +120,7 @@ $institution = $view->get('institution');
 $view->set_edit_nav();
 $view->set_user_theme();
 
-if ($view->get('type') == 'activity') {
+if ($view->get('type') == 'activity' && !$issitetemplate) {
     View::check_can_edit_activity_page_info($group);
 }
 
@@ -208,7 +208,7 @@ function create_settings_pieform() {
 
     // Only allow activity pages as part of group portfolios
     $group = $view->get('group');
-
+    $hidden_activity_info_elems = array();
     if ($view->get('type') == 'activity' && $group && is_outcomes_group($group)) {
         list($activity_info_elements, $hidden_activity_info_elems) = get_view_activity_info_elements($outcome);
     }
@@ -401,11 +401,12 @@ function get_view_activity_info_elements(int $outcome_id): array {
         && (trim($activity->description)) ? $activity->description : '',
     );
 
-    $outcome_subjects = get_records_array('outcome_subject');
+    $outcome_subjects = get_records_sql_array("SELECT os.*, osc.name FROM {outcome_subject} os
+                                               JOIN {outcome_subject_category} osc ON os.outcome_subject_category = osc.id");
     $subjects_ids = $subjects_names = array();
     foreach ($outcome_subjects as $subject) {
         $subjects_ids[] = $subject->id;
-        $subjects_names[] = $subject->title;
+        $subjects_names[] = $subject->name . ' - ' . $subject->title;
     }
     $subjects_options =  array_combine($subjects_ids, $subjects_names);
 
@@ -428,6 +429,7 @@ function get_view_activity_info_elements(int $outcome_id): array {
     $elements['supervisor'] = array(
         'type' => 'select',
         'title' => get_string('activity_info_supervisor', 'view'),
+        'description' => get_string('activity_info_activity_info_supervisor_desc', 'view'),
         'options' => $supervisor_options,
         'defaultvalue' => property_exists($activity, 'supervisor') ? $activity->supervisor : $USER->id
     );
@@ -464,7 +466,8 @@ function get_view_activity_info_elements(int $outcome_id): array {
     $hidden_elements = array(
         'outcome' => array(
             'type' => 'hidden',
-            'value' =>  $outcome_id ?? get_field('outcome_view_activity', 'outcome', 'activity', $activity->id),
+            'value' =>  $outcome_id > 0 ? $outcome_id
+                : get_field('outcome_view_activity', 'outcome', 'activity', $activity->id),
         ),
     );
 
@@ -515,7 +518,7 @@ function get_achievement_levels_elements(int $activity_id = null): array {
 
     // Construct the pieform for achievement levels
     $achievement_levels_elements = [];
-    $lowest_type = array_key_last($achievement_levels);
+    $lowest_type = array_keys($achievement_levels)[count($achievement_levels)-1]; // get array key last
     foreach ($achievement_levels as $level_type => $value) {
         $default_value = $level_type === $lowest_type ? 'Not demonstrated' : '';
         $achievement_levels_elements[$level_type] = [
@@ -892,7 +895,7 @@ function get_signoff_elements(): array {
         'verify' => array(
             'type' => 'switchbox',
             'title' => get_string('verify', 'view'),
-            'description' => get_string('verifydesc', 'view'),
+            'description' => get_string('verifydesc1', 'view'),
             'defaultvalue' => $show_verify ?: 0,
             'disabled' => !$signoff_record || $is_from_template,
         ),
@@ -971,7 +974,7 @@ function settings_submit(Pieform $form, $values) {
         }
     }
 
-    if ($view->get('type') == 'activity') {
+    if ($view->get('type') == 'activity' && !$issitetemplate) {
         set_view_activity_info($form, $values);
     }
 
@@ -1394,7 +1397,7 @@ function save_activity_data($values = [], $outcome = 0, $view_id = 0) {
         update_record('view_activity', $view_activity, array('view' => $view->get('id')));
     }
 
-    // Achivement levels done by type and value
+    // Achievement levels done by type and value
     // Brand new activity + achievement levels
     // If there are more achievement levels than 4,
     // their string needs to be created/and existing ones overwritten if don't want to say 'Level 1'
@@ -1435,6 +1438,13 @@ function get_levels(array $values) {
         if (is_int($type) !== false) {
             $levels[$type] = $value;
         }
+    }
+    if (empty($levels)) {
+        // no levels supplied so we use the default ones
+        $levels = array(1 => get_string('activity_info_achievement_level', 'view', 1),
+                        2 => get_string('activity_info_achievement_level', 'view', 2),
+                        3 => get_string('activity_info_achievement_level', 'view', 3),
+                        4 => get_string('activity_info_achievement_level_0', 'view'));
     }
     return $levels;
 }

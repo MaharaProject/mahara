@@ -13,18 +13,17 @@
 defined('INTERNAL') || die();
 
 $string['pluginname'] = 'Checkpoint';
-$string['Feedback'] = 'Feedback';
-$string['feedback'] = 'feedback';
+$string['Feedback'] = 'Comment';
+$string['feedback'] = 'comment';
 $string['comments'] = 'comments';
 $string['nfeedback'] = array(
     '%s comment',
     '%s comments'
 );
-$string['attachfile'] = 'Attach file';
-$string['feedbacksubmitted'] = 'Checkpoint feedback saved';
-$string['reallydeletethisfeedback'] = 'Really delete this checkpoint feedback?';
-$string['feedbackremoved'] = 'Checkpoint feedback deleted';
-$string['assessmentremovedfailed'] = 'Checkpoint feedback failed to delete';
+$string['feedbacksubmitted'] = 'Checkpoint comment saved';
+$string['reallydeletethisfeedback'] = 'Do you really want to delete this checkpoint comment? You cannot undo this action.';
+$string['feedbackremoved'] = 'Checkpoint comment deleted';
+$string['assessmentremovedfailed'] = 'Checkpoint comment failed to delete';
 
 $string['achievementlevel'] = 'Achievement level';
 $string['level'] = 'level';

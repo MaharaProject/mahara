@@ -341,6 +341,8 @@ $javascript[] = $wwwroot . 'js/momentjs/moment-with-locales.min.js';
 $javascript[] = $wwwroot . 'js/bootstrap-datetimepicker/tempusdominus-bootstrap-4.js';
 $stylesheets[] = '<link rel="stylesheet" type="text/css" href="' . append_version_number(get_config('wwwroot') . 'js/jquery/jquery-ui/css/smoothness/jquery-ui.min.css') . '">';
 
+$signoff_html = $view->has_signoff() ? $view->get_signoff_verify_form() : '';
+
 $smarty = smarty($javascript, $stylesheets, $strings, $extraconfig);
 
 $smarty->assign('addform', $addform);
@@ -399,12 +401,10 @@ if ($view->get('type') == 'activity' && $view->get('group')) {
     $activity_data = $view->get_view_activity_data();
     $group = $view->get('group');
     $smarty->assign('activity', $activity_data);
-    $can_edit_activity = $group ? View::check_can_edit_activity_page_info($group, true) : true;
+    $can_edit_activity = (View::check_can_edit_activity_page_info($group, true) && !$activity_data->achieved);
     $smarty->assign('activity_support_form', $view->get_activity_support_form($can_edit_activity));
     $smarty->assign('can_edit_page_settings', $can_edit_activity);
-    // pass in dummyform for sign-off-like functionality
-    // Prepare the signoff verify form in advance - used to be a block
-    // $smarty->assign('achievement_switch_html', $view->get_activity_signoff());
+    $smarty->assign('activity_signoff_html', $signoff_html);
 }
 else {
     $smarty->assign('can_edit_page_settings', true);

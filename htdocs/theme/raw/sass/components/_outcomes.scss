@@ -32,7 +32,7 @@ a.outcome-state,
 a.activity-state {
 	padding: 0 !important;
 	border: none !important;
-
+    text-decoration: none;
 	// complete icon
 	&.outcome-complete {
 		color: $progresscompletion-verified-color !important;
@@ -107,4 +107,28 @@ span.help {
 
 .collapsible-group .pieform-fieldset.collapsible .pieform.supportform .form-group {
 	border-bottom: 0;
+}
+
+div.activity-outcome-line {
+    display: flex;
+    font-size: 1rem;
+    align-items: center;
+    & div.outcome-text {
+        padding-right: 10px;
+    }
+    & .signoff-wrapper {
+        display: inline-flex;
+        & a {
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            z-index: 3;
+        }
+    }
+    & .activity-outcome-signoff {
+        margin-left: auto;
+    }
+}
+
+.bt-checkpoint form {
+    padding-top: 5px;
 }

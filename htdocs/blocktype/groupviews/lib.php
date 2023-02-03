@@ -310,7 +310,7 @@ class PluginBlocktypeGroupViews extends MaharaCoreBlocktype {
             // Don't show group homepage for outcomes groups
             $type = null;
             if (is_outcomes_group($group->id)) {
-                $type = array('portfolio');
+                $type = array('portfolio', 'activity');
             }
             // Find out what order to sort them by (default is titles)
             if (!isset($configdata['sortgroupviewsby']) || $configdata['sortgroupviewsby'] == PluginBlocktypeGroupViews::SORTBY_TITLE) {

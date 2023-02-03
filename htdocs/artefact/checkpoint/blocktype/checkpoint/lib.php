@@ -74,7 +74,8 @@ class PluginBlocktypeCheckpoint extends MaharaCoreBlocktype {
             pieform(ArtefactTypeCheckpointfeedback::delete_checkpoint_feedback_form(
                 param_integer('feedback'),
                 param_integer('view'),
-                param_integer('block')
+                param_integer('block'),
+                $editing
             ));
         }
         $view = new View($instance->get('view'));
@@ -87,37 +88,41 @@ class PluginBlocktypeCheckpoint extends MaharaCoreBlocktype {
         $options->view = $instance->get_view();
         $options->block = $instance->get('id');
         $options->group = $view->get('group') ?? null;
-        $feedback = ArtefactTypeCheckpointfeedback::get_checkpoint_feedback($options, $versioning, $exporter);
-        $feedbackform = ArtefactTypeCheckpointfeedback::add_checkpoint_feedback_form($instance->get('id'), 0);
-        $feedbackform = pieform($feedbackform);
 
         $smarty = smarty_core();
         $smarty->assign('blockid', $instance->get('id'));
         $smarty->assign('exporter', ($exporter ? true : false));
-        $smarty->assign('allowfeedback', $feedback->canedit && !$versioning);
-        $smarty->assign('addcheckpointfeedbackform', $feedbackform);
+        if ($view->get('type') == 'activity' && $view->get('template') == View::SITE_TEMPLATE) {
+            $smarty->assign('sitetemplate', true);
+        }
+        else {
+            $feedback = ArtefactTypeCheckpointfeedback::get_checkpoint_feedback($options, $versioning, $exporter);
+            $feedbackform = ArtefactTypeCheckpointfeedback::add_checkpoint_feedback_form($instance->get('id'), 0, $editing);
+            $feedbackform = pieform($feedbackform);
+            $smarty->assign('allowfeedback', $feedback->canedit && !$versioning);
+            $smarty->assign('addcheckpointfeedbackform', $feedbackform);
 
-        // Display achievement level if one exists, otherwise provide dropdown
-        if (array_key_exists('level', $configdata)) {
-            $smarty->assign('saved_achievement_level', $configdata['level']);
-        }
-        else {
-            $achievementform = ArtefactTypeCheckpointfeedback::get_checkpoint_achievement_form($instance->get('id'));
-            $achievementform = pieform($achievementform);
-            $smarty->assign('select_achievement_form', $achievementform);
-        }
-        if ($feedback) {
-            $smarty->assign('feedback', $feedback);
-        }
-        else {
-            if ($feedback->count = 0) {
-                $smarty->assign('noassessment', get_string('nopeerassessment', 'blocktype.checkpoint/checkpoint'));
+            // Display achievement level if one exists, otherwise provide dropdown
+            if (array_key_exists('level', $configdata)) {
+                $smarty->assign('saved_achievement_level', $configdata['level']);
             }
+            else {
+                $achievementform = ArtefactTypeCheckpointfeedback::get_checkpoint_achievement_form($instance->get('id'));
+                $achievementform = pieform($achievementform);
+                $smarty->assign('select_achievement_form', $achievementform);
+            }
+            if ($feedback) {
+                $smarty->assign('feedback', $feedback);
+            }
+            else {
+                if ($feedback->count = 0) {
+                    $smarty->assign('noassessment', get_string('nopeerassessment', 'blocktype.checkpoint/checkpoint'));
+                }
+            }
+
+            $can_edit_activity = View::check_can_edit_activity_page_info($view->get('group'), true);
+            $smarty->assign('can_edit_activity', $can_edit_activity);
         }
-
-        $can_edit_activity = View::check_can_edit_activity_page_info($view->get('group'), true);
-        $smarty->assign('can_edit_activity', $can_edit_activity);
-
         $html = $smarty->fetch('blocktype:checkpoint:checkpoint.tpl');
         return $html;
     }
@@ -145,11 +150,6 @@ class PluginBlocktypeCheckpoint extends MaharaCoreBlocktype {
     }
 
     public static function instance_config_save($values, $instance) {
-        // must set min height to see help modal
-        if ($instance->get('height') < 30) {
-            $instance->set('height', 35);
-            $instance->commit();
-        };
         return $values;
     }
 

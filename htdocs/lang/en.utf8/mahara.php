@@ -1370,7 +1370,7 @@ $string['styleguide_description'] = 'This style guide describes all the differen
 // Miscellaneous (please keep these alphabetized)
 $string['cli_incorrect_value'] = 'Incorrect value, please retry.';
 $string['progresspagedescription'] = 'Portfolio completion page for a collection.';
-$string['activitypagedescription'] = 'Activity page for an outcome collection in groups.';
+$string['activitypagedescription'] = 'Activity page for an outcomes collection in groups.';
 $string['scroll_to_top'] = 'Back to top';
 $string['tabgroup'] = 'Group';
 $string['tabinstitution'] = 'Institution';

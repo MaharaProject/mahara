@@ -22,12 +22,13 @@
         <span class="btn-title visually-hidden">{str tag=editcontent1 section=view}</span>
         </button>
     {/if}
-    <button
-data-url="{$WWWROOT}{if $collectionurl}{$collectionurl}{else}view/view.php?id={$viewid}{/if}"
+    {if !$issitetemplate}
+        <button data-url="{$WWWROOT}{if $collectionurl}{$collectionurl}{else}view/view.php?id={$viewid}{/if}"
     id='displaypagebtn' type="button" class="btn btn-secondary editviews displaycontent" title="{str tag=displayview section=view}">
-    <span class="icon icon-tv icon-lg left" role="presentation" aria-hidden="true"></span>
-    <span class="visually-hidden">{str tag=displayview section=view}</span>
-    </button>
+        <span class="icon icon-tv icon-lg left" role="presentation" aria-hidden="true"></span>
+        <span class="visually-hidden">{str tag=displayview section=view}</span>
+        </button>
+    {/if}
     {if !$accesssuspended && ($edittitle || $viewtype == 'share') && !$issitetemplate && $selected != 'share'}
         <button
             data-url="{$WWWROOT}view/accessurl.php?return=edit&id={$viewid}{if $collectionid}&collection={$collectionid}{/if}"

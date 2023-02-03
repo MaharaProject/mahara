@@ -134,10 +134,6 @@ if ($viewtype == 'profile' || $viewtype == 'dashboard' || $viewtype == 'grouphom
     redirect($view->get_url());
 }
 
-// Prepare the achieved switch in advance
-if ($viewtype == 'activity') {
-    $achieved_switch = $view->get_activity_signoff();
-}
 $institution = $view->get('institution');
 View::set_nav($groupid, $institution, false, false, false);
 // Comment list pagination requires limit/offset params
@@ -965,9 +961,6 @@ $returnto = $view->get_return_to_url_and_title();
 $smarty->assign('url', $returnto['url']);
 $smarty->assign('linktext', $returnto['title']);
 $smarty->assign('viewid', $view->get('id'));
-$smarty->assign('signoff_html', $signoff_html);
-$smarty->assign('group', $view->get('group'));
-$smarty->assign('signoff_html', $signoff_html);
 $smarty->assign('group', $view->get('group'));
 
 // Activity data form
@@ -980,17 +973,14 @@ if ($view->get('group') && $view->get('type') == 'activity') {
     $group = $view->get('group');
     $smarty->assign('activity', $activity_data);
     $smarty->assign('is_activity_page', $view->get('type') == 'activity');
-    $can_edit_layout = $group ? View::check_can_edit_activity_page_info($group, true) : true;
+    $can_edit_layout = (View::check_can_edit_activity_page_info($group, true) && !$activity_data->achieved);
     $smarty->assign('activity_support_form', $view->get_activity_support_form( $can_edit_layout));
     $smarty->assign('can_edit_layout', $can_edit_layout);
     $smarty->assign('usercaneditview', $can_edit_layout);
-
-    // pass in dummyform for sign-off-like functionality
-    // Prepare the signoff verify form in advance - used to be a block
-    $smarty->assign('activity_achieved_switch', $achieved_switch);
-    $smarty->assign('collection', $view->get_collection()->get('id'));
-    $smarty->assign('collectionid', $view->get_collection()->get('id'));
-
+    $smarty->assign('activity_signoff_html', $signoff_html);
+}
+else {
+    $smarty->assign('signoff_html', $signoff_html);
 }
 
 $smarty->display('view/view.tpl');

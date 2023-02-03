@@ -85,6 +85,7 @@ function create_outcome_form($name, $title, $collection, $new=true, $outcome=nul
         'full_title'  => array(
           'type'        => 'textarea',
           'title'       => get_string('fulltitle', 'collection'),
+          'description' => get_string('fulltitledesc', 'collection'),
           'defaultvalue'=> $new ? null : $outcome->full_title,
           'rows'        => 5,
           'cols'        => 30,

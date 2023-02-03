@@ -596,13 +596,13 @@ $string['signoffhelppage'] = "Mark this page as 'Signed off' when you have finis
 $string['signoffdesc'] = 'The portfolio owner can sign off a page when all requirements have been met to indicate that it is ready for assessment.';
 
 $string['verify'] = 'Verify';
-$string['verifydesc'] = 'Decide whether a moderator needs to verify this page as part of the portfolio assessment process.';
+$string['verifydesc1'] = 'Decide whether a manager needs to verify this page as part of the portfolio assessment process.';
 $string['signedoff'] = 'Signed off';
 $string['verified'] = 'Verified';
 
 $string['signoffpagetitle'] = 'Sign-off page';
 $string['signoffpagedesc'] = 'Select "Yes" to sign off this page and indicate that you have met all requirements. Select "No" to abort.';
-$string['signoffpageundodesc'] = 'If you select "Yes", you will remove the signed off status. That will also remove the verification if that had been part of the assessment work flow. Select "No" to abort.';
+$string['signoffpageundodesc'] = 'If you select "Yes", you will remove the signed-off status. That will also remove the verification if that had been part of the assessment work flow. Select "No" to abort.';
 $string['signoffpageconfirm'] = 'Confirm this action?';
 
 $string['verifypagetitle'] = 'Verify page';
@@ -615,7 +615,7 @@ $string['viewsignoffdetails'] = 'View sign-off details information';
 $string['readyforverification'] = 'This page is ready for verification.';
 $string['signedoffbyondate'] = '%s signed off this page on %s.';
 $string['verifiedbyondate'] = '%s verified this page on %s.';
-
+$string['cannoteditaftersignoff'] = 'You cannot update "%s" after page is signed off';
 
 $string['removedverifynotificationsubject'] = 'Verification for %s removed';
 $string['removedverifynotification'] = 'The owner of the page %s has removed their sign-off. Therefore, your verification has also been removed. Please go to the page to see if it is ready to be marked as verified again.';
@@ -634,13 +634,13 @@ $string['activity_info_desc'] = 'Describe the activity that the learner should a
 // Subject
 $string['activity_info_subject'] = 'Subject';
 $string['activity_info_subject_desc'] = 'Select the subject that fits most closely for this activity.';
-$string['activity_info_supervisor'] = 'Responsible tutor or administrator';
+$string['activity_info_supervisor'] = 'Responsible staff';
 $string['activity_info_activity_info_supervisor_desc'] = 'Select the group tutor or group administrator who is in charge of this activity.';
 
 $string['activity_info_start_date'] = 'Start date';
 $string['activity_info_end_date'] = 'End date';
-$string['activity_info_start_date_desc'] = 'Select the date when the learner will start work on this activity';
-$string['activity_info_end_date_desc'] = 'Select the date when the learner is expected to finish this activity';
+$string['activity_info_start_date_desc'] = 'Select the date when the learner will start work on this activity.';
+$string['activity_info_end_date_desc'] = 'Select the date when the learner is expected to finish this activity.';
 $string['activity_info_achievement_levels'] = 'Levels of achievement';
 $string['activity_info_achievement_levels_desc'] = 'Define the levels of achievement for this particular activity.';
 
@@ -653,47 +653,13 @@ $string['activity_info_staff'] = 'Responsible staff';
 $string['timeframe'] = 'Time frame';
 $string['subject'] =  'Subject'; // Can be pulled from outcomes
 $string['strategy_support']  = 'Strategies and support';
+
 $string['strategy_support_desc'] = '
-    <div class="html form-group">
-        <span class="pseudolabel"></span>
-        <span class="text-small postedon">
-            Outline the strategies and support recommendations you are taking to support the learner.
-        </span>
-    </div>
+    Outline your strategies and support recommendations to help the learner.
 ';
+
 $string['resources_support'] = 'Resources';
-
-$string['resources_support_desc'] = '
-    <div class="html form-group">
-        <span class="pseudolabel"></span>
-        <span class="text-small postedon">
-            Describe the resources used and how they support the learner.
-        </span>
-    </div>
-';
+$string['resources_support_desc'] = 'Describe the resources you used and how they supported the learner.';
 $string['learner_support'] = 'Learner support';
-
-$string['learner_support_desc'] = '
-    <div class="html form-group">
-        <span class="pseudolabel"></span>
-        <span class="text-small postedon">
-            Describe how the learner was supported to achieve the activity (personal outcome).
-        </span>
-    </div>
-';
-
-$string['last_edited'] = '
-    <div class="html form-group">
-        <span class="pseudolabel"></span>
-        <span class="text-small postedon">
-            <a href="%s">%s</a>, on %s
-        </span>
-    </div>
-';
-
-$string['activity_support_submit_button'] = '
-    <span class="pseudolabel"></span>
-    <button id="%s_support" class="btn-secondary button btn activity_support">
-        Save
-    </button>
-';
+$string['learner_support_desc'] = 'Describe how you supported the learner to complete this activity.';
+$string['supportupdatedfor'] = 'Updated "%s"';
