@@ -117,6 +117,13 @@ if (!empty($group->id)) {
     $outcomesgroup = is_outcomes_group($group->id);
 }
 
+foreach ($data->data as $portfolioindex => $portfolio) {
+    // Make sure empty collection has collection object associated with it
+    if (empty($portfolio['collection']) && !empty($portfolio['collid'])) {
+        $data->data[$portfolioindex]['collection'] = new Collection($portfolio['collid']);
+    }
+}
+
 $smarty = smarty(array('paginator'));
 setpageicon($smarty, 'icon-layer-group');
 $smarty->assign('INLINEJAVASCRIPT', $js);

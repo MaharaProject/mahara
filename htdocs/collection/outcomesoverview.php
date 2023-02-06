@@ -158,6 +158,8 @@ if ($outcomes) {
 
     $activities = get_outcome_activity_views($collection->get('id'));
     $smarty->assign('activities', $activities);
+    $can_edit_layout = View::check_can_edit_activity_page_info($collection->get('group'), true);
+    $smarty->assign('usercaneditview', $can_edit_layout);
 }
 
 $smarty->assign('url', get_config('wwwroot') . 'view/groupviews.php?group=' . $collection->get('group'));
