@@ -1180,14 +1180,14 @@ class View {
                   va.*,
                   o.short_title AS outcome,
                   ot.abbreviation AS outcome_type,
-                  os.abbreviation AS subject_name,
+                  os.title AS subject_name,
                   ot.styleclass
                 FROM
                   {view_activity} va
                   JOIN {outcome_view_activity} ov ON va.id = ov.activity
                   JOIN {outcome} o ON o.id = ov.outcome
-                  JOIN {outcome_type} ot ON ot.id = o.outcome_type
                   JOIN {outcome_subject} os ON os.id = va.subject
+                  LEFT JOIN {outcome_type} ot ON ot.id = o.outcome_type
                   WHERE va.view = ?
             ";
 
@@ -1220,6 +1220,9 @@ class View {
         // Delete related activity achievement levels
         $levels = get_column('view_activity_achievement_levels', 'id', 'activity', $view_activity->id);
         delete_records('view_activity_achievement_levels', 'activity', $view_activity->id);
+
+        // Delete related support data
+        delete_records('view_activity_support', 'activity', $view_activity->id);
 
         // Delete reference to activity page
         delete_records('view_activity', 'id', $view_activity->id);
@@ -4194,7 +4197,27 @@ class View {
         return true;
     }
 
-    private function activity_support_edit_element($activity, $type) {
+    /**
+     * Check if the outcome and collection exist for the group
+     *
+     * @param  mixed $groupid
+     * @param  mixed $outcomeid
+     * @param  mixed $collectionid
+     * @throws AccessDeniedException
+     */
+    public static function check_group_outcome_collection($groupid, $outcomeid, $collectionid): bool {
+        if (get_record_sql("SELECT o.id FROM {collection} c
+                            JOIN {outcome} o ON o.collection = c.id
+                            WHERE c.group = ? AND o.collection = ? AND o.id = ?", array($groupid, $collectionid, $outcomeid))) {
+            return true;
+        }
+        throw new AccessDeniedException();
+    }
+
+    /**
+     * Generate activity support data
+     */
+    private function get_activity_support_data(object $activity, string $type): array {
         $db_table = 'view_activity_support';
         $support = get_record($db_table, 'activity', $activity->id, 'type', $type . '_support');
         $support_edited_by_html = '';
@@ -4209,27 +4232,30 @@ class View {
             $smarty->assign('author', $last_edit_author);
             $smarty->assign('date', $last_edit_time);
             $support_edited_by_html =  $smarty->fetch('view/activitysupporteditedby.tpl');
-            $support_value = get_field(
-                'view_activity_support',
-                'value',
-                'activity',
-                $activity->id,
-                'type',
-                $type . '_support'
-            );
+            $support_value = $support->value;
         }
         return array($support_value, $support_edited_by_html);
     }
 
-    private function get_activity_support_element_display($type, $supportvalue, $supportby) {
+    /**
+     * Get the Pieform element structure for author text in activity support
+     *
+     * Display support text and author lines
+     */
+    private function get_activity_support_elem_display(string $type, string $supportvalue, string $supportby): array {
         return array($type . '_support' => array(
             'type'   => 'html',
             'title'  => get_string($type . '_support', 'view'),
-            'value'  => $supportvalue . $supportby,
+            'value'  => '<br>' . $supportvalue . $supportby, // Add break so value starts below the title
         ));
     }
 
-    private function get_activity_support_element_editing($type, $supportvalue, $supportby) {
+    /**
+     * Get the Pieform element structure for editing activity support
+     *
+     * Textboxes and submit buttons
+     */
+    private function get_activity_support_elem_editing(string $type, string $supporttext): array {
         $smarty = smarty();
         $smarty->assign('description', get_string($type . '_support_desc', 'view'));
         $html = $smarty->fetch('view/activitysupportdesc.tpl');
@@ -4238,7 +4264,7 @@ class View {
             'type'         => 'textarea',
             'title'        => get_string($type . '_support', 'view'),
             'description'  => $html,
-            'defaultvalue' => $supportvalue,
+            'defaultvalue' => $supporttext,
             'rows'         => 5,
             'cols'         => 70,
             'class'        => 'form-group-no-border'
@@ -4250,40 +4276,45 @@ class View {
         return array_merge($supportelement, $supportsubmit);
     }
 
-    public function get_activity_support_edit_elems($activity, $edit = true) {
+    /**
+     * Get the Pieform element structure for editing or displaying activity support
+     */
+    public function get_activity_support_edit_display_elems(object $activity, $edit = true) {
         // Get info for form
         $support_types = ['strategy', 'resources', 'learner'];
-        $display_elems = array();
-        $edit_elems = array();
+        $display_elements = array();
+        $edit_elements = array();
         foreach ($support_types as $support_type) {
-            list($supportvalue, $supportby_html) = $this->activity_support_edit_element($activity, $support_type);
-            $display_elems = array_merge(
-                $display_elems,
-                $this->get_activity_support_element_display($support_type, $supportvalue, $supportby_html)
+            list($support_text, $author_text) = $this->get_activity_support_data($activity, $support_type);
+
+            $edit_elements = array_merge(
+                $edit_elements,
+                $this->get_activity_support_elem_editing($support_type, $support_text)
             );
 
-            $edit_elems = array_merge(
-                $edit_elems,
-                $this->get_activity_support_element_editing($support_type, $supportvalue, $supportby_html)
+            $display_elements = array_merge(
+                $display_elements,
+                $display_elements = $this->get_activity_support_elem_display($support_type, $support_text, $author_text)
             );
         }
 
-        $edit_elems['new'] = array(
+        $edit_elements['new'] = array(
             'type' => 'hidden',
             'name' => 'group',
             'value' => $activity->id
         );
 
-        return $edit ? $edit_elems : $display_elems;
+        return $edit ? $edit_elements : $display_elements;
     }
 
     /**
-     * Get the pieform for the top of Activity page support form
+     * Get the Pieform for the top of Activity page support form
      *
-     * Visible to group admins/tutors
+     * Returns either the edit or display version depending on
+     * the value of $editing
      *
      */
-    public function get_activity_support_form($edit = true): string {
+    public function get_activity_support_display_edit_form($editing = true): string {
         $activity = $this->get_view_activity_data();
 
         if (!$activity) {
@@ -4322,8 +4353,11 @@ class View {
             ]
         );
 
-        // If editing, add textboxes
-        $support_form['elements'] = array_merge($support_form['elements'], $this->get_activity_support_edit_elems($activity, $edit));
+        // This returns either the edit or display form based on $editing
+        $support_form['elements'] = array_merge(
+            $support_form['elements'],
+            $this->get_activity_support_edit_display_elems($activity, $editing)
+        );
 
         $support_form = pieform($support_form);
 
@@ -8056,7 +8090,7 @@ class View {
         }
 
         // We make a couple of dummy forms so we get pieform 'switchbox' markup but we don't want
-        // to submit via pieforms as the markup will be accessed via javascript // TODO: Doris copy this but use Cecilia's logic
+        // to submit via pieforms as the markup will be accessed via javascript
         $signoff_element['signoff'] = array(
             'type'         => 'switchbox',
             'title'        => '',

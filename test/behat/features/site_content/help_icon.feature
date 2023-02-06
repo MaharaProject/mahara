@@ -50,7 +50,7 @@ Scenario: Showing contextual help for pages under menu "Portfolio" (Bug 809297).
   And I click on "Help for \"Tags\"" in the "Tags section" "Tags" property
   Then I should see "You can add tags to artefacts, pages and collections you create. Tags are descriptive labels that allow you to find your content later on more easily."
   And I set the field "Collection name" to "Collection 01"
-  And I click on "Next: Edit collection pages"
+  And I click on "Continue: Edit collection pages"
   # Edit collection pages
   And I click on "Help"
   Then I should see "Here you can add pages to your collection and set the order in which they will be displayed in the collection navigation."

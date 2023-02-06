@@ -4,18 +4,20 @@
             <a data-bs-toggle="collapse" href="#target" aria-expanded="true" class="outer-link"></a>
             {$activity->description}
             <span class="icon icon-chevron-down collapse-indicator float-end" role="presentation" aria-hidden="true"></span>
-            <div class="activity-outcome-line">
-                <div class="outcome-text">{str tag="outcome" section="collection"}: {$activity->outcome}</div>
-                <div class="outcome-text">{str tag="outcometype" section="collection"}:
-                    <div id="outcometype-{$outcome->id}" class="outcome-type">
-                        <span class="badge rounded-pill text-bg-{$activity->styleclass}">{$activity->outcome_type}</span>
-                    </div>
-                </div>
-                <div class="activity-outcome-signoff">{$activity_signoff_html|safe}</div>
-            </div>
         </h2>
+        <div class="activity-outcome-line">
+            <div class="outcome-text">{str tag="outcome" section="collection"}: {$activity->outcome}</div>
+            {if $activity->outcome_type}
+            <div class="outcome-text">{str tag="outcometype" section="collection"}:
+                <div id="outcometype-{$outcome->id}" class="outcome-type">
+                    <span class="badge rounded-pill text-bg-{$activity->styleclass}">{$activity->outcome_type}</span>
+                </div>
+            </div>
+            {/if}
+            <div class="activity-outcome-signoff">{$activity_signoff_html|safe}</div>
+        </div>
         <div class="block collapse hide" id="target" aria-expanded="true">
-            {$activity_support_form|safe}
+            {$activity_support|safe}
         </div>
     </div>
 {/if}

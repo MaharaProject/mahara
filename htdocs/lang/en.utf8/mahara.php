@@ -42,6 +42,7 @@ $string['update']  = 'Update';
 $string['change']  = 'Change';
 $string['send']    = 'Send';
 $string['go']      = 'Go';
+$string['continue'] = 'Continue';
 $string['configfor'] = 'Configuration for';
 $string['infofor'] = 'Information for';
 $string['default'] = 'Default';

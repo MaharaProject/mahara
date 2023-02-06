@@ -92,7 +92,7 @@ $elements = $collection->get_collectionform_elements();
 
 if ($copy) {
     $type = 'submit';
-    $submitstr = get_string('next') . ': ' . get_string('editviews', 'collection');
+    $submitstr = get_string('continue') . ': ' . get_string('editviews', 'collection');
     $confirm = null;
     $class = 'btn-primary';
     $subclass = null;
@@ -100,16 +100,19 @@ if ($copy) {
 else {
     $type = 'submitcancel';
     if ($collection->get('group') && is_outcomes_group($collection->get('group'))) {
-      $submitstr = array('button' => get_string('save'), 'cancel' => get_string('cancel'));
-      $confirm = array('cancel' => get_string('confirmcancelcreatingcollection','collection'));
+        $submitstr = array('button' => get_string('continue'), 'cancel' => get_string('cancel'));
+        $confirm = array('cancel' => get_string('confirmcancelcreatingcollection', 'collection'));
     }
     else if ($new) {
-      $submitstr = array('button' => get_string('next') . ': ' . get_string('editviews', 'collection'), 'cancel' => get_string('cancel'));
-      $confirm = array('cancel' => get_string('confirmcancelcreatingcollection','collection'));
+        $submitstr = array(
+            'button' => get_string('continue') . ': ' . get_string('editviews', 'collection'),
+            'cancel' => get_string('cancel')
+        );
+        $confirm = array('cancel' => get_string('confirmcancelcreatingcollection', 'collection'));
     }
     else {
-      $submitstr = array(get_string('save'), get_string('cancel'));
-      $confirm = null;
+        $submitstr = array(get_string('continue'), get_string('cancel'));
+        $confirm = null;
     }
     $class = 'btn-primary';
     $subclass = array('btn-primary');

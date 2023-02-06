@@ -50,10 +50,10 @@ Scenario: SmartEvidence interaction by member / staff
     | Collection name | SmartEvidence Collection 1 |
     | Collection description | SmartEvidence Collection 1 description |
     And I select "Title of your framework" from "SmartEvidence framework"
-    And I click on "Next: Edit collection pages"
+    And I click on "Continue: Edit collection pages"
     And I click on "All"
     And I click on "Add pages"
-    When I click on "Next: Edit access"
+    When I click on "Continue: Edit access"
     Then I click on "Return to portfolios"
 
     # Mahara member makes page visible to public

@@ -6,18 +6,20 @@
       <div class="delete-button-container">
         <span class="btn-group btn-group-top">
           <span class="delete-outcome deletebutton btn btn-secondary btn-sm">
-            <a href="#" title={str tag=delete}>
+            <a href="#" title="{str tag=deleteoutcome section=collection} '{$form.shorttitle}'">
               <span role="presentation" class="icon icon-trash-alt text-danger"></span>
             </a>
           </span>
         </span>
       </div>
     {/if}
-    {$form|safe}
+    {$form.html|safe}
   {/foreach}
 </div>
 <div class="outcome-form-section">
-  <a id="add_outcome" class="add-outcome-link" href="#">+ {get_string('addoutcomelink', 'collection')}</a>
+  <a id="add_outcome" class="add-outcome-link link-blocktype" href="#">
+    <span class="icon icon-plus" role="presentation" aria-hidden="true"></span>
+    {get_string('addoutcomelink', 'collection')}</a>
 </div>
 
 <div id="outcome_buttons_container" class="outcome-form-section submitcancel form-group">

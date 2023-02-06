@@ -59,13 +59,13 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
     | Collection description | SmartEvidence Collection 1 description |
     And I select "Title of your framework" from "SmartEvidence framework"
     # Adding page 1, 2 & 3 to the collection
-    And I click on "Next: Edit collection pages"
+    And I click on "Continue: Edit collection pages"
     And I click on "All"
     And I click on "Add pages"
     # Verifying that the pages were added
     Then I should see "Page UserA_01"
     And I should see "Page UserA_03"
-    When I click on "Next: Edit access"
+    When I click on "Continue: Edit access"
     Then I should see "Edit access"
 
     # Mahara member makes to page visible to public

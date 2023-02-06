@@ -15,6 +15,7 @@ define('JSON', 1);
 require(dirname(dirname(__FILE__)) . '/init.php');
 require_once(get_config('docroot') . 'lib/collection.php');
 
+$dynamicindex = param_integer('dynamicindex');
 $outcomeid = param_integer('outcomeid');
 $collectionid =  param_integer('collection', null);
 
@@ -26,8 +27,19 @@ if (!($collection->get('group') && group_user_access($collection->get('group')) 
 
 json_headers();
 
-if (!delete_records('outcome','id', $outcomeid)) {
-    json_reply('local', get_string('deletefailed','admin'));
+
+// Get view activity info
+$num_of_activities = get_records_array('outcome_view_activity', 'outcome', $outcomeid);
+if ($num_of_activities) {
+    $data['message'] = get_string('deletefailedoutcome', 'collection', $dynamicindex) . ' ' . get_string('deleteactivitiesfirst', 'collection');
+    json_reply('local', $data);
+}
+
+try {
+    delete_records('outcome', 'id', $outcomeid);
+}
+catch (Exception $e) {
+    json_reply('false', get_string('deletefailed', 'admin'));
 }
 
 json_reply(false, get_string('outcomedeleted','collection'));

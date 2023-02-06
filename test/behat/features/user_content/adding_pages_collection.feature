@@ -29,7 +29,7 @@ Scenario: Creating a collection AND adding pages
         | Collection name | Test Collection |
         | Collection description | Test |
     # Adding page 1, 2 & 3 to the collection
-    And I click on "Next: Edit collection pages"
+    And I click on "Continue: Edit collection pages"
     And I click on "All"
     Then I click on "Add pages"
     # Verifying that the pages were added

@@ -54,6 +54,7 @@ if ($new && $id === false) {
 
         if ($view_type == 'activity') {
             View::check_can_edit_activity_page_info($groupid);
+            View::check_group_outcome_collection($groupid, $outcome, $collection_to_add_view);
             $values['outcome'] = $outcome;
         }
 
@@ -229,7 +230,6 @@ function create_settings_pieform() {
         if ($view->get('type') == 'activity' && $group && is_outcomes_group($group)) {
             $formelements['activityinfo'] = array(
                 'type'        => 'fieldset',
-                'class'       => 'first',
                 'collapsible' => true,
                 'collapsed'   => false,
                 'legend'      => get_string('activity_info_fieldset', 'view'),
@@ -449,15 +449,18 @@ function get_view_activity_info_elements(int $outcome_id): array {
     );
 
     $elements['achievement_levels_title'] = [
-        'type' => 'container',
-        'elements' => [],
-        'title' => get_string('activity_info_achievement_levels', 'view'),
+        'type' => 'html',
+        'value' => '
+        <h3>' . get_string('activity_info_achievement_levels', 'view') . '</h3>
+        <div class="description"><span class="description">' . get_string('activity_info_achievement_levels_desc', 'view') .
+        '</span></div>
+        ',
+        'class' => 'form-group-no-border'
     ];
 
     $elements['achievement_levels'] = [
         'type' => 'fieldset',
         'columns' => get_string('activity_info_achievement_levels_desc', 'view'),
-        'legend' => get_string('activity_info_achievement_levels_desc', 'view'),
         'elements' => get_achievement_levels_elements($activity->id ?? null),
     ];
 

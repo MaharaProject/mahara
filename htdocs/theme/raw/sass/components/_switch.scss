@@ -51,6 +51,7 @@ $indicator-total-width: $indicator-size + ($indicator-horizontal-margin * 2);
         padding: 0;
         min-width: 0;
         margin: 0;
+        color: $theme-text-color;
 
         &:hover {
             .switch-inner:before,

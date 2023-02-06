@@ -368,10 +368,8 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
         global $USER;
 
         $allowedoptions = self::get_checkpoint_feedback_options();
-        $admintutorids = property_exists($options, 'group')
-            ?  group_get_member_ids($options->group, array('admin', 'tutor')) : [];
 
-        // vars populated from $options
+        // vars get populated from $options
         $limit = null;
         $offset = null;
         $block = null;
@@ -388,9 +386,7 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
         $userid = $USER->get('id');
         $viewid = $view->get('id');
         $activityid = ArtefactTypeCheckpointfeedback::get_checkpoint_activity_id();
-        $group =  $view->get('group');
 
-        // $canedit = $admintutorids = $group && in_array($userid, $admintutorids, true);
         $canedit = true; // all group members can add a comment to provide feedback
         $owner = $view->get('owner');
         $isowner = $userid && $userid == $owner;

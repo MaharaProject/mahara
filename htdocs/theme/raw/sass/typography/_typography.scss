@@ -184,7 +184,7 @@ a {
     margin: $spacing-base 0 0 0;
     padding: $input-btn-padding-y $input-btn-padding-x;
     display: inline-block;
-    text-decoration: none !important;
+    text-decoration: underline !important;
     &:hover,
     &:focus {
         background-color: $accent-bg;

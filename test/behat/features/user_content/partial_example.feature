@@ -27,7 +27,7 @@ Scenario: Meta test testing Behat's functionality (Bug #1387836)
     And I click on "Collection" in the dialog
     And I fill in "Collection name" with "test collection name"
     And the "Page navigation bar" checkbox should be checked
-    And I click on "Next: Edit collection pages"
+    And I click on "Continue: Edit collection pages"
     # Adding pages to the collection
     And I click on "Add pages"
     # Verifying it added
@@ -36,7 +36,7 @@ Scenario: Meta test testing Behat's functionality (Bug #1387836)
     And I check "test page name 1"
     And the "test page name 1" checkbox should be checked
     And I click on "Add pages"
-    And I click on "Next: Edit access"
+    And I click on "Continue: Edit access"
     And I click on "Return to portfolios"
     And I click on "test collection name" card menu
     And I should see "Delete"
