@@ -15,7 +15,7 @@ require_once(get_config('libroot') . '/elasticsearch/autoload.php');
 
 use Elasticsearch\ClientBuilder;
 
-function __autoload_elasticsearchtypes ($class) {
+function ___autoload_elasticsearchtypes ($class) {
     if (substr($class, 0, 18) == 'ElasticsearchType_') {
         $file = __DIR__ . '/type/' . $class . '.php';
         if (file_exists($file)) {
@@ -23,7 +23,7 @@ function __autoload_elasticsearchtypes ($class) {
         }
     }
 }
-spl_autoload_register('__autoload_elasticsearchtypes', true);
+spl_autoload_register('___autoload_elasticsearchtypes', true);
 
 /**
  * The internal search plugin which searches against the
