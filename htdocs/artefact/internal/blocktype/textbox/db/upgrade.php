@@ -26,6 +26,7 @@ function xmldb_blocktype_textbox_upgrade($oldversion=0) {
         $lastid = 0;
 
         if (is_mysql()) {
+            // phpcs:ignore
             $mp = mysql_get_variable('max_allowed_packet');
             $limit = ($mp && is_numeric($mp) && $mp > 1048576) ? ($mp / 8192) : 100;
         }
