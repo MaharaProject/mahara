@@ -505,7 +505,7 @@ function webservice_download_file_content($url, $headers=null, $postdata=null, $
     $options[CURLOPT_HEADER] = false;
     $options[CURLOPT_CONNECTTIMEOUT] = $connecttimeout;
 
-    if (!ini_get('open_basedir') and !ini_get('safe_mode')) {
+    if (!ini_get('open_basedir')) {
         // TODO: add version test for '7.10.5'
         $options[CURLOPT_FOLLOWLOCATION] = true;
         $options[CURLOPT_MAXREDIRS] = 5;
