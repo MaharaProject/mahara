@@ -16,6 +16,7 @@ require(dirname(dirname(dirname(__FILE__))) . '/init.php');
 require(get_config('libroot') . 'cli.php');
 
 $cli = get_cli();
+$exporter = false;
 
 $options = array();
 $options['dryrun'] = (object) array(
@@ -198,7 +199,7 @@ else {
  * @param boolean $allusers true | false
  */
 function bulkexport($values, $exportformat = 'html', $allusers = true) {
-    global $cli;
+    global $cli, $exporter;
 
     $usernames = array();
 

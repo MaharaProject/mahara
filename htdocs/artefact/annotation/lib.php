@@ -1135,7 +1135,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
      * @param   bool    $editing  Whether we are view edit mode or not
      */
     public static function get_annotation_feedback_for_view($annotationartefact, $view, $blockid, $html = true, $editing = false) {
-        global $USER;
+        global $USER, $exporter;
         if (!is_object($annotationartefact) || !is_object($view)) {
             throw new MaharaException(get_string('annotationinformationerror', 'artefact.annotation'));
         }
@@ -1155,7 +1155,7 @@ class ArtefactTypeAnnotationfeedback extends ArtefactType {
         if ($html) {
             // Return the rendered form.
             $smarty = smarty_core();
-            if ($annotationartefact->get('allowcomments') && !$editing) {
+            if ($annotationartefact->get('allowcomments') && !$editing && !$exporter) {
                 $addannotationfeedbackform = pieform(ArtefactTypeAnnotationfeedback::add_annotation_feedback_form($annotationartefact, $view, null, $blockid, false, $annotationartefact->get('approvecomments')));
                 $smarty->assign('addannotationfeedbackform', $addannotationfeedbackform);
             }
