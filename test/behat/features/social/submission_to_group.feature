@@ -69,5 +69,5 @@ Feature: Mahara users submit pages / colelctions to a group
     Given I log in as "groupAdmin" with password "Kupuh1pa!"
     And I choose "Groups" in "Engage" from main menu
     When I click on "GroupA"
-    And I scroll to the base of id "groupviewlist"
+    And I scroll to the base of id "nosubmissionslist"
     Then I should see "Cecilia User" in the "Members without a submission to the group" "Groups" property
