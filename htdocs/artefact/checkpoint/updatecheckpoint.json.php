@@ -24,6 +24,8 @@ $block = new BlockInstance($blockid);
 $configdata = $block->get('configdata');
 $viewid = $block->get('view');
 $configdata['level'] = $level;
+$configdata['author'] = $USER->get('id');
+$configdata['time'] = time();
 $block->set('configdata', $configdata);
 $block->commit();
 

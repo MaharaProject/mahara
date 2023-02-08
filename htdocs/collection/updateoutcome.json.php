@@ -22,7 +22,7 @@ $collectionid = param_integer('collectionid');
 $update_type = param_alpha('update_type', '');
 
 $progress = trim(param_variable('progress', ''));
-$support = param_boolean('support', null);
+$support = (int) param_boolean('support');
 
 
 $collection = new Collection($collectionid);

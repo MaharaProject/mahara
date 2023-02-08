@@ -29,7 +29,7 @@
         <span class="visually-hidden">{str tag=displayview section=view}</span>
         </button>
     {/if}
-    {if !$accesssuspended && ($edittitle || $viewtype == 'share') && !$issitetemplate && $selected != 'share'}
+    {if !$accesssuspended && ($edittitle || $viewtype == 'share') && $can_edit_page_settings && !$issitetemplate && $selected != 'share'}
         <button
             data-url="{$WWWROOT}view/accessurl.php?return=edit&id={$viewid}{if $collectionid}&collection={$collectionid}{/if}"
             class="btn btn-secondary editviews editshare {if $selected == 'share'}active{/if}" title="{str tag=shareview1 section=view}">

@@ -29,6 +29,8 @@ $string['achievementlevel'] = 'Achievement level';
 $string['level'] = 'level';
 $string['level_cap'] = 'Level';
 $string['save'] = 'Save';
+$string['achievementauthor'] = 'Verified by';
+$string['achievementleveltime'] = 'Verified on';
 
 // Profile completion
 $string['checkpointfeedback'] = 'Checkpoint feedback';
