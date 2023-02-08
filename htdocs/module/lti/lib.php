@@ -963,6 +963,18 @@ class ModuleLtiSubmission {
         return true;
     }
 
+    /**
+     * Format the grade for the LTI consumer.
+     *
+     * @param float $grade The grade to format.
+     *
+     * @return string The formatted value.
+     */
+    public static function format_grade($grade) {
+        $grade = $grade / 100;
+        return number_format($grade, 2, '.', '');
+    }
+
     private function publish_lti_outcome() {
 
         require_once(get_config('docroot') . 'webservice/libs/oauth-php/OAuthRequester.php');
@@ -970,7 +982,7 @@ class ModuleLtiSubmission {
         $smarty = smarty();
         $smarty->assign('sourceid', $this->lisresultsourceid);
         $smarty->assign('messageidentifier', sha1(uniqid(time(), true)));
-        $smarty->assign('score', $this->grade / 100);
+        $smarty->assign('score', ModuleLtiSubmission::format_grade($this->grade));
         $body = $smarty->fetch('module:lti:xmlreplaceresult.tpl');
         $bodyhash = base64_encode(sha1($body, true));
 
