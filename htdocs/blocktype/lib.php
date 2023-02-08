@@ -437,12 +437,13 @@ EOF;
     /**
      * Fetch all the view types
      *
+     * Keeps a static list unless upgrading
      * @return array $viewtypes
      */
     public static function get_viewtypes() {
         static $viewtypes = null;
 
-        if (is_null($viewtypes)) {
+        if (is_null($viewtypes) || get_field('config', 'value', 'field', '_upgrade')) {
             $viewtypes = get_column('view_type', 'type');
             if (!$viewtypes) {
                 $viewtypes = array();
