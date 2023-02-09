@@ -596,11 +596,17 @@ $show_comment_id = 0;
 if ($show_comment_type) {
     $show_comment_id = ${'show' . $show_comment_type};
     $artefacttype = get_field('artefact', 'artefacttype', 'id', $show_comment_id);
-    $classname = generate_artefact_class_name($artefacttype);
-    $tmpcomment = new $classname($show_comment_id);
-    if (property_exists($tmpcomment, 'onartefact') && $tmpcomment->get('onartefact') && !$commentonartefact) {
-        redirect(get_config('wwwroot') . 'view/view.php?id=' . $viewid . '&show' . $show_comment_type . '=' .
-            $show_comment_id . '&modal=1&artefact=' . $tmpcomment->get('onartefact'));
+    if ($artefacttype) {
+        $classname = generate_artefact_class_name($artefacttype);
+        $tmpcomment = new $classname($show_comment_id);
+        if (property_exists($tmpcomment, 'onartefact') && $tmpcomment->get('onartefact') && !$commentonartefact) {
+            redirect(get_config('wwwroot') . 'view/view.php?id=' . $viewid . '&show' . $show_comment_type . '=' .
+                $show_comment_id . '&modal=1&artefact=' . $tmpcomment->get('onartefact'));
+        }
+    }
+    else {
+        // Comment id is not valid - the comment may have already been deleted
+        redirect(get_config('wwwroot') . 'view/view.php?id=' . $viewid);
     }
 }
 
