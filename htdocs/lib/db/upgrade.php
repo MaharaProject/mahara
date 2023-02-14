@@ -1261,5 +1261,11 @@ function xmldb_core_upgrade($oldversion=0) {
         change_field_type($outcome_table, $outcome_progress_field);
     }
 
+    if ($oldversion < 2023021600) {
+        log_debug('Update installed skin fonts and remove .otf variant');
+        require_once(get_config('libroot') . 'skin.php');
+        install_skins_default();
+    }
+
     return $status;
 }

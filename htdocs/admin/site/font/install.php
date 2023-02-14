@@ -34,7 +34,7 @@ $form = pieform(array(
         'fontinstructions' => array(
             'type' => 'html',
             'title' => '',
-            'value' => get_string('installfontinstructions1', 'skin'),
+            'value' => get_string('installfontinstructions2', 'skin'),
         ),
         'fonttitle' => array(
             'type' => 'text',

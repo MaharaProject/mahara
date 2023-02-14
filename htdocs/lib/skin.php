@@ -1477,11 +1477,12 @@ function install_skins_default() {
         'bold'        => array('variant' => 'bold', 'font-weight' => 'bold', 'font-style' => 'normal'),
         'italic'      => array('variant' => 'italic', 'font-weight' => 'normal', 'font-style' => 'italic'),
         'bolditalic'  => array('variant' => 'bolditalic', 'font-weight' => 'bold', 'font-style' => 'italic'),
-        'light'       => array('variant' => 'light', 'font-weight' => 'lighter', 'font-style' => 'normal'),
-        'lightitalic' => array('variant' => 'light', 'font-weight' => 'lighter', 'font-style' => 'italic'),
         '300'         => array('variant' => 'light', 'font-weight' => 'lighter', 'font-style' => 'normal'),
+        '300italic'   => array('variant' => 'light', 'font-weight' => 'lighter', 'font-style' => 'italic'),
         '700'         => array('variant' => 'bold', 'font-weight' => 'bold', 'font-style' => 'normal'),
+        '700italic'   => array('variant' => 'bolditalic', 'font-weight' => 'bold', 'font-style' => 'italic'),
         '900'         => array('variant' => 'bold', 'font-weight' => 'bolder', 'font-style' => 'normal'),
+        '900italic'   => array('variant' => 'bolditalic', 'font-weight' => 'bold', 'font-style' => 'italic'),
     );
     // The basic regular/bold/italic/bolditalic combo
     $basicvariants = serialize(array($fv['regular'], $fv['bold'], $fv['italic'], $fv['bolditalic']));
@@ -1709,12 +1710,12 @@ function install_skins_default() {
     );
 
     // Theme fonts
-    $filetypes = array('EOT', 'SVG', 'TTF', 'WOFF', 'WOFF2', 'OTF');
+    $filetypes = array('EOT', 'SVG', 'TTF', 'WOFF', 'WOFF2');
     $robotoslabvariants = array();
-    foreach (array('bold', 'regular', 'light') as $option) {
+    foreach (array('300', '700', 'regular') as $option) {
         $robotoslabvariants[$option] = $fv[$option];
         foreach ($filetypes as $type) {
-            $robotoslabvariants[$option][$type] = 'robotoslab-' . $option . '.' . strtolower($type);
+            $robotoslabvariants[$option][$type] = 'roboto-slab-v24-latin-ext_latin-' . $option . '.' . strtolower($type);
         }
     }
     ensure_record_exists('skin_fonts',
@@ -1725,8 +1726,8 @@ function install_skins_default() {
         (object) array(
             'name' => 'RobotoSlab',
             'title' => 'Roboto Slab',
-            'licence' => '',
-            'previewfont' => 'robotoslab-regular.ttf',
+            'licence' => 'LICENSE.txt',
+            'previewfont' => 'roboto-slab-v24-latin-ext_latin-regular.ttf',
             'variants' => serialize($robotoslabvariants),
             'fonttype' => 't_raw',
             'onlyheading' => 0,
@@ -1736,15 +1737,10 @@ function install_skins_default() {
     );
 
     $opensansvariants = array();
-    foreach (array('bold', 'regular', 'light', 'lightitalic') as $option) {
+    foreach (array('300', '300italic', '700', 'regular', 'italic') as $option) {
         $opensansvariants[$option] = $fv[$option];
         foreach ($filetypes as $type) {
-            if ($option == 'lightitalic') {
-                $opensansvariants[$option][$type] = 'OpenSansLightItalic.' . strtolower($type);
-            }
-            else {
-                $opensansvariants[$option][$type] = 'OpenSans' . ucfirst($option) . '.' . strtolower($type);
-            }
+            $opensansvariants[$option][$type] = 'open-sans-v34-latin-ext_latin-' . $option . '.' . strtolower($type);
         }
     }
     ensure_record_exists('skin_fonts',
@@ -1755,8 +1751,8 @@ function install_skins_default() {
         (object) array(
             'name' => 'OpenSans',
             'title' => 'Open Sans',
-            'licence' => '',
-            'previewfont' => 'OpenSansRegular.ttf',
+            'licence' => 'OFL.txt',
+            'previewfont' => 'open-sans-v34-latin-ext_latin-regular.ttf',
             'variants' => serialize($opensansvariants),
             'fonttype' => 't_raw',
             'onlyheading' => 0,
@@ -1791,10 +1787,10 @@ function install_skins_default() {
     );
 
     $ralewayvariants = array();
-    foreach (array('bold', 'regular', 'italic', 'light', 'lightitalic') as $option) {
+    foreach (array('300', '300italic', '700', 'regular', 'italic') as $option) {
         $ralewayvariants[$option] = $fv[$option];
         foreach ($filetypes as $type) {
-            $ralewayvariants[$option][$type] = 'raleway-' . $option . '.' . strtolower($type);
+            $ralewayvariants[$option][$type] = 'raleway-v28-latin-ext_latin-' . $option . '.' . strtolower($type);
         }
     }
     ensure_record_exists('skin_fonts',
@@ -1806,7 +1802,7 @@ function install_skins_default() {
             'name' => 'Raleway',
             'title' => 'Raleway',
             'licence' => 'OFL.txt',
-            'previewfont' => 'raleway-regular.ttf',
+            'previewfont' => 'raleway-v28-latin-ext_latin-regular.ttf',
             'variants' => serialize($ralewayvariants),
             'fonttype' => 't_modern',
             'onlyheading' => 0,
@@ -1819,7 +1815,7 @@ function install_skins_default() {
     foreach (array('regular') as $option) {
         $shadowsintolight2variants[$option] = $fv[$option];
         foreach ($filetypes as $type) {
-            $shadowsintolight2variants[$option][$type] = 'shadows-into-light-two-v6-latin-ext_latin-' . $option . '.' . strtolower($type);
+            $shadowsintolight2variants[$option][$type] = 'shadows-into-light-two-v13-latin-ext_latin-' . $option . '.' . strtolower($type);
         }
     }
     ensure_record_exists('skin_fonts',
@@ -1831,7 +1827,7 @@ function install_skins_default() {
             'name' => 'ShadowsIntoLightTwo',
             'title' => 'Shadows Into Light Two',
             'licence' => 'OFL.txt',
-            'previewfont' => 'shadows-into-light-two-v6-latin-ext_latin-regular.ttf',
+            'previewfont' => 'shadows-into-light-two-v13-latin-ext_latin-regular.ttf',
             'variants' => serialize($shadowsintolight2variants),
             'fonttype' => 't_primaryschool',
             'onlyheading' => 0,
@@ -1844,7 +1840,7 @@ function install_skins_default() {
     foreach (array('700', '900') as $option) {
         $alegreyavariants[$option] = $fv[$option];
         foreach ($filetypes as $type) {
-            $alegreyavariants[$option][$type] = 'alegreya-v13-latin-ext_latin-' . $option . '.' . strtolower($type);
+            $alegreyavariants[$option][$type] = 'alegreya-v31-latin-ext_latin-' . $option . '.' . strtolower($type);
         }
     }
     ensure_record_exists('skin_fonts',
@@ -1856,7 +1852,7 @@ function install_skins_default() {
             'name' => 'Alegreya',
             'title' => 'Alegreya',
             'licence' => 'OFL.txt',
-            'previewfont' => 'alegreya-v13-latin-ext_latin-700.ttf',
+            'previewfont' => 'alegreya-v31-latin-ext_latin-700.ttf',
             'variants' => serialize($alegreyavariants),
             'fonttype' => 't_maroon',
             'onlyheading' => 1,
@@ -1866,10 +1862,10 @@ function install_skins_default() {
     );
 
     $alegreyasansvariants = array();
-    foreach (array('300', '700', '900', 'italic', 'regular') as $option) {
+    foreach (array('300', '300italic', '700', '700italic', '900', '900italic', 'italic', 'regular') as $option) {
         $alegreyasansvariants[$option] = $fv[$option];
         foreach ($filetypes as $type) {
-            $alegreyasansvariants[$option][$type] = 'alegreya-sans-v10-latin-ext_latin-' . $option . '.' . strtolower($type);
+            $alegreyasansvariants[$option][$type] = 'alegreya-sans-v24-latin-ext_latin-' . $option . '.' . strtolower($type);
         }
     }
     ensure_record_exists('skin_fonts',
@@ -1881,7 +1877,7 @@ function install_skins_default() {
             'name' => 'AlegreyaSans',
             'title' => 'Alegreya Sans',
             'licence' => 'OFL.txt',
-            'previewfont' => 'alegreya-sans-v10-latin-ext_latin-regular.ttf',
+            'previewfont' => 'alegreya-sans-v24-latin-ext_latin-regular.ttf',
             'variants' => serialize($alegreyasansvariants),
             'fonttype' => 't_maroon',
             'onlyheading' => 0,
