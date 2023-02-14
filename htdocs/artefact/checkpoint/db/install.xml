@@ -10,6 +10,7 @@
                 <FIELD NAME="activity" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="block" TYPE="int" LENGTH="10" NOTNULL="true" />
                 <FIELD NAME="author" TYPE="int" LENGTH="10" NOTNULL="true" />
+                <FIELD NAME="deletedby" TYPE="char" LENGTH="50" NOTNULL="false" />
             </FIELDS>
             <KEYS>
                 <KEY NAME="feedbackpk" TYPE="primary" FIELDS="feedback" />

@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  * @package    mahara
@@ -12,6 +11,16 @@
 
 defined('INTERNAL') || die();
 
-$config = new stdClass();
-$config->version = 2023020900;
-$config->release = '1.0.1';
+function xmldb_artefact_checkpoint_upgrade($oldversion=0) {
+
+    $success = true;
+
+    if ($oldversion < 2023020900) {
+        $table = new XMLDBTable('artefact_checkpoint_feedback');
+        $field = new XMLDBField('deletedby');
+        $field->setAttributes(XMLDB_TYPE_CHAR, 50);
+        add_field($table, $field);
+    }
+
+    return $success;
+}

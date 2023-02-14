@@ -163,6 +163,7 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
     protected $view;          // view id of the view this checkpoint feedback is linked to.
     protected $activity;      // activity id of the activity this checkpoint feedback is linked to.
     protected $view_obj;      // the view object based on the $view id.
+    protected $deletedby;     // what type of person deleted the comment
     protected $private;       // Whether this assessment has been published by the user.
     // 0 = can be seen by author, page owner, manager (published)
     // 1 = can only be seen by author (draft)
@@ -249,6 +250,7 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
             'block'      => $this->get('block'),
             'author'     => $this->get('author'),
             'activity'   => $this->get('activity'),
+            'deletedby'  => $this->get('deletedby'),
         );
 
         if ($new) {
@@ -593,21 +595,24 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
         }
     }
 
-    public static function last_feedback($view = null) {
-        if ($newest = get_records_sql_array(
-            '
-              SELECT a.id, a.ctime
-              FROM {artefact} a
-              INNER JOIN {artefact_checkpoint_feedback} cf ON a.id = cf.feedback
-              INNER JOIN {view_activity} va ON va.id = cf.activity
-              WHERE va.view = ?
-              ORDER BY a.ctime DESC',
-            array($view),
-            0,
-            1
-        )) {
+    /**
+     * Get the last comment for the particular block
+     *
+     * @param $viewid integer ID of the view
+     * @param $blockid integer ID of the block
+     * @return array
+     */
+    public static function last_feedback($viewid, $blockid) {
+        if ($newest = get_records_sql_array("
+            SELECT a.id, a.ctime
+            FROM {artefact} a
+            INNER JOIN {artefact_checkpoint_feedback} cf ON a.id = cf.feedback
+            INNER JOIN {view_activity} va ON va.id = cf.activity
+            WHERE va.view = ? AND cf.block = ?
+            ORDER BY a.ctime DESC", array($viewid, $blockid), 0, 1)) {
             return $newest[0];
         }
+        return array();
     }
 
     public static function build_html(&$data, $versioning = null, $exporter = null) {
@@ -615,11 +620,19 @@ class ArtefactTypeCheckpointfeedback extends ArtefactType {
 
         $deletedmessage = array();
         $authors = array();
-        $lastcomment = self::last_feedback($data->view);
+        $lastcomment = self::last_feedback($data->view, $data->block);
         $editableafter = time() - 60 * get_config_plugin('artefact', 'comment', 'commenteditabletime');
         $admintutorids = $view->get('group') ? group_get_member_ids($view->get('group'), array('admin', 'tutor')) : [];
         foreach ($data->data as $key => &$item) {
+            $deletedby = get_field('artefact_checkpoint_feedback', 'deletedby', 'feedback', $item->id);
+            if (intval($deletedby)) {
+                $item->deletedmessage = !empty($deletedby) ? get_string('commentremovedbyuser', 'artefact.checkpoint', get_config('wwwroot') . 'user/view.php?id=' . $deletedby, display_name(get_user_for_display($deletedby), $USER)) : null;
+            }
+            else {
+                $item->deletedmessage = !empty($deletedby) ? get_string('commentremovedby' . $deletedby, 'artefact.comment') : null;
+            }
             $candelete = in_array($USER->get('id'), $admintutorids);
+            $candelete = $candelete && ($item->id == $lastcomment->id || empty($deletedby));
             $item->ts = strtotime($item->ctime);
             $timelapse = format_timelapse($item->ts);
             $item->date = ($timelapse) ? $timelapse : format_date($item->ts, 'strftimedatetime');
@@ -910,7 +923,7 @@ function delete_checkpoint_feedback_submit(Pieform $form, $values) {
     // If this page is being marked, make assessments un-deletable until released
     // unless it is the last assessment still with in the editable timeframe
     $editableafter = time() - 60 * get_config_plugin('artefact', 'comment', 'commenteditabletime');
-    $lastcomment = $checkpoint_feedback::last_feedback($viewid);
+    $lastcomment = $checkpoint_feedback::last_feedback($viewid, $blockid);
     $is_last_comment = $lastcomment && $checkpoint_feedback->get('id') == $lastcomment->id;
 
     $view = new View($values['view']);
@@ -955,7 +968,7 @@ function delete_checkpoint_feedback_submit(Pieform $form, $values) {
                         'key'     => 'deletedauthornotification1',
                         'section' => 'artefact.checkpoint',
                         'args'    => array(
-                            display_name($author), $title, html2text($checkpoint_feedback->get('description'))
+                            $title, html2text($checkpoint_feedback->get('description'))
                         ),
                     ),
                     'urltext' => (object) array(
@@ -968,18 +981,28 @@ function delete_checkpoint_feedback_submit(Pieform $form, $values) {
             activity_occurred('maharamessage', $data);
         }
 
-        $checkpoint_feedback->delete();
+        if ($is_last_comment) {
+            $checkpoint_feedback->delete();
+        }
+        else {
+            $deletedby = '';
+            if ($USER->get('id') == $checkpoint_feedback->get('author')) {
+                $deletedby = 'author';
+            }
+            else if ($USER->can_edit_view($view)) {
+                $deletedby = $USER->get('id');
+            }
+            else if ($USER->get('admin')) {
+                $deletedby = 'admin';
+            }
+            $checkpoint_feedback->set('deletedby', $deletedby);
+            $checkpoint_feedback->commit();
+        }
         db_commit();
 
-        $feedback_options = ArtefactTypeCheckpointfeedback::get_checkpoint_feedback_options();
-        $feedback_options->showfeedback = $checkpoint_feedback->get('id');
-        $feedback_options->view = $view;
-        $feedback_options->block = $blockid;
-        $newlist = ArtefactTypeCheckpointfeedback::get_checkpoint_feedback($feedback_options);
         $form->reply(PIEFORM_OK, array(
             'message' => get_string('feedbackremoved', 'artefact.checkpoint'),
             'goto' => $goto,
-            'data' => $newlist,
         ));
     }
     else {
@@ -1035,15 +1058,12 @@ function add_checkpoint_feedback_form_submit(Pieform $form, $values) {
 
     $goto = get_config('wwwroot') . $url;
 
-    // If the checkpoint feedback is published we send a notification to page owner
-    if ($view->get('owner') != $USER->get('id')) {
-        // Notify owner
-        $data = (object) array(
-            'feedbackid' => $checkpoint_feedback->get('id'),
-            'viewid'    => $view->get('id'),
-        );
-        activity_occurred('checkpointfeedback', $data, 'artefact', 'checkpoint');
-    }
+    // Notify group
+    $data = (object) array(
+        'checkpointid' => $checkpoint_feedback->get('id'),
+        'viewid'    => $view->get('id'),
+    );
+    activity_occurred('feedback', $data, 'artefact', 'checkpoint');
 
     db_commit();
 
@@ -1091,6 +1111,7 @@ class ActivityTypeArtefactCheckpointfeedback extends ActivityTypePlugin {
             throw new ViewNotFoundException(get_string('viewnotfound', 'error', $onview));
         }
         $userid = $viewrecord->owner;
+        $groupid = $viewrecord->group;
         if (empty($this->url)) {
             $this->url = 'view/view.php?id=' . $onview;
         }
@@ -1099,6 +1120,16 @@ class ActivityTypeArtefactCheckpointfeedback extends ActivityTypePlugin {
         $this->users = array();
         if (!empty($userid)) {
             $this->users = activity_get_users($this->get_id(), array($userid));
+        }
+        else if (!empty($groupid)) {
+            require_once(get_config('docroot') . 'lib/group.php');
+            $this->users = get_records_sql_assoc("SELECT u.id, u.username, u.firstname, u.lastname, u.preferredname, u.email
+                                                  from {usr} u, {group_member} m, {group} g
+                                                  WHERE g.id = m.group AND m.member = u.id AND m.group = ?
+                                                  AND (g.feedbacknotify = " . GROUP_ROLES_ALL . "
+                                                   OR (g.feedbacknotify = " . GROUP_ROLES_NONMEMBER . " AND (m.role = 'tutor' OR m.role = 'admin'))
+                                                   OR (g.feedbacknotify = " . GROUP_ROLES_ADMIN . " AND m.role = 'admin')
+                                                  )", array($groupid));
         }
 
         if (empty($this->users)) {

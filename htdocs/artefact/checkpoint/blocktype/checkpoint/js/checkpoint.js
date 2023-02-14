@@ -84,7 +84,6 @@ function modifyCheckpointFeedbackSuccess(form, data) {
     var offset = getUrlParameter('offset');
 
     // Reload the checkpoint feedback table with the new feedback that's just been made public.
-
     // Calls the save method on all editor instances
     tinyMCE.triggerSave();
     sendjsonrequest(config.wwwroot + 'artefact/checkpoint/checkpoint.json.php', {
@@ -101,9 +100,10 @@ function modifyCheckpointFeedbackSuccess(form, data) {
             scope.html(data.data.tablerows);
             var scopepagination = scope.parent().find('.pagination-wrapper');
             scopepagination.html(data.data.pagination);
-            dock.init(scope);
             initTinyMCE(formname);
+            submitConfirm();
             configureModalOpen();
+            dock.init(jQuery(document));
         })(jQuery);
     });
     // if we are in a modal close it
@@ -124,6 +124,7 @@ function addCheckpointFeedbackSuccess(form, data) {
         // Make sure its using the checkpoint paginator.
         checkpointpaginator.updateResults(data);
         checkpointpaginator.alertProxy('pagechanged', data['data']);
+        submitConfirm();
         configureModalOpen();
     }
     else {
@@ -144,9 +145,10 @@ function addCheckpointFeedbackSuccess(form, data) {
                 scope.html(data.data.tablerows);
                 var scopepagination = scope.parent().find('.pagination-wrapper');
                 scopepagination.html(data.data.pagination);
-                dock.init(scope);
                 initTinyMCE(formname);
+                submitConfirm();
                 configureModalOpen();
+                dock.init(scope);
             })(jQuery);
         });
     }

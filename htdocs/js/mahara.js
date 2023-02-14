@@ -1392,3 +1392,11 @@ const GRIDSTACK_CONSTANTS = {
     mobileWidth: 1,
     defaultHeight: 3
 }
+
+function submitConfirm() {
+    jQuery('[data-confirm]').off('click');
+    jQuery('[data-confirm]').on('click', function() {
+        var content = jQuery(this).attr('data-confirm');
+        return confirm(content);
+    });
+}

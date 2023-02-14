@@ -39,3 +39,24 @@ $string['progress_checkpointfeedback'] = array(
     'Add 1 checkpoint feedback',
     'Add %s checkpoint feedbacks',
 );
+
+$string['deletednotificationsubject'] = 'Checkpoint comment on "%s" deleted';
+$string['deletedauthornotification1'] = "Your checkpoint comment on \"%s\" was deleted. You had written:\n%s";
+$string['newfeedbacknotificationsubject'] = 'New checkpoint comment on page "%s"';
+$string['feedbacknotificationhtml'] = "<div style=\"padding: 0.5em 0; border-bottom: 1px solid #999;\"><strong>%s added a checkpoint comment on \"%s\"</strong><br>%s</div>
+
+<div style=\"margin: 1em 0;\">%s</div>
+<div style=\"font-size: smaller; border-top: 1px solid #999;\">
+<p><a href=\"%s\">View this checkpoint comment online</a></p>
+</div>";
+$string['feedbacknotificationtext1'] = "%s added a checkpoint comment on \"%s\"
+%s
+-------------------------------------------------------------------------
+
+%s
+
+-------------------------------------------------------------------------
+To see this checkpoint comment online, follow this link:
+%s";
+
+$string['commentremovedbyuser'] = 'Comment removed by <a href="%s">%s</a>';

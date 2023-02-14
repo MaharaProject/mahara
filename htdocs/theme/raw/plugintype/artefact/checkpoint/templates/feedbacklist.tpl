@@ -52,10 +52,14 @@
                 </div>
             </div>
             <div class="push-left-for-usericon">
-                {if $item->author}
-                    {$item->description|clean_html|safe}
+                {if $item->deletedmessage}
+                    <span class="metadata">{$item->deletedmessage|clean_html|safe}</span>
                 {else}
-                    {$item->description|safe}
+                    {if $item->author}
+                        {$item->description|clean_html|safe}
+                    {else}
+                        {$item->description|safe}
+                    {/if}
                 {/if}
             </div>
         </div>
