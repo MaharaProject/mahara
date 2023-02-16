@@ -7,23 +7,22 @@ $italic: normal, italic;
 $bold: 700, normal;
 
 $raleway: (
-    raleway-light: $light,
-    raleway-lightitalic: $lightItalic,
-    raleway-regular: $regular,
-    raleway-italic: $italic,
-    raleway-bold: $bold
+    raleway-v28-latin-ext_latin-300: $light,
+    raleway-v28-latin-ext_latin-300italic: $lightItalic,
+    raleway-v28-latin-ext_latin-regular: $regular,
+    raleway-v28-latin-ext_latin-italic: $italic,
+    raleway-v28-latin-ext_latin-700: $bold
 );
 
 @each $fontname, $style in $raleway {
     @font-face {
         font-family: 'Raleway';
-        src: url('#{$font-path}/raleway/#{$fontname}.eot');
-        src: url('#{$font-path}/raleway/#{$fontname}.eot?#iefix') format('embedded-opentype'),
-             url('#{$font-path}/raleway/#{$fontname}.svg##{$fontname}') format('svg'),
-             url('#{$font-path}/raleway/#{$fontname}.otf') format('opentype'),
-             url('#{$font-path}/raleway/#{$fontname}.ttf') format('truetype'),
-             url('#{$font-path}/raleway/#{$fontname}.woff2') format('woff2'),
-             url('#{$font-path}/raleway/#{$fontname}.woff') format('woff');
+        src: url('#{$font-path}/raleway/#{$fontname}.eot'); /* IE9 Compat Modes */
+        src: url('#{$font-path}/raleway/#{$fontname}.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+        url('#{$font-path}/raleway/#{$fontname}.woff2') format('woff2'), /* Super Modern Browsers */
+        url('#{$font-path}/raleway/#{$fontname}.woff') format('woff'), /* Modern Browsers */
+        url('#{$font-path}/raleway/#{$fontname}.ttf') format('truetype'), /* Safari, Android, iOS */
+             url('#{$font-path}/raleway/#{$fontname}.svg##{$fontname}') format('svg'); /* Legacy iOS */
         font-weight: nth($style, 1);
         font-style:  nth($style, 2);
     }

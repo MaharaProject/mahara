@@ -184,7 +184,7 @@ $string['manageskins'] = 'Manage skins';
 $string['sitefontsmenu'] = 'Fonts';
 $string['sitefonts'] = 'Fonts';
 $string['sitefontsdescription'] = 'The following fonts have been installed on your site for use in skins.';
-$string['installfontinstructions1'] = '<p>
+$string['installfontinstructions2'] = '<p>
 Add fonts, which allow font embedding into web pages, via the CSS @font-face rule. Remember that not all authors / foundries allow this.
 </p>
 <p>
@@ -197,7 +197,7 @@ You can use <a href="https://www.fontsquirrel.com/tools/webfont-generator/">Font
 <p>
 Or you can install a Google font via the following steps:
 <ol>
-<li>Visit <a href="https://google-webfonts-helper.herokuapp.com">Google webfonts helper</a>. Do this at your own risk. This service is not provided by Google Fonts.</li>
+<li>Visit <a href="https://gwfh.mranftl.com">Google webfonts helper</a>. Do this at your own risk. This service is not provided by Google Fonts.</li>
 <li>Select the font for which you are looking.</li>
 <li>Select the character sets you require.</li>
 <li>Select the styles you want to have available.</li>

@@ -7,30 +7,29 @@ $italic: normal, italic;
 $bold: 700, normal;
 
 $opensans: (
-    OpenSansLight: $light,
-    OpenSansLightItalic: $lightItalic,
-    OpenSansRegular: $regular,
-    OpenSansItalic: $italic,
-    OpenSansBold: $bold
+    open-sans-v34-latin-ext_latin-300: $light,
+    open-sans-v34-latin-ext_latin-300italic: $lightItalic,
+    open-sans-v34-latin-ext_latin-regular: $regular,
+    open-sans-v34-latin-ext_latin-italic: $italic,
+    open-sans-v34-latin-ext_latin-700: $bold
 );
 
 $robotoslab: (
-    robotoslab-light: $light,
-    robotoslab-regular: $regular,
-    robotoslab-bold: $bold
+    roboto-slab-v24-latin-ext_latin-300: $light,
+    roboto-slab-v24-latin-ext_latin-regular: $regular,
+    roboto-slab-v24-latin-ext_latin-700: $bold
 );
 
 
 @each $fontname, $style in $opensans {
     @font-face {
         font-family: 'Open Sans';
-        src: url('#{$font-path}/opensans/#{$fontname}.eot');
-        src: url('#{$font-path}/opensans/#{$fontname}.eot?#iefix') format('embedded-opentype'),
-             url('#{$font-path}/opensans/#{$fontname}.woff2') format('woff2'),
-             url('#{$font-path}/opensans/#{$fontname}.svg##{$fontname}') format('svg'),
-             url('#{$font-path}/opensans/#{$fontname}.otf') format('opentype'),
-             url('#{$font-path}/opensans/#{$fontname}.ttf') format('truetype'),
-             url('#{$font-path}/opensans/#{$fontname}.woff') format('woff');
+        src: url('#{$font-path}/opensans/#{$fontname}.eot'); /* IE9 Compat Modes */
+        src: url('#{$font-path}/opensans/#{$fontname}.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+             url('#{$font-path}/opensans/#{$fontname}.woff2') format('woff2'), /* Super Modern Browsers */
+             url('#{$font-path}/opensans/#{$fontname}.woff') format('woff'), /* Modern Browsers */
+             url('#{$font-path}/opensans/#{$fontname}.ttf') format('truetype'), /* Safari, Android, iOS */
+             url('#{$font-path}/opensans/#{$fontname}.svg##{$fontname}') format('svg'); /* Legacy iOS */
         font-weight: nth($style, 1);
         font-style:  nth($style, 2);
     }
@@ -39,13 +38,12 @@ $robotoslab: (
 @each $fontname, $style in $robotoslab {
     @font-face {
         font-family: 'Roboto Slab';
-        src: url('#{$font-path}/robotoslab/#{$fontname}.eot');
-        src: url('#{$font-path}/robotoslab/#{$fontname}.eot?#iefix') format('embedded-opentype'),
-             url('#{$font-path}/robotoslab/#{$fontname}.woff2') format('woff2'),
-             url('#{$font-path}/robotoslab/#{$fontname}.svg##{$fontname}') format('svg'),
-             url('#{$font-path}/robotoslab/#{$fontname}.otf') format('opentype'),
-             url('#{$font-path}/robotoslab/#{$fontname}.ttf') format('truetype'),
-             url('#{$font-path}/robotoslab/#{$fontname}.woff') format('woff');
+        src: url('#{$font-path}/robotoslab/#{$fontname}.eot'); /* IE9 Compat Modes */
+        src: url('#{$font-path}/robotoslab/#{$fontname}.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+             url('#{$font-path}/robotoslab/#{$fontname}.woff2') format('woff2'), /* Super Modern Browsers */
+             url('#{$font-path}/robotoslab/#{$fontname}.woff') format('woff'), /* Modern Browsers */
+             url('#{$font-path}/robotoslab/#{$fontname}.ttf') format('truetype'), /* Safari, Android, iOS */
+             url('#{$font-path}/robotoslab/#{$fontname}.svg##{$fontname}') format('svg'); /* Legacy iOS */
         font-weight: nth($style, 1);
         font-style:  nth($style, 2);
     }

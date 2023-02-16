@@ -3,19 +3,18 @@ $font-path: '../../primaryschool/fonts';
 $regular: normal, normal;
 
 $ShadowsIntoLighttwo: (
-    shadows-into-light-two-v6-latin-ext_latin-regular: $regular
+    shadows-into-light-two-v13-latin-ext_latin-regular: $regular
 );
 
 @each $fontname, $style in $ShadowsIntoLighttwo {
     @font-face {
         font-family: 'Shadows Into Light Two';
-        src: url('#{$font-path}/shadowsintolighttwo/#{$fontname}.eot');
-        src: url('#{$font-path}/shadowsintolighttwo/#{$fontname}.eot?#iefix') format('embedded-opentype'),
-             url('#{$font-path}/shadowsintolighttwo/#{$fontname}.woff2') format('woff2'),
-             url('#{$font-path}/shadowsintolighttwo/#{$fontname}.svg##{$fontname}') format('svg'),
-             url('#{$font-path}/shadowsintolighttwo/#{$fontname}.otf') format('opentype'),
-             url('#{$font-path}/shadowsintolighttwo/#{$fontname}.ttf') format('truetype'),
-             url('#{$font-path}/shadowsintolighttwo/#{$fontname}.woff') format('woff');
+        src: url('#{$font-path}/shadowsintolighttwo/#{$fontname}.eot'); /* IE9 Compat Modes */
+        src: url('#{$font-path}/shadowsintolighttwo/#{$fontname}.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+             url('#{$font-path}/shadowsintolighttwo/#{$fontname}.woff2') format('woff2'), /* Super Modern Browsers */
+             url('#{$font-path}/shadowsintolighttwo/#{$fontname}.woff') format('woff'), /* Modern Browsers */
+             url('#{$font-path}/shadowsintolighttwo/#{$fontname}.ttf') format('truetype'), /* Safari, Android, iOS */
+             url('#{$font-path}/shadowsintolighttwo/#{$fontname}.svg##{$fontname}') format('svg'); /* Legacy iOS */
         font-weight: nth($style, 1);
         font-style:  nth($style, 2);
     }
