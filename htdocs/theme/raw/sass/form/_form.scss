@@ -36,6 +36,13 @@ select {
     }
 }
 
+span.togglePassword {
+    margin-left: -30px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: normal;
+}
+
 .password-progress {
     margin-top: 0.5rem; // 8px;
     margin-bottom: 0;
@@ -44,6 +51,9 @@ select {
     .step2 & {
         width: 100% !important;
     }
+}
+.password span.help {
+    padding-left: 1.25rem !important;
 }
 
 label,

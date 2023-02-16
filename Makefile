@@ -168,6 +168,8 @@ else
 endif
 
 initcomposer: installcomposer
+	@echo "Removing htdocs/vendor directory so that we can rebuild it fresh"
+	rm -rf htdocs/vendor
 	@echo "Updating external dependencies with Composer..."
 	@php external/composer.phar --working-dir=external update
 	@echo "Installing third-party dependencies with Composer..."

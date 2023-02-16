@@ -50,6 +50,7 @@ if ($SESSION->get('forgotpasskey')) {
                 'title' => get_string('password'),
                 'description' => get_password_policy_description('user'),
                 'showstrength' => true,
+                'toggledisplay' => true,
                 'rules' => array(
                     'required' => true
                 )
@@ -57,6 +58,7 @@ if ($SESSION->get('forgotpasskey')) {
             'password2' => array(
                 'type' => 'password',
                 'title' => get_string('confirmpassword'),
+                'toggledisplay' => true,
                 'rules' => array(
                     'required' => true
                 )
