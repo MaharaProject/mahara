@@ -3,7 +3,7 @@ SimpleSAMLphp in Mahara
 
 Website: https://simplesamlphp.org/
 Website: https://github.com/simplesamlphp/simplesamlphp
-Version: 1.18.7
+Version: 1.19.7
 License: GPL 2.1
 
 This is where SimpleSAMLphp modules can be directly distributed with Mahara.
