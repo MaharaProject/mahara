@@ -2,13 +2,13 @@
 // -------------------------
 
 // only display content to screen readers
-.sr-only,
-.#{$fa-css-prefix}-sr-only {
-  @include fa-sr-only;
+.visually-hidden,
+.#{$fa-css-prefix}-visually-hidden {
+  @include fa-visually-hidden;
 }
 
-// use in conjunction with .sr-only to only display content when it's focused
-.sr-only-focusable,
-.#{$fa-css-prefix}-sr-only-focusable {
-  @include fa-sr-only-focusable;
+// use in conjunction with .visually-hidden to only display content when it's focused
+.visually-hidden-focusable,
+.#{$fa-css-prefix}-visually-hidden-focusable {
+  @include fa-visually-hidden-focusable;
 }

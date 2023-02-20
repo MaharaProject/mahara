@@ -1,0 +1,85 @@
+diff --git a/htdocs/theme/raw/sass/lib/font-awesome/_variables.scss b/htdocs/theme/raw/sass/lib/font-awesome/_variables.scss
+index 4d34515d89..fb7db172c4 100644
+--- a/htdocs/theme/raw/sass/lib/font-awesome/_variables.scss
++++ b/htdocs/theme/raw/sass/lib/font-awesome/_variables.scss
+@@ -1,7 +1,7 @@
+ // variables
+ // --------------------------
+ 
+-$fa-css-prefix          : fa !default;
++$fa-css-prefix          : icon !default;
+ $fa-style               : 900 !default;
+ $fa-style-family        : "Font Awesome 6 Free" !default;
+ 
+@@ -46,7 +46,7 @@ $fa-stack-width         : ($fa-fw-width * 2) !default;
+ $fa-stack-z-index       : auto !default;
+ 
+ $fa-font-display        : block !default;
+-$fa-font-path           : "../webfonts" !default;
++$fa-font-path           : "../../raw/fonts/font-awesome" !default;
+ 
+ $fa-var-0: \30;
+ $fa-var-1: \31;
+diff --git a/htdocs/theme/raw/sass/lib/font-awesome/fontawesome.scss b/htdocs/theme/raw/sass/lib/font-awesome/fontawesome.scss
+index 87644bf62b..b6940057fa 100644
+--- a/htdocs/theme/raw/sass/lib/font-awesome/fontawesome.scss
++++ b/htdocs/theme/raw/sass/lib/font-awesome/fontawesome.scss
+@@ -19,3 +19,6 @@
+ @import 'stacked';
+ @import 'icons';
+ @import 'screen-reader';
++@import 'solid';
++@import 'brands';
++@import 'regular';
+diff --git a/htdocs/theme/raw/sass/lib/font-awesome/_mixins.scss b/htdocs/theme/raw/sass/lib/font-awesome/_mixins.scss
+index e06b69aa54..675c00f536 100644
+--- a/htdocs/theme/raw/sass/lib/font-awesome/_mixins.scss
++++ b/htdocs/theme/raw/sass/lib/font-awesome/_mixins.scss
+@@ -22,7 +22,7 @@
+ // only display content to screen readers
+ // see: https://www.a11yproject.com/posts/2013-01-11-how-to-hide-content/
+ // see: https://hugogiraudel.com/2016/10/13/css-hide-and-seek/
+-@mixin fa-sr-only() {
++@mixin fa-visually-hidden() {
+   position: absolute;
+   width: 1px;
+   height: 1px;
+@@ -34,10 +34,10 @@
+   border-width: 0;
+ }
+
+-// use in conjunction with .sr-only to only display content when it's focused
+-@mixin fa-sr-only-focusable() {
++// use in conjunction with .visually-hidden to only display content when it's focused
++@mixin fa-visually-hidden-focusable() {
+   &:not(:focus) {
+-    @include fa-sr-only();
++    @include fa-visually-hidden();
+   }
+ }
+
+diff --git a/htdocs/theme/raw/sass/lib/font-awesome/_screen-reader.scss b/htdocs/theme/raw/sass/lib/font-awesome/_screen-reader.scss
+index 2beb887b49..8c095170bf 100644
+--- a/htdocs/theme/raw/sass/lib/font-awesome/_screen-reader.scss
++++ b/htdocs/theme/raw/sass/lib/font-awesome/_screen-reader.scss
+@@ -2,13 +2,13 @@
+ // -------------------------
+
+ // only display content to screen readers
+-.sr-only,
+-.#{$fa-css-prefix}-sr-only {
+-  @include fa-sr-only;
++.visually-hidden,
++.#{$fa-css-prefix}-visually-hidden {
++  @include fa-visually-hidden;
+ }
+
+-// use in conjunction with .sr-only to only display content when it's focused
+-.sr-only-focusable,
+-.#{$fa-css-prefix}-sr-only-focusable {
+-  @include fa-sr-only-focusable;
++// use in conjunction with .visually-hidden to only display content when it's focused
++.visually-hidden-focusable,
++.#{$fa-css-prefix}-visually-hidden-focusable {
++  @include fa-visually-hidden-focusable;
+ }
