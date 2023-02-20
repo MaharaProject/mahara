@@ -155,7 +155,7 @@
 
       <div id="secondaryToolbar" class="secondaryToolbar hidden doorHangerRight">
         <div id="secondaryToolbarButtonContainer">
-          <button id="secondaryOpenFile" class="secondaryToolbarButton visibleLargeView" title="Open File" tabindex="51"
+          <button style="display: none" id="secondaryOpenFile" class="secondaryToolbarButton visibleLargeView" title="Open File" tabindex="51"
             data-l10n-id="open_file">
             <span data-l10n-id="open_file_label">Open</span>
           </button>
@@ -287,7 +287,7 @@
               <span id="numPages" class="toolbarLabel"></span>
             </div>
             <div id="toolbarViewerRight">
-              <button id="openFile" class="toolbarButton hiddenLargeView" title="Open File" tabindex="31" data-l10n-id="open_file">
+              <button style="display: none"  id="openFile" class="toolbarButton hiddenLargeView" title="Open File" tabindex="31" data-l10n-id="open_file">
                 <span data-l10n-id="open_file_label">Open</span>
               </button>
 

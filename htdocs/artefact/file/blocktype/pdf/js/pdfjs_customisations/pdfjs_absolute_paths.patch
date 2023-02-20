@@ -1,0 +1,31 @@
+diff --git a/htdocs/artefact/file/blocktype/pdf/js/pdfjs/web/viewer.js b/htdocs/artefact/file/blocktype/pdf/js/pdfjs/web/viewer.js
+index d8295e0845..ca5467753b 100644
+--- a/htdocs/artefact/file/blocktype/pdf/js/pdfjs/web/viewer.js
++++ b/htdocs/artefact/file/blocktype/pdf/js/pdfjs/web/viewer.js
+@@ -634,7 +634,7 @@
+       kind: OptionKind.VIEWER + OptionKind.PREFERENCE
+     },
+     imageResourcesPath: {
+-      value: "./images/",
++      value: window.parent.config.wwwroot + "artefact/file/blocktype/pdf/js/pdfjs/web/images/",
+       kind: OptionKind.VIEWER
+     },
+     maxCanvasPixels: {
+@@ -694,7 +694,7 @@
+       kind: OptionKind.API
+     },
+     cMapUrl: {
+-      value: "../web/cmaps/",
++      value: window.parent.config.wwwroot + "artefact/file/blocktype/pdf/js/pdfjs/web/cmaps/",
+       kind: OptionKind.API
+     },
+     disableAutoFetch: {
+@@ -754,7 +754,7 @@
+       kind: OptionKind.WORKER
+     },
+     workerSrc: {
+-      value: "../build/pdf.worker.js",
++      value: window.parent.config.wwwroot + "artefact/file/blocktype/pdf/js/pdfjs/build/pdf.worker.js",
+       kind: OptionKind.WORKER
+     }
+   };
