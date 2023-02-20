@@ -2,42 +2,19 @@ PDF.js in Mahara
 ==================
 
 Website: http://mozilla.github.io/pdf.js/getting_started/#download
-Version: 2.13.216
 License: Apache License 2.0
+
+🟡 Managed by Composer
 
 PDF.js is used in the Mahara to provide a javascript library for
 viewing PDF file
 
 **Have Node.JS installed.**
 
-1. Check what version of node you are using `node -e 'console.log(process.versions)'`
-2. Install the latest stable if the version is not new enough - say 12+
-
-    ```bash
-    sudo npm cache clean -f
-    sudo npm install -g n
-    sudo n stable
-    ```
-
-**Clone the pdf.js git repo** <https://github.com/mozilla/pdf.js/> ...
-
-1. Checkout the repo locally and go into the pdf.js directory
-2. Let's build the pdf.js
-
-    ```bash
-    sudo npm install -g gulp-cli --force
-    sudo npm install
-    ```
-
-3. And once that completes we want to build the distribution
-
-    ``` bash
-    gulp dist-install
-    ```
-
-    This will make the `build/minified/build/` subdirectory - a minfied a version of pdf.js
-4. Copy and rename it to pdf.min.js
-5. Copy the new files in `build/minified/` to go in our version on the pdfjs/ directory
+1. Go to the third-party library link to get the zip
+2. Replace the folders with what we have
+3. Replace everything in viewer.html into pdf.tpl
+4. Add in our customisations
 
 **Checks**:
 
