@@ -1,6 +1,6 @@
 <?php
 /**
- * Run the elastic search check cli to check if elastic search is still processing.
+ * Run the elasticsearch7 check cli to check if elastic search is still processing.
  *
  * @package    mahara
  * @subpackage module-monitor
@@ -17,7 +17,7 @@
  *  - https://nagios-plugins.org/doc/guidelines.html#PLUGOUTPUT
  */
 
-define('PUBLIC_ACCESS', 1);
+define('PUBLIC', 1);
 define('INTERNAL',  1);
 
 $MAHARA_ROOT = dirname(dirname(dirname(dirname(__FILE__)))) . '/';
@@ -52,11 +52,11 @@ require(get_config('libroot') . 'cli.php');
 require_once(get_config('docroot') . '/module/monitor/lib.php');
 $cli = get_cli();
 $searchplugin = get_config('searchplugin');
-if ($searchplugin == 'elasticsearch') {
-    require_once(get_config('docroot') . '/module/monitor/type/MonitorType_elasticsearch.php');
+if ($searchplugin == 'elasticsearch7') {
+    require_once(get_config('docroot') . '/module/monitor/type/MonitorType_search.php');
 }
 else {
-    $cli->cli_exit(get_string('wrongsearchtype', 'module.monitor', $searchplugin, 'elasticsearch'));
+    $cli->cli_exit(get_string('wrongsearchtype', 'module.monitor', $searchplugin, 'elasticsearch7'));
 }
 
 if (!PluginModuleMonitor::is_active()) {
@@ -75,20 +75,20 @@ $options['okmessagedisabled']->required = false;
 
 $settings = new stdClass();
 $settings->options = $options;
-$settings->info = get_string('elasticsearchcheckhelp', 'module.monitor');
+$settings->info = get_string('searchcheckhelp', 'module.monitor');
 $cli->setup($settings);
 
-$failedqueuesize = MonitorType_elasticsearch::get_failed_queue_size();
+$failedqueuesize = MonitorType_search::get_failed_queue_size();
 if ($failedqueuesize['value'] != 0) {
     $cli->cli_exit(get_string('checkingelasticsearchfailedrecords', 'module.monitor'), 2);
 }
 
-$isqueueold = MonitorType_elasticsearch::is_queue_older_than();
+$isqueueold = MonitorType_search::is_queue_older_than();
 if ($isqueueold['status'] == true) {
-    $hours = MonitorType_elasticsearch::get_hours_to_consider_elasticsearch_record_old();
+    $hours = MonitorType_search::get_hours_to_consider_elasticsearch_record_old();
     $cli->cli_exit(get_string('checkingelasticsearcholdunprocesessedfail', 'module.monitor', $hours, $hours), 2);
 }
-$unprocessedqueuerate = MonitorType_elasticsearch::unprocessed_queue_rate();
+$unprocessedqueuerate = MonitorType_search::unprocessed_queue_rate();
 if ($unprocessedqueuerate['rawvalue'] > 100) {
     $cli->cli_exit(get_string('unprocessedqueueratecliwarn', 'module.monitor', $unprocessedqueuerate['rawvalue']));
 }

@@ -51,6 +51,7 @@ case PluginModuleMonitor::type_elasticsearch:
     $params[] = MonitorType_elasticsearch::get_failed_queue_size();
     $params[] = MonitorType_elasticsearch::is_queue_older_than();
     $params[] = MonitorType_elasticsearch::get_unprocessed_queue_size();
+    $params[] = MonitorType_elasticsearch::unprocessed_queue_rate();
     $data = MonitorType_elasticsearch::format_for_display($params);
     break;
 case PluginModuleMonitor::type_search:

@@ -46,8 +46,7 @@ class MonitorType_ldaplookup extends MonitorType {
      * Check the LDAP status for the instanceid provided.
      *
      * @param int $instanceid - LDAP auth instance id from the auth_instance table.
-     * @return array: 1st param: boolean true = success; false = failed.
-     *                2nd param: string message
+     * @return array<boolean, string>
      */
     public static function check_ldap_status($instanceid) {
         global $CFG;
@@ -114,7 +113,7 @@ class MonitorType_ldaplookup extends MonitorType {
      * to be displayed on the screen.
      *
      * @param array $instances - result from get_ldap_instances().
-     * @param int $limi - for pagination
+     * @param int $limit - for pagination
      * @param int $offset - for pgination
      * @return array $data
      */

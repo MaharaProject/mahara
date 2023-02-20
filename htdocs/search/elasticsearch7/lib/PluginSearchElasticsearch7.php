@@ -2837,6 +2837,7 @@ class PluginSearchElasticsearch7 extends PluginSearch {
             'monitor_get_failed_queue_size',
             'monitor_is_queue_older_than',
             'monitor_get_unprocessed_queue_size',
+            'monitor_get_unprocessed_queue_rate',
         ];
     }
 
@@ -2998,12 +2999,39 @@ class PluginSearchElasticsearch7 extends PluginSearch {
         self::set_last_minimalsearchid();
     }
 
+    /**
+     * Report on how big a percentage the unprocessed records are waiting
+     *
+     * Check on the queue table for the number of items waiting to be processed
+     * and see the ratio of that versus the amount that can be processed in a cron run.
+     *
+     * @return array<string,string>
+     */
     public static function monitor_get_unprocessed_queue_size() {
         $ret = [];
         $size = count_records('search_elasticsearch_7_queue', 'status', '0');
         $ret = array(
             'task' => get_string('monitorunprocessedqueuesize', 'search.elasticsearch7'),
             'value' => $size,
+        );
+        return $ret;
+    }
+
+    public static function monitor_get_unprocessed_queue_rate() {
+        $size = count_records('search_elasticsearch_7_queue', 'status', '0');
+        $cronlimit = intval(get_config_plugin('search', 'elasticsearch7', 'cronlimit'));
+        $ratio = $ratiostr = '-';
+        if ($cronlimit) {
+            $ratio = (($size / $cronlimit) * 100);
+            $ratiostr = $ratio . '%';
+            if ($ratio > 100) {
+                $ratiostr = '<span class="errormsg">' . $ratiostr . '</span>';
+            }
+        }
+        $ret = array(
+            'task' => get_string('monitorunprocessedqueuerate', 'search.elasticsearch7'),
+            'value' => $ratiostr,
+            'rawvalue' => $ratio,
         );
         return $ret;
     }

@@ -133,7 +133,7 @@ class MonitorType_ldapsuspendedusers extends MonitorType {
      * to be displayed on the screen.
      *
      * @param array $results - result from get_ldap_instances().
-     * @param int $limi - for pagination
+     * @param int $limit - for pagination
      * @param int $offset - for pgination
      * @return array $data
      */

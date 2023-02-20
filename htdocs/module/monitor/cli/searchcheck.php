@@ -24,9 +24,16 @@ $MAHARA_ROOT = dirname(dirname(dirname(dirname(__FILE__)))) . '/';
 require($MAHARA_ROOT . '/init.php');
 require(get_config('libroot') . 'cli.php');
 require_once(get_config('docroot') . '/module/monitor/lib.php');
-require_once(get_config('docroot') . '/module/monitor/type/MonitorType_search.php');
 
 $cli = get_cli();
+$searchplugin = get_config('searchplugin');
+if ($searchplugin == 'elasticsearch7') {
+    require_once(get_config('docroot') . '/module/monitor/type/MonitorType_search.php');
+}
+else {
+    $cli->cli_exit(get_string('wrongsearchtype', 'module.monitor', $searchplugin, 'elasticsearch7'));
+}
+
 if (!PluginModuleMonitor::is_active()) {
     $cli->cli_exit(get_string('monitormodulenotactive', 'module.monitor'), 2);
 }
@@ -55,7 +62,14 @@ if ($isqueueold['status'] == true) {
     $cli->cli_exit($status . ': ' . $message, 2);
 }
 
+$unprocessedqueuerate = MonitorType_search::unprocessed_queue_rate();
+if ($unprocessedqueuerate['rawvalue'] > 100) {
+    $cli->cli_exit(get_string('unprocessedqueueratecliwarn', 'module.monitor', $unprocessedqueuerate['rawvalue']));
+}
 if (!$cli->get_cli_param('okmessagedisabled')) {
+    if ($unprocessedqueuerate['rawvalue'] <= 100) {
+        $cli->cli_print(get_string('unprocessedqueueratecli', 'module.monitor', $unprocessedqueuerate['rawvalue']));
+    }
     $status = get_string('clistatusok', 'module.monitor');
     $message = MonitorType_search::checking_search_succeeded_message();
     $cli->cli_exit($status . ': ' . $message, 0);

@@ -298,7 +298,7 @@ abstract class MonitorType {
      * Prepare the list of data to be displayed on the screen.
      *
      * @param array $data - result from general query.
-     * @param int $limi - for pagination
+     * @param int $limit - for pagination
      * @param int $offset - for pgination
      * @return array $data - results set.
      */
