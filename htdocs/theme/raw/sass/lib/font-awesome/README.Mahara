@@ -3,7 +3,7 @@ FontAwesome
 
 Website: https://fontawesome.com
 Website: https://github.com/FortAwesome/Font-Awesome
-Version: 6.1.1
+Version: 6.3.0
 License: http://fontawesome.io/license CSS: MIT License
 See also: theme/raw/fonts for font license information
 
@@ -17,7 +17,7 @@ To update the sass files part go to their git repo
 and copy the contents of their /scss/ directory to our
 htdocs/theme/raw/sass/lib/font-awesome/ directory.
 
-Note: You will need to do at lest the following
+Note: You will need to do at least the following
 - Edit htdocs/theme/raw/sass/lib/font-awesome/_variables.scss
   - set the $fa-font-path to be the path to our location of the fonts
   - Set the $fa-css-prefix  to be 'icon' (not 'fa')

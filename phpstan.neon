@@ -102,12 +102,9 @@ parameters:
         - htdocs/webservice/tests/exampleclients/lib/*
         - htdocs/webservice/tests/phpunit/*
         - htdocs/webservice/xmlrpc/*
-        - htdocs/auth/saml/extlib/simplesamlphp/lib/SimpleSAML/Auth/Simple.php
-        - htdocs/auth/saml/extlib/simplesamlphp/lib/SimpleSAML/Configuration.php
     ignoreErrors:
         # PhpStan cannot see that we're pulling the init.php and so the following globals are seen as undefined
         - '#Variable \$CFG might not be defined#'
         - '#Variable \$SESSION might not be defined#'
         - '#Variable \$THEME might not be defined.#'
         - '#Variable \$USER might not be defined#'
-            
