@@ -4784,6 +4784,11 @@ function cron_send_registration_data() {
     require_once(get_config('libroot') . 'registration.php');
     registration_store_data();
     if (!get_config('registration_sendweeklyupdates')) {
+        // Site not set to send updates
+        return;
+    }
+    if (!get_config('productionmode')) {
+        // Site not in production mode so we don't want to send stats when in this state
         return;
     }
 
