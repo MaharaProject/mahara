@@ -1,7 +1,8 @@
 {
     "require": {
         "google/recaptcha": "^1.2",
-        "cweagans/composer-patches": "^1.7"
+        "cweagans/composer-patches": "^1.7",
+        "phpmailer/phpmailer": "6.7.1"
     },
     "config": {
         "vendor-dir": "htdocs/vendor",
