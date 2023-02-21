@@ -12,7 +12,6 @@
 
 // Required because we use the PluginSearchInternal class for some functions
 require_once(get_config('docroot') . 'search/internal/lib.php');
-require_once(get_config('libroot') . '/elasticsearch/autoload.php');
 require_once(dirname(__FILE__) . '/Elasticsearch7Indexing.php');
 require_once(dirname(__FILE__) . '/Elasticsearch7Pseudotype_all.php');
 

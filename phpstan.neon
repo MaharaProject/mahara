@@ -12,7 +12,7 @@ parameters:
         - htdocs/lib/antispam/
         - htdocs/lib/csstidy/
         - htdocs/lib/dwoo/
-        - htdocs/lib/elasticsearch/
+        - htdocs/vendor/elasticsearch/
         - htdocs/lib/htmlpurifier/
         - htdocs/vendor/phpmailer/phpmailer/
         - htdocs/vendor/google/recaptcha/
@@ -43,7 +43,7 @@ parameters:
         - htdocs/lib/dwoo/dwoo/Dwoo/Core.php
         - htdocs/lib/dwoo/mahara/Dwoo_Mahara.php
         # Needed for Elasticsearch 7. Delete if it causes yours to crash
-        - htdocs/lib/elasticsearch/elasticsearch/elasticsearch/src/Elasticsearch/ClientBuilder.php
+        - htdocs/vendor/elasticsearch/elasticsearch/src/Elasticsearch/ClientBuilder.php
         - htdocs/lib/errors.php
         - htdocs/lib/group.php
         - htdocs/lib/htmlpurifier/HTMLPurifier.php

@@ -2,7 +2,8 @@
     "require": {
         "google/recaptcha": "~1.2.0",
         "cweagans/composer-patches": "^1.7",
-        "phpmailer/phpmailer": "6.7.1"
+        "phpmailer/phpmailer": "6.7.1",
+        "elasticsearch/elasticsearch": "7.17.1"
     },
     "config": {
         "vendor-dir": "htdocs/vendor",

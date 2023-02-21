@@ -11,7 +11,6 @@
 defined('INTERNAL') || die();
 // Required because we use the PluginSearchInternal class for some functions
 require_once(get_config('docroot') . 'search/internal/lib.php');
-require_once(get_config('libroot') . '/elasticsearch/autoload.php');
 
 use Elasticsearch\ClientBuilder;
 
