@@ -17,6 +17,7 @@
         </td>
     {/if}
     {if $columns.numviews}<td>{$item->views}</td>{/if}
+    {if $columns.submittedstatus}<td class="center">{$item->submittedstatus}</td>{/if}
     {if $columns.accessrules}<td>{include file="admin/users/accesslistitem.tpl" item=$item}</td>{/if}
   </tr>
 {/foreach}
