@@ -10,7 +10,7 @@ parameters:
         - htdocs/lib/
         - htdocs/vendor/adodb/adodb-php/
         - htdocs/lib/antispam/
-        - htdocs/lib/csstidy/
+        - htdocs/vendor/cerdic/css-tidy
         - htdocs/lib/dwoo/
         - htdocs/vendor/elasticsearch/
         - htdocs/lib/htmlpurifier/

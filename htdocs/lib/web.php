@@ -4073,7 +4073,7 @@ function clean_html($text, $xhtml=false) {
  */
 function clean_css($input_css, $preserve_css=false) {
     require_once(get_config('docroot') . 'vendor/ezyang/htmlpurifier/library/HTMLPurifier.auto.php');
-    require_once('csstidy/class.csstidy.php');
+    require_once(get_config('docroot') . 'vendor/cerdic/css-tidy/class.csstidy.php');
 
     // Create a new configuration object
     $config = HTMLPurifier_Config::createDefault();

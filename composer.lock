@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7863b2c3efe383ba1228c8ba68025286",
+    "content-hash": "68657921aebd9d0c7be53c0d51553505",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -66,6 +66,55 @@
                 "source": "https://github.com/ADOdb/ADOdb"
             },
             "time": "2022-10-28T17:34:17+00:00"
+        },
+        {
+            "name": "cerdic/css-tidy",
+            "version": "v2.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Cerdic/CSSTidy.git",
+                "reference": "436c69db9e0951760ca54b6b123d61c89ab3e918"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Cerdic/CSSTidy/zipball/436c69db9e0951760ca54b6b123d61c89ab3e918",
+                "reference": "436c69db9e0951760ca54b6b123d61c89ab3e918",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1 || ^8"
+            },
+            "require-dev": {
+                "pear/text_diff": "^1.2",
+                "simpletest/simpletest": "dev-master"
+            },
+            "bin": [
+                "bin/pcsstidy"
+            ],
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "class.csstidy_optimise.php",
+                    "class.csstidy_print.php",
+                    "class.csstidy.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Cédric MORIN",
+                    "email": "changeme@mailinator.com"
+                }
+            ],
+            "description": "CSSTidy is a CSS minifier",
+            "support": {
+                "issues": "https://github.com/Cerdic/CSSTidy/issues",
+                "source": "https://github.com/Cerdic/CSSTidy/tree/v2.0.3"
+            },
+            "time": "2022-09-14T13:26:35+00:00"
         },
         {
             "name": "cweagans/composer-patches",
@@ -725,5 +774,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.2.0"
 }
