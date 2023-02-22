@@ -125,8 +125,8 @@ if (file_exists($locallib)) {
 }
 
 // Database access functions
-require('adodb/adodb-exceptions.inc.php');
-require('adodb/adodb.inc.php');
+require(get_config('docroot') . 'vendor/adodb/adodb-php/adodb-exceptions.inc.php');
+require(get_config('docroot') . 'vendor/adodb/adodb-php/adodb.inc.php');
 
 try {
     // ADODB does not provide the raw driver error message if the connection

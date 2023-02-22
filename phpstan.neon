@@ -8,7 +8,7 @@ parameters:
         - external/vendor
         - htdocs/auth/saml/
         - htdocs/lib/
-        - htdocs/lib/adodb/
+        - htdocs/vendor/adodb/adodb-php/
         - htdocs/lib/antispam/
         - htdocs/lib/csstidy/
         - htdocs/lib/dwoo/
@@ -37,8 +37,8 @@ parameters:
         - htdocs/auth/saml/lib.php
         - htdocs/auth/user.php
         - htdocs/blocktype/lib.php
-        - htdocs/lib/adodb/adodb-exceptions.inc.php
-        - htdocs/lib/adodb/adodb.inc.php
+        - htdocs/vendor/adodb/adodb-php/adodb-exceptions.inc.php
+        - htdocs/vendor/adodb/adodb-php/adodb.inc.php
         - htdocs/lib/dml.php
         - htdocs/lib/dwoo/dwoo/Dwoo/Core.php
         - htdocs/lib/dwoo/mahara/Dwoo_Mahara.php
@@ -83,7 +83,7 @@ parameters:
         - htdocs/webservice/rest/locallib.php
     excludePaths:
         - htdocs/auth/saml/*
-        - htdocs/lib/adodb/*
+        - htdocs/vendor/adodb/adodb-php/*
         - htdocs/lib/antispam/*
         - htdocs/lib/csstidy/*
         - htdocs/lib/elasticsearch/*

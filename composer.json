@@ -1,5 +1,6 @@
 {
     "require": {
+        "adodb/adodb-php": "^5.22",
         "cweagans/composer-patches": "^1.7",
         "elasticsearch/elasticsearch": "~7.17.1",
         "google/recaptcha": "~1.2.0",
@@ -16,6 +17,10 @@
     },
     "extra": {
         "patches": {
+            "adodb/adodb-php": {
+                "Add Mahara $SESSION support": "composer_patches/adodb.session.patch",
+                "Suppress a PHP Notice that is thrown from Behat": "https://github.com/ADOdb/ADOdb/commit/1c1406b4e3d32b61c3dee6b0edadea0e66607948.patch"
+            }
         }
     },
     "require-dev": {

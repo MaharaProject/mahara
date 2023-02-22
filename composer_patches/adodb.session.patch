@@ -1,0 +1,46 @@
+commit 9a4fb33b0be193a92ffc832d9c75e7e2d3e0ec97
+Author: Robert Lyon <robertl@catalyst.net.nz>
+Date:   Mon Aug 15 12:27:03 2016 +1200
+
+    Modified session variable setting in ADOdb adodb-pager.inc.php
+    
+    Bug 1672867
+    
+    Was originally part of commit 55a8deb8cbd2e1455c7af3a35c50b7cad76d63df
+    but have moved it out to own patch for purposes of adodb version update
+    
+    (cherry-picked from f9818ff606bbe6ec00b34eab23d1743870407b48)
+    
+    behatnotneeded
+    
+    Change-Id: Ie76bbe5b6b015246937b90b2782c0398243a69b8
+    Signed-off-by: Cecilia Vela Gurovic <ceciliavg@catalyst.net.nz>
+
+diff --git a/htdocs/lib/adodb/adodb-pager.inc.php b/htdocs/lib/adodb/adodb-pager.inc.php
+index fa77d55c7a..7f10e14113 100644
+--- a/htdocs/lib/adodb/adodb-pager.inc.php
++++ b/htdocs/lib/adodb/adodb-pager.inc.php
+@@ -59,7 +59,7 @@ class ADODB_Pager {
+ 	//
+ 	function __construct(&$db,$sql,$id = 'adodb', $showPageLinks = false)
+ 	{
+-	global $PHP_SELF;
++	global $PHP_SELF, $SESSION;
+ 
+ 		$curr_page = $id.'_curr_page';
+ 		if (!empty($PHP_SELF)) $PHP_SELF = htmlspecialchars($_SERVER['PHP_SELF']); // htmlspecialchars() to prevent XSS attacks
+@@ -72,11 +72,11 @@ class ADODB_Pager {
+ 		$next_page = $id.'_next_page';
+ 
+ 		if (isset($_GET[$next_page])) {
+-			$_SESSION[$curr_page] = (integer) $_GET[$next_page];
++			$SESSION->set($curr_page, (integer) $_GET[$next_page]);
+ 		}
+-		if (empty($_SESSION[$curr_page])) $_SESSION[$curr_page] = 1; ## at first page
++		if (empty($SESSION->get($curr_page))) $SESSION->set($curr_page, 1); ## at first page
+ 
+-		$this->curr_page = $_SESSION[$curr_page];
++		$this->curr_page = $SESSION->get($curr_page);
+ 
+ 	}
+ 
