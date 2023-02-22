@@ -1,0 +1,17 @@
+diff --git a/library/HTMLPurifier/ConfigSchema/schema/Filter.ExtractStyleBlocks.PreserveCSS.txt b/htdocs/vendor/ezyang/htmlpurifier/library/HTMLPurifier/ConfigSchema/schema/Filter.ExtractStyleBlocks.PreserveCSS.txt
+new file mode 100644
+index 0000000000..4cf73d4220
+--- /dev/null
++++ b/library/HTMLPurifier/ConfigSchema/schema/Filter.ExtractStyleBlocks.PreserveCSS.txt
+@@ -0,0 +1,10 @@
++Filter.ExtractStyleBlocks.PreserveCSS
++TYPE: bool
++VERSION: 3.1.0
++DEFAULT: false
++EXTERNAL: CSSTidy
++--DESCRIPTION--
++<p>
++  If it turns on, HTML Purifier will attempt to preserve CSS comments.
++</p>
++--# vim: et sw=4 sts=4
+\ No newline at end of file

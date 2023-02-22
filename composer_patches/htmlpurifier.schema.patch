@@ -1,0 +1,13 @@
+diff --git a/vendor/ezyang/htmlpurifier/library/HTMLPurifier/ConfigSchema.php b/htdocs/vendor/ezyang/htmlpurifier/library/HTMLPurifier/ConfigSchema.php
+index c3fe8cd4ab..acb66fe41a 100644
+--- a/vendor/ezyang/htmlpurifier/library/HTMLPurifier/ConfigSchema.php
++++ b/vendor/ezyang/htmlpurifier/library/HTMLPurifier/ConfigSchema.php
+@@ -68,7 +68,7 @@ class HTMLPurifier_ConfigSchema
+      */
+     public static function makeFromSerial()
+     {
+-        $contents = file_get_contents(HTMLPURIFIER_PREFIX . '/HTMLPurifier/ConfigSchema/schema.ser');
++        $contents = file_get_contents(get_config('docroot') . 'lib/htmlpurifier/schema.ser');
+         $r = unserialize($contents);
+         if (!$r) {
+             $hash = sha1($contents);

@@ -11,10 +11,6 @@ Changes:
 We only use the /library/HTMLPurifier folder from the download, however the configuration change below requires a script that depends on some other code to be run, so for a start grab /extras, /library and /maintenence from the download.
 
 Steps to update:
-- Download latest .zip file and extract somewhere locally (not in mahara directory)
-
-  In the unzipped folder...
-
 - Add the changes to HTMLPurifier/Filter/ExtractStyleBlocks.php
   (from commits: a485b22c302f862e1bfd4254320a837418c24511 and fa31693221a1b1c69e37c26d8716fa80dbca94eb)
   Add in the HTMLPurifier/ConfigSchema/schema/Filter.ExtractStyleBlocks.PreserveCSS.txt
@@ -25,7 +21,5 @@ Steps to update:
   To allow protocol relative urls
   Prevents HTTP iframes on HTTPS sites
 
-- Go into maintenence/generate-schema-cache.php directory and run
-  php generate-schema-cache.php
-
-- Copy all the content from library/ to htdocs/lib/htmlpurifier/
+! To generate the schema.ser, you need to download the zip's maintenence/ and extras/ folders into the same level as library/
+- and run php generate-schema-cache.php
