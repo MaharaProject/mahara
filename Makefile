@@ -141,6 +141,8 @@ endif
 initcomposer: installcomposer
 	@echo "Updating external dependencies with Composer..."
 	@php external/composer.phar --working-dir=external update
+	@echo "Installing third-party dependencies with Composer..."
+	@php external/composer.phar install
 
 simplesamlphp := $(shell ls -d htdocs/auth/saml/extlib/simplesamlphp 2>/dev/null)
 

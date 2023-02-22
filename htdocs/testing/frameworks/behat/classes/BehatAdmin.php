@@ -97,6 +97,10 @@ class BehatAdmin extends BehatBase {
                 'eventlogenhancedsearch',
             // Experiment settings
                 'skins',
+            // reCAPTCHA settings
+                'recaptchapublickey',
+                'recaptchaprivatekey',
+                'recaptchaonregisterform',
         );
         // if public views are disabled, sitemap generation must also be disabled.
         if (empty($settings['allowpublicviews'])) {

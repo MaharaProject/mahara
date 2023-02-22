@@ -1,0 +1,19 @@
+{
+    "require": {
+        "google/recaptcha": "^1.2",
+        "cweagans/composer-patches": "^1.7"
+    },
+    "config": {
+        "vendor-dir": "htdocs/vendor",
+        "allow-plugins": {
+            "cweagans/composer-patches": true
+        }
+    },
+    "extra": {
+        "patches": {
+            "google/recaptcha": {
+                "Remove test dir": "composer_patches/google_recaptcha.remove_tests.patch"
+            }
+        }
+    }
+}

@@ -1,11 +1,27 @@
 #!/bin/bash
 
-# Get action and Mahara dir
-ACTION=$1
-REPORT=$3
+#Get the path to the Mahara directory
 SCRIPTPATH=`readlink -f "${BASH_SOURCE[0]}"`
 MAHARAROOT=`dirname $( dirname $( dirname "$SCRIPTPATH" ))`
 BEHATROOT=`php ${MAHARAROOT}/htdocs/testing/frameworks/behat/cli/util.php --behat-root`
+
+# Sanity check Mahara's install state.
+if [ ! -d "$MAHARAROOT/htdocs/vendor" ];
+then
+    echo "Mahara is not installed. Please run 'make initcomposer' or 'composer install'"
+    exit 1
+fi
+
+if [ ! -f "$MAHARAROOT/htdocs/config.php" ];
+then
+    echo "Mahara is not configured. Please create and edit $MAHARAROOT/htdocs/config.php"
+    exit 1
+fi
+
+# Get action
+ACTION=$1
+REPORT=$3
+BEHATROOT=`php htdocs/testing/frameworks/behat/cli/util.php --behat-root`
 SERVER=0
 SERVERXVFB=
 test -z $SELENIUM_PORT && export SELENIUM_PORT=4444

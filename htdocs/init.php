@@ -32,9 +32,15 @@ require('errors.php');
 if (!is_readable($CFG->docroot . 'config.php')) {
     // @todo Later, this will redirect to the installer script. For now, we
     // just log and exit.
-    log_environ('Not installed! Please create config.php from config-dist.php');
+    throw new ConfigSanityException('Not installed! Please create config.php from config-dist.php');
     exit;
 }
+
+// Check that vendor/autoload.php exists
+if (!file_exists($CFG->docroot . 'vendor/autoload.php')) {
+    throw new ConfigSanityException($CFG->docroot . "vendor/autoload.php not found. Please run 'composer install' or 'make initcomposer'");
+}
+require_once($CFG->docroot . 'vendor/autoload.php');
 
 init_performance_info();
 
