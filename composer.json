@@ -4,6 +4,7 @@
         "cweagans/composer-patches": "^1.7",
         "elasticsearch/elasticsearch": "~7.17.1",
         "google/recaptcha": "~1.2.0",
+        "ezyang/htmlpurifier": "~4.14.0",
         "phpmailer/phpmailer": "~6.7.1",
         "psr/log": "^1.0"
     },

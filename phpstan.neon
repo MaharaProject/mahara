@@ -46,12 +46,12 @@ parameters:
         - htdocs/vendor/elasticsearch/elasticsearch/src/Elasticsearch/ClientBuilder.php
         - htdocs/lib/errors.php
         - htdocs/lib/group.php
-        - htdocs/lib/htmlpurifier/HTMLPurifier.php
-        - htdocs/lib/htmlpurifier/HTMLPurifier/Config.php
-        - htdocs/lib/htmlpurifier/HTMLPurifier/Exception.php
-        - htdocs/lib/htmlpurifier/HTMLPurifier/Filter.php
-        - htdocs/lib/htmlpurifier/HTMLPurifier/URIFilter.php
-        - htdocs/lib/htmlpurifier/HTMLPurifier/AttrDef/Enum.php
+        - htdocs/vendor/ezyang/htmlpurifier/library/HTMLPurifier.php
+        - htdocs/vendor/ezyang/htmlpurifier/library/HTMLPurifier/Config.php
+        - htdocs/vendor/ezyang/htmlpurifier/library/HTMLPurifier/Exception.php
+        - htdocs/vendor/ezyang/htmlpurifier/library/HTMLPurifier/Filter.php
+        - htdocs/vendor/ezyang/htmlpurifier/library/HTMLPurifier/URIFilter.php
+        - htdocs/vendor/ezyang/htmlpurifier/library/HTMLPurifier/AttrDef/Enum.php
         - htdocs/lib/license.php
         - htdocs/lib/mahara.php
         - htdocs/lib/objectionable.php
