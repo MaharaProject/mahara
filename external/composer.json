@@ -1,6 +1,6 @@
 {
     "require": {
-        "php": "^7.0",
+        "php": "^7.0||^8.0",
         "behat/behat": "^3.4.0",
         "behat/mink": "1.7.1",
         "behat/mink-extension": "^2.3",
