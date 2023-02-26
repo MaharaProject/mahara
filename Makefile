@@ -57,7 +57,8 @@ CCEND=$(shell echo "\033[0m")
 .PHONY: css clean-css help imageoptim installcomposer initcomposer cleanssphp ssphp \
 		cleanpdfexport pdfexport install phpunit behat minaccept jenkinsaccept securitycheck \
 		push security docker-image docker-images docker-builder reload hard-reload \
-		docker-bash docker-bash-root phpstan-analyze psa
+		docker-bash docker-bash-root phpstan-analyze psa initcomposerexternal \
+		initcomposermahara initchangeidcommitmsg
 
 all: css
 
@@ -138,11 +139,27 @@ else
 	@curl -sS https://getcomposer.org/installer | php -- --install-dir=external
 endif
 
-initcomposerdev: installcomposer
+initcomposerdev: installcomposer initcomposerexternal initcomposermahara initchangeidcommitmsg
+
+initcomposerexternal:
 	@echo "Updating external dependencies with Composer for development..."
 	@php external/composer.phar --working-dir=external update
+
+initcomposermahara:
 	@echo "Installing third-party dependencies with Composer for development..."
 	@php external/composer.phar install
+
+initchangeidcommitmsg: initcomposerexternal
+	@echo "Appending our Change-Id commit-msg hook if needed"
+ifeq ("Change-Id",$(findstring Change-Id,$(shell cat .git/hooks/commit-msg)))
+	@echo "Change-Id hook already installed";
+else
+	@echo "Installing Change-Id hook";
+	@echo >> .git/hooks/commit-msg
+	@scp -p -P 29418 ${USER}@reviews.mahara.org:hooks/commit-msg .git/hooks/commit-msg.id.tmp
+	@cat .git/hooks/commit-msg.id.tmp >> .git/hooks/commit-msg
+	@rm .git/hooks/commit-msg.id.tmp
+endif
 
 initcomposer: installcomposer
 	@echo "Updating external dependencies with Composer..."
