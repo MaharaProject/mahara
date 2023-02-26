@@ -12,16 +12,16 @@
     "es6-promise": "^4.2.4",
     "event-stream": "4.0.1",
     "globule": "^1.0.0",
-    "gulp-autoprefixer": "^7.0.0",
+    "gulp-autoprefixer": "^8.0.0",
     "gulp-clean-css": "^4.3.0",
     "gulp-if": "^3.0.0",
     "path": "^0.12.7",
-    "yargs": "^17.5.1"
+    "yargs": "^17.7.1"
   },
   "devDependencies": {
     "gulp": "^4.0.2",
     "gulp-sass": "^5.0.0",
-    "sass": "^1.54.3"
+    "sass": "^1.58.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
