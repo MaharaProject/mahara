@@ -70,7 +70,9 @@ function build_webservice_log_search_results($search) {
 
     if ($results['data']) {
         foreach ($results['data'] as &$result) {
-            $result['canedituser'] = $USER->can_masquerade_as((object)$result, array('supportadmin'));
+            $usercheck = new stdClass();
+            $usercheck->id = $result['userid'];
+            $result['canedituser'] = $USER->can_masquerade_as($usercheck, array('supportadmin'));
         }
     }
 
