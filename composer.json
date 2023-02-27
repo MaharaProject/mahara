@@ -1,6 +1,6 @@
 {
     "require": {
-        "google/recaptcha": "^1.2",
+        "google/recaptcha": "~1.2.0",
         "cweagans/composer-patches": "^1.7",
         "phpmailer/phpmailer": "6.7.1"
     },
@@ -12,9 +12,6 @@
     },
     "extra": {
         "patches": {
-            "google/recaptcha": {
-                "Remove test dir": "composer_patches/google_recaptcha.remove_tests.patch"
-            }
         }
     }
 }
