@@ -682,6 +682,31 @@ EOF;
     }
 
     /**
+     * Rewrites embedded image urls in the $configdata['text']
+     *
+     * See more in PluginBlocktype::rewrite_blockinstance_extra_config()
+     */
+    public static function rewrite_blockinstance_extra_config(View $view, BlockInstance $block, $configdata, $artefactcopies) {
+        $regexp = array();
+        $replacetext = array();
+        $new_blockid = $block->get('id');
+        if (isset($configdata['draft']) && $configdata['draft']) {
+            $configdata['text'] = '';
+            $configdata['draft'] = false;
+        }
+        // Prepare embedded images to reference their new files
+        foreach ($artefactcopies as $copyobj) {
+            $regexp[] = '#<img([^>]+)src="' . get_config('wwwroot') . 'artefact/file/download.php\?file=' . $copyobj->oldid . '([^0-9])#';
+            $replacetext[] = '<img$1src="' . get_config('wwwroot') . 'artefact/file/download.php?file=' . $copyobj->newid . '$2';
+        }
+        // Prepare embedded images to reference their new blocks
+        require_once('embeddedimage.php');
+        $configdata['text'] = preg_replace($regexp, $replacetext, $configdata['text']);
+        $configdata['text'] = EmbeddedImage::prepare_embedded_images($configdata['text'], 'text', $new_blockid);
+        return $configdata;
+    }
+
+    /**
      * Shouldn't be linked to any artefacts via the view_artefacts table.
      *
      * @param BlockInstance $instance
