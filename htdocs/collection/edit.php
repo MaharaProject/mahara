@@ -50,6 +50,7 @@ if ($collection->is_submitted()) {
 }
 
 $urlparams = array();
+$group = null;
 if (!empty($groupid)) {
     require_once('group.php');
     define('MENUITEM', 'engage/index');
@@ -80,7 +81,8 @@ else {
     $baseurl = get_config('wwwroot') . 'view/index.php';
 }
 
-if (!$USER->can_edit_collection($collection) || (!empty($groupid) && group_user_access($groupid) !== 'admin')) {
+$outcomesgroup = $group && is_outcomes_group($group->id);
+if (!$USER->can_edit_collection($collection) || (!empty($groupid) && $outcomesgroup && group_user_access($groupid) !== 'admin')) {
     throw new AccessDeniedException(get_string('canteditcollection', 'collection'));
 }
 
