@@ -2287,7 +2287,7 @@ JS;
      * Echos a line to the console to indicate where the test has reached in a scenario.
      * For debugging tests without using a breakpoint. Ok for automated runs.
      *
-     * @Then /^(?:\I )echo the line "([^"]*)"$/
+     * @Then /^(?:|I )echo the line "([^"]*)"$/
      */
 
      public function i_echo_the_line($text){

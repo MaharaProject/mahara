@@ -1,9 +1,10 @@
 {
     "require": {
-        "google/recaptcha": "~1.2.0",
         "cweagans/composer-patches": "^1.7",
-        "phpmailer/phpmailer": "6.7.1",
-        "elasticsearch/elasticsearch": "7.17.1"
+        "elasticsearch/elasticsearch": "~7.17.1",
+        "google/recaptcha": "~1.2.0",
+        "phpmailer/phpmailer": "~6.7.1",
+        "psr/log": "^1.0"
     },
     "config": {
         "vendor-dir": "htdocs/vendor",
@@ -18,7 +19,7 @@
         }
     },
     "require-dev": {
-        "phpro/grumphp-shim": "^1.13",
-        "phpstan/phpstan": "^1.10"
+        "phpro/grumphp-shim": "~1.13.0",
+        "phpstan/phpstan": "^1.10.0"
     }
 }

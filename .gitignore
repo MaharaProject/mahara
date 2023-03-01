@@ -52,3 +52,4 @@ package-lock.json
 vendor
 /docs
 dev/elasticsearch7/.env
+.neon

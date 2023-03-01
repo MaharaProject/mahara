@@ -1283,7 +1283,7 @@ class BlockInstance {
         if ($field == 'configdata') {
             // make sure we unserialise it
             if (!is_array($this->configdata)) {
-                $this->configdata = unserialize($this->configdata);
+                $this->configdata = unserialize($this->configdata ?? '');
             }
         }
         if ($field == 'tags') {

@@ -1106,7 +1106,7 @@ function get_table_from_query($sql) {
         $type = 'update';
     }
     if ($prefix = get_config('dbprefix')) {
-        $table = preg_replace('/^' . $prefix . '/', '', $table);
+        $table = preg_replace('/^' . $prefix . '/', '', $table ?? '');
     }
     return array($type, $table, $idsql, $bindoffset);
 }
@@ -1283,7 +1283,7 @@ function table_need_trigger($table) {
     if (empty($estables)) {
         $search_plugin = get_config('searchplugin');
         $tables = get_config_plugin('search', $search_plugin, 'types');
-        $estables = explode(',', $tables);
+        $estables = explode(',', $tables ?? '');
         // Extra table to trigger queuing on.
         $estables[] = 'view_artefact';
     }
