@@ -1,0 +1,16 @@
+diff --git a/vendor/ezyang/htmlpurifier/library/HTMLPurifier/Filter/ExtractStyleBlocks.php b/htdocs/vendor/ezyang/htmlpurifier/library/HTMLPurifier/Filter/ExtractStyleBlocks.php
+index 66f70b0fc0..7e1bfbac0a 100644
+--- a/vendor/ezyang/htmlpurifier/library/HTMLPurifier/Filter/ExtractStyleBlocks.php
++++ b/vendor/ezyang/htmlpurifier/library/HTMLPurifier/Filter/ExtractStyleBlocks.php
+@@ -121,6 +121,11 @@ class HTMLPurifier_Filter_ExtractStyleBlocks extends HTMLPurifier_Filter
+      */
+     public function cleanCSS($css, $config, $context)
+     {
++        // Mahara customisation - allows CSS comments to not be stripped out
++        if ($config->get('Filter.ExtractStyleBlocks.PreserveCSS')) {
++            $this->_tidy->set_cfg('preserve_css_comment', true);
++        }
++
+         // prepare scope
+         $scope = $config->get('Filter.ExtractStyleBlocks.Scope');
+         if ($scope !== null) {

@@ -1,8 +1,10 @@
 {
     "require": {
         "adodb/adodb-php": "^5.22",
+        "cerdic/css-tidy": "^2.0.1",
         "cweagans/composer-patches": "^1.7",
         "elasticsearch/elasticsearch": "~7.17.1",
+        "ezyang/htmlpurifier": "^4.14.0",
         "google/recaptcha": "~1.2.0",
         "phpmailer/phpmailer": "~6.7.1",
         "psr/log": "^1.0"
@@ -19,6 +21,12 @@
         "patches": {
             "adodb/adodb-php": {
                 "Suppress a PHP Notice that is thrown from Behat": "https://github.com/ADOdb/ADOdb/commit/1c1406b4e3d32b61c3dee6b0edadea0e66607948.patch"
+            },
+            "ezyang/htmlpurifier": {
+                "Schema": "composer_patches/htmlpurifier.schema.patch",
+                "Allow CSS comments to not be stripped out": "composer_patches/htmlpurifier.patch",
+                "Whitelists": "composer_patches/htmlpurifier.whitelists.patch",
+                "Preserve CSS comments filter": "composer_patches/htmlpurifier.preservecssfilter.patch"
             }
         }
     },

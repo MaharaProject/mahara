@@ -3909,7 +3909,7 @@ function get_htmlpurifier_custom_filters() {
  * @return string The cleaned up text
  */
 function clean_html($text, $xhtml=false) {
-    require_once('htmlpurifier/HTMLPurifier.auto.php');
+    require_once(get_config('docroot') . 'vendor/ezyang/htmlpurifier/library/HTMLPurifier.auto.php');
     $config = HTMLPurifier_Config::createDefault();
 
     // Uncomment this line to disable the cache during debugging
@@ -4072,8 +4072,8 @@ function clean_html($text, $xhtml=false) {
  * @return string The cleaned CSS
  */
 function clean_css($input_css, $preserve_css=false) {
-    require_once('htmlpurifier/HTMLPurifier.auto.php');
-    require_once('csstidy/class.csstidy.php');
+    require_once(get_config('docroot') . 'vendor/ezyang/htmlpurifier/library/HTMLPurifier.auto.php');
+    require_once(get_config('docroot') . 'vendor/cerdic/css-tidy/class.csstidy.php');
 
     // Create a new configuration object
     $config = HTMLPurifier_Config::createDefault();
