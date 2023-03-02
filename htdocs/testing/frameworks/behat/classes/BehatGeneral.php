@@ -36,6 +36,21 @@ use Behat\Mink\Exception\ExpectationException as ExpectationException,
  */
 class BehatGeneral extends BehatBase {
 
+
+    /**
+     * Click input with given name
+     *
+     * Used to click on a given submit button
+     * @Given /^I click on input "(?P<name>(?:[^"]|\\")*)"$/
+     */
+    public function i_click_input($name) {
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the input button');
+        $xpath = "//input[@name = '" . $name . "']";
+        $node = $this->find('xpath', $xpath, $exception);
+        $this->ensure_node_is_visible($node);
+        $node->click();
+    }
+
     /**
      * Login as a mahara user
      *
@@ -712,7 +727,41 @@ EOF;
 
         // Click on the collection box for the card
         $jscode = "jQuery(\"div.card h2:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.card-footer').find('.collection-list')[0].click();";
-        $this->getSession()->executeScript($jscode);
+        try {
+            $this->getSession()->executeScript($jscode);
+        }
+        catch (Exception $e) {
+            // Expected!
+        }
+        finally {
+            return true;
+        }
+    }
+
+    /**
+     * Cannot click on the link or button inside a card menu containing the specified text.
+     *
+     * @When /^I cannot click on "(?P<link_or_button>(?:[^"]|\\")*)" in "(?P<row_text_string>(?:[^"]|\\")*)" card menu$/
+     * @param string $link_or_button we look for
+     * @param string $rowtext The card menu text
+     * @throws ElementNotFoundException
+     */
+    public function i_cannot_click_on_in_card_menu($link_or_button, $rowtext) {
+
+        // The card container.
+        $rowtextliteral = $this->escaper->escapeLiteral($rowtext);
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'card', ' '))" .
+        " and contains(normalize-space(.), " . $rowtextliteral . ")]";
+        $rownode = $this->find('xpath', $xpath, false);
+        // Click on the elipsis button for the card
+        $jscode = "jQuery(\"div.card h2:contains(" .
+        $this->escapeDoubleQuotes($rowtextliteral) .
+        ")\").siblings('.card-footer').find('.page-controls a:contains(" .
+        $this->escapeDoubleQuotes($link_or_button) . ")')[0];";
+        $result = $this->getSession()->evaluateScript($jscode);
+        if ($result !== null) {
+            throw Exception('Element that should not be in the card menu appears to exist.');
+        }
     }
 
     /**
@@ -736,6 +785,62 @@ EOF;
         $jscode = "jQuery(\"div.card h2:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.card-footer').find('.page-controls a:contains(" . $this->escapeDoubleQuotes($link_or_button) . ")')[0].click();";
         $this->getSession()->executeScript($jscode);
     }
+
+    /**
+     * Cannot click on the link or button inside a card access menu containing the specified text.
+     *
+     * @When /^I cannot click on "(?P<link_or_button>(?:[^"]|\\")*)" in "(?P<row_text_string>(?:[^"]|\\")*)" card access menu$/
+     * @param string $link_or_button we look for
+     * @param string $rowtext The card menu text
+     * @throws ElementNotFoundException
+     */
+    public function i_cannot_click_on_in_card_access_menu($link_or_button, $rowtext) {
+
+        // The card container.
+        $rowtextliteral = $this->escaper->escapeLiteral($rowtext);
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'card', ' '))" .
+        " and contains(normalize-space(.), " . $rowtextliteral . ")]";
+        $rownode = $this->find(
+            'xpath',
+            $xpath,
+            false
+        );
+
+        // Click on the elipsis button for the card
+        $jscode = "jQuery(\"div.card h2:contains("
+        . $this->escapeDoubleQuotes($rowtextliteral)
+            . ")\").siblings('.card-footer').find('.page-access a:contains("
+            . $this->escapeDoubleQuotes($link_or_button) . ")')[0];";
+
+        $result = $this->getSession()->evaluateScript($jscode);
+
+        if ($result !== null) {
+            throw Exception('Element that should not appaer in the card access menu appears');
+        }
+    }
+
+    /**
+     * Should see the link or button inside a card access menu containing the specified text.
+     *
+     * @When /^I should see "(?P<link_or_button>(?:[^"]|\\")*)" in "(?P<row_text_string>(?:[^"]|\\")*)" card access menu$/
+     * @param string $link_or_button we look for
+     * @param string $rowtext The card menu text
+     * @throws ElementNotFoundException
+     */
+    public function i_should_see_in_card_access_menu($link_or_button, $rowtext) {
+
+        // The card container.
+        $rowtextliteral = $this->escaper->escapeLiteral($rowtext);
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the card access containing the text "' . $rowtext . '"');
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'card', ' '))" .
+        " and contains(normalize-space(.), " . $rowtextliteral . ")]";
+        $rownode = $this->find('xpath', $xpath, $exception);
+
+        // Click on the elipsis button for the card
+        $jscode = "jQuery(\"div.card h2:contains(" . $this->escapeDoubleQuotes($rowtextliteral) . ")\").siblings('.card-footer').find('.page-access a:contains(" . $this->escapeDoubleQuotes($link_or_button) . ")')[0];";
+        $this->getSession()->executeScript($jscode);
+    }
+
 
     /**
      * Click on the link or button inside a card access menu containing the specified text.
@@ -918,6 +1023,31 @@ EOF;
         $this->ensure_node_is_visible($deletenode);
         $deletenode->press();
         $this->getSession()->getDriver()->getWebDriverSession()->accept_alert();
+    }
+
+    /**
+     * Click on the delete button inside a list/table row containing the specified text.
+     *
+     * @When /^I cannot delete the "(?P<row_text_string>(?:[^"]|\\")*)" row$/
+     * @param string $rowtext The list/table row text
+     * @throws ElementNotFoundException
+     */
+    public function i_cannot_delete_the_row($rowtext) {
+
+        // The table row container.
+        $rowtextliteral = $this->escaper->escapeLiteral($rowtext);
+        $exception = new ElementNotFoundException($this->getSession(), 'text', null, 'the delete button in the row containing the text "' . $rowtext . '"');
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'list-group-item', ' '))" .
+        " and contains(normalize-space(.), " . $rowtextliteral . ")]//button[starts-with(@id, 'delete_')]" .
+        "|" .
+            "//tr[contains(normalize-space(.), " . $rowtextliteral . ")]//button[starts-with(@id, 'delete_') or starts-with(@name, 'files_filebrowser_delete')]";
+        try {
+            $this->find('xpath', $xpath, $exception);
+            $this->getSession()->getDriver()->getWebDriverSession()->accept_alert();
+        }
+        catch (ElementNotFoundException $e) {
+            # Expected :)
+        }
     }
 
     /**
@@ -2517,6 +2647,26 @@ JS;
     }
 
     /**
+     * Check if an element has an attribute with a value
+     *
+     * @Then an :element element should contain the text :text in the :attribute attribute
+     * @Then a :element element should contain the text :text in the :attribute attribute
+     * @author Gold <gold> 🏅
+     * @author Doris
+     */
+    public function check_element_contains_text_in_attribute($element, $text, $attribute) {
+        $textliteral = $this->escaper->escapeLiteral($text);
+        $xpath = "//" . $element . "[@" . $attribute . "=" . $textliteral . "]";
+        try {
+            $span = $this->find('xpath', $xpath);
+            $this->ensure_node_is_visible($span);
+        }
+        catch (ElementNotFoundException $e) {
+            throw new ExpectationException('No ' . $element . ' contains ' . $textliteral . ' in the ' . $attribute . ' attribute.', $this->getSession());
+        }
+    }
+
+    /**
      * Check if a block's "display" icons are not present
      *
      * @Then the :row row should not contain display button :text
@@ -2558,6 +2708,44 @@ JS;
             if (!preg_match('/Installed\: \(none\)/', $eog)) {
                 exec('eog ' . $file_and_path . " > /dev/null 2>/dev/null &");
             }
+        }
+    }
+
+    /**
+     * Go back a page in the browser
+     *
+     * @Then I go back
+     */
+    public function go_back() {
+        $this->getSession()->back();
+    }
+
+    /**
+     * Go back a page in the browser
+     *
+     * @Then I do nothing
+     */
+    public function do_nothing() {
+    }
+
+    /**
+     * Check if a signing off on a page is disabled
+     *
+     * When a person doesn't have the rights to sign off a page there is a gray dash instead of a switch
+     * @Then I see that :signoff is displayed disabled
+     */
+    public function check_signoff_is_disabled($signoff) {
+        $textliteral = $this->escaper->escapeLiteral($signoff);
+        $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'signoff-wrapper', ' '))" .
+                 " and contains(normalize-space(.), " . $textliteral . ")]" .
+                 "/span[contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'dot', ' '))" .
+                 " and contains(concat(' ', normalize-space(@class), ' '), concat(' ', 'disabled', ' '))]";
+        try {
+            $span = $this->find('xpath', $xpath);
+            $this->ensure_node_is_visible($span);
+        }
+        catch (ElementNotFoundException $e) {
+            throw new ExpectationException('Unable to find disabled element containing ' . $textliteral . '.', $this->getSession());
         }
     }
 }

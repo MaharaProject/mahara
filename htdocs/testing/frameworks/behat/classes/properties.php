@@ -52,6 +52,7 @@ define('LOCATORS', array(
     'LEGAL',
     'WEBSERVICES',
     'PAGINATION',
+    'OUTCOMES'
 ));
 
 /**
@@ -93,6 +94,7 @@ define('BLOCKS', array(
     'Tags block' => '#sb-tags',
     'Group info' => '.bt-groupinfo',
     'Add new block' => '#newblock',
+    'Save block' => '[id^=instconf_action_configureblockinstance_id]',
 ));
 
 define('COMMENT', array(
@@ -301,6 +303,18 @@ define('TINYMCE', array(
 define ('WEBSERVICES', array(
     'Manage service access tokens' => '#webservices_token_pseudofieldset',
 ));
+
+define('OUTCOMES', [
+    'Save level' => '[id$=level_submit]',
+    'Activity pages' =>  '.progresstitle',
+    'Progress form' => '.outcome-progress-form',
+    'Complete outcome' => '#complete-confirm-form',
+    'Sign off activity page' => '#signoff-confirm-form',
+    'Un-sign off activity page' => '#unsignoff-confirm-form',
+    'Activity complete icon' => '#activity_complete',
+    'Incomplete outcome form' => '#incomplete-confirm-form',
+    'Complete outcome form' => '#complete-confirm-form',
+]);
 
 /**
  * Looks for the css or xpath for the requested property.

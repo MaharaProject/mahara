@@ -16,6 +16,6 @@ $string['title'] = 'Checkpoint';
 $string['titlelower'] = 'checkpoint';
 $string['description'] = 'A block to display checkpoint comments';
 $string['addcheckpointfeedback'] = 'Add checkpoint comment';
-$string['addcheckpointfeedback'] = 'Add comment';
+$string['modalcheckpointcomment'] = 'Checkpoint: Add comment';
 $string['save'] = 'Save';
 $string['checkpointsitetemplate'] = 'The content for this checkpoint will display correctly with in the group it belongs to.';

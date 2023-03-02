@@ -42,7 +42,7 @@
                     <span class="icon icon-check-circle completed mt-1 px-4 "></span>
                   </a>
                 {else}
-                  <a href="#" class="outcome-state" title="{str tag='incompleteoutcome' section='collection' arg1=$outcome->short_title|safe}" >
+                  <a href="#" class="outcome-state" title="{str tag='incompleteoutcomedisabled' section='collection' arg1=$outcome->short_title|safe}" >
                     <span class="icon icon-circle dot mt-1 px-4 disabled "></span>
                   </a>
                 {/if}

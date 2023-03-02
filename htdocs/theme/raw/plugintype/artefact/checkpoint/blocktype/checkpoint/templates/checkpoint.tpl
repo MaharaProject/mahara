@@ -38,7 +38,7 @@
                     </button>
                     <h1 class="modal-title">
                         <span class="icon icon-check" role="presentation" aria-hidden="true"></span>
-                        {str tag=title section=blocktype.checkpoint/checkpoint}
+                        {str tag=modalcheckpointcomment section=blocktype.checkpoint/checkpoint}
                     </h1>
                 </div>
                 <div class="modal-body">

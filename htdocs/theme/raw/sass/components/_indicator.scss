@@ -87,13 +87,15 @@ button[data-bs-toggle="collapse"] {
     &:focus .collapse-indicator{
         color: $collapse-indicator-hover-color;
     }
-    .collapse-indicator {
+    .collapse-indicator,
+    &  ~ span.collapse-indicator {
         transform: rotate(-180deg);
         transition-duration: 0.3s;
         color: $collapse-indicator-color;
         height: auto;
     }
-    &.collapsed .collapse-indicator {
+    &.collapsed .collapse-indicator,
+    &.collapsed ~ span.collapse-indicator {
         transform: rotate(0deg);
         transition-duration: 0.3s;
     }

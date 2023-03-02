@@ -20,7 +20,7 @@ $name = 'outcome' . $formscount;
 $title = get_string('outcometitle', 'collection', $formscount + 1);
 $form = create_outcome_form($name, $title, $collection, true);
 
-$deletestring = get_string('delete');
+$deletestring = get_string('deletenewoutcome', 'collection', $title);
 
 $deleteform = '
 <div class="delete-button-container">

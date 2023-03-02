@@ -1,8 +1,9 @@
 {if $is_activity_page}
-    <div class="bt-activitysupport card card-secondary clearfix collapsible">
+    <div class="bt-activitysupport card card-secondary clearfix collapsible collapsible-group">
         <h2 class="title card-header js-heading">
-            <a data-bs-toggle="collapse" href="#target" aria-expanded="true" class="outer-link"></a>
-            {$activity->description}
+            <a data-bs-toggle="collapse" href="#target" aria-expanded="true" class="outer-link collapsed">
+                {$activity->description}
+            </a>
             <span class="icon icon-chevron-down collapse-indicator float-end" role="presentation" aria-hidden="true"></span>
         </h2>
         <div class="activity-outcome-line">
