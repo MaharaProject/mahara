@@ -934,7 +934,13 @@ class EmailDisabledException extends EmailException {}
 /**
  * Exception - artefact not found
  */
-class ArtefactNotFoundException extends NotFoundException {}
+class ArtefactNotFoundException extends NotFoundException {
+    public function strings() {
+        return array_merge(parent::strings(),
+            array('message' => get_string('artefactnotfoundexception', 'error')),
+            array('title'   => get_string('notfound', 'error')));
+    }
+}
 
 /**
  * Exception - block instance not found

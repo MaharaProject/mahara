@@ -93,6 +93,8 @@ $string['wrongparamtype'] = 'A function or method has been passed the wrong kind
 
 $string['notfound'] = 'Not found';
 $string['notfoundexception'] = 'The page you are looking for could not be found.';
+$string['artefactnotfoundexception'] = 'The artefact you are looking for could not be found.';
+$string['artefactmissing'] = 'Unable to fetch artefact from dataroot.';
 
 $string['accessdenied'] = 'Access denied';
 $string['accessdeniedobjection'] = 'Access denied. The objection has already been resolved by another administrator.';

@@ -44,6 +44,9 @@ function serve_file($path, $filename, $mimetype, $options=array()) {
         $dataroot = realpath(get_config('dataroot'));
         $localpath = realpath($path);
 
+        if ($path === false || $localpath === false) {
+            throw new ArtefactNotFoundException(get_string('artefactmissing', 'error'));
+        }
         if (!get_config('insecuredataroot') && substr($localpath, 0, strlen($dataroot)) != $dataroot) {
             throw new AccessDeniedException();
         }
