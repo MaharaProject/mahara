@@ -2,7 +2,7 @@ Video.js - HTML5 Video Player
 =============================
 
 Website: https://videojs.com/
-Version: 7.17.0
+Version: 7.21.1
 
 This html5 video player is used by the Mahara internal media blocktype.
 The distribution is downloaded from the latest release (https://github.com/videojs/video.js/releases).
