@@ -113,11 +113,13 @@ help:
 	@echo "Helper targets"
 	@echo "=============="
 	@echo "Run 'make initcomposer' to install Composer and phpunit"
+	@echo "Run 'make initcomposerdev' to install Composer development tools"
 	@echo "Run 'make phpunit' to execute phpunit tests"
 	@echo "Run 'make install' runs the Mahara install script"
 	@echo "Run 'make behat' to execute behat tests"
 	@echo "Run 'make ssphp' to install SimpleSAMLphp"
 	@echo "Run 'make cleanssphp' to remove SimpleSAMLphp"
+	@echo "Run 'make cleancomposer' to remove the Composer vendor directories"
 	@echo "Run 'make imageoptim' to losslessly optimise all images"
 	@echo "Run 'make docker-image' to build a Mahara docker image"
 	@echo "Run 'make docker-builder' builds the docker builder image required for docker-build"
@@ -130,6 +132,10 @@ imageoptim:
 	find . -iname '*.jpeg' -exec jpegoptim -q -p --strip-all {} \;
 
 composer := $(shell ls external/composer.phar 2>/dev/null)
+
+cleancomposer:
+	rm -rf htdocs/vendor/
+	rm -rf external/vendor/
 
 installcomposer:
 ifdef composer
