@@ -3,7 +3,7 @@ FontAwesome
 
 Website: https://fontawesome.com
 Website: https://github.com/FortAwesome/Font-Awesome
-Version: 6.1.1
+Version: 6.3.0
 License: http://fontawesome.io/license CSS: MIT License
 See also: theme/raw/fonts for font license information
 
@@ -17,15 +17,22 @@ To update the sass files part go to their git repo
 and copy the contents of their /scss/ directory to our
 htdocs/theme/raw/sass/lib/font-awesome/ directory.
 
-Note: You will need to do at lest the following
-- Edit htdocs/theme/raw/sass/lib/font-awesome/_variables.scss
-  - set the $fa-font-path to be the path to our location of the fonts
-  - Set the $fa-css-prefix  to be 'icon' (not 'fa')
-- Make sure htdocs/theme/raw/sass/lib/font-awesome/fontawesome.scss
-still has the lines:
- @import 'solid';
- @import 'brands';
- @import 'regular';
+Apply the .patches for customisations:
+  htdocs/theme/raw/sass/lib/font-awesome/fa_customisations.patch
+
+Manual customusations:
+  Note: You will need to do at least the following
+  - Edit htdocs/theme/raw/sass/lib/font-awesome/_variables.scss
+    - set the $fa-font-path to be the path to our location of the fonts
+    - Set the $fa-css-prefix  to be 'icon' (not 'fa')
+  - Make sure htdocs/theme/raw/sass/lib/font-awesome/fontawesome.scss
+  still has the lines:
+  @import 'solid';
+  @import 'brands';
+  @import 'regular';
+  - Make sure the htdocs/theme/raw/sass/lib/font-awesome/_mixins.scss
+    and htdocs/theme/raw/sass/lib/font-awesome/_screen-reader.scss have
+    the .sr-only to .visually-hidden changes
 
 - If doing a major version upgrade you will also need to update
 instances of font-family: 'Font Awesome x Free'  (where x is the

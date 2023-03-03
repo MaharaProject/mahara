@@ -4,11 +4,11 @@
 // only display content to screen readers
 .visually-hidden,
 .#{$fa-css-prefix}-visually-hidden {
-  @include fa-visually-hidden; 
+  @include fa-visually-hidden;
 }
 
 // use in conjunction with .visually-hidden to only display content when it's focused
 .visually-hidden-focusable,
 .#{$fa-css-prefix}-visually-hidden-focusable {
-  @include fa-visually-hidden-focusable; 
+  @include fa-visually-hidden-focusable;
 }
