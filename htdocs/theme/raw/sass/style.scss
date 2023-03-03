@@ -11,6 +11,6 @@
 @import "utilities/theme-variables"; // Import our theme variables
 @import "utilities/bootstrap-variables";  // ...and our custom bootstrap variables file
 @import "utilities/custom-variables";  // ...and our custom variables file
-@import "lib/bootstrap5/bootstrap"; // bootstrap scss dependency file
+@import "../../../node_modules/bootstrap/scss/bootstrap"; // bootstrap scss dependency file
 
 @import "utilities/index"; //include the index of our sass partials

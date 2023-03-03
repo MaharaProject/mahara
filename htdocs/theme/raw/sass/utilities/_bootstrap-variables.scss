@@ -10,7 +10,7 @@
 @use "sass:math";
 @use "sass:list";
 
-@import "../lib/bootstrap5/functions"; // Import the bootstrap functions here since they are required
+@import "../../../../node_modules/bootstrap/scss/functions"; // Import the bootstrap functions here since they are required
 @import "theme-variables"; // TODO: Figure out why importing this in style.scss isn't enough
 
 // Variables

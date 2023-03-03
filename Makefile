@@ -88,8 +88,7 @@ endif
 
 ifndef npmsetup
 	@echo "System node version: " && node -v;
-	@$(nvm_check) && nvm ls
-	@$(nvm_check) && npm install
+	@$(nvm_check) && nvm ls && npm install && cd htdocs && npm install
 endif
 	@echo "Building CSS..."
 	@if $(nvm_check) && npm rebuild node-sass && gulp css --production $(production) ; then echo "Done!"; else $(nvm_check) && npm rebuild node-sass && npm install; gulp css --production $(production);  fi

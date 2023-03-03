@@ -260,7 +260,7 @@ function set_report_styling() {
     $font_files = array_values(array_diff(scandir($font_awesome_dir), array('.', '..')));
     $font_awesome_css = get_mahararoot_dir() . "/htdocs/theme/raw/style/lib/font-awesome/fontawesome.css";
     $jquery_js = get_mahararoot_dir() . "/htdocs/js/jquery/jquery.js";
-    $bootstrap_js = get_mahararoot_dir() . "/htdocs/lib/bootstrap/assets/javascripts/bootstrap.min.js";
+    $bootstrap_js = get_mahararoot_dir() . "node_modules/bootstrap/dist/js/bootstrap.min.js";
 
     if (file_exists($report_root . '/composer.json')) {
         echo "Adding styling for html report...\n";

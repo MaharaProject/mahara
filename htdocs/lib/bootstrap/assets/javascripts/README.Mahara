@@ -1,15 +1,96 @@
 Bootstrap for Sass
 ==================
 
-Website: https://getbootstrap.com/
-Version: 5.0.1
+Website: <https://getbootstrap.com/>
+Version: Now managed by NPM
 
 Bootstrap is a popular HTML, CSS, and JavaScript framework for developing responsive, mobile-first projects on the web.
 
 On updating the major version, please update the version check inside 'ensure_upgrade_sanity()' found in htdocs/lib/mahara.php.
 
-Download the source files - this is for a base so we can customise
-- Only kept the 'js/' directory
-- Moved items inside'/scss' directory to 'theme/raw/sass/lib/bootstrap5'
-Download the compiled CSS and js - for our javascript files
-- Get the bootstrap.min.js and map.js and put them in htdocs/lib/bootstrap/assets/javascripts/bootstrap.min.js
+Diffs
+
+```patch
+# htdocs/theme/raw/sass/lib/bootstrap5/_utilities.scss
+
+"font-size": (
+--  rfs: true,
+    property: font-size,
+
+"font-size": (
+++  rfs: false,
+    property: font-size,
+
+# htdocs/theme/raw/sass/lib/bootstrap5/_reboot.scss
+# node_modules/bootstrap/scss/_reboot.scss
+
+// Inherit font family and line height for file input buttons
+
+-- ::file-selector-button {
+--   font: inherit;
+-- }
+
+// Inherit font family and line height for file input buttons
+
+++ // Removed to fix display in Firefox
+++ // ::file-selector-button {
+++ //   font: inherit;
+++ // }
+
+# htdocs/theme/raw/sass/lib/bootstrap5/_variables.scss
+# node_modules/bootstrap/scss/_variables.scss
+
+$enable-button-pointers:      true !default;
+-- $enable-rfs:                  true !default;
+$enable-validation-icons:     true !default;
+
+$enable-button-pointers:      true !default;
+++ $enable-rfs:                  false;
+$enable-validation-icons:     true !default;
+
+# htdocs/theme/raw/sass/lib/bootstrap5/vendor/_rfs.scss
+# node_modules/bootstrap/scss/_rfs.scss
+
+```patch
+// Generate enable or disable classes. Possibilities: false, "enable" or "disable"
+-- $rfs-class: false !default;
+
+// Generate enable or disable classes. Possibilities: false, "enable" or "disable"
+++ $rfs-class: enable !default;
+
+// Disable RFS by setting $enable-rfs to false
+-- $enable-rfs: true !default;
+
+// Disable RFS by setting $enable-rfs to false
+++ $enable-rfs: false;
+
+# htdocs/theme/raw/sass/lib/bootstrap5/_tables.scss
+# node_modules/bootstrap/scss/_tables_.scss
+
+// Default zebra-stripe styles (alternating gray and transparent backgrounds)
+.table-striped {
+--  > tbody > tr:nth-of-type(#{$table-striped-order}) {
+    --#{$variable-prefix}table-accent-bg: var(--#{$variable-prefix}table-striped-bg);
+    color: var(--#{$variable-prefix}table-striped-color);
+  }
+}
+
+// Default zebra-stripe styles (alternating gray and transparent backgrounds)
+.table-striped {
+++  > tbody > tr:nth-of-type(#{$table-striped-order}):not(.warning) {
+    --#{$variable-prefix}table-accent-bg: var(--#{$variable-prefix}table-striped-bg);
+    color: var(--#{$variable-prefix}table-striped-color);
+  }
+}
+```
+
+How to add more packages:
+
+- fix a bug in one of your dependencies `vim node_modules/some-package/brokenFile.js`
+- run patch-package to create a .patch file `npx patch-package some-package`
+- commit the patch file to share the fix with your team
+
+```bash
+git add patches/some-package+3.14.15.patch
+git commit -m "fix brokenFile.js in some-package"
+```

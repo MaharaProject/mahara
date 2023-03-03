@@ -45,7 +45,7 @@
     <link rel="stylesheet" type="text/css" href="{$cssurl}">
 {/foreach}
     <script type="application/javascript" src="{$WWWROOT}js/popper/popper.min.js?v={$CACHEVERSION}"></script>
-    <script type="application/javascript" src="{$WWWROOT}lib/bootstrap/assets/javascripts/bootstrap.min.js?v={$CACHEVERSION}"></script>
+    <script type="application/javascript" src="{$WWWROOT}node_modules/bootstrap/dist/js/bootstrap.min.js?v={$CACHEVERSION}"></script>
     <script type="application/javascript" src="{$WWWROOT}js/javascript-templates/js/tmpl.min.js?v={$CACHEVERSION}"></script>
     <script type="application/javascript" src="{$WWWROOT}js/masonry/masonry.min.js?v={$CACHEVERSION}"></script>
     <script type="application/javascript" src="{theme_url filename='js/pieform.js'}?v={$CACHEVERSION}"></script>

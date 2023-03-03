@@ -1,0 +1,24 @@
+{
+    "name": "mahara",
+    "version": "1.0.2",
+    "description": "JS dependencies for Mahara",
+    "main": "gulpfile.js",
+    "repository": {
+      "type": "git",
+      "url": "git://git.mahara.org/mahara/mahara"
+    },
+    "license": "GPL-3.0",
+    "dependencies": {
+      "bootstrap": "~5.0.2",
+      "patch-package": "^6.5.1"
+    },
+    "devDependencies": {
+    },
+    "scripts": {
+      "postinstall": "patch-package --patch-dir=../patches/htdocs"
+    },
+    "browserslist": [
+      "last 4 version"
+    ]
+  }
+  

@@ -1119,7 +1119,7 @@ private function get_folder_modals(&$idarray, BlockInstance $bi) {
         // Copy over bootstrap and jquery files
         $jsdir =  $staticdir . 'theme/' . $theme . '/static/js/';
         $directoriestocopy[get_config('docroot') . 'js/popper/popper.min.js'] = $jsdir . 'popper.min.js';
-        $directoriestocopy[get_config('docroot') . 'lib/bootstrap/assets/javascripts/bootstrap.min.js'] = $jsdir . 'bootstrap.min.js';
+        $directoriestocopy[get_config('docroot') . 'node_modules/bootstrap/dist/js/bootstrap.min.js'] = $jsdir . 'bootstrap.min.js';
         $directoriestocopy[get_config('docroot') . 'js/jquery/jquery.js'] = $jsdir . 'jquery.js';
         $directoriestocopy[get_config('docroot') . 'js/gridstack/gridstack_modules'] = $jsdir . 'gridstack_modules';
         $directoriestocopy[get_config('docroot') . 'js/gridlayout.js'] = $jsdir . 'gridlayout.js';

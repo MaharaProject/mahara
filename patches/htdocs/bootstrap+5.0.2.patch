@@ -1,0 +1,113 @@
+diff --git a/node_modules/bootstrap/scss/_functions.scss b/node_modules/bootstrap/scss/_functions.scss
+index 870f367..7f9a307 100644
+--- a/node_modules/bootstrap/scss/_functions.scss
++++ b/node_modules/bootstrap/scss/_functions.scss
+@@ -147,7 +147,7 @@ $_luminance-list: .0008 .001 .0011 .0013 .0015 .0017 .002 .0022 .0025 .0027 .003
+ // Return opaque color
+ // opaque(#fff, rgba(0, 0, 0, .5)) => #808080
+ @function opaque($background, $foreground) {
+-  @return mix(rgba($foreground, 1), $background, opacity($foreground) * 100);
++  @return mix(rgba($foreground, 1), $background, opacity($foreground) * 100%);
+ }
+ 
+ // scss-docs-start color-functions
+diff --git a/node_modules/bootstrap/scss/_reboot.scss b/node_modules/bootstrap/scss/_reboot.scss
+index 3520469..5fa368a 100644
+--- a/node_modules/bootstrap/scss/_reboot.scss
++++ b/node_modules/bootstrap/scss/_reboot.scss
+@@ -569,9 +569,10 @@ legend {
+ 
+ // Inherit font family and line height for file input buttons
+ 
+-::file-selector-button {
+-  font: inherit;
+-}
++// Removed to fix display in Firefox
++// ::file-selector-button {
++//   font: inherit;
++// }
+ 
+ // 1. Change font properties to `inherit`
+ // 2. Correct the inability to style clickable types in iOS and Safari.
+diff --git a/node_modules/bootstrap/scss/_tables.scss b/node_modules/bootstrap/scss/_tables.scss
+index 92556ba..57e8586 100644
+--- a/node_modules/bootstrap/scss/_tables.scss
++++ b/node_modules/bootstrap/scss/_tables.scss
+@@ -4,7 +4,6 @@
+ 
+ .table {
+   --#{$variable-prefix}table-bg: #{$table-bg};
+-  --#{$variable-prefix}table-accent-bg: #{$table-accent-bg};
+   --#{$variable-prefix}table-striped-color: #{$table-striped-color};
+   --#{$variable-prefix}table-striped-bg: #{$table-striped-bg};
+   --#{$variable-prefix}table-active-color: #{$table-active-color};
+@@ -98,7 +97,7 @@
+ // Default zebra-stripe styles (alternating gray and transparent backgrounds)
+ 
+ .table-striped {
+-  > tbody > tr:nth-of-type(#{$table-striped-order}) {
++  > tbody > tr:nth-of-type(#{$table-striped-order}):not(.warning) {
+     --#{$variable-prefix}table-accent-bg: var(--#{$variable-prefix}table-striped-bg);
+     color: var(--#{$variable-prefix}table-striped-color);
+   }
+diff --git a/node_modules/bootstrap/scss/_utilities.scss b/node_modules/bootstrap/scss/_utilities.scss
+index 3c927cf..3f47414 100644
+--- a/node_modules/bootstrap/scss/_utilities.scss
++++ b/node_modules/bootstrap/scss/_utilities.scss
+@@ -432,7 +432,7 @@ $utilities: map-merge(
+       values: (monospace: var(--#{$variable-prefix}font-monospace))
+     ),
+     "font-size": (
+-      rfs: true,
++      rfs: false,
+       property: font-size,
+       class: fs,
+       values: $font-sizes
+diff --git a/node_modules/bootstrap/scss/_variables.scss b/node_modules/bootstrap/scss/_variables.scss
+index 06dfa4a..5504ddd 100644
+--- a/node_modules/bootstrap/scss/_variables.scss
++++ b/node_modules/bootstrap/scss/_variables.scss
+@@ -222,7 +222,7 @@ $enable-reduced-motion:       true !default;
+ $enable-smooth-scroll:        true !default;
+ $enable-grid-classes:         true !default;
+ $enable-button-pointers:      true !default;
+-$enable-rfs:                  true !default;
++$enable-rfs:                  false !default;
+ $enable-validation-icons:     true !default;
+ $enable-negative-margins:     false !default;
+ $enable-deprecation-messages: true !default;
+diff --git a/node_modules/bootstrap/scss/forms/_form-check.scss b/node_modules/bootstrap/scss/forms/_form-check.scss
+index 6321b41..f87912e 100644
+--- a/node_modules/bootstrap/scss/forms/_form-check.scss
++++ b/node_modules/bootstrap/scss/forms/_form-check.scss
+@@ -25,7 +25,7 @@
+   background-size: contain;
+   border: $form-check-input-border;
+   appearance: none;
+-  color-adjust: exact; // Keep themed appearance for print
++  print-color-adjust: exact; // Keep themed appearance for print
+   @include transition($form-check-transition);
+ 
+   &[type="checkbox"] {
+diff --git a/node_modules/bootstrap/scss/vendor/_rfs.scss b/node_modules/bootstrap/scss/vendor/_rfs.scss
+index 7e9a6c7..77e74e9 100644
+--- a/node_modules/bootstrap/scss/vendor/_rfs.scss
++++ b/node_modules/bootstrap/scss/vendor/_rfs.scss
+@@ -38,7 +38,7 @@ $rfs-factor: 10 !default;
+ $rfs-mode: min-media-query !default;
+ 
+ // Generate enable or disable classes. Possibilities: false, "enable" or "disable"
+-$rfs-class: false !default;
++$rfs-class: enable !default;
+ 
+ // 1 rem = $rfs-rem-value px
+ $rfs-rem-value: 16 !default;
+@@ -47,7 +47,7 @@ $rfs-rem-value: 16 !default;
+ $rfs-safari-iframe-resize-bug-fix: false !default;
+ 
+ // Disable RFS by setting $enable-rfs to false
+-$enable-rfs: true !default;
++$enable-rfs: false !default;
+ 
+ // Cache $rfs-base-value unit
+ $rfs-base-value-unit: unit($rfs-base-value);

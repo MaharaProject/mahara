@@ -4,16 +4,16 @@
 @import "utilities/bootstrap-variables";
 @import "utilities/custom-variables";
 
-@import "./lib/bootstrap5/mixins";
+@import "../../../node_modules/bootstrap/scss/mixins";
 @import "utilities/mixins";
 
-@import "./lib/bootstrap5/variables";
-@import "./lib/bootstrap5/reboot";
-@import "./lib/bootstrap5/type";
-@import "./lib/bootstrap5/grid";
-@import "./lib/bootstrap5/tables";
-@import "./lib/bootstrap5/forms";
-@import "./lib/bootstrap5/buttons";
+@import "../../../node_modules/bootstrap/scss/variables";
+@import "../../../node_modules/bootstrap/scss/reboot";
+@import "../../../node_modules/bootstrap/scss/type";
+@import "../../../node_modules/bootstrap/scss/grid";
+@import "../../../node_modules/bootstrap/scss/tables";
+@import "../../../node_modules/bootstrap/scss/forms";
+@import "../../../node_modules/bootstrap/scss/buttons";
 
 @import "typography/fonts";
 @import "typography/typography";

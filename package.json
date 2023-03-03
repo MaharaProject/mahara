@@ -15,6 +15,7 @@
     "gulp-autoprefixer": "^8.0.0",
     "gulp-clean-css": "^4.3.0",
     "gulp-if": "^3.0.0",
+    "patch-package": "^6.5.1",
     "path": "^0.12.7",
     "yargs": "^17.7.1"
   },
@@ -23,12 +24,12 @@
     "gulp-sass": "^5.1.0",
     "sass": "^1.58.3"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "overrides": {
     "chokidar": "3.5.3",
     "glob-parent": "6.0.2"
+  },
+  "scripts": {
+    "postinstall": "patch-package --patch-dir=./patches/root"
   },
   "browserslist": [
     "last 4 version"
