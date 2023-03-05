@@ -4,7 +4,7 @@
  * For LGPL see License.txt in the project root for license information.
  * For commercial licenses see https://www.tiny.cloud/
  *
- * Version: 5.10.2 (2021-11-17)
+ * Version: 5.10.7 (2022-12-06)
  */
 (function () {
     'use strict';
@@ -2593,14 +2593,26 @@
         items: [
           {
             title: 'Heading 1',
-            format: 'h4'
+            format: 'h1'
           },
           {
             title: 'Heading 2',
-            format: 'h5'
+            format: 'h2'
           },
           {
             title: 'Heading 3',
+            format: 'h3'
+          },
+          {
+            title: 'Heading 4',
+            format: 'h4'
+          },
+          {
+            title: 'Heading 5',
+            format: 'h5'
+          },
+          {
+            title: 'Heading 6',
             format: 'h6'
           }
         ]
