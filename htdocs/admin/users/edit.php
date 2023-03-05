@@ -72,7 +72,8 @@ if (method_exists($authobj, 'change_password')) {
         'type'         => 'password',
         'title'        => get_string('resetpassword','admin'),
         'description'  => get_string('resetpassworddescription', 'admin') . ' ' . get_password_policy_description(),
-        'showstrength' => true
+        'showstrength' => true,
+        'toggledisplay' => true
     );
 
     $elements['passwordchange'] = array(

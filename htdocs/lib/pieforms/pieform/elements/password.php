@@ -21,7 +21,24 @@ function pieform_element_password(Pieform $form, $element) {/*{{{*/
     $result = '<input type="password"'
         . $form->element_attributes($element)
         . ' value="' . Pieform::hsc($form->get_value($element)) . '">';
-
+    if (isset($element['toggledisplay']) && $element['toggledisplay']) {
+        $result .= '<span class="icon icon-eye-slash togglePassword"></span>';
+        $result .= <<<EOJS
+<script>
+jQuery('.togglePassword').off('click');
+jQuery('.togglePassword').on('click', function() {
+    const type = $(this).prev().prop("type") === "password" ? "text" : "password";
+    $(this).prev().prop("type", type);
+    $(this).toggleClass("icon-eye");
+    $(this).toggleClass("icon-eye-slash");
+});
+</script>
+EOJS;
+    }
+    if (isset($element['toggledisplay']) && $element['toggledisplay'] && isset($element['showstrength']) && $element['showstrength']) {
+        // We need to add a clearing div so things line up
+        $result .= '<div class="clear"></div>';
+    }
     if (isset($element['showstrength']) && $element['showstrength']) {
         $id = $form->get_name() . '_' . $element['id'];
         $msg1 = get_string('passwordstrength1');
