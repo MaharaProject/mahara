@@ -226,7 +226,7 @@ function get_message_ids_mr ($usr = null, $role = 'recipient', $type = null,
     if (null === $sortby) {
         $sortby = 'ctime';
     }
-    $values = array($usr, $role, $type, $sortby);
+    $values = array($usr, $role, $type);
 
     $query = '
         SELECT msg.id
@@ -236,7 +236,7 @@ function get_message_ids_mr ($usr = null, $role = 'recipient', $type = null,
             AND rel.usr = ?
             AND rel.role = ?
         WHERE msg.type = ?
-        ORDER BY ?';
+        ORDER BY ' . $sortby;
 
     $result = get_records_sql_array($query, $values, $offset, $limit);
 
