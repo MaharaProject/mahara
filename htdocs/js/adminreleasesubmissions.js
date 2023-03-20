@@ -88,9 +88,10 @@ var CurrentSubmissionsRelease = (function($) {
           console.log($('#searchresults input.selectcontentrelease').length);
           $('#searchresults input.selectcontentrelease').each(function() {
               var value = $(this).val();
+              var releasetype = $(this).data('releasetype');
               $(this).on('change', function() {
                   if ($(this).prop('checked')) {
-                      self.selectcontentrelease[value] = 1;
+                      self.selectcontentrelease[value] = releasetype;
                   }
                   else {
                       delete self.selectcontentrelease[value];
@@ -103,7 +104,7 @@ var CurrentSubmissionsRelease = (function($) {
           if ($('#selectallrelease').length) {
               $('#selectallrelease').on("click", function() {
                   $('#searchresults input.selectcontentrelease').each(function() {
-                      self.selectcontentrelease[$(this).val()] = 1;
+                      self.selectcontentrelease[$(this).val()] = $(this).data('releasetype');
                       $(this).prop('checked', true);
                   });
                   return false;
@@ -126,7 +127,7 @@ var CurrentSubmissionsRelease = (function($) {
                       $('#' + formid).append($('<input>', {
                           'type': 'checkbox',
                           'name': 'releaseids[' + j + ']',
-                          'value': j,
+                          'value': self.selectcontentrelease[j],
                           'class': 'd-none',
                           'checked': 'checked'
                       }));

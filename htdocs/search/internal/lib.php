@@ -741,7 +741,8 @@ class PluginSearchInternal extends PluginSearch {
                         ';
                         $customsql = '
                         SELECT
-                            cv.view AS releaseid,
+                            cv.collection AS releaseid,
+                            \'collection\' AS releasetype,
                             CASE
                                 WHEN c.submittedgroup IS NOT NULL
                                 THEN CAST(c.submittedgroup AS ' . $casttype . ')
@@ -767,6 +768,7 @@ class PluginSearchInternal extends PluginSearch {
                         UNION
                         SELECT
                             v.id AS releaseid,
+                            \'view\' AS releasetype,
                             CASE
                                 WHEN v.submittedgroup IS NOT NULL
                                 THEN CAST(v.submittedgroup AS ' . $casttype . ')

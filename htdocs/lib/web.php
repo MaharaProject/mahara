@@ -1640,7 +1640,7 @@ function param_exists($name) {
  * @param string The GET or POST parameter you want returned
  * @param mixed [optional] the default value for this parameter
  *
- * @return string The value of the parameter
+ * @return array<int, string>|string The value of the parameter
  *
  */
 function param_variable($name) {
