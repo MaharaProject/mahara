@@ -3850,7 +3850,7 @@ class View {
                 $select = "(a.institution = 'mahara' OR ga.can_view = 1";
             }
 
-            if (is_string($group) || is_int($group)) {
+            if (is_numeric($group)) {
                 $ph = array((int)$group, $user->get('id'));
             }
             else {
