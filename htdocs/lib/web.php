@@ -3429,8 +3429,7 @@ function find_menu_children(&$menu, $path) {
             && ($item['path'] == MENUITEM
                 || ($item['path'] . '/' == substr(MENUITEM, 0, strlen($item['path'])+1))
                 || (!empty($item['parent']) && $item['parent'] == MENUITEM));
-        if (
-            ($path == '' && $item['path'] == '') ||
+        if (($path == '' && $item['path'] == '') ||
             ($item['path'] != '' && substr($item['path'], 0, strlen($path)) == $path && !preg_match('%/%', substr($item['path'], strlen($path) + 1)))) {
             $result[] = $item;
             unset($menu[$key]);
@@ -3474,8 +3473,7 @@ function selfsearch_sideblock() {
                                                    'create/files',
                                                    'share/sharedbyme',
                                                    'create/views')
-                                   )
-                         ),
+                                   )),
         );
         return $sideblock;
     }
@@ -3656,19 +3654,22 @@ function get_script_path() {
     if (!empty($_SERVER['REQUEST_URI'])) {
         return $_SERVER['REQUEST_URI'];
 
-    } else if (!empty($_SERVER['PHP_SELF'])) {
+    }
+    else if (!empty($_SERVER['PHP_SELF'])) {
         if (!empty($_SERVER['QUERY_STRING'])) {
             return $_SERVER['PHP_SELF'] .'?'. $_SERVER['QUERY_STRING'];
         }
         return $_SERVER['PHP_SELF'];
 
-    } else if (!empty($_SERVER['SCRIPT_NAME'])) {
+    }
+    else if (!empty($_SERVER['SCRIPT_NAME'])) {
         if (!empty($_SERVER['QUERY_STRING'])) {
             return $_SERVER['SCRIPT_NAME'] .'?'. $_SERVER['QUERY_STRING'];
         }
         return $_SERVER['SCRIPT_NAME'];
 
-    } else if (!empty($_SERVER['URL'])) {     // May help IIS (not well tested)
+    }
+    else if (!empty($_SERVER['URL'])) {     // May help IIS (not well tested)
         if (!empty($_SERVER['QUERY_STRING'])) {
             return $_SERVER['URL'] .'?'. $_SERVER['QUERY_STRING'];
         }
@@ -3750,7 +3751,8 @@ function get_full_script_path() {
 
     if (!empty($url['port'])) {
         $hostname .= ':'.$url['port'];
-    } else if (!empty($_SERVER['SERVER_PORT'])) {
+    }
+    else if (!empty($_SERVER['SERVER_PORT'])) {
         // SSL proxy could be on a random port and we don't want it to appear in URL.
         if (get_config('sslproxy')) {
             $_SERVER['SERVER_PORT'] = '443';
@@ -4713,7 +4715,8 @@ function build_pagination_pagelink($class, $text, $title, $disabled=false, $url=
         $result .= '<span class="page-link">';
         $result .= $text;
         $result .= '</span>';
-    } else {
+    }
+    else {
         $result .= '<a class="page-link" href="' . hsc($url) . '" title="' . $title . '">';
         $result .= $text;
         $result .= '</a>';
@@ -4917,11 +4920,8 @@ function sanitize_url($url) {
         }
     }
     // Make sure the URL starts with a valid protocol (or "//", indicating that it's protocol-relative)
-    if (
-            !(
-                    in_array($parsedurl['scheme'], array('https', 'http', 'ftp', 'mailto'))
-                    || preg_match('#^//[a-zA-Z0-9]#', $url) === 1
-            )
+    if (!(in_array($parsedurl['scheme'], array('https', 'http', 'ftp', 'mailto'))
+                    || preg_match('#^//[a-zA-Z0-9]#', $url) === 1)
     ) {
         return '';
     }
@@ -5200,9 +5200,7 @@ function is_valid_url($url) {
 function account_institution_get_menu_tabs($migrate=true) {
     $menu = array(
         'institutions' => array(
-            'path' => 'settings/institutions',
-            'url' => 'account/institutions.php',
-            'title' => get_string('currentinstitutionmembership'),
+            'path' => 'settings/institutions', 'url' => 'account/institutions.php', 'title' => get_string('currentinstitutionmembership'),
             'weight' => 10,
         )
     );
