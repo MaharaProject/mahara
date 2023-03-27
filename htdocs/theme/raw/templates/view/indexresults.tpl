@@ -116,12 +116,28 @@
                             </div>
                             {/if}
                             <div class="page-controls">
+                                {if $view.submittedto}
+                                <button class="dropdown-toggle btn btn-link moremenu" type="button"
+                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="{str tag='submittedinfo' section='mahara'}">
+                                    <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
+                                    <span class="icon icon-check-to-slot close-indicator" role="presentation" aria-hidden="true"></span>
+                                    <span class="visually-hidden">{str tag=submittedinfofor section=mahara arg1="$view.vtitle"}</span>
+                                </button>
+                                {elseif $view.issubmission}
+                                <button class="dropdown-toggle btn btn-link moremenu" type="button"
+                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="{str tag='releasedinfo' section='mahara'}">
+                                    <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
+                                    <span class="icon icon-square-check close-indicator" role="presentation" aria-hidden="true"></span>
+                                    <span class="visually-hidden">{str tag=releasedinfofor section=mahara arg1="$view.vtitle"}</span>
+                                </button>
+                                {else}
                                 <button class="dropdown-toggle btn btn-link moremenu" type="button"
                                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="{str tag='moreoptions' section='mahara'}">
                                     <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                                     <span class="icon icon-ellipsis-v close-indicator" role="presentation" aria-hidden="true"></span>
                                     <span class="visually-hidden">{str tag=moreoptionsfor section=mahara arg1="$view.vtitle"}</span>
                                 </button>
+                                {/if}
                                 <ul class="dropdown-menu dropdown-menu-end" role="menu">
                                 {if $view.collid && !$view.submittedto && !$noedit && !$view.lockedcoll && !$view.issubmission}
                                     <li class="dropdown-item with-icon">
