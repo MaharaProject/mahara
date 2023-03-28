@@ -182,12 +182,12 @@ class PluginModuleMultirecipientnotification extends PluginModule {
         $userid = $user['id'];
 
         db_begin();
-        $recievedmessageids = get_message_ids_mr($userid, 'recipient', null, null, null);
+        $recievedmessageids = get_message_ids_mr($userid, 'recipient', null, null, null, null);
         if (count($recievedmessageids) > 0) {
             delete_messages_mr($recievedmessageids, $userid);
         }
 
-        $sentmessageids = get_message_ids_mr($userid, 'sender', null, null, 100);
+        $sentmessageids = get_message_ids_mr($userid, 'sender', null, null, null, null);
         if (count($sentmessageids) > 0) {
             delete_messages_mr($sentmessageids, $userid);
         }
