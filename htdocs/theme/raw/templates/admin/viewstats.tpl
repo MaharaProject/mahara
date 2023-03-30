@@ -10,6 +10,7 @@
     {if $columns.blocks}<td>{$item->blocks}</td>{/if}
     {if $columns.visits}<td class="right">{$item->visits}</td>{/if}
     {if $columns.comments}<td class="center">{$item->comments}</td>{/if}
+    {if $columns.submittedstatus}<td class="center">{$item->submittedstatus}</td>{/if}
   </tr>
 {/foreach}
 

@@ -112,6 +112,7 @@ $string['collectionsubmittedtohost'] = 'This collection has been submitted for a
 $string['collectionsubmittedtohoston'] = 'This collection was submitted on %s.';
 $string['submittedpendingrelease'] = 'Pending release after archiving.';
 $string['submittedpendingreleasefailed'] = 'Release failed to archive.<br>Go to <a href="%s">Export queue</a> to re-queue.';
+$string['submittedstatus'] = 'Submission status';
 $string['nobodycanseethisview2'] = 'Only you can see this page.';
 $string['noviews2'] = 'No portfolios';
 $string['youhavenoviews2'] = 'You don\'t have any portfolios.';
@@ -277,7 +278,10 @@ $string['viewinformationsaved'] = 'Page information saved successfully';
 $string['canteditdontown'] = 'You cannot edit this page because you do not own it.';
 $string['canteditsubmitted'] = 'You cannot edit this page because it has been submitted for assessment to "%s". You will have to wait until a tutor releases the page.';
 $string['canteditsubmission'] = 'You cannot edit this page while it is a submission.';
+$string['notsubmitted'] = 'Not submitted';
 $string['Submitted'] = 'Submitted';
+$string['archiving'] = 'Archiving';
+$string['released'] = 'Released';
 $string['submittedforassessment'] = 'Submitted for assessment';
 $string['blocknotinview'] = 'The block with ID "%d" is not in the page.';
 

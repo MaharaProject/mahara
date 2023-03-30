@@ -203,6 +203,7 @@ $string['reportdescsmartevidence'] = '<ul>
 <li>Email address</>
 <li>Title of the portfolio</li>
 <li>Number of pages in the portfolio</li>
+<li>Submission status</li>
 <li>Access list, i.e. who has permission to view the portfolio</li>
 <li>The sum of each status for the SmartEvidence assessment across the portfolio, no matter the individual standards</li>
 </ul><p>Listed are portfolios that were created during the selected time period. Their current access permissions are shown.</p>';
@@ -212,6 +213,7 @@ $string['reportdescaccesslist'] = '<ul>
 <li>Portfolio owner</li>
 <li>Title of the portfolio</li>
 <li>Number of pages in the portfolio</li>
+<li>Submission status</li>
 <li>Access list, i.e. who has permission to view the portfolio</li>
 </ul><p>Listed are portfolios that were created during the selected time period. Their current access permissions are shown.</p>';
 
@@ -330,6 +332,7 @@ $string['reportdescpageactivity'] = '<ul>
 <li>Number of blocks included in the page</li>
 <li>Number of visits to the page</li>
 <li>Number of comments on the page</li>
+<li>Submission status</p>
 </ul><p>Displayed are pages that were modified during the reporting time period.</p>';
 $string['allothers'] = 'All others';
 

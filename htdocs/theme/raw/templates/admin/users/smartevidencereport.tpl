@@ -16,6 +16,7 @@
     </td>
     {if $columns.pagecount}<td>{$item->views}</td>{/if}
     {if $columns.numviews}<td>{$item->views}</td>{/if}
+    {if $columns.submittedstatus}<td>{$item->submittedstatus}</td>{/if}
     {if $columns.accessrules}<td>{include file="admin/users/smartevidencereportaccessitem.tpl" item=$item}</td>{/if}
     {if $columns.evidence_begun}<td>{$item->evidence_begun}</td>{/if}
     {if $columns.evidence_incomplete}<td>{$item->evidence_incomplete}</td>{/if}
