@@ -60,3 +60,4 @@ To see this checkpoint comment online, follow this link:
 %s";
 
 $string['commentremovedbyuser'] = 'Comment removed by <a href="%s">%s</a>';
+$string['typefeedback'] = 'Feedback on checkpoints';
