@@ -1000,7 +1000,7 @@ function xmldb_core_upgrade($oldversion=0) {
                         delete_records('watchlist_queue', 'block', $record->id);
                         if (record_exists('usr_watchlist_view', 'view', $block_instance->get('view'))) {
                             $whereobj = new stdClass();
-                            $whereobj->view = $block->get('view');
+                            $whereobj->view = $block_instance->get('view');
                             $whereobj->block = null;
                             $whereobj->usr = $record->usr;
                             $dataobj = clone $whereobj;
