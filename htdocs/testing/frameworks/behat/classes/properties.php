@@ -180,6 +180,8 @@ define('MODAL', array(
     'Message' => 'div#modal_messages',
     'File download modal' => '#instconf_artefactfieldset_container',
     'Submission' => 'div[id^=instconf_action].submitcancel',
+    'Sign-off page' => '#signoff-confirm-form .modal-body .btn-group',
+    'Verify page' => '#verify-confirm-form .modal-body .btn-group',
 ));
 
 define('MISC', array(
@@ -262,6 +264,7 @@ define('VIEWS', array(
     'Page content' => '.user-page-content',
     'Last updated' => '.last-updated',
     'Main content' => 'div#column-container',
+    'Signed off' => 'a#signoff',
 ));
 
 define('REPORT', array(

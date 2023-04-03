@@ -15,6 +15,7 @@ Background:
      | UserA    | Kupuh1pa! | UserA@example.org | Angela    | User | instone | internal | staff |
      | UserB    | Kupuh1pa! | UserB@example.org | Bob       | User | instone | internal | member |
      | UserC    | Kupuh1pa! | UserC@example.org | Cecilia   | User | instone | internal | member |
+     | UserD    | Kupuh1pa! | UserD@example.org | Dave      | User | instone | internal | admin |
 
     And the following "groups" exist:
      | name   | owner | description           | grouptype | open | invitefriends | editroles | submittableto | allowarchives | members      | staff | institution |
@@ -37,6 +38,9 @@ Background:
      | Page UserA_10 | Page 10 | user | UserA |
      | Page UserA_11 | Page 11 | user | UserA |
      | Page UserA_12 | Page 12 | user | UserA |
+     | Page UserA_13 | Page 13 | user | UserA |
+     | Page UserA_14 | Page 14 | user | UserA |
+     | Page UserA_15 | Page 15 | user | UserA |
      | Page UserB_01 | UserB's page 01 | user | UserB |
      | Page UserB_02 | UserB's page 02 | user | UserB |
      | Page UserB_03 | UserB's page 03 | user | UserB |
@@ -92,8 +96,9 @@ Background:
 
      # To test portfolio completion in groups
     And the following "collections" exist:
-     | title       | description | ownertype | ownername | pages | progresscompletion |
-     | Coll GroupA | Group PC    | group     | GroupA    | Page GroupA | ON |
+     | title         | description   | ownertype | ownername | pages                                     | progresscompletion |
+     | Coll GroupA   | Group PC      | group     | GroupA    | Page GroupA                               | ON                 |
+     | Progress Coll | Collection 07 | user      | UserA     | Page UserA_13,Page UserA_14,Page UserA_15 | ON                 |
 
 Scenario: The list of group portfolios. Shared/submitted portfolios should
 be displayed page by page and sorted by "page title (A-Z)" or "most recently updated".
@@ -119,6 +124,52 @@ This list must take into account the sort option chosen in the block config (Bug
     And I set the select2 value "Collection UserA_01, Collection UserA_02, Collection UserA_03, Collection UserA_04, Collection UserA_05, Collection UserA_06" for "editaccess_collections"
     And I select "GroupA" from "accesslist[0][searchtype]"
     And I click on "Save"
+    # Set up a progress completion collection
+    And I choose "Portfolios" in "Create" from main menu
+    And I click on "Progress Coll"
+    Then I should see "Portfolio completion"
+    And I click on "Next page"
+    And I click on "Edit"
+    And I click on "Configure"
+    And I expand the section "Advanced"
+    And I enable the switch "Sign-off"
+    And I click on "Save"
+    And I click on "Display page"
+    Then I should see "Signed off"
+    And I should not see "Verified"
+    And I click on "Next page"
+    And I click on "Edit"
+    And I click on "Configure"
+    And I expand the section "Advanced"
+    And I enable the switch "Sign-off"
+    And I enable the switch "Verify"
+    And I click on "Save"
+    And I click on "Display page"
+    Then I should see "Signed off"
+    And I should see "Verified"
+    And I click on the "Signed off" "Views" property
+    And I click on "Yes" in the "Sign-off page" "Modal" property
+    # move back 2 pages to the completion page
+    And I click on "Previous page"
+    And I click on "Previous page"
+    Then I should see "33%" in the "#quota_fill" "css_element"
+    And I click on the matrix point "2,2"
+    And I click on "Yes" in the "Sign-off page" "Modal" property
+    Then I should see "67%" in the "#quota_fill" "css_element"
+    And I choose "Shared by me" in "Share" from main menu
+    And I click on "Collections" in the "Share tabs" "Misc" property
+    And I click on "Edit access" in "Progress Coll" row
+    And I select "Person" from "accesslist[0][searchtype]"
+    And I select "Dave User" from select2 hidden search box in row number "1"
+    And I select "Manager" from "accesslist[0][role]"
+    And I click on "Save"
+    And I log out
+    # Log in as institution admin user
+    Given I log in as "UserD" with password "Kupuh1pa!"
+    And I click on "Progress Coll"
+    And I click on the matrix point "3,3"
+    And I click on "Yes" in the "Verify page" "Modal" property
+    Then I should see "100%" in the "#quota_fill" "css_element"
     And I log out
     # Log in as a normal user
     Given I log in as "UserB" with password "Kupuh1pa!"
@@ -411,6 +462,7 @@ This list must take into account the sort option chosen in the block config (Bug
     And I should see "Collection UserC_08" in the "Collections shared with this group" "Groups" property
     And I should see "Collection UserC_06; submitted" in the "Submissions to this group" "Groups" property
     And I should see "Collection UserC_07; submitted" in the "Submissions to this group" "Groups" property
+    And I log out
 
 Scenario: Check progress completion is availble in group collections
     Given I log in as "UserA" with password "Kupuh1pa!"
