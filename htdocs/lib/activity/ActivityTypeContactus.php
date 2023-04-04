@@ -53,12 +53,11 @@ class ActivityTypeContactus extends ActivityType {
               }
           }
       }
-      else {
-          // user is not logged in
-          $this->customheaders = array(
-              'Reply-to: ' . $this->fromname . ' <' . $this->fromemail . '>',
-          );
-      }
+      // Set the reply-to value so the email servers handle things better
+      // this will mean the 'from' is set to the site's default 'from' address
+      $this->customheaders = array(
+          'Reply-to: ' . $this->fromname . ' <' . $this->fromemail . '>',
+      );
   }
 
   /**
