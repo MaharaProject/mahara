@@ -1,0 +1,191 @@
+<?xml version="1.0"?>
+<!-- https://github.com/squizlabs/PHP_CodeSniffer/wiki/ -->
+<!-- https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-Ruleset -->
+
+<ruleset name="Mahara custom standards">
+
+    <!--
+    The name attribute of the ruleset tag is displayed
+    when running PHP_CodeSniffer with the -v command line
+    argument.
+
+    If you have custom sniffs, and they use a namespace prefix
+    that is different to the name of the directory containing
+    your ruleset.xml file, you can set the namespace prefix using
+    the namespace attribute of the ruleset tag.
+
+    For example, if your namespace format for sniffs is
+    MyProject\CS\Standard\Sniffs\Category, set the namespace to
+    MyProject\CS\Standard (everything up to \Sniffs\)
+    -->
+
+    <!--
+    The content of the description tag is not displayed anywhere
+    except in this file, so it can contain information for
+    developers who may change this file in the future.
+    -->
+
+    <!-- Use the -s flag to show the code in the output and page it here to ignore -->
+    <description>Mahara project custom coding standards</description>
+
+    <rule ref="Squiz">
+        <exclude name="Squiz" />
+    </rule>
+
+    <rule ref="PEAR">
+        <exclude name="PEAR" />
+    </rule>
+
+    <rule ref="Generic">
+        <!-- <exclude name="Generic" /> -->
+        <exclude name="Generic.WhiteSpace.DisallowSpaceIndent.SpacesUsed" />
+        <exclude name="Generic.NamingConventions.CamelCapsFunctionName" />
+        <exclude name="Generic.PHP.UpperCaseConstant" />
+        <exclude name="Generic.Formatting.MultipleStatementAlignment" />
+        <exclude name="Generic.Arrays.DisallowLongArraySyntax" />
+        <exclude name="Generic.PHP.ClosingPHPTag" />
+        <exclude name="Generic.Commenting.DocComment.TagValueIndent" />
+        <exclude name="Generic.Formatting.SpaceAfterNot" />
+        <exclude name="Generic.Formatting.SpaceBeforeCast" />
+        <exclude name="Generic.Files.OneClassPerFile.MultipleFound" />
+        <exclude name="Generic.Files.EndFileNoNewline" />
+        <exclude name="Generic.Files.EndFileNewline" />
+        <exclude name="Generic.Strings.UnnecessaryStringConcat" />
+        <exclude name="Generic.Files.OneInterfacePerFile.MultipleFound" />
+        <exclude name="Generic.Files.InlineHTML.Found" />
+        <exclude name="Generic.Files.LowercasedFilename" />
+        <exclude name="Generic.NamingConventions.AbstractClassNamePrefix" />
+        <exclude name="Generic.Files.OneObjectStructurePerFile.MultipleFound" />
+        <exclude name="Generic.Arrays.DisallowShortArraySyntax.Found" />
+        <exclude name="Generic.NamingConventions.InterfaceNameSuffix.Missing" />
+        <exclude name="Generic.Formatting.NoSpaceAfterCast.SpaceFound" />
+        <exclude name="Generic.Functions.OpeningFunctionBraceBsdAllman.BraceOnSameLine" />
+    </rule>
+
+    <rule ref="Generic.PHP.DisallowRequestSuperglobal">
+        <type>warning</type>
+    </rule>
+
+    <rule ref="Generic.Classes.OpeningBraceSameLine.BraceOnNewLine">
+        <type>warning</type>
+    </rule>
+
+    <rule ref="Generic.ControlStructures.DisallowYodaConditions">
+        <type>warning</type>
+    </rule>
+
+    <rule ref="Generic.Files.ExecutableFile.Executable">
+        <type>warning</type>
+    </rule>
+
+    <rule ref="Generic.PHP.RequireStrictTypes">
+        <type>warning</type>
+    </rule>
+
+    <rule ref="Generic.Metrics.CyclomaticComplexity">
+        <type>warning</type>
+    </rule>
+
+    <rule ref="Generic">
+        <!-- <type>warning</type> -->
+    </rule>
+
+    <rule ref="PSR12">
+        <!-- Testing -->
+        <exclude name="PSR12.Files.FileHeader.SpacingAfterBlock" />
+        <exclude name="PSR12.Keywords.ShortFormTypeKeywords.LongFound" />
+
+
+        <!-- Fixed -->
+        <exclude name="PSR12.Classes.OpeningBraceSpace.Found" />
+    </rule>
+
+    <rule ref="PSR12.Operators.OperatorSpacing">
+        <type>warning</type>
+    </rule>
+
+    <rule ref="PSR12.ControlStructures.ControlStructureSpacing.CloseParenthesisLine">
+        <type>warning</type>
+    </rule>
+
+    <rule ref="PSR12.ControlStructures.ControlStructureSpacing.FirstExpressionLine">
+        <type>warning</type>
+    </rule>
+
+    <rule ref="PSR12.Classes.ClassInstantiation.MissingParentheses">
+        <type>warning</type>
+    </rule>
+
+    <rule ref="PSR12.Files.ImportStatement.LeadingSlash">
+        <type>warning</type>
+    </rule>
+
+    <rule ref="PSR12.Classes.ClosingBrace.StatementAfter">
+        <type>warning</type>
+    </rule>
+
+    <rule ref="PSR2">
+        <exclude name="PSR2.Classes" />
+        <!-- <exclude name="PSR2" /> -->
+    </rule>
+
+    <rule ref="PSR1">
+        <!-- Fixed -->
+        <exclude name="PSR1.Methods.CamelCapsMethodName" />
+        <exclude name="PSR1.Classes.ClassDeclaration" />
+        <!-- <exclude name="PSR1" /> -->
+    </rule>
+
+    <rule ref="PSR2.Namespaces.UseDeclaration">
+        <type>warning</type>
+    </rule>
+
+    <rule ref="PSR2.Methods">
+        <type>warning</type>
+    </rule>
+
+    <!-- Copied same ignores from phpstan.neon -->
+    <exclude-pattern>
+        ../htdocs/auth/saml/</exclude-pattern>
+    <exclude-pattern>../htdocs/vendor/adodb/adodb-php/</exclude-pattern>
+    <exclude-pattern>
+        ../htdocs/lib/antispam/</exclude-pattern>
+    <exclude-pattern>../htdocs/lib/csstidy/</exclude-pattern>
+    <exclude-pattern>
+        ../htdocs/lib/elasticsearch/</exclude-pattern>
+    <exclude-pattern>../htdocs/lib/form/elements/captcha.php</exclude-pattern>
+    <exclude-pattern>
+        ../htdocs/lib/htmlpurifier/</exclude-pattern>
+    <exclude-pattern>../htdocs/vendor/phpmailer/phpmailer/</exclude-pattern>
+    <exclude-pattern>
+        ../htdocs/lib/phpunit.php</exclude-pattern>
+    <exclude-pattern>../htdocs/vendor/</exclude-pattern>
+    <exclude-pattern>
+        ../htdocs/lib/redis/sentinel.php</exclude-pattern>
+    <exclude-pattern>../htdocs/lib/tests/phpunit/</exclude-pattern>
+    <exclude-pattern>
+        ../htdocs/lib/xmldb/</exclude-pattern>
+    <exclude-pattern>../htdocs/module/lti_advantage/</exclude-pattern>
+    <exclude-pattern>
+        ../htdocs/module/submissions/vendor/composer/autoload_static.php</exclude-pattern>
+    <exclude-pattern>
+        ../htdocs/webservice/admin/oauthv1sregister.php</exclude-pattern>
+    <exclude-pattern>
+        ../htdocs/webservice/libs/oauth-php</exclude-pattern>
+    <exclude-pattern>
+        ../htdocs/webservice/tests/exampleclients/lib/</exclude-pattern>
+    <exclude-pattern>
+        ../htdocs/webservice/tests/phpunit/</exclude-pattern>
+    <exclude-pattern>../htdocs/webservice/xmlrpc/</exclude-pattern>
+    <exclude-pattern>
+        ../htdocs/vendor/</exclude-pattern>
+    <exclude-pattern>../htdocs/auth/saml/extlib/</exclude-pattern>
+    <exclude-pattern>
+        ../htdocs/lib/chrome-php</exclude-pattern>
+    <exclude-pattern>../htdocs/lib/dwoo</exclude-pattern>
+    <exclude-pattern>
+        ../htdocs/webservice/libs/oauth-php</exclude-pattern>
+    <exclude-pattern>../htdocs/module/submissions/vendor</exclude-pattern>
+    <exclude-pattern>
+        ../htdocs/module/lti_advantage/lib</exclude-pattern>
+</ruleset>

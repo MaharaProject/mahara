@@ -1,32 +1,47 @@
 grumphp:
-    tasks: {
-        phpstan: {
-            level : 1
+  tasks:
+    {
+      phpstan: { level: 1 },
+      phpcs:
+        {
+          standard: dev/mahara_custom_phpcs.xml,
+          error_severity: 5,
+          warning_severity: 0,
         },
-    },
-    hooks_dir: ~
-    hooks_preset: local
-    git_hook_variables:
-         VAGRANT_HOST_DIR: .
-         VAGRANT_PROJECT_DIR: /var/www
-         EXEC_GRUMPHP_COMMAND: exec
-         ENV: {}
-    ignore_unstaged_changes: false
-    hide_circumvention_tip: false
-    process_timeout: 60
-    ascii:
-        failed: dev/sad-banner.txt
-        succeeded: dev/happy-banner.txt
-    parallel:
-        enabled: true
-        max_workers: 32
-    fixer:
-        enabled: true
-        fix_by_default: false
-    environment:
-        files: []
-        variables:
-            GRUMPHP_BIN_DIR: "htdocs/vendor/bin/"
-        paths: []
-    testsuites: []
-    extensions: []
+      phpcsfixer:
+        {
+          allow_risky: true,
+          verbose: true,
+          config: dev/.php-cs-fixer.dist.php,
+        },
+    }
+    # to see the code for each error, use the -s flag:
+    # /code/mahara/htdocs/vendor/bin/phpcs --standard=dev/mahara_custom_phpcs.xml --extensions=php --tab-width=4 -s --report=full /home/doristam/code/mahara/htdocs/lib/web.php
+    # To fix one rule at a time:
+    # code/mahara/htdocs/vendor/bin/phpcbf htdocs --sniffs=Squiz.Functions.FunctionDeclarationArgumentSpacing.SpaceAfterEquals,
+  hooks_dir: ~
+  hooks_preset: local
+  git_hook_variables:
+    VAGRANT_HOST_DIR: .
+    VAGRANT_PROJECT_DIR: /var/www
+    EXEC_GRUMPHP_COMMAND: exec
+    ENV: {}
+  ignore_unstaged_changes: false
+  hide_circumvention_tip: false
+  process_timeout: 30
+  ascii:
+    failed: dev/sad-banner.txt
+    succeeded: dev/happy-banner.txt
+  parallel:
+    enabled: true
+    max_workers: 32
+  fixer:
+    enabled: true
+    fix_by_default: true
+  environment:
+    files: []
+    variables:
+      GRUMPHP_BIN_DIR: "htdocs/vendor/bin/"
+    paths: []
+  testsuites: []
+  extensions: []
