@@ -318,6 +318,7 @@
         // images need time to load before height can be properly calculated
         window.setTimeout(function() {
             $(window).trigger('colresize');
+            $(window).trigger('blocksloaded');
         }, 300);
 
     } // init
