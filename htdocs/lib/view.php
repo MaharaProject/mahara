@@ -4811,6 +4811,7 @@ class View {
                 if ($data['submissionoriginal'] > 0) {
                     $submissionid = false;
                     $submissionurl = false;
+                    $submissiontitle = '';
                     // We may or may not have an original submission id
                     // regardless of if it is still present.
                     $data['issubmission'] = 1;
@@ -4865,8 +4866,8 @@ class View {
                 // get the access rules for this view/collection
                 if (!empty($data['id']) && $data['type'] != 'dashboard') {
                     $ua = new stdClass();
-                    $ua->displayname = get_string('manageaccess', 'view');
-                    $ua->accessibilityname = get_string('manageaccessfor', 'view', $data['vtitle']);
+                    $ua->displayname = get_string('managesharing', 'view');
+                    $ua->accessibilityname = get_string('managesharingfor', 'view', $data['vtitle']);
                     $ua->accesstype = 'managesharing';
 
                     $data['manageaccess'] = array($ua);

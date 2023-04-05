@@ -40,7 +40,7 @@ When relying on icons, make sure they are universal symbols, e.g. magnifying gla
 When button does not display any text, include title attribute for sighted people and screen readers.
 For button icon images, add the aria-hidden="true" attribute.
 ```
-<button class="btn-secondary btn-sm btn" title="{str tag=addspecific}">
+<button class="btn-secondary btn-sm btn" title='{str tag=addspecific section=mahara arg1="New item"}'>
     <span class="icon icon-plus" role="presentation" aria-hidden="true"></span>
 </button>
 ```
@@ -879,7 +879,7 @@ This card is used to show a page.
 </section>
 
 <section data-markdown data-category="cards">
-## Submitted Page card
+## Submitted page card
 This card is used to show a submitted page.
 <style>
 /* Styles for submitted and collection cards */
@@ -889,7 +889,7 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
 </style>
 ```
 <div class="card-quarter card-view">
-    <div class="card card bg-warning">
+    <div class="card card bg-submitted">
         <h2 class="card-header has-link">
             <a class="title-link title" href="" title="Dashboard page">Unnamed page</a>
         </h2>
@@ -900,17 +900,17 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
         </div>
         <div class="card-footer">
             <div class="page-access">
-                <a href="#" class="dropdown-toggle btn btn-link" data-bs-toggle="dropdown" aria-expanded="false" title="Manage access">
+                <a href="#" class="dropdown-toggle btn btn-link" data-bs-toggle="dropdown" aria-expanded="false" title="Manage sharing">
                     <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                     <span class="icon icon-unlock close-indicator" role="presentation" aria-hidden="true"></span>
-                    <span class="visually-hidden">Access rules for "Unnamed page"</span>
+                    <span class="visually-hidden">Manage sharing permissions for "Unnamed page"</span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     <li class="dropdown-item with-icon">
                         <a class="seperator" href="">
-                            <span class="icon icon-unlock left" role="presentation" aria-hidden="true"></span>
-                            <span class="link-text">Manage access</span>
-                            <span class="visually-hidden">Manage access for "Unnamed page"</span>
+                            <span class="icon icon-share-nodes left" role="presentation" aria-hidden="true"></span>
+                            <span class="link-text">Manage sharing</span>
+                            <span class="visually-hidden">Manage sharing for "Unnamed page"</span>
                         </a>
                     </li>
                     <li class="dropdown-item with-icon">
@@ -972,17 +972,17 @@ section .card-quarter:nth-child(4n) .page-access .dropdown-menu {
         </div>
         <div class="card-footer">
             <div class="page-access">
-                <a href="#" class="dropdown-toggle btn btn-link" data-bs-toggle="dropdown" aria-expanded="false" title="Manage access">
+                <a href="#" class="dropdown-toggle btn btn-link" data-bs-toggle="dropdown" aria-expanded="false" title="Manage sharing">
                 <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                 <span class="icon icon-unlock close-indicator" role="presentation" aria-hidden="true"></span>
-                <span class="visually-hidden">Access rules for "collection"</span>
+                <span class="visually-hidden">Manage sharing permissions for "collection"</span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
                     <li class="dropdown-item with-icon">
                         <a class="seperator" href="">
-                        <span class="icon icon-unlock left" role="presentation" aria-hidden="true"></span>
-                        <span class="link-text">Manage access</span>
-                        <span class="visually-hidden">Manage access for "collection"</span>
+                        <span class="icon icon-share-nodes left" role="presentation" aria-hidden="true"></span>
+                        <span class="link-text">Manage sharing</span>
+                        <span class="visually-hidden">Manage sharing permissions for "collection"</span>
                         </a>
                     </li>
                     <li class="dropdown-item with-icon">

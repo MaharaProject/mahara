@@ -86,7 +86,7 @@ Background:
     # share the page with people and give a role
     When I choose "Shared by me" in "Share" from main menu
     And I click on "Pages" in the "Share tabs" "Misc" property
-    And I click on "Edit access" in "Page UserA_03" row
+    And I click on "Share" in "Page UserA_03" row
     And I select "Person" from "accesslist[0][searchtype]"
     And I select "Dmitri User" from select2 nested search box in row number "1"
     And I select "Peer and manager" from "accesslist[0][role]"

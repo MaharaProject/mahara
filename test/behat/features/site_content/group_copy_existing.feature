@@ -37,7 +37,7 @@ Scenario: Group admin pushes a Group page and collection to existing group membe
     When I choose "Groups" in "Engage" from main menu
     And I click on "GroupA"
     And I click on "Share" in the "Navigation" "Groups" property
-    And I click on "Edit access" in "Collection GroupA_01" row
+    And I click on "Share" in "Collection GroupA_01" row
     And I click on "Advanced options"
     # verify field lalel is displayed on page
     Then I should see "Copy for existing group members"
@@ -45,7 +45,7 @@ Scenario: Group admin pushes a Group page and collection to existing group membe
     And I enable the switch "Copy for existing group members"
     And I click on "Save"
     And I click on "Pages" in the "Share tabs" "Misc" property
-    And I click on "Edit access" in "Page GroupA_01" row
+    And I click on "Share" in "Page GroupA_01" row
     And I click on "Advanced options"
     # verify field lalel is displayed on page
     Then I should see "Copy for existing group members"

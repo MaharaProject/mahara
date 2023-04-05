@@ -253,7 +253,7 @@ $inlinejs = "jQuery(function() {" . $pagination['javascript'] . "});jQuery(funct
 $smarty = smarty(array('paginator'));
 $percentagehelpicon = get_help_icon('core', 'view', 'sharedviews', 'completionpercentage');
 $verificationhelpicon = get_help_icon('core', 'view', 'sharedviews', 'verification');
-setpageicon($smarty, 'icon-share-alt-square');
+setpageicon($smarty, 'icon-square-share-nodes');
 $smarty->assign('views', $data->data);
 $smarty->assign('searchform', $searchform);
 $smarty->assign('completionpercentagehelp', $percentagehelpicon);

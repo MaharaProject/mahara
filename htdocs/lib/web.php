@@ -3001,7 +3001,7 @@ function mahara_standard_nav() {
             'url' => null,
             'title' => get_string('share'),
             'weight' => 30,
-            'iconclass' => 'unlock',
+            'iconclass' => 'share-nodes',
         ),
         'engage' => array(
             'path' => 'engage',

@@ -2,7 +2,7 @@
 Feature: Added ID's for text blocks
 In order for allow and moderate comments to save correctly
 As an admin
-I need to be able to save it once and not have to do it again in Edit Access screen
+I need to be able to save it once and not have to do it again in "Share" screen
 
 Background:
 
@@ -38,6 +38,6 @@ Scenario: Correctly saving access rules for allowing comments (Bug 1201174)
  When I choose "Portfolios" in "Create" from main menu
  And I click on "Edit" in "Page admin_01" card menu
  When I click on "Share" in the "Toolbar buttons" "Nav" property
- Then I should see "Edit access"
+ Then I should see "Share"
  And I expand the section "Advanced options"
  And the "accesslist[0][allowcomments]" checkbox should be checked

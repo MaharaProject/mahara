@@ -36,7 +36,7 @@ Scenario: Meta test testing Behat's functionality (Bug #1387836)
     And I check "test page name 1"
     And the "test page name 1" checkbox should be checked
     And I click on "Add pages"
-    And I click on "Continue: Edit access"
+    And I click on "Continue: Share"
     And I click on "Return to portfolios"
     And I click on "test collection name" card menu
     And I should see "Delete"

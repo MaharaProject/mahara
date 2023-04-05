@@ -61,8 +61,8 @@
 
             {if $usercaneditview || $userisowner || $actionsallowed}
                 <li class="dropdown-item with-icon">
-                    <a id="" title="{str tag=manageaccess section=view}" href="{$accessurl}">
-                        <span class="icon {if $viewlocked}icon-lock{else}icon-unlock{/if} left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=manageaccess section=view}</span>
+                    <a id="" title="{str tag=managesharing section=view}" href="{$accessurl}">
+                        <span class="icon {if $viewlocked}icon-share-nodes{else}icon-share-nodes{/if} left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=managesharing section=view}</span>
                     </a>
                 </li>
             {/if}

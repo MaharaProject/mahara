@@ -27,7 +27,7 @@
                     <tr>
                         <th>{str tag=name section=collection}</th>
                         <th>{str tag=accesslist section=view}</th>
-                        <th class="al-edit text-tiny text-center">{str tag=editaccess section=view}</th>
+                        <th class="al-edit text-tiny text-center">{str tag=share section=view}</th>
                         <th class="secreturls text-tiny text-center">{str tag=secreturls section=view}</th>
                     </tr>
                 </thead>
@@ -49,7 +49,7 @@
                 <tr>
                     <th>{str tag=title section=view}</th>
                     <th>{str tag=accesslist section=view}</th>
-                    <th class="al-edit text-tiny text-center">{str tag=editaccess section=view}</th>
+                    <th class="al-edit text-tiny text-center">{str tag=share section=view}</th>
                     <th class="secreturls text-tiny text-center">{str tag=secreturls section=view}</th>
                 </tr>
             </thead>

@@ -116,7 +116,7 @@ Scenario: Testing collaboration report generation
     And I select "Hall of Fame" from "accesslist[2][searchtype]"
     And I click on "Save"
     And I choose "Portfolios" in "Create" from main menu
-    And I click on "Manage access" in "Proud Mary" card access menu
+    And I click on "Manage sharing" in "Proud Mary" card access menu
     And I select "Person" from "accesslist[0][searchtype]"
     And I select "Bruce Springsteen" from select2 hidden search box in row number "1"
     And I select "Registered people" from "accesslist[1][searchtype]"

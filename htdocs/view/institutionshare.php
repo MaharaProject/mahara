@@ -31,7 +31,7 @@ define('TITLE', get_string('share', 'view'));
 
 if ($institution === false) {
     $smarty = smarty();
-    setpageicon($smarty, 'icon-share-alt');
+    setpageicon($smarty, 'icon-share-nodes');
     $smarty->display('admin/users/noinstitutions.tpl');
     exit;
 }
@@ -39,7 +39,7 @@ if ($institution === false) {
 $accesslists = View::get_accesslists(null, null, $institution);
 
 $smarty = smarty();
-setpageicon($smarty, 'icon-share-alt');
+setpageicon($smarty, 'icon-share-nodes');
 
 $smarty->assign('institutionselector', $s['institutionselector']);
 $smarty->assign('INLINEJAVASCRIPT', $s['institutionselectorjs']);

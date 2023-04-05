@@ -73,7 +73,7 @@
                                 {if $view.accesslist || $view.manageaccess}
                                     <button class="btn btn-link dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">                                        <span class="icon icon-chevron-down open-indicator" role="presentation" aria-hidden="true"></span>
                                         <span class="icon {if !$view.accesslist}icon-lock{else}icon-unlock{/if} close-indicator" role="presentation" aria-hidden="true"></span>
-                                        <span class="visually-hidden">{str tag="accessrulesfor" section="view" arg1="$view.vtitle"}</span>
+                                        <span class="visually-hidden">{str tag="sharingrulesfor" section="view" arg1="$view.vtitle"}</span>
                                     </button>
                                     <ul class="dropdown-menu" role="menu">
                                       {if $view.manageaccesssuspended}
@@ -83,7 +83,7 @@
                                         <li class="dropdown-item with-icon">
                                             {if $manageitem->accesstype == 'managesharing'}
                                             <a class="seperator" href="{$WWWROOT}view/accessurl.php?return=index&id={$view.id}{if $view.collid}&collection={$view.collid}{/if}">
-                                                <span class="icon {if $view.locked}icon-lock{else}icon-unlock{/if} left" role="presentation" aria-hidden="true"></span><span class="link-text">{$manageitem->displayname}</span>
+                                                <span class="icon {if $view.locked}icon-lock{else}icon-share-nodes{/if} left" role="presentation" aria-hidden="true"></span><span class="link-text">{$manageitem->displayname}</span>
                                                 <span class="visually-hidden">{$manageitem->accessibilityname}</span>
                                             </a>
                                             {/if}

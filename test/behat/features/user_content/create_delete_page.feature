@@ -82,7 +82,7 @@ Scenario: Creating a page with content in it (Bug 1426983)
     And I should see "Delete this page"
     # User share page with public and enable copy page functionality
     And I choose "Portfolios" in "Create" from main menu
-    And I click on "Manage access" in "This is the edited page title" card access menu
+    And I click on "Manage sharing" in "This is the edited page title" card access menu
     And I click on "Advanced options"
     And I enable the switch "Allow copying"
     And I collapse "Advanced options" node

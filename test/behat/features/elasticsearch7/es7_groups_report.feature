@@ -87,11 +87,11 @@ Scenario: Testing report generation
 # Share portfolios with group
     Given I log in as "teeny" with password "Kupuh1pa!"
     And I choose "Portfolios" in "Create" from main menu
-    And I click on "Manage access" in "Greatest Hits" card access menu
+    And I click on "Manage sharing" in "Greatest Hits" card access menu
     And I select "Carbo Kids" from "Groups" in shared with select2 box
     And I click on "Save"
     And I choose "Portfolios" in "Create" from main menu
-    And I click on "Manage access" in "Proud Mary" card access menu
+    And I click on "Manage sharing" in "Proud Mary" card access menu
     And I select "League of Legumes" from "Groups" in shared with select2 box
     And I click on "Save"
     And I log out

@@ -65,12 +65,12 @@ Scenario: 1) Mahara member creates a collection of 3 pages and submits for marki
     # Verifying that the pages were added
     Then I should see "Page UserA_01"
     And I should see "Page UserA_03"
-    When I click on "Continue: Edit access"
-    Then I should see "Edit access"
+    When I click on "Continue: Share"
+    Then I should see "Share"
 
     # Mahara member makes to page visible to public
     And I choose "Portfolios" in "Create" from main menu
-    And I click on "Manage access" in "SmartEvidence Collection 1" card access menu
+    And I click on "Manage sharing" in "SmartEvidence Collection 1" card access menu
     And I select "Public" from "accesslist[0][searchtype]"
     And I click on "Save"
     # Verify author is on correct page

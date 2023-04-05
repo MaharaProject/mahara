@@ -25,7 +25,7 @@ if ($collectionid = param_integer('collection', null)) {
     $collection = new Collection($collectionid);
     $views = $collection->views();
     if (empty($views)) {
-        $SESSION->add_error_msg(get_string('emptycollectionnoeditaccess', 'collection'));
+        $SESSION->add_error_msg(get_string('emptycollectionnoeditaccess1', 'collection'));
         redirect('/collection/views.php?id=' . $collectionid);
     }
     // Pick any old view, they all have the same access records.
@@ -41,7 +41,7 @@ if (empty($collection)) {
     $collection = $view->get_collection();
 }
 
-define('TITLE', get_string('editaccess', 'view'));
+define('TITLE', get_string('managesharing', 'view'));
 
 $group = $view->get('group');
 $institution = $view->get('institution');
@@ -558,7 +558,7 @@ function editaccess_submit(Pieform $form, $values) {
     if (isset($values['collections'])) {
         foreach ($values['collections'] as $cid) {
             if (!isset($collections[$cid])) {
-                throw new UserException(get_string('editaccessinvalidviewset1', 'view'));
+                throw new UserException(get_string('editaccessinvalidviewset2', 'view'));
             }
             $collection = new Collection($cid);
             if ($cpid = $collection->has_progresscompletion()) {
@@ -571,7 +571,7 @@ function editaccess_submit(Pieform $form, $values) {
     if (isset($values['views'])) {
         foreach ($values['views'] as $viewid) {
             if (!isset($views[$viewid])) {
-                throw new UserException(get_string('editaccessinvalidviewset1', 'view'));
+                throw new UserException(get_string('editaccessinvalidviewset2', 'view'));
             }
             $toupdate[] = $viewid;
         }
@@ -636,7 +636,7 @@ $smarty = smarty(
     ),
     array('sidebars' => false)
 );
-setpageicon($smarty, 'icon-share-alt');
+setpageicon($smarty, 'icon-share-nodes');
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('form', $form);
 $smarty->assign('shareurl', $shareurl);

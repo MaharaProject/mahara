@@ -946,7 +946,7 @@ $string['cantmoveitem'] = 'Cannot move this artefact.';
 
 $string['belongingto'] = 'Belonging to';
 $string['attachment'] = 'Attachment';
-$string['editaccess'] = 'Edit access';
+$string['editaccess'] = 'Share';
 
 // Upload manager
 $string['clammovedfile'] = 'The file has been moved to a quarantine directory.';

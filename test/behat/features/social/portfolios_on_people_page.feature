@@ -26,12 +26,12 @@ Scenario: Create friends and portfolios for each to see portfolios on People pag
     # Log in as a UserA and create portfolio and set sharing access to friends
     Given I log in as "UserA" with password "Kupuh1pa!"
     When I choose "Portfolios" in "Create" from main menu
-    And I click on "Manage access" in "CollectionA" card access menu
+    And I click on "Manage sharing" in "CollectionA" card access menu
     And I select "friends" from "General" in shared with select2 box
     And I click on "Save"
 
     Then I choose "Portfolios" in "Create" from main menu
-    And I click on "Manage access" in "PageA single" card access menu
+    And I click on "Manage sharing" in "PageA single" card access menu
     And I select "friends" from "General" in shared with select2 box
     And I click on "Save"
 
@@ -49,12 +49,12 @@ Scenario: Create friends and portfolios for each to see portfolios on People pag
 
     # Change sharing permissions
     When I choose "Portfolios" in "Create" from main menu
-    And I click on "Manage access" in "CollectionB" card access menu
+    And I click on "Manage sharing" in "CollectionB" card access menu
     And I select "friends" from "General" in shared with select2 box
     And I click on "Save"
 
     Then I choose "Portfolios" in "Create" from main menu
-    And I click on "Manage access" in "PageB single" card access menu
+    And I click on "Manage sharing" in "PageB single" card access menu
     And I select "friends" from "General" in shared with select2 box
     Then I click on "Save"
 
