@@ -44,7 +44,8 @@
                 {else}
                     <a id="copyview-button{if $headertype == "progresscompletion"}-progress{/if}" title="{str tag=copythisportfolio section=view}" href="{$copyurl}">
                 {/if}
-                    <span class="icon icon-regular icon-copy left" role="presentation" aria-hidden="true"></span><span class="link-text">{str tag=copy section=mahara}</span>
+                    <span class="icon icon-regular icon-clone left" role="presentation" aria-hidden="true"></span>
+                    <span class="link-text">{str tag=copy section=mahara}</span>
                     </a>
                 </li>
             {/strip}{/if}

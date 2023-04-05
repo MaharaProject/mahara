@@ -48,7 +48,7 @@
                         <div class="flex-controls">
                             <div class="btn-action-list btn-top-right btn-group btn-group-top">
                                 <button id="copytoclipboard-{$item.id}" data-clipboard-text="{$item.url}" class="url-copytoclipboardbutton btn btn-secondary btn-sm" type="button" title="{str tag=copytoclipboard}" href="#">
-                                    <span class="icon icon-regular icon-copy" role="presentation" aria-hidden="true"></span>
+                                    <span class="icon icon-regular icon-clone" role="presentation" aria-hidden="true"></span>
                                     <span class="visually-hidden">{str tag=copytoclipboard}</span>
                                 </button>
                                 <button id="edit-{$item.id}" class="url-open-editform nojs-hidden-inline btn btn-secondary btn-sm closed" type="button" title="{str tag=edit}" href="">
@@ -87,7 +87,7 @@
             <div class="modal-header">
                 <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="{str tag=Close}"><span aria-hidden="true">&times;</span></button>
                 <h1 class="modal-title">
-                    <span class="icon icon-regular icon-copy"></span>
+                    <span class="icon icon-regular icon-clone"></span>
                     {str tag=copyingsecreturl section=view}
                 </h1>
             </div>

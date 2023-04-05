@@ -9,8 +9,8 @@
       {/if}
       {if !$outcomesgroup}
         <button id="copyview-button" class="btn btn-secondary" type="button" data-url="{$WWWROOT}view/choosetemplate.php?searchcollection=1{$urlparamsstr}">
-        <span class="icon icon-regular icon-copy left" role="presentation" aria-hidden="true"></span>
-        {str section=mahara tag=copy}
+            <span class="icon icon-regular icon-clone left" role="presentation" aria-hidden="true"></span>
+            {str section=mahara tag=copy}
         </button>
       {/if}
     </div>

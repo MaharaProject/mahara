@@ -1637,7 +1637,7 @@ Used to show comments and used for the "Recent forum posts" block.
 ### Copy to clipboard
 As used on the secret URLs page.
 ```
-<div class="icon icon-regular icon-copy" role="presentation"></div>
+<div class="icon icon-regular icon-clone" role="presentation"></div>
 ```
 </section>
 
@@ -2230,7 +2230,7 @@ Used as icon for a system notification.
         // add copy button
         var codeElem = $j(elem).find('code');
         codeElem.attr('id', 'code-block-' + i);
-        codeElem.before('<button class="copy btn-secondary btn-sm btn" role="presentation" data-clipboard-target="#code-block-' + i + '" title="{$copy}"><span class="icon icon-regular icon-copy"></span></button>');
+        codeElem.before('<button class="copy btn-secondary btn-sm btn" role="presentation" data-clipboard-target="#code-block-' + i + '" title="{$copy}"><span class="icon icon-regular icon-clone"></span></button>');
 
         // add the category to the sections index
         var category = $j(elem).data('category');
