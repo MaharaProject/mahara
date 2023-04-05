@@ -265,7 +265,7 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
     // as it doesn't work on some of them and can
     // disable the editing of a textarea field
     if (is_html_editor_enabled()) {
-        $checkarray = array(&$javascript, &$headers);
+        $header_resources = array(&$javascript, &$headers);
         $found_tinymce = false;
         $tinymceviewid = 'null';
         if ($inpersonalarea = user_personal_section()) {
@@ -276,13 +276,13 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
             }
         }
 
-        foreach ($checkarray as &$check) {
-            if (($key = array_search('tinymce', $check)) !== false || ($key = array_search('tinytinymce', $check)) !== false) {
+        foreach ($header_resources as &$resource) {
+            if (($key = array_search('tinymce', $resource)) !== false || ($key = array_search('tinytinymce', $resource)) !== false) {
                 if (!$found_tinymce) {
-                    $found_tinymce = $check[$key];
+                    $found_tinymce = $resource[$key];
                     $javascript_array[] = $wwwroot . 'artefact/file/js/filebrowser.js';
                     $javascript_array[] = $jsroot . 'switchbox.js';
-                    $javascript_array[] = $jsroot . 'tinymce/tinymce.js';
+                    $javascript_array[] = $wwwroot . 'node_modules/tinymce/tinymce.js';
                     $stylesheets = array_merge($stylesheets, array_reverse(array_values($THEME->get_url('style/tinymceskin.css', true))));
                     $content_css = json_encode($THEME->get_url('style/tinymce.css'));
                     $language = current_language();
@@ -315,14 +315,13 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
                     $mathslateplugin = !empty($mathslate) ? ',' . $mathslate : '';
                     $toolbar = array(
                         null,
-                        '"toolbar_toggle | formatselect | bold italic | bullist numlist | link unlink | imagebrowser | undo redo"',
-                        '"underline strikethrough subscript superscript | alignleft aligncenter alignright alignjustify | outdent indent | forecolor backcolor | ltr rtl | fullscreen"',
-                        '"fontselect | fontsizeselect | emoticons nonbreaking charmap ' . $mathslate . ' ' . $spellchecker_toolbar . ' | table | removeformat pastetext | anchor | code"',
+                        '"toolbar_toggle | imagebrowser | table | fullscreen | undo redo | formatselect | bold italic | bullist numlist | link unlink "',
+                        '" underline strikethrough subscript superscript | alignleft aligncenter alignright alignjustify | outdent indent | forecolor backcolor | ltr rtl"',
+                        '"fontselect | fontsizeselect | emoticons nonbreaking charmap ' . $mathslate . ' ' . $spellchecker_toolbar . ' | removeformat pastetext | anchor | code"',
                     );
 
                     // For right-to-left langs, reverse button order & align controls right.
                     $tinymce_langdir = $langdirection == 'rtl' ? 'rtl' : 'ltr';
-                    $toolbar_align = 'left';
 
                     // Language strings required for TinyMCE
                     $pagestrings['mahara'] = isset($pagestrings['mahara']) ? $pagestrings['mahara'] : array();
@@ -330,68 +329,66 @@ function smarty($javascript = array(), $headers = array(), $pagestrings = array(
 
                     $tinymceinitbehatsetup = '';
                     $tinymcebehatsetup = '';
+                    $tinymceconfig = '';
                     if (defined('BEHAT_TEST')) {
                         $tinymceinitbehatsetup = 'window.isEditorInitializing = false;';
                         $tinymcebehatsetup = <<<EOF
-        ed.on('PreInit', function(ed) {
-            window.isEditorInitializing = true;
-        });
-EOF;
+                                ed.on('PreInit', function(ed) {
+                                    window.isEditorInitializing = true;
+                                });
+                        EOF;
                     }
 
-                    if ($check[$key] == 'tinymce') {
+                    if ($resource[$key] == 'tinymce') {
                         $tinymceconfig = <<<EOF
-    theme: "silver",
-    mobile: {
-        theme: 'mobile',
-        toolbar: ['undo', 'bold', 'italic', 'link', 'bullist', 'styleselect'],
-    },
-    browser_spellcheck: true,
-    contextmenu: false,
-    plugins: "tooltoggle,visualblocks,wordcount,link,lists,imagebrowser,table,emoticons{$spellchecker},paste,code,fullscreen,directionality,searchreplace,nonbreaking,charmap{$mathslateplugin},anchor",
-    skin: 'oxide',
-    toolbar1: {$toolbar[1]},
-    toolbar2: {$toolbar[2]},
-    toolbar3: {$toolbar[3]},
-    menubar: false,
-    fix_list_elements: true,
-    image_advtab: true,
-    table_style_by_css: true,
-    {$spellchecker_config}
-EOF;
+                            theme: "silver",
+                            browser_spellcheck: true,
+                            contextmenu: false,
+                            plugins: "quickbars,tooltoggle,autoresize,fullscreen,visualblocks,wordcount,link,lists,imagebrowser,table,emoticons{$spellchecker},paste,code,fullscreen,directionality,searchreplace,nonbreaking,charmap{$mathslateplugin},anchor",
+                            skin: 'oxide',
+                            // default: 'fullscreen | undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent',
+                            toolbar1: {$toolbar[1]},
+                            toolbar2: {$toolbar[2]},
+                            toolbar3: {$toolbar[3]},
+                            menubar: false,
+                            fix_list_elements: true,
+                            image_advtab: true,
+                            table_style_by_css: true,
+                            quickbars_selection_toolbar: 'bold italic | formatselect | link unlink | bullist',
+                            // If you want to have image browser and quick table as default option at each new line,
+                            // uncomment the next line and set quick_bars_insert_toolbar: true,
+                            // quickbars_insert_toolbar: 'imagebrowser quicktable',
+                            quickbars_insert_toolbar: false,
+                            {$spellchecker_config}
+                        EOF;
                     }
-                    else {
-                        $tinymceconfig = <<<EOF
-    selector: "textarea.tinywysiwyg",
-    theme: "silver",
-    skin: 'light',
-    plugins: "fullscreen,autoresize",
-    toolbar: {$toolbar[0]},
-EOF;
-                    }
-$samepage = get_string('samepage', 'mahara');
+                    $samepage = get_string('samepage', 'mahara');
                     $headers[] = <<<EOF
-<script>
+
+<script language='javascript'>
+
+var extendedElements = "object[width|height|classid|codebase]"
++ ",param[name|value]"
++ ",embed[src|type|width|height|flashvars|wmode]"
++ ",script[src,type,language]"
++ ",figure[class]"
++ ",figcaption[class]"
++ ",ul[id|type|compact]"
++ ",iframe[src|width|height|name|scrolling|frameborder|allowfullscreen|webkitallowfullscreen|mozallowfullscreen|longdesc|marginheight|marginwidth|align|title|class|type|style]"
++ ",a[id|class|title|href|name|target]"
++ ",button[id|class|title]";
+
+var fontFormats = 'Andale Mono=andale mono,times;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;Comic Sans MS=comic sans ms,sans-serif;Courier New=courier new,courier;Georgia=georgia,palatino;Helvetica=helvetica;Impact=impact,chicago;Open Sans=Open Sans;Symbol=symbol;Tahoma=tahoma,arial,helvetica,sans-serif;Terminal=terminal,monaco;Times New Roman=times new roman,times;Trebuchet MS=trebuchet ms,geneva;Verdana=verdana,geneva;Webdings=webdings;Wingdings=wingdings,zapf dingbats;';
+
 tinyMCE.init({
     {$tinymceconfig}
-    schema: 'html4',
     block_formats: 'Paragraph=p; Heading 1=h4; Heading 2=h5; Heading 3=h6; Preformatted=pre',
-    extended_valid_elements:
-        "object[width|height|classid|codebase]"
-        + ",param[name|value]"
-        + ",embed[src|type|width|height|flashvars|wmode]"
-        + ",script[src,type,language]"
-        + ",figure[class]"
-        + ",figcaption[class]"
-        + ",ul[id|type|compact]"
-        + ",iframe[src|width|height|name|scrolling|frameborder|allowfullscreen|webkitallowfullscreen|mozallowfullscreen|longdesc|marginheight|marginwidth|align|title|class|type|style]"
-        + ",a[id|class|title|href|name|target]"
-        + ",button[id|class|title]"
-    ,urlconverter_callback : "custom_urlconvert",
+    extended_valid_elements: extendedElements,
+    urlconverter_callback : "custom_urlconvert",
     language: '{$language}',
     directionality: "{$tinymce_langdir}",
     content_css : {$content_css},
-    font_formats: 'Andale Mono=andale mono,times;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;Comic Sans MS=comic sans ms,sans-serif;Courier New=courier new,courier;Georgia=georgia,palatino;Helvetica=helvetica;Impact=impact,chicago;Open Sans=Open Sans;Symbol=symbol;Tahoma=tahoma,arial,helvetica,sans-serif;Terminal=terminal,monaco;Times New Roman=times new roman,times;Trebuchet MS=trebuchet ms,geneva;Verdana=verdana,geneva;Webdings=webdings;Wingdings=wingdings,zapf dingbats;',
+    font_formats: fontFormats,
     remove_script_host: false,
     relative_urls: false,
     target_list: [
@@ -490,19 +487,19 @@ function custom_urlconvert (u, n, e) {
 </script>
 
 EOF;
-                    unset($check[$key]);
+                    unset($resource[$key]);
                 }
                 else {
-                    if ($check[$key] != $found_tinymce) {
+                    if ($resource[$key] != $found_tinymce) {
                         log_warn('Two differently configured tinyMCE instances have been asked for on this page! This is not possible');
                     }
-                    unset($check[$key]);
+                    unset($resource[$key]);
                 }
             }
 
             // If any page adds jquery explicitly, remove it from the list
-            if (($key = array_search('jquery', $check)) !== false) {
-                unset($check[$key]);
+            if (($key = array_search('jquery', $resource)) !== false) {
+                unset($resource[$key]);
             }
         }
     }
