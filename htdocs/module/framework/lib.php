@@ -738,8 +738,8 @@ class Framework {
                 'view'       => $data->view,
                 'positionx'  => 0,
                 'positiony'  => (int)$blockpositiony,
-                'width'      => 4,
-                'height'     => 3,
+                'width'      => BlockInstance::GRIDSTACK_CONSTANTS['desktopWidth'],
+                'height'     => BlockInstance::GRIDSTACK_CONSTANTS['defaultHeight'],
             ));
             $annotation->commit();
             $new = true;
