@@ -17,15 +17,29 @@ then
     echo "Mahara is not configured. Please create and edit $MAHARAROOT/htdocs/config.php"
     exit 1
 fi
-
+SELENIUM_PORT=
+PHP_PORT=
+numbers='^[0-9]+$'
+PHP_PORT_FROM_CONFIG=$(grep -Po "behat_wwwroot.+?:\s*\K[^/]+" $MAHARAROOT/htdocs/config.php)
+if ! [[ $PHP_PORT_FROM_CONFIG =~ $numbers ]] ; then
+    PHP_PORT=8000
+else
+    PHP_PORT=$PHP_PORT_FROM_CONFIG
+fi
+SELENIUM_PORT_FROM_CONFIG=$(grep -Po "behat_selenium2.+?:\s*\K[^/]+" $MAHARAROOT/htdocs/config.php)
+if ! [[ $SELENIUM_PORT_FROM_CONFIG =~ $numbers ]] ; then
+    SELENIUM_PORT=4444
+else
+    SELENIUM_PORT=$SELENIUM_PORT_FROM_CONFIG
+fi
 # Get action
 ACTION=$1
 REPORT=$3
 BEHATROOT=`php htdocs/testing/frameworks/behat/cli/util.php --behat-root`
 SERVER=0
 SERVERXVFB=
-test -z $SELENIUM_PORT && export SELENIUM_PORT=4444
-test -z $PHP_PORT && export PHP_PORT=8000
+test -z $SELENIUM_PORT && export SELENIUM_PORT=$SELENIUM_PORT
+test -z $PHP_PORT && export PHP_PORT=$PHP_PORT
 test -z $XVFB_PORT && export XVFB_PORT=10
 
 echo "Selenium port: $SELENIUM_PORT"
