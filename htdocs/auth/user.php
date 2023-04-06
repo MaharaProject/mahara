@@ -2202,7 +2202,7 @@ class LiveUser extends User {
         $this->populate($user);
         $this->SESSION->regenerate_id();
         $time = time();
-        $this->set('lastlastlogin', $this->lastlogin);
+        $this->set('lastlastlogin', $this->get('lastlogin'));
         $this->set('lastlogin', $time);
         $this->set('lastaccess', $time);
         $this->set('sessionid', session_id());

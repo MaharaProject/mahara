@@ -377,7 +377,6 @@ class AuthSaml extends Auth {
 
             $user->expiry             = null;
             $user->expirymailsent     = 0;
-            $user->lastlogin          = time();
 
             $user->firstname          = $firstname;
             $user->lastname           = $lastname;
@@ -463,8 +462,6 @@ class AuthSaml extends Auth {
                 // make sure they are not site staff anymore
                 $user->staff = 0;
             }
-            $user->lastlastlogin      = $user->lastlogin;
-            $user->lastlogin          = time();
         }
 
         if ($hasaffiliations) {

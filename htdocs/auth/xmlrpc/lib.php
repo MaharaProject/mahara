@@ -194,7 +194,6 @@ class AuthXmlrpc extends Auth {
             //$institution = new Institution($peer->institution);
             $user->expiry             = null;
             $user->expirymailsent     = 0;
-            $user->lastlogin          = time();
 
             $user->firstname          = $remoteuser->firstname;
             $user->lastname           = $remoteuser->lastname;
@@ -247,9 +246,6 @@ class AuthXmlrpc extends Auth {
 
             $locked = $this->import_user_settings($user, $remoteuser);
             $locked = array_merge($imported, $locked);
-
-            $user->lastlastlogin      = $user->lastlogin;
-            $user->lastlogin          = time();
 
             //TODO: import institution's per-user-quota?:
             //$user->quota              = $userrecord->quota;
