@@ -1311,24 +1311,29 @@ function disable_copy_links() {
     // to avoid double clicking
     $('a[href*="view/copy.php"]').on('click', function(event) {
         event.preventDefault();
-        let info = $(this);
-        let infoicon = '';
-        if ($(this).parent().hasClass('dropdown-item')) {
-            $(this).parent().addClass('disabled');
-            infoicon = $(this).find('span.icon');
+        if (event.currentTarget.id == 'copyview-button' && event.currentTarget.href.match(/collection=(.*)/)) {
+            // Let it fall thru to copy modal in viewmenu.js
         }
         else {
-            $(this).addClass('disabled');
-            infoicon = $(this).find('span.icon').css('padding-right', '0px').css('padding-left', '7px');
-            $(this).css('color', 'black');
+            let info = $(this);
+            let infoicon = '';
+            if ($(this).parent().hasClass('dropdown-item')) {
+                $(this).parent().addClass('disabled');
+                infoicon = $(this).find('span.icon');
+            }
+            else {
+                $(this).addClass('disabled');
+                infoicon = $(this).find('span.icon').css('padding-right', '0px').css('padding-left', '7px');
+                $(this).css('color', 'black');
+            }
+            info.text('');
+            if (infoicon) {
+                infoicon.removeClass().addClass('icon icon-lg left icon-spinner icon-pulse');
+                info.append(infoicon[0]);
+            }
+            info.append(document.createTextNode(get_string('processing') + ' ...'));
+            window.location.href = $(this).prop('href');
         }
-        info.text('');
-        if (infoicon) {
-            infoicon.removeClass().addClass('icon icon-lg left icon-spinner icon-pulse');
-            info.append(infoicon[0]);
-        }
-        info.append(document.createTextNode(get_string('processing') + ' ...'));
-        window.location.href = $(this).prop('href');
     });
 };
 
