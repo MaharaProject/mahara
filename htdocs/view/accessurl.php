@@ -26,7 +26,7 @@ if ($collectionid = param_integer('collection', null)) {
     $collection = new Collection($collectionid);
     $views = $collection->views();
     if (empty($views)) {
-        $SESSION->add_error_msg(get_string('emptycollectionnoeditaccess', 'collection'));
+        $SESSION->add_error_msg(get_string('emptycollectionnoeditaccess1', 'collection'));
         redirect('/collection/views.php?id=' . $collectionid);
     }
     // Pick any old view, they all have the same access records.
@@ -46,7 +46,7 @@ if (empty($collection)) {
 }
 
 $in_editor = param_integer('editor', 0);
-$viewtitle = $in_editor ? $view->get('title') : get_string('editaccess', 'view');
+$viewtitle = $in_editor ? $view->get('title') : get_string('share', 'view');
 define('TITLE', $viewtitle);
 
 $group = $view->get('group');
@@ -823,7 +823,7 @@ $smarty = smarty(
     array('sidebars' => false)
 );
 $smarty->assign('INLINEJAVASCRIPT', $js);
-setpageicon($smarty, 'icon-share-alt');
+setpageicon($smarty, 'icon-share-nodes');
 $smarty->assign('form', $form);
 $smarty->assign('shareurl', $shareurl);
 $smarty->assign('group', $group);

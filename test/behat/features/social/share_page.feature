@@ -26,7 +26,7 @@ Background:
 Scenario: Check share page with friends
  # Log in as a normal userA
  Given I log in as "UserA" with password "Kupuh1pa!"
- # Edit access for Page 03
+ # Edit sharing permissions for Page 03
  And I choose "People" in "Engage" from main menu
  And I click on "Send friend request" in "Bob User" row
  And I set the field "Message" to "Love me, love me, say you do!"
@@ -36,7 +36,7 @@ Scenario: Check share page with friends
  And I click on "pending friend"
  And I click on "Approve"
  And I choose "Portfolios" in "Create" from main menu
- And I click on "Manage access" in "Page UserB_02" card access menu
+ And I click on "Manage sharing" in "Page UserB_02" card access menu
  And I select "Friends" from "General" in shared with select2 box
  And I click on "Save"
  And I log out
@@ -51,9 +51,9 @@ Scenario: Check share page with friends
 Scenario: Check share page with Registered Users
  # Log in as a normal userA
  Given I log in as "UserA" with password "Kupuh1pa!"
- # Edit access for Page 03
+ # Edit sharing permissions for Page 03
  And I choose "Portfolios" in "Create" from main menu
- And I click on "Manage access" in "Page UserA_03" card access menu
+ And I click on "Manage sharing" in "Page UserA_03" card access menu
  And I select "Registered people" from "General" in shared with select2 box
  And I click on "Save"
  And I log out
@@ -70,9 +70,9 @@ Scenario: Check share page with Registered Users
 Scenario: Check share page with groups and that copy options works
  # Log in as a normal userA
  Given I log in as "UserA" with password "Kupuh1pa!"
- # Edit access for Page 03
+ # Edit sharing permissions for Page 03
  And I choose "Portfolios" in "Create" from main menu
- And I click on "Manage access" in "Page UserA_03" card access menu
+ And I click on "Manage sharing" in "Page UserA_03" card access menu
  And I select "GroupA" from "Groups" in shared with select2 box
  And I select "GroupB" from "Groups" in shared with select2 box
  And I expand "Advanced options" node

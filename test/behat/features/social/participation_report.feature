@@ -34,15 +34,15 @@ Given the following "users" exist:
 Scenario: In the participation report pages should be seen in a collection
  # Log in as a normal userA
  Given I log in as "UserA" with password "Kupuh1pa!"
- # Edit access for Page 03
+ # Edit sharing permissions for Page 03
  And I choose "Shared by me" in "Share" from main menu
  And I click on "Pages" in the "Share tabs" "Misc" property
- And I click on "Edit access" in "Page 03" row
+ And I click on "Share" in "Page 03" row
  And I select "Group one" from "accesslist[0][searchtype]"
  And I fill in "accesslist[0][startdate]" with "2015/06/15 03:00"
  And I click on "Save"
- # Edit access for Collection 01
- And I click on "Edit access" in "Collection 01" row
+ # Edit sharing permissions for Collection 01
+ And I click on "Share" in "Collection 01" row
  And I set the select2 value "Collection 01" for "editaccess_collections"
  And I select "Group one" from "accesslist[0][searchtype]"
  And I fill in "accesslist[0][startdate]" with "2015/06/15 03:00"
@@ -56,17 +56,17 @@ Scenario: In the participation report pages should be seen in a collection
  # Making group page 01 public
  When I click on "Group one"
  And I click on "Portfolios" in the "Arrow-bar nav" "Nav" property
- And I click on "Manage access" in "Group collection 01" card access menu
+ And I click on "Manage sharing" in "Group collection 01" card access menu
  And I select "Public" from "accesslist[0][searchtype]"
  And I click on "Save"
  # Making group page 03 public
  When I click on "Portfolios" in the "Arrow-bar nav" "Nav" property
- And I click on "Manage access" in "Group page 03" card access menu
+ And I click on "Manage sharing" in "Group page 03" card access menu
  And I select "Public" from "accesslist[0][searchtype]"
  And I click on "Save"
  # Making group page 04 public
  When I click on "Portfolios" in the "Arrow-bar nav" "Nav" property
- And I click on "Manage access" in "Group page 04" card access menu
+ And I click on "Manage sharing" in "Group page 04" card access menu
  And I select "Public" from "accesslist[0][searchtype]"
  And I click on "Save"
  # UserA comments on group page 01

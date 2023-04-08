@@ -299,7 +299,7 @@ $smarty = smarty(
     array(),
     array('sidebars' => true)
 );
-setpageicon($smarty, 'icon-share-alt');
+setpageicon($smarty, 'icon-share-nodes');
 $smarty->assign('INLINEJAVASCRIPT', $js);
 $smarty->assign('editurls', $editurls);
 $smarty->assign('allownew', $allownew);

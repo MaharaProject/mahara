@@ -38,7 +38,7 @@
  Scenario: Checking the jump list of the paginator (Bug 1409370)
   Given I log in as "UserA" with password "Kupuh1pa!"
   And I choose "Shared by me" in "Share" from main menu
-  And I click on "Edit access" in "Page UserA_01" row
+  And I click on "Share" in "Page UserA_01" row
   And I set the select2 value "Page UserA_01, Page UserA_02, Page UserA_03, Page UserA_04, Page UserA_05, Page UserA_06, Page UserA_07, Page UserA_08, Page UserA_09, Page UserA_10, Page UserA_11, Page UserA_12, Page UserA_13, Page UserA_14, Page UserA_15, Page UserA_16, Page UserA_17, Page UserA_18, Page UserA_19, Page UserA_20, Page UserA_21" for "editaccess_views"
   And I select "Public" from "accesslist[0][searchtype]"
   And I click on "Save" in the "#editaccess_submit_container" "css_element"

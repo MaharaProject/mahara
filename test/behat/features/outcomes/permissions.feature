@@ -171,13 +171,13 @@ Feature: Roles and permissions around functionality in outcomes portfolios
   # - Group changes: Can see the 'Create' button on the 'Portfolios' overview page
   # - Group changes: Can see the 'Copy' button on the 'Portfolios' overview page.
   # - Group changes: Can change the sharing permissions for a portfolio either directly on a page or via the 'Portfolios' overview page.
-  Scenario Outline: Check create/copy/manage access permissions
+  Scenario Outline: Check create/copy/manage sharing permissions
     When I log in as "<person>" with password "Kupuh1pa!"
     * I go to group "Group1"
     * I click on "Portfolios" in the "Arrow-bar nav" "Nav" property
     Then I should <see_create> in the "Create" "Views" property
     And I should <see_copy> in the "Create" "Views" property
-    And I <can_manage_access> in "Outcome collection" card access menu
+    And I <can_manage_sharing> in "Outcome collection" card access menu
     Then I <go_back>
     And I <can_manage_outcomes> in "Outcome collection" card menu
     Then I <go_back>
@@ -187,10 +187,10 @@ Feature: Roles and permissions around functionality in outcomes portfolios
     Then I <click_share> in the "Toolbar buttons" "Nav" property
 
     Examples: group admin = admin, Group1_Tutor = tutor, Group1_Member = member
-      | person        | see_create       | see_copy       | can_manage_access               | click_share            | can_manage_outcomes               | go_back    | can_see_settings_on_edit  |
-      | admin         | see "Create"     | not see "Copy" | click on "Manage access"        | click on "Share"       | click on "Manage outcomes"        | go back    | should see "Settings"     |
-      | Group1_Tutor  | not see "Create" | not see "Copy" | click on "Manage access"        | click on "Share"       | cannot click on "Manage outcomes" | go back    | should see "Settings"     |
-      | Group1_Member | not see "Create" | not see "Copy" | cannot click on "Manage access" | should not see "Share" | cannot click on "Manage outcomes" | do nothing | should not see "Settings" |
+      | person        | see_create       | see_copy       | can_manage_sharing               | click_share            | can_manage_outcomes               | go_back    | can_see_settings_on_edit  |
+      | admin         | see "Create"     | not see "Copy" | click on "Manage sharing"        | click on "Share"       | click on "Manage outcomes"        | go back    | should see "Settings"     |
+      | Group1_Tutor  | not see "Create" | not see "Copy" | click on "Manage sharing"        | click on "Share"       | cannot click on "Manage outcomes" | go back    | should see "Settings"     |
+      | Group1_Member | not see "Create" | not see "Copy" | cannot click on "Manage sharing" | should not see "Share" | cannot click on "Manage outcomes" | do nothing | should not see "Settings" |
 
   Scenario Outline: Can delete an entire outcomes portfolio or individual pages within it in a group.
     When I log in as "<person>" with password "Kupuh1pa!"

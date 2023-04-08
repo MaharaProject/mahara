@@ -57,7 +57,7 @@ Scenario: Creating and accessing social media buttons (Bug 1448948)
  And the field "buttons with icons and text" matches value "1"
  And I click on "Save"
  And I go to "/view/share.php"
- And I click on "Edit access" in "Page UserA_01" row
+ And I click on "Share" in "Page UserA_01" row
  And I select "Public" from "accesslist[0][searchtype]"
  And I click on "Save"
  And I should see "Access rules were updated for 1 page"

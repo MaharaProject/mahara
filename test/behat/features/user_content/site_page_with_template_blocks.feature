@@ -16,7 +16,7 @@ Scenario: Check templates not editable then create and use the Page template wit
     Given I log in as "admin" with password "Kupuh1pa!"
     And I choose "Portfolios" in "Configure site" from administration menu
     # Check there is no access to "Share" on any of the four template cards BUG - # 1824767
-    And I should not see "Manage access"
+    And I should not see "Manage sharing"
     # Check there is no access to "Share" on each of the four edit template pages BUG - # 1824767
     When I click on "Dashboard template"
     Then I should not see "Share" in the "Vertical button group" "Views" property

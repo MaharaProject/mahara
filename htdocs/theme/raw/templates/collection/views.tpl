@@ -71,7 +71,7 @@
     </div>
 
     <div id="collectiondonewrap" class=" primary submitcancel form-group">
-        <button class="btn btn-primary submitcancel submit" type="submit" data-url="{$accessurl}">{str tag=continueeditaccess section=collection}</button>
+        <button class="btn btn-primary submitcancel submit" type="submit" data-url="{$accessurl}">{str tag=continueeditaccess1 section=collection}</button>
         <button class="btn submitcancel cancel" type="submit" data-url="{$baseurl}">{str tag=cancel}</button>
     </div>
 

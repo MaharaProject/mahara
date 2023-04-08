@@ -56,7 +56,7 @@ Scenario: Creating a collection AND adding pages
     And I should see "Page title"
     And I click on "Collections"
     # Continue initial test
-    And I click on "Edit access"
+    And I click on "Share" in "Test Collection" row
     And I select "Registered people" from "accesslist[0][searchtype]"
     And I click on "Save"
     And I choose "Portfolios" in "Create" from main menu

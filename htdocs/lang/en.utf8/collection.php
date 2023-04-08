@@ -50,7 +50,7 @@ $string['sitecollections'] = 'Site collections';
 $string['collectionaccess'] = 'Collection access';
 $string['collectionaccessrules'] = 'Collection access rules';
 $string['collectionaccesseditedsuccessfully'] = 'Collection access saved successfully';
-$string['collectioneditaccess'] = 'You are editing access for %d pages in this collection.';
+$string['collectioneditaccess1'] = 'You are changing the sharing permissions for %d pages in this collection.';
 $string['collectionconfirmdelete1'] = '<p>Do you really want to delete this collection? It will also delete all pages within this collection. If you only want to delete individual pages, abort this action and delete the pages in question themselves.</p>
 <p>Please consider creating a backup by <a href="%sexport/index.php?collection=%s">exporting</a> your portfolio before you delete anything.</p>
 <p><strong>Note:</strong> If you decide to delete this collection, all your files and journal entries that you linked in the pages will still be available. However, any text blocks and comments placed on the pages will be deleted along with the pages.</p>';
@@ -60,7 +60,7 @@ $string['collectiondeleted'] = 'Collection deleted successfully.';
 $string['collectiondescription'] = 'A collection is a set of pages that are linked to one another and have the same access permissions. You can create as many collections as you like, but a page cannot appear in more than one collection.';
 $string['collectiontitle'] = 'Collection title';
 $string['confirmcancelcreatingcollection'] = 'This collection has not been completed. Do you really want to cancel?';
-$string['continueeditaccess'] = 'Continue: Edit access';
+$string['continueeditaccess1'] = 'Continue: Share';
 $string['collectionsaved'] = 'Collection saved successfully.';
 $string['copyacollection'] = 'Copy a collection';
 $string['created'] = 'Created';
@@ -78,7 +78,7 @@ $string['edittitleanddesc'] = 'Edit title and description';
 $string['editviews'] = 'Edit collection pages';
 $string['editviewaccess'] = 'Edit page access';
 $string['editaccess'] = 'Edit collection access';
-$string['emptycollectionnoeditaccess'] = 'You cannot edit access to empty collections. Add some pages first.';
+$string['emptycollectionnoeditaccess1'] = 'You cannot share an empty collections. Add at least one page.';
 $string['emptycollection'] = 'Empty collection';
 $string['manage'] = 'Manage';
 $string['manageviews'] = 'Manage pages';

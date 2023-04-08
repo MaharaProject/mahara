@@ -74,7 +74,7 @@ Scenario: Making sure that the max items per page drop down limits to correct am
   And I select "atoz" from "orderby"
   And I click on "Search" in the "#searchviews_submit_container" "css_element"
   And I choose "Shared by me" in "Share" from main menu
-  And I click on "Edit access" in "Page UserA_01" row
+  And I click on "Share" in "Page UserA_01" row
   And I set the select2 value "Page UserA_01, Page UserA_02, Page UserA_03, Page UserA_04, Page UserA_05, Page UserA_06, Page UserA_07, Page UserA_08, Page UserA_09, Page UserA_10, Page UserA_11, Page UserA_12, Page UserA_13, Page UserA_14, Page UserA_15, Page UserA_16, Page UserA_17, Page UserA_18, Page UserA_19, Page UserA_20, Page UserA_21, Page UserA_22, Page UserA_23, Page UserA_24, Page UserA_25, Page UserA_26, Page UserA_27, Page UserA_28, Page UserA_29, Page UserA_30, Page UserA_31, Page UserA_32, Page UserA_33, Page UserA_34, Page UserA_35, Page UserA_36, Page UserA_37, Page UserA_38, Page UserA_39, Page UserA_40, Page UserA_41, Page UserA_42, Page UserA_43, Page UserA_44, Page UserA_45, Page UserA_46, Page UserA_47, Page UserA_48, Page UserA_49, Page UserA_50, Page UserA_51" for "editaccess_views"
   And I select "Public" from "accesslist[0][searchtype]"
   And I click on "Save"

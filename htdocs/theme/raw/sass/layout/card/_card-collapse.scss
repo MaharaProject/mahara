@@ -295,7 +295,7 @@
 
     // pseudofieldset
     &.pseudofieldset:only-of-type .card-header a,
-    &.pseudofieldset:first-of-type .card-header a, {
+    &.pseudofieldset:first-of-type .card-header a {
       border-top-left-radius: $card-border-radius;
       border-top-right-radius: $card-border-radius;
     }
@@ -311,7 +311,7 @@
     visibility: visible;
 }
 
-// custom for Share | Edit access advance options in smaller widths
+// custom for Share | Edit sharing permissions advance options in smaller widths
 @include media-breakpoint-down(lg) {
   #editaccess_more_container {
     margin-top: -1rem;

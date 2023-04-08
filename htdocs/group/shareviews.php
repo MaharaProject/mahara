@@ -30,7 +30,7 @@ if (group_deny_access($group, 'member')) {
 $accesslists = View::get_accesslists(null, $group->id);
 
 $smarty = smarty();
-setpageicon($smarty, 'icon-share-alt');
+setpageicon($smarty, 'icon-share-nodes');
 $smarty->assign('heading', $group->name);
 $smarty->assign('headingclass', 'page-header');
 $smarty->assign('accesslists', $accesslists);

@@ -34,7 +34,7 @@
             <div id="home-info-share" class="widget home-info-box">
                 <div class="widget-heading">
                     <div class="circle-bg">
-                        <span class="icon icon-unlock" role="presentation" aria-hidden="true"></span>
+                        <span class="icon icon-share-nodes" role="presentation" aria-hidden="true"></span>
                     </div>
                     <div class="widget-content">
                         <h2 class="title">

@@ -57,7 +57,7 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   And I check "Page admin_02"
   And I click on "Add pages"
   And I should see "1 page added to collection"
-  And I click on "Continue: Edit access"
+  And I click on "Continue: Share"
 
   # Copy a collection directly from its location
   And I choose "Portfolios" in "Create" from main menu
@@ -66,14 +66,14 @@ Scenario: Accessing the popup window in the Copy or page or collection (Bug 1361
   And I click on "Copy"
   And I click on "Collection" in the "#copyview-form" "css_element"
   And I click on "Continue: Edit collection pages"
-  And I click on "Continue: Edit access"
+  And I click on "Continue: Share"
 
   # Copy a collection
   And I choose "Portfolios" in "Create" from main menu
   And I click on "Copy"
   And I click on "Copy collection" in "Collection admin_01" row
   And I click on "Continue: Edit collection pages"
-  And I click on "Continue: Edit access"
+  And I click on "Continue: Share"
 
   #veryfying if the collection is copied directly from its location
   And I choose "Portfolios" in "Create" from main menu

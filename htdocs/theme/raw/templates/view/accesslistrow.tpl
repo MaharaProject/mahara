@@ -36,9 +36,9 @@
 <td colspan="2"></td>
 {else}
 <td class="al-edit text-center tiny">
-    <a href="{$WWWROOT}view/access.php?id={$item.viewid}{if $item.views}&collection={$item.id}{/if}" title="{str tag=editaccess section=view}" class="text-default">
-        <span class="icon icon-lock" role="presentation" aria-hidden="true"></span>
-        <span class="visually-hidden">{str tag=editaccess}</span>
+    <a href="{$WWWROOT}view/access.php?id={$item.viewid}{if $item.views}&collection={$item.id}{/if}" title="{str tag=share section=view}" class="text-default">
+        <span class="icon icon-share-nodes" role="presentation" aria-hidden="true"></span>
+        <span class="visually-hidden">{str tag=share}</span>
     </a>
 </td>
 <td class="secreturls text-center tiny">

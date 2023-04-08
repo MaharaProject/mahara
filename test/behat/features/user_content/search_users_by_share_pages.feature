@@ -24,7 +24,7 @@ Scenario: Create accounts and search for them (Bug 897586)
     Given I log in as "UserA" with password "Kupuh1pa!"
     # Sharing both of the pages that have been created
     And I choose "Shared by me" in "Share" from main menu
-    And I click on "Edit access" in "Page UserA_01" row
+    And I click on "Share" in "Page UserA_01" row
     And I set the select2 value "Page UserA_01, Page UserA_02" for "editaccess_views"
     And I select "Public" from "accesslist[0][searchtype]"
     And I click on "Save"
@@ -37,7 +37,7 @@ Scenario: Create accounts and search for them (Bug 897586)
     And I should see "Bob User"
     # Sharing 2 of the pages Bob created to public
     And I choose "Shared by me" in "Share" from main menu
-    And I click on "Edit access" in "Page UserB_01" row
+    And I click on "Share" in "Page UserB_01" row
     And I set the select2 value "Page UserB_01, Page UserB_02" for "editaccess_views"
     And I select "Public" from "accesslist[0][searchtype]"
     And I click on "Save"
@@ -45,7 +45,7 @@ Scenario: Create accounts and search for them (Bug 897586)
     And I should see "Access rules were updated for 2 pages."
     # Sharing 1 of the pages Bob created with "Admin"
     And I choose "Shared by me" in "Share" from main menu
-    And I click on "Edit access" in "Page UserB_01" row
+    And I click on "Share" in "Page UserB_01" row
     And I set the select2 value "Page UserB_03" for "editaccess_views"
     And I select "Person" from "accesslist[0][searchtype]"
     And I select "Admin Account" from select2 nested search box in row number "1"
