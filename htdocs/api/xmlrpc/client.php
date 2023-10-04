@@ -110,7 +110,8 @@ class Client {
         }
 
         if ($xml->getName() == 'methodResponse') {
-            $this->response = xmlrpc_decode($payload);
+            // Decode with UTF-8 as that is the encoding we request.
+            $this->response = xmlrpc_decode($payload, 'utf-8');
 
             // Margin of error is the time it took the request to complete.
             $margin_of_error  = $timestamp_receive - $timestamp_send;
