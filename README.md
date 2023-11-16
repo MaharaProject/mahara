@@ -1,13 +1,14 @@
 # Mahara Readme
 
+**This is the old repository for Mahara. It is not updated any more as of April 2023. The latest code is available via a [subscription](https://mahara.org/subscription).**
+
+## What is Mahara?
+
 Mahara is an open source ePortfolio system. An ePortfolio is a type of
 web application that allows learners to record and share evidence of their
 learning and reflect on their learning. Mahara can be used to create different
 types of portfolios, including learning portfolio, development portfolio,
 presentation / showcase portfolio, employability portfolio.
-
-For more information about Mahara and ePortfolios, see the Mahara manual's
-[introduction chapter](https://manual.mahara.org/en/22.10/intro/introduction.html#what-is-mahara).
 
 ## SUPPORT
 
